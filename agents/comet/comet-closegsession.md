@@ -1,7 +1,7 @@
 # /comet-closegsession — Comet Session Close
 > Запускается после завершения рабочей сессии.
 > Цель: зафиксировать сделанное, обновить контекст, передать эстафету Assistant.
-> Аналог: `/closegsession` в Claude Code (VS Code)
+> Название с флагом `comet` — не конфликтует с `/closegsession` в Claude Code / VS Code.
 
 ---
 
@@ -9,21 +9,24 @@
 
 ### Шаг 1 — Обнови `memory/handshake-assistant.md`
 
-Перезапиши файл целиком:
-- Заголовок: `# HANDSHAKE-ASSISTANT — [YYYY-MM-DD]`
-- `## Current Focus` — что делали в этой сессии
-- `## Active Projects` — актуальные статусы
-- `## What Was Done` — список выполненных действий
-- `## Open Tasks` — таблица task / priority / blocker
-- `## Architecture Snapshot` — текущее состояние архитектуры
-- `## For Comet — Quick Start` — 5 строк для онбординга
-- `## Updated: [timestamp]`
+Перезапиши файл целиком. Структура:
+
+```markdown
+# HANDSHAKE-ASSISTANT — [YYYY-MM-DD]
+## Current Focus
+## Active Projects  (table: project / status / last action)
+## What Was Done   (bullet list)
+## Open Tasks      (table: task / priority / blocker)
+## Architecture Snapshot
+## For External Assistant (Comet) — Quick Start  (5 строк)
+## Updated: [timestamp]
+```
 
 ### Шаг 2 — Добавь запись в `memory/episodic-context-global.md`
 
 Только если было принято решение или изменено правило.
-Формат:
-```
+
+```markdown
 ## [YYYY-MM-DD] [comet] — [decision title]
 - Tags: [...]
 - [bullet список решений]
@@ -31,17 +34,20 @@
 
 ### Шаг 3 — Обнови `memory/current-context-global.md`
 
-Только если изменился:
+Только если изменилось:
 - Статус эпика (Active Epics)
 - Блокеры
 - Global State
 
-### Шаг 4 — Закрой задачи через Issues
+### Шаг 4 — Issues для незавершённых задач
 
-Для всех незавершённых задач с блокерами —
-создай GitHub Issue:
-- К Assistant: метка `comet`, тайтл `[comet→assistant] ...`
-- К nopoint: метка `needs:decision`, тайтл `[comet→nopoint] ...`
+Для всех задач которые заблокированы или требуют действия от Assistant:
+- Титул: `[comet→assistant] {task}`
+- Метка: `comet`
+
+Для задач требующих решения nopoint:
+- Титул: `[comet→nopoint] {decision}`
+- Метка: `needs:decision`
 
 ---
 
@@ -49,8 +55,8 @@
 
 ```
 ✅ handshake-assistant.md обновлён
-✅ episodic log: [N] записей / не требовалось
-✅ current-context: [updated / no changes]
-✅ Issues: [N] создано / не нужно
+✅ episodic log: [N записей добавлено] / [не требовалось]
+✅ current-context: [updated] / [no changes]
+✅ Issues созданы: [N] / [не нужно]
 — Сессия закрыта. Assistant заберёт через /sync.
 ```

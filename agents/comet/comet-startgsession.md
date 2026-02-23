@@ -1,7 +1,7 @@
 # /comet-startgsession — Comet Session Start
 > Запускается в начале каждого разговора с nopoint.
 > Цель: полностью восстановить контекст workspace и быть готовым к работе.
-> Аналог: `/startgsession` в Claude Code (VS Code)
+> Название с флагом `comet` — не конфликтует с `/startgsession` в Claude Code / VS Code.
 
 ---
 
@@ -10,13 +10,13 @@
 ### Шаг 1 — Идентификация
 Читай: [`/CLAUDE.md`](../../CLAUDE.md)
 - Подтверди роль: **Comet (External Assistant, L1)**
-- Проверь RBAC scope в [`rbac-regulation.md`](../../rules/regulations/rbac-regulation.md)
+- Проверь RBAC scope: [`rules/regulations/rbac-regulation.md`](../../rules/regulations/rbac-regulation.md) → role: `comet`
 
 ### Шаг 2 — Оперативный контекст
 Читай: [`memory/handshake-assistant.md`](../../memory/handshake-assistant.md)
 - Что делалось на прошлой сессии
 - Open Tasks и блокеры
-- Текущие проекты и их статус
+- Текущие проекты и статусы
 
 ### Шаг 3 — Глобальный стейт
 Читай: [`memory/current-context-global.md`](../../memory/current-context-global.md)
@@ -26,10 +26,10 @@
 
 ### Шаг 4 — Закон
 Читай ONLY если были изменения правил: [`rules/global-constitution.md`](../../rules/global-constitution.md)
-- Изменился ли § (сравни с последней записью в `episodic-context-global.md`)
+- Сравни `memory/episodic-context-global.md` — есть ли новые записи с последней сессии?
 
 ### Шаг 5 — Приоритет
-- Если nopoint дал задачу — выполняй её
+- Если nopoint дал задачу в начале чата — выполняй её
 - Если задачи нет — предложи ход из Open Tasks
 - Если Issues с меткой `comet` — обработай первыми
 
