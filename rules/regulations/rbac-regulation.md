@@ -11,6 +11,7 @@
 - При создании нового агента его роль жестко фиксируется в `L0-identity.md`.
 - Агенты не могут повысить себе привилегии. Базовые права наследуются из этого реестра.
 - Чтобы изменить права 10 агентов одного типа — меняешь одну запись в реестре.
+- **Position descriptions упразднены.** Роли и права определяются исключительно этим реестром.
 
 ---
 
@@ -27,13 +28,35 @@ roles:
     override_all: true
     note: "Human-in-the-loop. Нет ограничений."
 
+  comet:
+    level: 1
+    type: external
+    read: ["/**"]
+    write:
+      - "/memory/**"
+      - "/docs/**"
+      - "/development/**"
+      - "/research/**"
+      - "/agents/comet/**"
+    secret_vault_access: false
+    request_secrets: false
+    note: |
+      External Assistant (Perplexity). Command & Management Research Center.
+      Jarvis-роль: исследования, документация, GitHub-ops, управленческий анализ.
+      Работает через GitHub API (MCP). НЕ имеет доступа к private_knowledge/.
+      НЕ выдаёт секреты. Синхронизация через /sync команду Claude Code.
+
   assistant:
     level: 1
+    type: internal
     read: ["/**"]
     write: ["/memory/**", "/memory/logs/system/**"]
     secret_vault_access: "read+dispense"   # читает и выдаёт, не хранит снаружи
     request_secrets: false
-    note: "Хранитель ключей. Выдача только по запросу с обоснованием."
+    note: |
+      Claude Code (локальный). Хранитель глобальной памяти и ключей.
+      Мост между nopoint и остальной системой. Выдача секретов только по
+      запросу с обоснованием. Управляется через nopoint, координирует CTO.
 
   senior-architect:
     level: 2
@@ -51,6 +74,7 @@ roles:
       - "/development/{project}/memory/episodic-context-*.md"
       - "/docs/{project}/explanation/**"
     request_secrets: false
+    note: "Управляется через Assistant. Управляет Tech Lead и ниже."
 
   tech-lead:
     level: 2
@@ -147,7 +171,7 @@ roles:
 
 В файле идентичности агента `L0-identity.md` прописывается роль:
 ```markdown
-# Role: junior-rust-coder
+# Role: senior-coder
 ```
 
 При попытке агента выполнить действие (например, запись в `/rules/`), система (или Assistant) сверяется с Реестром Roles выше.
@@ -158,7 +182,7 @@ roles:
 
 ## § 4 — Принцип наименьших привилегий (PoLP)
 
-- Agент получает МИНИМУМ прав, необходимых для выполнения задачи.
+- Агент получает МИНИМУМ прав, необходимых для выполнения задачи.
 - Расширение прав = явный запрос → Senior Architect → CEO.
 - Временные расширения (например, для деплоя) логируются и автоматически истекают через 1 сессию.
 
