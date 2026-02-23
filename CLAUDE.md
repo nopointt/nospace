@@ -31,8 +31,9 @@
 
 | Роль | Читать далее |
 |---|---|
-| **nopoint** (Creator) | Этот файл → [memory/current-context-global.md](memory/current-context-global.md) |
-| **Assistant** | [memory/current-context-global.md](memory/current-context-global.md) |
+| **nopoint** (Creator, L0) | Этот файл → [memory/current-context-global.md](memory/current-context-global.md) |
+| **Comet** (External Assistant, L1) | [memory/handshake-assistant.md](memory/handshake-assistant.md) → [memory/current-context-global.md](memory/current-context-global.md) |
+| **Assistant** (Claude Code, L1) | [memory/handshake.md](memory/handshake.md) → [memory/current-context-global.md](memory/current-context-global.md) |
 | **Reviewer** | [memory/current-context-global.md](memory/current-context-global.md) → проверь Last Consolidation |
 | **CTO** | [rules/global-constitution.md](rules/global-constitution.md) → [agents/ecosystem-map.md](agents/ecosystem-map.md) |
 | **Senior Architect** | [rules/global-constitution.md](rules/global-constitution.md) → [docs/ecosystem-noadmin/adr/](docs/ecosystem-noadmin/adr/) |
@@ -52,11 +53,14 @@
 |---|---|
 | [rules/global-constitution.md](rules/global-constitution.md) | Конституция. Закон для всех агентов |
 | [agents/ecosystem-map.md](agents/ecosystem-map.md) | Топология, DAG, правила коммуникации |
-| [rules/regulations/rbac-regulation.md](rules/regulations/rbac-regulation.md) | Права доступа по ролям |
+| [rules/regulations/rbac-regulation.md](rules/regulations/rbac-regulation.md) | Права доступа по ролям (единственный источник истины) |
 | [rules/regulations/agent-onboarding-regulation.md](rules/regulations/agent-onboarding-regulation.md) | Pre-flight checklist |
 | [memory/current-context-global.md](memory/current-context-global.md) | Текущее состояние workspace |
+| [memory/handshake.md](memory/handshake.md) | Рукопожатие между сессиями Assistant |
+| [memory/handshake-assistant.md](memory/handshake-assistant.md) | Оперативный контекст Comet |
 | [memory/semantic-context-global.md](memory/semantic-context-global.md) | База знаний (entity-centric, RAG) |
 | [agents/_template/](agents/_template/) | L0–L4 шаблоны агентов |
+| [docs/ecosystem-noadmin/explanation/comet-assistant-capabilities.md](docs/ecosystem-noadmin/explanation/comet-assistant-capabilities.md) | Capabilities Comet — для команды |
 
 ---
 
