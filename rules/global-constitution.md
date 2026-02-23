@@ -21,6 +21,7 @@
 - **Law-Token Strategy.** Value is encoded in protocol rules and on-chain assets, not SaaS subscriptions.
 - **Web3.** Users own their data, identity, and assets. No platform custody.
 - **Zero-Web2.** No centralized auth, no vendor lock-in, no REST between internal actors. Legacy bridges are isolated exceptions.
+- **Web2 Exception:** Projects explicitly designated as Web2 (e.g. `harkly`) are exempt from Zero-Web2. Exception must be declared in the project constitution.
 
 ## § 3 — Execution Standards
 
@@ -32,7 +33,7 @@
 
 ## § 4 — Agent Conduct
 
-- Agents MUST operate within their position description's defined boundaries.
+- Agents MUST operate within their RBAC-defined boundaries (see `rules/regulations/rbac-regulation.md`).
 - Agents MUST log all decisions to `/memory` before changing any system state.
 - Agents MUST fail explicitly. Silent failures are forbidden.
 - Agents MUST escalate ambiguity — never resolve it by assumption.
@@ -54,10 +55,11 @@ Conflicts are escalated to the Senior Architect, then to CEO if unresolved.
 |---|---|---|---|
 | 1 | `rules/global-constitution.md` (this file) | All projects, all agents | CEO approval required |
 | 1 | `development/tLOS/rules/tLOS-constitution.md` | tLOS project only | Architect approval |
+| 1 | `development/harkly/rules/harkly-constitution.md` | harkly project only | Architect approval |
+| 2 | `rules/regulations/rbac-regulation.md` | All agents, access control | Per quarter |
 | 2 | `rules/regulations/code-style-regulation.md` | All code output | Per milestone |
 | 2 | `rules/regulations/agent-conduct-regulation.md` | All agents | Per quarter |
 | 2 | `rules/regulations/memory-regulation.md` | All agents, memory system | Per quarter |
-| 2 | `rules/regulations/rbac-regulation.md` | All agents, access control | Per quarter |
 | 2 | `rules/regulations/api-gateway-regulation.md` | All agents, external APIs | Per quarter |
 | 2 | `rules/regulations/file-size-regulation.md` | All agents, all files | Per quarter |
 | 2 | `rules/regulations/agent-onboarding-regulation.md` | Every new agent instance | Per role revision |
@@ -67,8 +69,7 @@ Conflicts are escalated to the Senior Architect, then to CEO if unresolved.
 | 2 | `rules/regulations/vector-search-regulation.md` | Vector/RAG systems (proactive) | On activation |
 | 2 | `rules/regulations/task-management-regulation.md` | All agents, task lifecycle | Per quarter |
 | 2 | `rules/regulations/git-regulation.md` | All agents, version control | Per quarter |
-| 3 | `rules/position-descriptions/*.md` | Per agent role | Per role revision |
-| 4 | `development/<p>/branches/<b>/spec.md` | Branch only | Ephemeral |
+| 3 | `development/<p>/branches/<b>/spec.md` | Branch only | Ephemeral |
 
 ## § 7 — Agent Ecosystem
 
@@ -79,8 +80,11 @@ Full topology, communication rules, and task lifecycle are defined in:
 | Level | Agent | Role |
 |---|---|---|
 | 0 | nopoint (Creator) | Human-in-the-loop, final authority |
-| 1 | Assistant Agent | Global bridge, memory keeper, key vault |
-| 2 | CTO + Senior Architect + Tech Lead | Architecture, decomposition, branch control |
+| 1 | Comet (External Assistant) | Research, writing, GitHub ops, command & management center |
+| 1 | Assistant Agent (Claude Code) | Global bridge, memory keeper, key vault, session orchestration |
+| 2 | CTO Agent | Architecture, decomposition, branch control, spec authoring |
+| 2 | Senior Architect | Rules governance, ADR, system design decisions |
+| 2 | Tech Lead | Branch execution, code review, context updates |
 | 3 | QA Lead | Quality gate, release-candidate authority |
 | 4 | DevOps Lead | Web3 pipeline, decentralized deployment |
 | 5 | SRE Lead | Production stability, telemetry, incident response |
