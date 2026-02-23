@@ -1,0 +1,40 @@
+# STANDARD 2026: Default-Deny, Airgapped Rust Compiler Environment
+# Security layers (defense-in-depth):
+#   1. Non-root user (agent_builder)
+#   2. no-new-privileges — prevents setuid escalation via execve (see seccomp comment)
+#   3. Seccomp profile — network blocked, ptrace killed, execve audited
+#   4. Runtime: --network=none, --read-only rootfs, --tmpfs /tmp
+# Run command:
+#   docker run --rm \
+#     --network=none \
+#     --read-only \
+#     --tmpfs /tmp:rw,noexec,nosuid,size=256m \
+#     --security-opt no-new-privileges \
+#     --security-opt seccomp=seccomp-profile.json \
+#     --cap-drop ALL \
+#     -v $(pwd):/workspace:rw \
+#     rust-compiler-env <cargo args>
+
+FROM rust:1.85-slim-bookworm AS builder
+
+# 1. Minimal build dependencies (lld: fast linker, clang: wasm32 support)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    lld \
+    clang \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Wasm targets (tLOS core requirement per tLOS-constitution.md §2)
+RUN rustup target add wasm32-wasip2
+RUN rustup component add clippy rustfmt
+
+# 3. Non-root user — all agent_builder processes run without elevated caps
+RUN useradd -m -s /bin/false agent_builder
+WORKDIR /workspace
+RUN chown agent_builder:agent_builder /workspace
+
+# 4. Drop to non-root before entrypoint
+USER agent_builder
+
+# Entrypoint piped by cargo-mcp-rust (tools/mcp-servers/cargo-mcp-rust)
+ENTRYPOINT ["cargo"]
+CMD ["--version"]

@@ -1,0 +1,80 @@
+{
+    "mcp_version": "2025-03-26",
+    "agent_role": "[REPLACE_WITH_ROLE]",
+    "project": "[REPLACE_WITH_PROJECT]",
+    "allowed_tools": [
+        {
+            "name": "fs_read",
+            "scope": "/nospace/development/{project}/branches/{active_branch}/**",
+            "note": "Expand scope for Lead-level agents per RBAC role registry",
+            "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false
+            }
+        },
+        {
+            "name": "fs_write",
+            "scope": "/nospace/development/{project}/branches/{active_branch}/**",
+            "annotations": {
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": false
+            }
+        },
+        {
+            "name": "query_codebase",
+            "description": "Dynamically queries the live codebase for interfaces, types, and patterns. Preferred over reading semantic-context.md.",
+            "scope": "/nospace/development/{project}/**",
+            "annotations": {
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false
+            }
+        },
+        {
+            "name": "api_call",
+            "description": "All external API calls. Routes through /tools/api-gateway. Agent never sees raw keys.",
+            "requires_session_token": true,
+            "annotations": {
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": true,
+                "note": "openWorldHint=true because it reaches external services"
+            }
+        },
+        {
+            "name": "handoff_to_lead",
+            "description": "Signal task completion (DONE) or permanent block (BLOCKED) to the supervising Lead agent.",
+            "allowed_statuses": [
+                "DONE",
+                "BLOCKED",
+                "NEEDS_CLARIFICATION"
+            ],
+            "annotations": {
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": false
+            }
+        },
+        {
+            "name": "run_verification_gate",
+            "description": "Executes the verification command from spec.md and returns pass/fail.",
+            "scope": "active_branch_only",
+            "annotations": {
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "note": "Runs in sandbox — no host execution"
+            }
+        }
+    ],
+    "blocked_tools": [
+        "execute_shell",
+        "git_push",
+        "internet_search",
+        "direct_db_write",
+        "read_private_knowledge"
+    ],
+    "note_for_leads": "Add tools: merge_to_semantic, trigger_consolidation, request_deploy_token"
+}

@@ -1,0 +1,56 @@
+# APPROVAL MATRIX: Human-in-the-Loop (HitL) Secrets Policy
+# Evaluated by: Assistant Agent
+# Scope: All requests for secrets from /private_knowledge/context/longterm/
+---
+
+roles:
+  # ---------------------------------------------------------
+  # DEVOPS LEAD
+  # ---------------------------------------------------------
+  devops-lead:
+    allowed_secrets:
+      - secret_id: "web3-seed-phrases.enc"
+        purpose: "Deploying tLOS core updates to Mainnet"
+        requires_human_approval: true
+        human_prompt: "DevOps Lead is requesting Mainnet deploy keys. Confirm?"
+        max_duration_minutes: 15
+        injection_target_mcp: "web3-dstorage-mcp"
+      
+      - secret_id: "cloudflare-root.env"
+        purpose: "Updating DNS/CDN caching rules"
+        requires_human_approval: false
+        max_duration_minutes: 5
+        injection_target_mcp: "cloudflare-mcp"
+
+  # ---------------------------------------------------------
+  # QA LEAD (Hackers QA)
+  # ---------------------------------------------------------
+  qa-lead:
+    allowed_secrets:
+      - secret_id: "neon-db-staging.env"
+        purpose: "Running destructive chaos-engineering tests on Staging"
+        requires_human_approval: false
+        max_duration_minutes: 60
+        injection_target_mcp: "neon-db-mcp"
+        
+      # QA CAN NEVER ACCESS MAINNET SECRETS
+
+  # ---------------------------------------------------------
+  # CTO AGENT
+  # ---------------------------------------------------------
+  cto:
+    allowed_secrets:
+      - secret_id: "github-admin-token.enc"
+        purpose: "Merging PRs, creating repositories, managing Webhooks"
+        requires_human_approval: true
+        human_prompt: "CTO requests GitHub Admin Token for repository management. Confirm?"
+        max_duration_minutes: 30
+        injection_target_mcp: "github-mcp"
+
+# ---------------------------------------------------------
+# GLOBAL RULES
+# ---------------------------------------------------------
+global_constraints:
+  - "NEVER dump secrets into markdown files (scratchpad.md, log-raw.md)"
+  - "Secrets MUST only be injected directly into MCP temp-tokens"
+  - "Assistant MUST revoke (delete) the temp-token immediately after max_duration_minutes"

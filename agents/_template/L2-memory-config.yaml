@@ -1,0 +1,34 @@
+# L2 — MEMORY CONFIGURATION
+# Controls what the agent can hold in context and how it retrieves knowledge.
+---
+
+working_memory:
+  max_lines: 400               # Мягкий потолок для scratchpad (см. file-size-regulation.md)
+  allowed_files:
+    - "/development/{project}/branches/{active_branch}/scratchpad.md"
+    - "/development/{project}/branches/{active_branch}/spec.md"
+  strategy: "overwrite"        # Перезаписывать старые мысли, не копить
+
+semantic_memory:
+  access_level: "read-only"    # Только Leads имеют право на запись
+  retrieval_method: "grep"     # Для файлов < 300 строк; переключить на "vector_search" при > 300
+  allowed_files:
+    - "/development/{project}/memory/semantic-context-{project}.md"
+
+episodic_memory:
+  access_level: "none"         # Swarm-агентам история проекта не нужна
+  # Lead-агентам: "read-only"
+
+global_memory:
+  access_level: "none"         # Swarm не читает глобальный контекст (токен-экономия)
+  # Lead-агентам: "read-only"
+
+query_codebase_tool:
+  enabled: true
+  scope: "/development/{project}/**"
+  use_instead_of: "full_semantic_file_read"  # При поиске конкретного интерфейса/типа
+
+file_size_alerts:
+  check_before_read: true      # Проверять размер файла перед чтением (см. file-size-regulation.md)
+  soft_limit_action: "warn_in_scratchpad"
+  hard_limit_action: "stop_and_escalate"

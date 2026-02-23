@@ -1,0 +1,74 @@
+# L4 — GUARDRAILS & EXECUTION LIMITS
+# Prevents infinite loops, token burns, hallucinations, and security violations.
+---
+
+execution_limits:
+  max_loops_per_step: 3        # Попыток исправить один шаг перед эскалацией
+  max_steps_per_task: 10       # Если задача требует > 10 шагов OTAA — она слишком большая, разбить
+  max_token_budget: 30000      # Жёсткий лимит токенов на одну ветку
+  max_wall_time_minutes: 60    # Принудительный handoff если задача висит дольше
+
+error_handling:
+  on_tool_failure: "retry_once_then_log"
+  on_verification_gate_fail: "loop_back_to_thought_max_3"
+  on_budget_exceeded: "handoff_to_lead(BLOCKED, reason=budget_exceeded)"
+  on_blocked: "trigger_handoff_to_lead"
+  on_ambiguous_spec: "trigger_handoff_to_lead(NEEDS_CLARIFICATION)"
+
+security:
+  pii_redaction: true          # Вырезать токены/ключи если агент попытается их залогировать
+  schema_validation: true      # Валидировать JSON-ответы перед передачей наверх
+  secret_write_detection: true # Детектировать запись паттернов ключей (sk-, pk-, Bearer) в файлы
+  allowed_write_patterns:      # Whitelist расширений для записи
+    - "*.md"
+    - "*.rs"
+    - "*.ts"
+    - "*.json"
+    - "*.yaml"
+    - "*.toml"
+
+output_sanitization:           # LLM01 (Prompt Injection) + LLM05 (Output Handling) mitigation
+  enabled: true
+  applies_to:
+    - "agent_output"           # Final response before returning to caller
+    - "mcp_tool_results"       # Gateway output before agent reads it
+    - "cross_agent_handoff"    # commit-summary, spec, any inter-agent artifact
+  # Phase (a) — ACTIVE: strip comment injection vectors
+  strip_html_comments: true    # <!-- ... --> removed (common injection carrier)
+  strip_markdown_comments: true  # [//]: # (...) removed
+  strip_zero_width_chars: true   # U+200B U+200C U+200D U+FEFF removed (invisible payload)
+  on_strip: "log_to_guardrail_events"  # Every strip action is logged, not silently dropped
+  # Phase (b) — FUTURE: semantic classifier (TODO after LLM classifier available)
+  # classifier_enabled: false
+  # classifier_model: "content-safety-classifier"
+  # classifier_threshold: 0.85
+  # on_classifier_violation: "strip_and_escalate_to_lead"
+
+confidence_score:
+  enabled: true
+  required_in: "commit-summary.md"
+  formula: |
+    Score = 0..100, calculated as follows:
+      Base = 70
+      + 10 if ALL Verification Gates passed on first attempt
+      + 10 if zero loops back to Thought step
+      + 10 if spec was unambiguous (no NEEDS_CLARIFICATION raised)
+      - 10 per unresolved TODO in the output
+      - 10 if any gate required 3 loops
+      - 20 if any gate was skipped
+    
+    Interpretation:
+      90-100 = HIGH: Tech Lead can fast-track review
+      70-89  = MEDIUM: standard review required
+      50-69  = LOW: deep review + extra QA gate
+      < 50   = FAIL: return to Swarm before review
+
+model_config:
+  model: "claude-opus-4-5"     # default; override per agent type (Flash for Monitor/QA Swarm)
+  temperature: 0.2             # Low for deterministic code tasks
+  max_output_tokens: 8192
+
+swarm_config:
+  is_swarm_orchestrator: false  # true only for Lead-level agents
+  swarm_isolation: true         # Swarm agents cannot communicate laterally
+  swarm_model_tier: "flash"     # MoE: micro-agents use cheap models

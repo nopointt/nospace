@@ -1,0 +1,46 @@
+# SRE THRESHOLDS: P2P NETWORK HEALTH
+# Used by: SRE Lead & Monitor Swarm (Flash-tier agents)
+# Trigger: Real-time telemetry monitoring
+---
+
+network_health:
+  ping_latency_ms:
+    warning: 150
+    critical: 500
+    action_critical: "Log P1, alert DevOps Lead to check gateways"
+  
+  block_propagation_ms:
+    warning: 800
+    critical: 2000
+    action_critical: "Log P0, trigger netsplit-checker-agent"
+
+  peer_drop_rate_percent_per_minute:
+    warning: 5
+    critical: 15
+    action_critical: "Log P0, initiate Emergency Hold on deployments"
+
+node_health:
+  memory_leak_growth_mb_per_hour:
+    warning: 50
+    critical: 200
+    action_critical: "Alert Tech Lead to parse profiler dumps"
+    
+  rust_panics_per_hour:
+    warning: 1
+    critical: 5
+    action_critical: "Log P0, halt pull-manifest updates"
+
+mempool:
+  queue_size_tx:
+    warning: 50000
+    critical: 150000
+    action_critical: "Activate Breakers QA to test DDOS mitigation"
+
+# Action Definition Matrix
+actions:
+  "Log P1":
+    - Write to `/memory/logs/system/telemetry-alerts.md`
+    - Do not wake CTO.
+  "Log P0":
+    - Write to `/memory/current-context-global.md`
+    - Wake CTO and nopoint IMMEDIATELY via Assistant.

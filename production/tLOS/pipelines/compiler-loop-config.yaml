@@ -1,0 +1,37 @@
+# COMPILER-IN-THE-LOOP CONFIGURATION
+# Pipeline: Agentic CI/CD 2026
+# Engine: Rust Borrow Checker + AI Resolution
+---
+
+policy:
+  mode: "autonomous_resolution"
+  max_loop_iterations: 5          # Сколько раз пытаться чинить код до эскалации Tech Lead'у
+  timeout_per_loop_ms: 60000      # 1 минута на компиляцию и генерацию патча
+
+triggers:
+  - compile_error_E0382: "use of moved value"
+  - compile_error_E0499: "cannot borrow as mutable more than once at a time"
+  - compile_error_E0502: "cannot borrow as immutable because it is also borrowed as mutable"
+  - compile_error_E0597: "does not live long enough"
+  - clippy_warning_denied: "deny(clippy::all)"
+
+resolution_protocol:
+  step_1: read_compiler_json
+    # Агент читает JSON-вывод rustc
+  step_2: verify_lifetimes
+    # Агент анализирует скоуп
+  step_3: generate_patch
+    # НЕДОПУСТИМО менять сигнатуру публичной функции или WIT-интерфейс
+    # ДОПУСТИМО клонировать переменные (с пометкой производительности), менять скоупы
+  step_4: apply_and_recompile
+    # Запуск cargo check && cargo clippy
+
+guardrails:
+  allow_unsafe_code: false         # AI не имеет права чинить ошибки через block `unsafe {}`
+  allow_clone_trait: true          # Если borrow checker непробиваем
+  log_every_attempt: true          # Писать в /memory/logs/system/compiler-loops-{date}.md
+
+escalation:
+  condition: "loop_iterations >= max_loop_iterations OR public_signature_change_required"
+  action: "handoff_to_tech_lead"
+  artifact: "compiler-panic-report.md"

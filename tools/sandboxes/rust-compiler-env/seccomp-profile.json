@@ -1,0 +1,62 @@
+{
+    "defaultAction": "SCMP_ACT_ERRNO",
+    "architectures": [
+        "SCMP_ARCH_X86_64",
+        "SCMP_ARCH_AARCH64"
+    ],
+    "syscalls": [
+        {
+            "names": [
+                "read",
+                "write",
+                "openat",
+                "close",
+                "stat",
+                "fstat",
+                "lseek",
+                "mmap",
+                "mprotect",
+                "munmap",
+                "brk",
+                "rt_sigaction",
+                "rt_sigprocmask",
+                "rt_sigreturn",
+                "ioctl",
+                "pread64",
+                "pwrite64",
+                "readv",
+                "writev",
+                "exit",
+                "exit_group",
+                "futex",
+                "clone"
+            ],
+            "action": "SCMP_ACT_ALLOW"
+        },
+        {
+            "names": ["execve"],
+            "action": "SCMP_ACT_ALLOW",
+            "comment": "INTENTIONAL: rustc calls system linker (lld/ld) and wasm-opt via execve. Mitigations: (1) no-new-privileges in Dockerfile, (2) non-root UID agent_builder, (3) network=none at runtime, (4) volume mount limited to /workspace. See ADR-003 when created."
+        },
+        {
+            "names": [
+                "socket",
+                "connect",
+                "accept",
+                "bind",
+                "listen"
+            ],
+            "action": "SCMP_ACT_ERRNO",
+            "comment": "NETWORK IS STRICTLY BLOCKED AT KERNEL LEVEL"
+        },
+        {
+            "names": [
+                "ptrace",
+                "process_vm_readv",
+                "process_vm_writev"
+            ],
+            "action": "SCMP_ACT_KILL",
+            "comment": "ANTI-DEBUG/INJECTION ATTEMPTS ARE KILLED"
+        }
+    ]
+}

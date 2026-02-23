@@ -1,0 +1,64 @@
+{
+    "mcp_version": "2026",
+    "server_name": "cargo-mcp-rust",
+    "description": "Управление компиляцией Rust-проектов через изолированные песочницы. Позволяет агентам запускать сборочные пайплайны без доступа к хост-ОС.",
+    "entrypoint": "cargo run --release",
+    "capabilities": {
+        "dynamic_tool_discovery": true,
+        "sandboxed_execution": true
+    },
+    "tools": [
+        {
+            "name": "build_target",
+            "description": "Скомпилировать Rust проект в Wasm или Native",
+            "input_schema": {
+                "target": {
+                    "type": "string",
+                    "enum": [
+                        "wasm32-wasip2",
+                        "x86_64-unknown-linux-gnu"
+                    ],
+                    "required": true
+                },
+                "release": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        {
+            "name": "run_clippy",
+            "description": "Запустить линтер для проверки кода",
+            "input_schema": {
+                "strict": {
+                    "type": "boolean",
+                    "default": true
+                }
+            }
+        },
+        {
+            "name": "run_tests",
+            "description": "Запустить unit и интеграционные тесты",
+            "input_schema": {
+                "module": {
+                    "type": "string",
+                    "description": "Опциональное имя модуля для точечного запуска"
+                }
+            }
+        }
+    ],
+    "execution_environment": {
+        "engine": "docker",
+        "image": "tlos-rust-compiler-env:latest",
+        "sandbox_profile": "/noadmin/tools/sandboxes/rust-compiler-env/seccomp-profile.json",
+        "network": "none"
+    },
+    "access_control": {
+        "allowed_roles": [
+            "senior-coder",
+            "tech-lead",
+            "devops-lead"
+        ],
+        "requires_auth_gate": false
+    }
+}

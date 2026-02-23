@@ -1,0 +1,70 @@
+{
+    "mcp_version": "2026",
+    "server_name": "query_codebase",
+    "description": "Динамический RAG-индексатор. Позволяет агентам запрашивать живой код напрямую вместо чтения устаревшей документации. Реализует парадигму Federation Over Embeddings.",
+    "entrypoint": "/tools/scripts/query_codebase.py",
+    "capabilities": {
+        "semantic_search": {
+            "description": "Поиск по смыслу: 'WIT interface for actor lifecycle'",
+            "method": "vector_similarity",
+            "fallback": "grep_exact"
+        },
+        "symbol_lookup": {
+            "description": "Точный поиск типа, функции, трейта по имени",
+            "method": "ast_parse"
+        },
+        "pattern_search": {
+            "description": "Поиск паттерна использования: 'all places where NatsClient is instantiated'",
+            "method": "grep_regex"
+        }
+    },
+    "input_schema": {
+        "query": {
+            "type": "string",
+            "description": "Вопрос или описание того, что нужно найти в кодовой базе",
+            "required": true
+        },
+        "scope": {
+            "type": "string",
+            "description": "Glob-паттерн для ограничения поиска. Например: '/development/tLOS/kernel/**/*.rs'",
+            "required": false,
+            "default": "/development/{project}/**"
+        },
+        "result_format": {
+            "type": "string",
+            "enum": [
+                "snippet",
+                "file_list",
+                "summary"
+            ],
+            "default": "snippet"
+        }
+    },
+    "output_schema": {
+        "results": [
+            {
+                "file": "string (relative path)",
+                "line_range": "string (e.g. '42-88')",
+                "content": "string (relevant code snippet)",
+                "relevance_score": "float 0-1"
+            }
+        ],
+        "total_found": "integer",
+        "query_time_ms": "integer"
+    },
+    "access_control": {
+        "allowed_roles": [
+            "senior-coder",
+            "tech-lead",
+            "cto",
+            "qa-lead",
+            "senior-architect"
+        ],
+        "read_only": true,
+        "note": "Инструмент только для чтения. Запись через fs_write, не через этот сервер."
+    },
+    "usage_rule": "PREFER over reading semantic-context.md for specific interface/type lookups. Use semantic-context only for high-level project entity understanding.",
+    "implementation_status": "planned",
+    "activate_at": "Alpha",
+    "note": "До активации агенты используют grep + exact match как fallback."
+}
