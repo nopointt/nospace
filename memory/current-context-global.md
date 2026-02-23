@@ -8,26 +8,29 @@
 
 | Epic ID | Project | Description | Status | Owner Agent |
 |---|---|---|---|---|
-| — | — | — | — | — |
+| HARKLY-01 | harkly | Desktop migration to nospace + investor pitch | in-progress | Assistant |
+| HARKLY-02 | harkly | npm install + test scraper run | pending | Assistant |
 
 ## Global State
 
 | Key | Value | Last Updated |
 |---|---|---|
-| workspace_phase | scaffolding | 2026-02-23 |
+| workspace_phase | scaffolding → active-dev | 2026-02-23 |
 | active_projects | tLOS, harkly | 2026-02-23 |
-| active_agents | assistant (Claude Code, L1), comet (Perplexity, L1), cto (Claude Code, L2) | 2026-02-23 |
+| active_agents | assistant (Claude Code, L2/CTO), comet (Perplexity, L1), nopoint (human CEO) | 2026-02-23 |
 
 ## Blockers
 
 | Blocker | Affects | Raised | Resolution |
 |---|---|---|---|
-| OPS-TODO-01: encrypt .env files with age | private_knowledge | 2026-02-22 | Requires nopoint action |
-| /agents/* folders not pushed | agents/ | 2026-02-23 | Assistant: run /sync |
+| OPS-TODO-01: encrypt cloudflare-root.env + neon-db-master.env with age | security | 2026-02-22 | nopoint action required |
+| /agents/* folders not pushed to repo | agents/ | 2026-02-23 | Assistant: run /sync, verify agents/ not in .gitignore |
+| harkly investor pitch: refine for specific investor | HARKLY-01 | 2026-02-23 | nopoint to provide investor details |
+| Claude ↔ Comet async channel: format not decided | ecosystem | 2026-02-23 | nopoint decision |
 
 ## Last Consolidation
 
-- **Reviewer Run:** —
+- **Reviewer Run:** Comet RBAC audit 2026-02-23 (removed position-descriptions, added comet role, updated constitution)
 - **Entities Merged:** —
 - **Next Scheduled Run:** every 10 commits or weekly, whichever comes first
 

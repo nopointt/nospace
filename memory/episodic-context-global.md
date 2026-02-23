@@ -47,4 +47,51 @@
 
 ---
 
+---
+## Session 2026-02-23 — Git setup, harkly migration, Comet sync infrastructure
+
+**Decisions:**
+- Repo switched private → memory/ now tracked in git for Comet sync
+- harkly migration scope: desktop only (API deferred to next stage)
+- Investor pitch: 3 UX/UI scenarios (SaaS Dashboard / API-product / White-Label), $3–5K seed ask with profit share model
+- /sync = bidirectional: pull Comet changes → push local state via handshake-assistant.md
+- Comet (Perplexity) confirmed as external AI assistant with full GitHub read/write; async inbox = Issues with `comet` label or memory/ files
+
+**Files changed:**
+- `.gitignore` — created + updated (memory/ tracked, .archive/ tracked, selective private_knowledge exclusions)
+- `.gitattributes` — created (LF normalization)
+- `.gitmessage` — created (conventional commits template)
+- `.git/hooks/pre-commit` — created + fixed (secret detection + file size; false positive fixes)
+- `.git/hooks/commit-msg` — created (format validation)
+- `rules/regulations/git-regulation.md` — created (full git protocol)
+- `rules/global-constitution.md` — §6 updated with git-regulation
+- `~/.claude/commands/startgsession.md` — created
+- `~/.claude/commands/closegsession.md` — created
+- `~/.claude/commands/sync.md` — created + fixed (git stash/pop for unstaged changes)
+- `development/harkly/` — full structure created (28 desktop source files, constitution, spec.md)
+- `development/harkly/src/desktop/package.json` — fixed (Electron + Vite + React deps)
+- `development/harkly/rules/harkly-constitution.md` — created
+- `docs/harkly/explanation/investor-pitch.md` — created
+- `docs/ecosystem-noadmin/explanation/comet-assistant-capabilities.md` — created
+- `memory/handshake-assistant.md` — created (Comet sync file, pushed to GitHub)
+
+**Tasks completed:**
+- Full git workflow: GCM, hooks, commit template, .gitattributes, git-regulation.md
+- /startgsession, /closegsession, /sync global slash commands
+- harkly desktop code migrated to nospace/development/harkly/src/desktop/ (28 files)
+- harkly investor pitch with 3 UX/UI scenarios
+- Comet capabilities documented
+- /sync tested and working (bidirectional push/pull with GitHub)
+
+**Tasks open / carried over:**
+- harkly: npm install + test scraper run — H priority, no blocker
+- harkly: refine investor pitch for specific investor — H, nopoint provides details
+- harkly: API module migration — M, deferred per nopoint
+- OPS-TODO-01: encrypt cloudflare/neon .env with age — H, nopoint manual action
+- Claude ↔ Comet async channel format — H, nopoint decision
+- tLOS: next milestone — M, awaiting nopoint direction
+
+**Risks / flags:**
+- `private_knowledge/context/longterm/` credentials unencrypted — OPS-TODO-01 critical, must resolve before any team expansion
+
 <!-- Add new entries above this line. Oldest entries at the bottom. -->
