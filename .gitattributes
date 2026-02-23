@@ -1,0 +1,23 @@
+# nospace — .gitattributes
+# Normalize line endings: LF in repo, CRLF on Windows checkout
+
+* text=auto eol=lf
+
+# Force LF for scripts and config
+*.sh    text eol=lf
+*.bash  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.json  text eol=lf
+*.toml  text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.ts    text eol=lf
+*.rs    text eol=lf
+
+# Binary files — no line-ending conversion
+*.wasm  binary
+*.png   binary
+*.jpg   binary
+*.ico   binary
+*.bin   binary

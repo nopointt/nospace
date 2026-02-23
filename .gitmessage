@@ -1,0 +1,17 @@
+# <type>: <short description> (50 chars max)
+# |<---- max 50 chars ---->|
+#
+# Types: feat | fix | refactor | docs | test | chore | perf | ci
+#
+# Body (optional, 72 chars per line):
+#
+#
+# Footer (optional):
+# Refs: #issue-number
+# BREAKING CHANGE: <description>
+#
+# Examples:
+#   feat: add JWT session identity token issuance
+#   fix: approval-router queue overflow on concurrent requests
+#   chore: update L4-guardrails output_sanitization config
+#   docs: add OWASP LLM audit report

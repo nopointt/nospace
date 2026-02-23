@@ -66,6 +66,7 @@ Conflicts are escalated to the Senior Architect, then to CEO if unresolved.
 | 2 | `rules/regulations/agent-identity-regulation.md` | All agents, identity/signing | Per quarter |
 | 2 | `rules/regulations/vector-search-regulation.md` | Vector/RAG systems (proactive) | On activation |
 | 2 | `rules/regulations/task-management-regulation.md` | All agents, task lifecycle | Per quarter |
+| 2 | `rules/regulations/git-regulation.md` | All agents, version control | Per quarter |
 | 3 | `rules/position-descriptions/*.md` | Per agent role | Per role revision |
 | 4 | `development/<p>/branches/<b>/spec.md` | Branch only | Ephemeral |
 
