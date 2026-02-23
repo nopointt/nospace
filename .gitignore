@@ -25,7 +25,7 @@ web3-seed-phrases*
 # ------------------------------------------------------------
 temp/
 data/
-memory/
+# memory/ — tracked (private repo, needed for AI assistant context sync)
 
 # ------------------------------------------------------------
 # Build Artifacts
@@ -77,17 +77,13 @@ log-raw*.md
 *.db
 
 # ------------------------------------------------------------
-# Docker
-# ------------------------------------------------------------
-.dockerignore
-
-# ------------------------------------------------------------
-# Archives (empty, but exclude if populated later)
-# ------------------------------------------------------------
-.archive/
-
-# ------------------------------------------------------------
 # Claude / AI context caches
 # ------------------------------------------------------------
 .claude/cache/
 *.jsonl
+
+# ------------------------------------------------------------
+# private_knowledge — selective exclusions
+# ------------------------------------------------------------
+private_knowledge/context/current/temp-mcp-tokens
+private_knowledge/context/current/active-sessions.json

@@ -1,0 +1,22 @@
+{
+    "agent_id": "agent-name",
+    "level": 2,
+    "position": "tech-lead",
+    "project": "tLOS",
+    "read_paths": [
+        "/nospace/development/tLOS/**"
+    ],
+    "write_paths": [
+        "/nospace/development/tLOS/branches/*/commit-summary.md",
+        "/nospace/development/tLOS/memory/current-context-tLOS.md"
+    ],
+    "forbidden_paths": [
+        "/nospace/private_knowledge/**",
+        "/nospace/rules/**",
+        "/nospace/production/**"
+    ],
+    "can_read_global_memory": false,
+    "can_request_secrets": false,
+    "swarm_orchestrator": true,
+    "swarm_isolation_enforced": true
+}

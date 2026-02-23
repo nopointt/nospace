@@ -1,0 +1,16 @@
+model: "claude-opus-4-5"   # or gemini-2.5-pro / gpt-4o / qwen3 etc.
+temperature: 0.2           # low for deterministic tasks (arch, code review)
+max_tokens: 8192
+context_window: 200000
+
+# Escalation
+max_retries: 2             # before surfacing blocker to orchestrator
+timeout_ms: 30000
+
+# Memory
+read_global_memory: false  # true only for Lead-level agents
+write_memory_tier: "project"  # global | project | branch
+
+# Swarm config (if this agent manages a swarm)
+swarm_size: 0             # 0 = not a swarm orchestrator
+swarm_isolation: true     # swarm agents cannot communicate laterally
