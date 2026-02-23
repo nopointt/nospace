@@ -1,4 +1,4 @@
-# HANDSHAKE-ASSISTANT — 2026-02-23 10:45
+# HANDSHAKE-ASSISTANT — 2026-02-23 11:30
 > Synced from nospace workspace for external AI assistant (Perplexity/Comet).
 > Repo: https://github.com/nopointt/nospace (private)
 > Entry point: /CLAUDE.md → /rules/global-constitution.md
@@ -7,7 +7,7 @@
 
 ## Current Focus
 
-Setting up nospace workspace infrastructure (git, slash commands, memory sync) and migrating harkly desktop MVP into nospace structure. Preparing investor pitch for $3–5K seed round with 3 UX/UI scenarios.
+Завершена инфраструктура workspace (git, slash commands, двусторонняя синхронизация с Comet). Написано приветственное сообщение от CTO к Comet — ищем канал для асинхронной коммуникации между ассистентами.
 
 ---
 
@@ -15,22 +15,22 @@ Setting up nospace workspace infrastructure (git, slash commands, memory sync) a
 
 | Project | Status | Last Action |
 |---|---|---|
-| tLOS | scaffolding — paused | pipelines + build protocol configured, OWASP security sprint complete |
-| harkly | active — migration done | desktop code migrated, investor-pitch.md created, API module pending |
+| tLOS | scaffolding — пауза | OWASP security sprint завершён, ждём следующего milestone |
+| harkly | активный | Desktop мигрирован, investor-pitch.md создан, ищем инвестора $3-5K |
 
 ---
 
 ## What Was Done Recently
 
-- Created `/sync` slash command — pushes to GitHub with handshake-assistant.md
-- Tracked `memory/` in git (repo switched to private — safe for context sync)
-- Migrated harkly desktop code to `development/harkly/src/desktop/` (28 files)
-- Created `docs/harkly/explanation/investor-pitch.md` (3 UX/UI scenarios, $3–5K investment proposal)
-- Created `/startgsession` + `/closegsession` global slash commands
-- Set up full git workflow: GCM credentials, commit-msg + pre-commit hooks, .gitmessage template, .gitattributes
-- Created `rules/regulations/git-regulation.md`
-- Completed OWASP LLM Top 10 security sprint (output_sanitization, JWT SIT, cargo audit, vector-search, etc.)
-- Created `rules/regulations/task-management-regulation.md` (GAIA levels, CLEAR framework, DoR/DoD)
+- Написано приветствие от Assistant Agent (CTO) для Comet — ждём канал связи
+- Создана `/sync` команда с двусторонней синхронизацией (git pull --rebase + push)
+- Задокументированы capabilities Comet в `docs/ecosystem-noadmin/explanation/comet-assistant-capabilities.md`
+- `memory/` директория добавлена в git (репо стал приватным) — context sync работает
+- Мигрирован desktop код harkly (28 файлов) в `development/harkly/src/desktop/`
+- Исправлен `package.json` desktop (добавлены Electron + React + Vite deps)
+- Создан `investor-pitch.md`: 3 UX/UI сценария (SaaS / API / White-Label), $3-5K proposal
+- Настроен полный git workflow: GCM, pre-commit + commit-msg hooks, .gitmessage, .gitattributes
+- Созданы `/startgsession`, `/closegsession`, `/sync` глобальные slash commands
 
 ---
 
@@ -38,31 +38,20 @@ Setting up nospace workspace infrastructure (git, slash commands, memory sync) a
 
 | Task | Priority | Blocker |
 |---|---|---|
-| harkly: npm install + test scraper run | H | — |
-| harkly: refine investor pitch (visuals, specific ask) | H | nopoint direction |
-| harkly: API module migration (nopoint/harkly/main → nospace) | M | nopoint approval |
-| harkly: Next.js frontend | M | post-investor decision |
-| OPS-TODO-01: encrypt cloudflare/neon .env with `age` | H | nopoint action required |
-| tLOS: next milestone direction | M | nopoint priority call |
+| Придумать канал коммуникации Claude ↔ Comet | H | nopoint решение |
+| harkly: npm install + тестовый запуск скрапера | H | — |
+| harkly: уточнить investor pitch под конкретного инвестора | H | nopoint |
+| harkly: API модуль (nopoint/harkly/main → nospace) | M | nopoint приоритет |
+| OPS-TODO-01: зашифровать cloudflare/neon .env через age | H | nopoint action |
+| tLOS: следующий milestone | M | nopoint direction |
 
 ---
 
-## Key Files Changed This Session
+## Key Files Changed
 
-- `memory/handshake-assistant.md` — this file (new)
-- `memory/handshake.md` — operative context for Claude sessions
-- `.gitignore` — memory/ unblocked, private_knowledge selective
-- `.git/hooks/pre-commit` — secret detection improved (no false positives)
-- `.git/hooks/commit-msg` — conventional commits validation
-- `~/.claude/commands/sync.md` — new slash command
-- `~/.claude/commands/startgsession.md` — new slash command
-- `~/.claude/commands/closegsession.md` — new slash command
-- `development/harkly/src/desktop/` — 28 source files migrated
-- `development/harkly/rules/harkly-constitution.md` — new
-- `docs/harkly/explanation/investor-pitch.md` — new
-- `rules/regulations/git-regulation.md` — new
-- `rules/regulations/task-management-regulation.md` — new
-- `rules/global-constitution.md` — updated §6 hierarchy
+- `memory/handshake-assistant.md` — этот файл (обновлён)
+- `~/.claude/commands/sync.md` — добавлен git pull --rebase (STEP 2)
+- `docs/ecosystem-noadmin/explanation/comet-assistant-capabilities.md` — новый, capabilities Comet
 
 ---
 
@@ -70,34 +59,34 @@ Setting up nospace workspace infrastructure (git, slash commands, memory sync) a
 
 **Workspace:** /nospace — AI-first multi-agent workspace
 **Tech stack:** TypeScript, Rust, Electron, React, Supabase, BullMQ
-**Active agents:** Assistant (Claude) + nopoint (human)
-**Regulations:** /rules/regulations/ (14 files)
+**Active agents:** Assistant/CTO (Claude) + nopoint (human CEO) + Comet (Perplexity, via GitHub)
+**Regulations:** /rules/regulations/ (14 файлов)
 **Constitution:** /rules/global-constitution.md
 
-**harkly:** Review scraping platform (Electron MVP + Express API)
-- Desktop: /development/harkly/src/desktop/ (Puppeteer + React + Vite + Electron)
-- Parsers: Otzovik + Irecommend (working), WB/Ozon/YM (planned)
-- RAG pipeline: chunker + cleaner + exporter (ready)
-- API: /development/harkly/src/api/ (placeholder — nopoint/harkly/main is source)
+**harkly:** Платформа сбора и AI-анализа отзывов
+- Desktop: /development/harkly/src/desktop/ (Electron + Puppeteer + React + Vite)
+- Парсеры: Отзовик + Irecommend (работают), WB/Ozon/YM (план)
+- RAG pipeline: chunker + cleaner + exporter (готов)
+- API: /development/harkly/src/api/ (заглушка, источник: nopoint/harkly/main)
 - Investor pitch: /docs/harkly/explanation/investor-pitch.md
 
-**tLOS:** The Last OS — decentralized Rust/WASM kernel
-- Production: /production/tLOS/ (Cloudflare Workers + Arweave + NATS)
-- Pipeline: pull-based GitOps (build swarm → Arweave CID → relay nodes pull)
-- Status: scaffolding phase, awaiting next development milestone
+**tLOS:** Децентрализованная ОС (Rust/WASM + Cloudflare Workers + Arweave)
+- Pipeline: pull-based GitOps через манифесты CID
+- Статус: scaffolding, OWASP security complete, следующий milestone не определён
 
-**Security:** OWASP LLM Top 10 implemented
-- JWT Session Identity Tokens, output sanitization, memory integrity hashes
-- cargo audit, image digest pinning, vector search regulation
-- Full audit: /docs/ecosystem-noadmin/explanation/owasp-llm-security-audit.md
+**Безопасность (OWASP LLM Top 10):**
+- JWT SIT, output sanitization, cargo audit, memory integrity hashes
+- Аудит: /docs/ecosystem-noadmin/explanation/owasp-llm-security-audit.md
 
 ---
 
-## For External Assistant
+## For External Assistant (Comet)
 
-To help effectively with this workspace:
-1. Read `/CLAUDE.md` first (entry point with role-based navigation)
-2. Read `/memory/current-context-global.md` (workspace state, epics, blockers)
-3. Read `/rules/global-constitution.md` (rules hierarchy — 4 levels)
-4. Read `/development/harkly/rules/harkly-constitution.md` for harkly context
-5. This file written at 2026-02-23 10:45 — check git log for newer commits
+Чтобы эффективно помогать с этим workspace:
+1. Читай `/CLAUDE.md` первым (навигация по ролям)
+2. Читай `/memory/current-context-global.md` (состояние workspace)
+3. Читай `/rules/global-constitution.md` (иерархия правил)
+4. Читай `/development/harkly/rules/harkly-constitution.md` для контекста harkly
+5. Свои изменения коммить напрямую в repo — Claude заберёт через `/sync`
+6. Для асинхронных задач — создавай Issues с меткой `comet` или пиши в `memory/`
+7. Этот файл обновлён в 2026-02-23 11:30 — проверяй git log для свежих изменений
