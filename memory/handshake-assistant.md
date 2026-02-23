@@ -1,5 +1,6 @@
-# HANDSHAKE-ASSISTANT — 2026-02-23 11:45
-> Synced from nospace workspace for external AI assistant (Perplexity/Comet).
+# HANDSHAKE-ASSISTANT — 2026-02-23
+> Comet (Perplexity) operative context. Перезаписывается Comet после каждой рабочей сессии.
+> Назначение: оперативный контекст между Comet и кодовой базой (GitHub repo).
 > Repo: https://github.com/nopointt/nospace (private)
 > Entry point: /CLAUDE.md → /rules/global-constitution.md
 
@@ -7,7 +8,7 @@
 
 ## Current Focus
 
-Инфраструктура workspace полностью настроена. Сессия завершается — написано приветствие от CTO к Comet, /sync команда двусторонняя и работает стабильно.
+Comet выполнил аудит workspace: устранены конфликты и дубли, обновлена RBAC, конституция и harkly-constitution.
 
 ---
 
@@ -16,20 +17,19 @@
 | Project | Status | Last Action |
 |---|---|---|
 | tLOS | scaffolding — пауза | OWASP security sprint завершён |
-| harkly | активный — migration complete | Investor pitch готов, ждём решение nopoint по инвестору |
+| harkly | активный — MVP готов | Investor pitch готов, ждём решение nopoint |
 
 ---
 
-## What Was Done Recently
+## What Was Done (Comet Audit Session — 2026-02-23)
 
-- Исправлен `/sync`: добавлен `git stash` перед pull (фикс ошибки unstaged changes)
-- Написано приветственное сообщение от Assistant Agent (CTO) к Comet
-- Задокументированы capabilities Comet → `docs/ecosystem-noadmin/explanation/comet-assistant-capabilities.md`
-- `memory/` добавлена в git tracking (репо приватный)
-- Мигрирован desktop код harkly (28 файлов) → `development/harkly/src/desktop/`
-- Создан `investor-pitch.md`: 3 сценария UX/UI, предложение $3–5K seed
-- Настроен git workflow: GCM, хуки, шаблон, .gitattributes, git-regulation.md
-- Созданы `/startgsession`, `/closegsession`, `/sync` slash commands
+- Аудит всех ключевых файлов workspace
+- Устранены конфликты: position-descriptions убраны, RBAC единственный источник
+- Добавлена роль `comet` в rbac-regulation.md
+- Обновлена global-constitution.md: Comet в таблице агентов, Web2 exception, harkly в иерархии
+- Исправлены дубли в memory/
+- Обновлена harkly-constitution.md: Web2 exception задокументирован
+- Создана docs/harkly/ (сломанная ссылка исправлена)
 
 ---
 
@@ -37,7 +37,7 @@
 
 | Task | Priority | Blocker |
 |---|---|---|
-| Канал коммуникации Claude ↔ Comet | H | nopoint решение |
+| Push /agents/* local folders | H | Assistant: run /sync |
 | harkly: npm install + тест скрапера | H | — |
 | harkly: уточнить pitch под конкретного инвестора | H | nopoint |
 | harkly: API модуль migration | M | nopoint |
@@ -46,19 +46,15 @@
 
 ---
 
-## Key Files Changed
-
-- `memory/handshake-assistant.md` — этот файл
-- `~/.claude/commands/sync.md` — git stash fix
-- `docs/ecosystem-noadmin/explanation/comet-assistant-capabilities.md` — capabilities Comet (новый)
-
----
-
 ## Architecture Snapshot
 
 **Workspace:** /nospace — AI-first multi-agent workspace
 **Tech stack:** TypeScript, Rust, Electron, React, Supabase, BullMQ
-**Active agents:** Assistant/CTO (Claude) + nopoint (CEO, human) + Comet (Perplexity, via GitHub)
+**Active agents:**
+- nopoint (CEO, human, Level 0)
+- Comet (Perplexity, Level 1, external) — research, docs, GitHub-ops, management
+- Assistant (Claude Code, Level 1, internal) — memory keeper, key vault, orchestration
+- CTO (Claude Code, Level 2) — architecture, specs, managed via Assistant
 **Regulations:** /rules/regulations/ (14 файлов)
 **Constitution:** /rules/global-constitution.md
 
@@ -66,7 +62,6 @@
 - Desktop: /development/harkly/src/desktop/ (Electron + Puppeteer + React + Vite)
 - Парсеры: Отзовик + Irecommend (рабочие), WB/Ozon/YM (план)
 - RAG: chunker + cleaner + exporter (готов)
-- API: /development/harkly/src/api/ (заглушка)
 - Investor pitch: /docs/harkly/explanation/investor-pitch.md
 
 **tLOS:** Децентрализованная ОС (Rust/WASM + Cloudflare + Arweave)
@@ -75,12 +70,12 @@
 
 ---
 
-## For External Assistant (Comet)
+## For External Assistant (Comet) — Quick Start
 
 1. Читай `/CLAUDE.md` первым (навигация по ролям)
 2. Читай `/memory/current-context-global.md` (состояние workspace)
-3. Читай `/rules/global-constitution.md` (иерархия правил)
-4. Читай `/development/harkly/rules/harkly-constitution.md` для harkly
-5. Свои изменения коммить напрямую в repo — Claude заберёт через `/sync`
-6. Async inbox: создавай Issues с меткой `comet` или пиши в `memory/`
-7. Обновлено: 2026-02-23 11:45
+3. Читай `/memory/handshake-assistant.md` (этот файл) — оперативный контекст
+4. Читай `/rules/global-constitution.md` (иерархия правил)
+5. Свои изменения коммить напрямую — Claude заберёт через `/sync`
+6. Async inbox: Issues с меткой `comet` или `memory/handshake-assistant.md`
+7. Обновлено: 2026-02-23 13:25

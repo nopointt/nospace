@@ -14,15 +14,16 @@
 
 | Key | Value | Last Updated |
 |---|---|---|
-| workspace_phase | scaffolding | 2026-02-22 |
-| active_projects | tLOS, harkly | 2026-02-22 |
-| active_agents | senior-architect | 2026-02-22 |
+| workspace_phase | scaffolding | 2026-02-23 |
+| active_projects | tLOS, harkly | 2026-02-23 |
+| active_agents | assistant (Claude Code, L1), comet (Perplexity, L1), cto (Claude Code, L2) | 2026-02-23 |
 
 ## Blockers
 
 | Blocker | Affects | Raised | Resolution |
 |---|---|---|---|
-| — | — | — | — |
+| OPS-TODO-01: encrypt .env files with age | private_knowledge | 2026-02-22 | Requires nopoint action |
+| /agents/* folders not pushed | agents/ | 2026-02-23 | Assistant: run /sync |
 
 ## Last Consolidation
 
