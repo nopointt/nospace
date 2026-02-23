@@ -15,7 +15,20 @@
 - White-label B2B: агентства, бренды, enterprise
 - Инвестиционная модель: $3–5K seed → % от прибыли
 
-## § 2 — Module Structure
+## § 2 — Web2 Exception (CEO Decision — 2026-02-23)
+
+> **harkly является Web2 проектом** — явное исключение из `global-constitution.md § 2 Zero-Web2`.
+
+Обоснование: harkly — B2B SaaS-продукт, ориентированный на e-commerce рынок. Целевая аудитория (агентства, бренды) работает в традиционной Web2-среде. Web3-подход снизит UX и замедлит time-to-market.
+
+Разрешенные Web2-паттерны в harkly:
+- REST API (Express / Node.js)
+- Centralized auth (Supabase Auth + JWT)
+- Managed database (Supabase PostgreSQL)
+- Managed queue (BullMQ + Upstash Redis)
+- Managed hosting (Render.com)
+
+## § 3 — Module Structure
 
 ```
 development/harkly/
@@ -27,7 +40,7 @@ development/harkly/
 └── docs/          — Ссылка на /docs/harkly/
 ```
 
-## § 3 — Tech Stack
+## § 4 — Tech Stack
 
 | Layer | Desktop (current) | API (next) |
 |---|---|---|
@@ -39,7 +52,7 @@ development/harkly/
 | Auth | — | Supabase Auth + JWT |
 | Deploy | Local | Render.com |
 
-## § 4 — Execution Standards
+## § 5 — Execution Standards
 
 - Код НЕ мутирует существующие объекты (immutable patterns)
 - Файлы ≤ 800 строк, функции ≤ 50 строк
@@ -47,7 +60,7 @@ development/harkly/
 - Секреты только через `.env` — никаких хардкодов
 - PR обязателен для слияния в `main` (агенты не пушат напрямую)
 
-## § 5 — Data Sources Priority
+## § 6 — Data Sources Priority
 
 | Source | Status | Complexity |
 |---|---|---|
@@ -57,7 +70,7 @@ development/harkly/
 | Ozon | ⏳ Planned | High |
 | Яндекс.Маркет | ⏳ Planned | High |
 
-## § 6 — Investor Context
+## § 7 — Investor Context
 
 Текущая стадия: **seed / MVP validation**
 Целевые инвестиции: $3,000–5,000 (first round)
