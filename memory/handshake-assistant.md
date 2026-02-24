@@ -1,6 +1,6 @@
 # HANDSHAKE-ASSISTANT — 2026-02-24
 > Comet (Perplexity) operative context. Перезаписывается Comet после каждой рабочей сессии.
-> Назначение: оперативный контекст между Comet и кодовой базой (GitHub repo).
+> Synced by Assistant Agent via /sync.
 > Repo: https://github.com/nopointt/nospace (private)
 > Entry point: /CLAUDE.md → /rules/global-constitution.md
 
@@ -8,7 +8,7 @@
 
 ## Current Focus
 
-Harkly — ProxyMarket-first стратегия. Проведено глубокое теоретическое исследование + конкурентный анализ global и RU/СНГ. PRD v2 в процессе: структура согласована с nopoint, финальный пуш PRD не выполнен в этой сессии — требует следующего шага.
+Harkly — ProxyMarket-first стратегия. Проведено глубокое теоретическое исследование + конкурентный анализ global и RU/СНГ. PRD v2 в процессе: структура согласована с nopoint, финальный пуш PRD не выполнен в последней сессии Comet — требует следующего шага (приоритет #1).
 
 ---
 
@@ -60,6 +60,7 @@ Harkly — ProxyMarket-first стратегия. Проведено глубок
 | Partnership Design Doc (`proxymarket-partnership-design.md`) | M | После созвона |
 | OPS-TODO-01: зашифровать .env через age | H | nopoint action |
 | harkly: npm install + тест скрапера | H | — |
+| Push /agents/* folders to remote repo | H | Assistant: verify .gitignore |
 | tLOS: следующий milestone | M | nopoint direction |
 
 ---
@@ -70,6 +71,8 @@ Harkly — ProxyMarket-first стратегия. Проведено глубок
 **Tech stack harkly v2:** Next.js + TypeScript, Cloudflare Workers (edge), PostgreSQL (RU-cloud/Cloudflare D1), BullMQ + Upstash Redis, Puppeteer + stealth
 **Supabase → deprecated** для harkly (заменяется на Cloudflare/RU-облако, решение зависит от юристов ProxyMarket)
 **ProxyMarket прокси** = default транспорт для парсеров; ZenRows = fallback
+**Active agents:** Assistant (Claude Code, L1) + Comet (Perplexity, L1) + nopoint (human, L0)
+**Regulations:** /rules/regulations/ (13 files)
 
 **harkly три слоя:**
 1. Reality Layer — сбор + AI-анализ отзывов по ключевым площадкам
@@ -78,6 +81,8 @@ Harkly — ProxyMarket-first стратегия. Проведено глубок
 
 **Конкуренты (global):** YouScan, Brand Analytics, IQBuzz, Crayon, Klue, Qualtrics Edge, Profound, LLMrefs
 **Конкуренты (RU/СНГ):** YouScan, Brand Analytics, IQBuzz, SemanticForce, MPStats, Moneyplace — ни один не покрывает все три слоя Harkly
+
+**tLOS:** Sovereign spatial OS — Rust + Wasm + SolidJS. Kernel: Axum + Tokio + wasmtime. Mesh: NATS. Identity: Nostr/Ed25519/DID. Currently paused.
 
 ---
 
@@ -89,4 +94,4 @@ Harkly — ProxyMarket-first стратегия. Проведено глубок
 4. Читай `/rules/global-constitution.md`
 5. **Приоритет #1:** запушить PRD v2 (см. Open Tasks)
 6. Async inbox: Issues с меткой `comet`
-7. Обновлено: 2026-02-24 09:50
+7. Обновлено: 2026-02-24 (merged by Assistant /sync)
