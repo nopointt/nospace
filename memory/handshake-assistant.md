@@ -1,4 +1,4 @@
-# HANDSHAKE-ASSISTANT — 2026-02-23
+# HANDSHAKE-ASSISTANT — 2026-02-24
 > Comet (Perplexity) operative context. Перезаписывается Comet после каждой рабочей сессии.
 > Назначение: оперативный контекст между Comet и кодовой базой (GitHub repo).
 > Repo: https://github.com/nopointt/nospace (private)
@@ -8,7 +8,7 @@
 
 ## Current Focus
 
-Comet выполнил аудит workspace: устранены конфликты и дубли, обновлена RBAC, конституция и harkly-constitution.
+Harkly — ProxyMarket-first стратегия. Проведено глубокое теоретическое исследование + конкурентный анализ global и RU/СНГ. PRD v2 в процессе: структура согласована с nopoint, финальный пуш PRD не выполнен в этой сессии — требует следующего шага.
 
 ---
 
@@ -16,20 +16,35 @@ Comet выполнил аудит workspace: устранены конфликт
 
 | Project | Status | Last Action |
 |---|---|---|
-| tLOS | scaffolding — пауза | OWASP security sprint завершён |
-| harkly | активный — MVP готов | Investor pitch готов, ждём решение nopoint |
+| tLOS | scaffolding — пауза | без изменений |
+| harkly | активный — pre-pilot ProxyMarket | Конкурентный анализ, product brief, PRD v2 draft (не запушен) |
 
 ---
 
-## What Was Done (Comet Audit Session — 2026-02-23)
+## What Was Done (Comet Session — 2026-02-24)
 
-- Аудит всех ключевых файлов workspace
-- Устранены конфликты: position-descriptions убраны, RBAC единственный источник
-- Добавлена роль `comet` в rbac-regulation.md
-- Обновлена global-constitution.md: Comet в таблице агентов, Web2 exception, harkly в иерархии
-- Исправлены дубли в memory/
-- Обновлена harkly-constitution.md: Web2 exception задокументирован
-- Создана docs/harkly/ (сломанная ссылка исправлена)
+### Исследования
+- Проведено глубокое теоретическое исследование по 8 темам: synthetic consumers, silicon samples, Homo silicus, AI brand sentiment, continuous intelligence, validation science, multi-agent societies, second-order guardrails
+- Построены три горизонта Harkly: Завтра (3–6 мес.), середина 2026, 2030
+- Проведён конкурентный анализ RU/СНГ (SERM/ORM, маркетплейс-аналитика, synthetic research, AIEO/GEO)
+
+### Артефакты в репо
+- `docs/harkly/research/competitive-landscape-global-ru-2026-02.md` — создан (global + RU/СНГ competitive analysis)
+- `docs/harkly/product-brief-v1.md` — создан ранее (не в этой сессии, подтверждён)
+- `docs/harkly/explanation/prd-horizon-1.md` — **НЕ обновлён**, остаётся v1.1 (см. Open Tasks)
+
+### Ключевые решения от nopoint
+- Монетизация H1: 2 запроса free → $49 / $149 / $499 тарифы
+- ProxyMarket: Hybrid трек (Enterprise сразу + путь к white-label)
+- Data residency: уточнять с юристами ProxyMarket
+- Calibration data: уточнять на созвоне с CPO
+- OPS-TODO-01: nopoint пояснения получены (про шифрование secrets перед деплоем)
+
+### PRD v2 — статус
+- Структура согласована (13 разделов по инструкции nopoint)
+- Черновик написан в чате, одобрен по структуре
+- **Финальный пуш в `prd-horizon-1.md` НЕ выполнен** — нужно закрыть в следующей сессии
+- v1.1 (SHA: b0558ed6249f1af5d79778c84b3ccac9417bf2c4) остаётся актуальной версией в репо
 
 ---
 
@@ -37,11 +52,14 @@ Comet выполнил аудит workspace: устранены конфликт
 
 | Task | Priority | Blocker |
 |---|---|---|
-| Push /agents/* local folders | H | Assistant: run /sync |
+| Запушить PRD v2 в `docs/harkly/explanation/prd-horizon-1.md` | **CRITICAL** | — Comet action |
+| Созвон с CPO ProxyMarket | H | nopoint schedule |
+| Technical One-Pager (`docs/harkly/technical-one-pager.md`) | H | После финала PRD |
+| Solution Architecture skeleton (`docs/harkly/solution-architecture-document.md`) | M | После PRD |
+| White-label playbook update | M | После созвона |
+| Partnership Design Doc (`proxymarket-partnership-design.md`) | M | После созвона |
+| OPS-TODO-01: зашифровать .env через age | H | nopoint action |
 | harkly: npm install + тест скрапера | H | — |
-| harkly: уточнить pitch под конкретного инвестора | H | nopoint |
-| harkly: API модуль migration | M | nopoint |
-| OPS-TODO-01: зашифровать cloudflare/neon .env через age | H | nopoint action |
 | tLOS: следующий milestone | M | nopoint direction |
 
 ---
@@ -49,33 +67,26 @@ Comet выполнил аудит workspace: устранены конфликт
 ## Architecture Snapshot
 
 **Workspace:** /nospace — AI-first multi-agent workspace
-**Tech stack:** TypeScript, Rust, Electron, React, Supabase, BullMQ
-**Active agents:**
-- nopoint (CEO, human, Level 0)
-- Comet (Perplexity, Level 1, external) — research, docs, GitHub-ops, management
-- Assistant (Claude Code, Level 1, internal) — memory keeper, key vault, orchestration
-- CTO (Claude Code, Level 2) — architecture, specs, managed via Assistant
-**Regulations:** /rules/regulations/ (14 файлов)
-**Constitution:** /rules/global-constitution.md
+**Tech stack harkly v2:** Next.js + TypeScript, Cloudflare Workers (edge), PostgreSQL (RU-cloud/Cloudflare D1), BullMQ + Upstash Redis, Puppeteer + stealth
+**Supabase → deprecated** для harkly (заменяется на Cloudflare/RU-облако, решение зависит от юристов ProxyMarket)
+**ProxyMarket прокси** = default транспорт для парсеров; ZenRows = fallback
 
-**harkly:** Платформа сбора и AI-анализа отзывов с e-commerce
-- Desktop: /development/harkly/src/desktop/ (Electron + Puppeteer + React + Vite)
-- Парсеры: Отзовик + Irecommend (рабочие), WB/Ozon/YM (план)
-- RAG: chunker + cleaner + exporter (готов)
-- Investor pitch: /docs/harkly/explanation/investor-pitch.md
+**harkly три слоя:**
+1. Reality Layer — сбор + AI-анализ отзывов по ключевым площадкам
+2. Prediction Layer — Silicon Sampling / Synthetic Consumers (локализованный, RU/СНГ)
+3. AI Perception Layer — AIEO/GEO мониторинг (GPT-4o, YandexGPT, GigaChat)
 
-**tLOS:** Децентрализованная ОС (Rust/WASM + Cloudflare + Arweave)
-- Pull-based GitOps через манифесты CID
-- Статус: scaffolding, ждёт следующего milestone
+**Конкуренты (global):** YouScan, Brand Analytics, IQBuzz, Crayon, Klue, Qualtrics Edge, Profound, LLMrefs
+**Конкуренты (RU/СНГ):** YouScan, Brand Analytics, IQBuzz, SemanticForce, MPStats, Moneyplace — ни один не покрывает все три слоя Harkly
 
 ---
 
 ## For External Assistant (Comet) — Quick Start
 
-1. Читай `/CLAUDE.md` первым (навигация по ролям)
-2. Читай `/memory/current-context-global.md` (состояние workspace)
-3. Читай `/memory/handshake-assistant.md` (этот файл) — оперативный контекст
-4. Читай `/rules/global-constitution.md` (иерархия правил)
-5. Свои изменения коммить напрямую — Claude заберёт через `/sync`
-6. Async inbox: Issues с меткой `comet` или `memory/handshake-assistant.md`
-7. Обновлено: 2026-02-23 13:25
+1. Читай `/CLAUDE.md` первым
+2. Читай `/memory/current-context-global.md`
+3. Читай этот файл — оперативный контекст
+4. Читай `/rules/global-constitution.md`
+5. **Приоритет #1:** запушить PRD v2 (см. Open Tasks)
+6. Async inbox: Issues с меткой `comet`
+7. Обновлено: 2026-02-24 09:50
