@@ -4,6 +4,31 @@
 
 ---
 
+## [2026-02-24] [comet] — Harkly: позиционирование ProxyMarket-first, трехслойная модель, PRD v2 draft
+
+- Tags: `[harkly, proxymarket, prd, research, competitive-analysis, synthetic-consumers, aieo]`
+
+**Принятые решения:**
+- Harkly = UX-интеллидженс платформа, а не парсер отзывов. Три слоя: Reality (real reviews) + Prediction (synthetic consumers) + AI Perception (AIEO/GEO).
+- Первоначальный фокус H1 — ProxyMarket (RU/СНГ + глобальные площадки ProxyMarket).
+- Supabase → deprecated. Стек: Cloudflare Workers + D1 или PostgreSQL в RU-облаке (уточняется с юристами ProxyMarket) + ZenRows как fallback до появления собственных парсеров.
+- ProxyMarket партнёрская модель: **Hybrid-трек** (сразу Enterprise + путь к white-label).
+- Монетизация H1: 2 prediction-запроса free → $49 / $149 / $499 тарифы.
+- Data residency: открытый вопрос, зависит от юристов ProxyMarket.
+- Calibration data: уточняется на созвоне с CPO ProxyMarket.
+- WB/Ozon — не в приоритете H1 (ProxyMarket использует другие площадки).
+
+**Файлы созданы:**
+- `docs/harkly/research/competitive-landscape-global-ru-2026-02.md` — конкурентный анализ (global + RU/СНГ)
+- `docs/harkly/explanation/proxymarket-artifact-plan.md` — план артефактов (ранее)
+
+**Открытые задачи:**
+- PRD v2 (`prd-horizon-1.md`) — черновик согласован, пуш не выполнен — приоритет #1
+- Technical One-Pager, Solution Architecture, White-label playbook — после PRD
+- Созвон с CPO ProxyMarket — организует nopoint
+
+---
+
 ## [2026-02-23] [comet] — Workspace audit: conflicts resolved, RBAC updated, position-descriptions removed
 
 - Tags: `[rbac, audit, comet, constitution, harkly, memory]`
