@@ -1,6 +1,7 @@
 # White-Label Partnership Scenarios — Proxymarket × Harkly
 > Версия: 1.0 | Дата: 2026-02-24 | Автор: Comet (L1)
-> Статус: **READY FOR CALL** — передать nopoint перед созвоном
+> Статус: **SUPERSEDED** — заменён на [partnership-scenarios.md](./partnership-scenarios.md) (v2.0)
+> Архив: оставлен для истории. Не использовать для переговоров.
 > Связано: [prd-horizon-1.md](./prd-horizon-1.md)
 
 ---
