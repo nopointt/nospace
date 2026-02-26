@@ -119,4 +119,27 @@
 **Risks / flags:**
 - `private_knowledge/context/longterm/` credentials unencrypted — OPS-TODO-01 critical, must resolve before any team expansion
 
+---
+## Session 2026-02-26 — Harkly economics model review (context limit hit)
+
+**Decisions:**
+- No architectural decisions made — session was analytical/review work
+
+**Files read (analysis only, no writes):**
+- `docs/harkly/economics/model.py` — harkly economics/financial model
+- `docs/harkly/economics/results.md` — economics analysis results
+- `docs/harkly/economics/dashboard.html` — economics dashboard UI
+
+**Tasks completed:**
+- Partial review of harkly economics model and dashboard (session context limit hit)
+
+**Tasks open / carried over:**
+- HARKLY-04: economics model review — incomplete, context limit reached mid-session. Resume with full re-read of model.py + results.md
+- HARKLY-01: PRD v2 push — still pending Comet action
+- HARKLY-02: npm install + scraper test run — still pending
+- HARKLY-03: CPO ProxyMarket call — pending nopoint
+
+**Risks / flags:**
+- OPS-TODO-01 (unencrypted .env credentials) still unresolved — remains critical before team expansion
+
 <!-- Add new entries above this line. Oldest entries at the bottom. -->

@@ -2,7 +2,7 @@
 # CURRENT CONTEXT — GLOBAL
 > Structured snapshot of workspace state. Updated when an epic or major branch closes.
 > Tags: [workspace, global, state, epics, blockers]
-> Last updated: 2026-02-24 by Comet
+> Last updated: 2026-02-26 by Assistant
 ---
 
 ## Active Epics
@@ -12,6 +12,7 @@
 | HARKLY-01 | harkly | ProxyMarket-first: PRD v2 + docs suite | **in-progress** | Comet |
 | HARKLY-02 | harkly | npm install + test scraper run | pending | Assistant |
 | HARKLY-03 | harkly | Созвон с CPO ProxyMarket | pending | nopoint |
+| HARKLY-04 | harkly | Economics model review (model.py + dashboard) | **in-progress** | Assistant |
 
 ## Global State
 
@@ -35,6 +36,7 @@
 | Calibration data для Prediction Layer | HARKLY-01 | 2026-02-24 | Уточнить на созвоне с CPO |
 | OPS-TODO-01: encrypt .env через age | security | 2026-02-22 | nopoint action required |
 | /agents/* folders not pushed to repo | agents/ | 2026-02-23 | Assistant: run /sync |
+| HARKLY-04 economics model review incomplete | HARKLY-04 | 2026-02-26 | Session hit context limit — resume next session |
 
 ## Last Consolidation
 

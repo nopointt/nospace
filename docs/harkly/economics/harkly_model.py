@@ -88,6 +88,18 @@ BENCH = {
     "annual_discount":  0.167,  # 2/12 months free = 16.7% [source: annual_discount]
 }
 
+# WL pricing (from model.py alignment)
+WL_FLOOR             = 0.020    # $/credit — minimum partners may charge clients
+WL_PARTNER_DISC      = 0.25     # 25 % off floor for partner wholesale
+WL_WHOLESALE         = WL_FLOOR * (1 - WL_PARTNER_DISC)    # $0.015/credit
+WL_BASE_CREDITS      = 150_000  # supports ~6 Enterprise or ~30 Pro clients
+WL_PRO_CREDITS       = 500_000  # supports ~20 Enterprise or ~100 Pro
+WL_SCALE_CREDITS     = 2_000_000  # supports ~80 Enterprise or ~400 Pro
+WL_BASE_PRICE        = WL_BASE_CREDITS  * WL_WHOLESALE   # $2,250/mo
+WL_PRO_PRICE         = WL_PRO_CREDITS   * WL_WHOLESALE   # $7,500/mo
+WL_SCALE_PRICE       = WL_SCALE_CREDITS * WL_WHOLESALE   # $30,000/mo
+CREDITS_WL_GIFT      = 25_000   # Enterprise gift per WL partner (personal use)
+
 # ─────────────────────────────────────────────────────────────────────
 # 2. PRICING TIERS
 # ─────────────────────────────────────────────────────────────────────
@@ -376,18 +388,29 @@ WL_SCENARIOS = {
 def wl_cashflow(scenario_key: str, months: int = 12) -> Dict:
     s = WL_SCENARIOS[scenario_key]
 
-    # Variable cost to serve enterprise-level usage per WL partner's end-clients
-    # ProxyMarket provides proxies → is_proxymarket=True
-    vc_per_end_client = variable_cost("enterprise", month_num=2, is_proxymarket=True)["total"]
-
-    # Enterprise gift cost (near-zero actual cost; mainly opportunity cost)
-    enterprise_gift_actual_cost = (
-        variable_cost("enterprise", 2, True)["total"] * s.enterprise_gift_months
-    )  # We serve them at enterprise level; our real cash cost is tiny
-    enterprise_gift_opportunity_cost = 499 * s.enterprise_gift_months  # foregone revenue
-
+    # For WL scenarios, COGS is based on credit quota provided, not end-client count
+    # Use WL_BASE_CREDITS as the default quota (most common WL tier)
+    wl_quota_credits = WL_BASE_CREDITS  # 150,000 credits resellable
+    wl_gift_credits = CREDITS_WL_GIFT   # 25,000 credits gift
+    
+    # Variable COGS for WL quota (100% consumption assumption for conservative GM)
+    # ProxyMarket provides proxies → is_proxymarket=True for proxy cost = 0
+    # But we need to calculate based on credits, not per-client
+    
+    # Per-credit COGS (from model.py): EFF_COGS_PER_CREDIT = $0.01275
+    # This includes: browser, proxy, LLM, embeddings, storage, prediction, AI Perception
+    # For WL, we assume partner's clients use the quota efficiently
+    COGS_PER_CREDIT = 0.01275  # $/credit (buffered)
+    
+    # Monthly COGS for WL quota + gift
+    monthly_quota_cogs = (wl_quota_credits + wl_gift_credits) * COGS_PER_CREDIT
+    # = 175,000 × $0.01275 = ~$2,231/mo
+    
     # Support cost: 2h/month per WL partner
     support_cost_monthly = 2 * 50  # $100/month (founder time)
+    
+    # Total monthly COGS during active period
+    monthly_cogs_total = monthly_quota_cogs + support_cost_monthly
 
     monthly_revenue = []
     monthly_cogs    = []
@@ -412,12 +435,15 @@ def wl_cashflow(scenario_key: str, months: int = 12) -> Dict:
             rev += 499
 
         # COGS this month
-        cogs = support_cost_monthly
-        cogs += vc_per_end_client * max(s.partner_end_clients, 1)
-        if m <= s.enterprise_gift_months:
-            # During gift period: no revenue from flat fee, but still serve them
-            cogs += variable_cost("enterprise", 2, True)["total"]
-
+        # Only incur COGS when we're actively providing the service
+        if m <= s.enterprise_gift_months and s.monthly_flat == 0:
+            # Gift period: provide Enterprise-level service without revenue
+            cogs = monthly_quota_cogs + support_cost_monthly
+        elif rev > 0:
+            cogs = monthly_cogs_total
+        else:
+            cogs = 0  # no revenue, no service provided
+        
         monthly_revenue.append(round(rev, 2))
         monthly_cogs.append(round(cogs, 2))
 
@@ -431,6 +457,10 @@ def wl_cashflow(scenario_key: str, months: int = 12) -> Dict:
     partner_cost_to_harkly = total_rev  # what partner pays us
     partner_gross_gain = partner_revenue_year1 - partner_cost_to_harkly
     partner_roi_pct = partner_gross_gain / partner_cost_to_harkly * 100 if partner_cost_to_harkly > 0 else 0
+    
+    # Enterprise gift costs
+    enterprise_gift_opportunity_cost = 499 * s.enterprise_gift_months  # foregone revenue
+    enterprise_gift_actual_cost = monthly_quota_cogs * s.enterprise_gift_months
 
     return {
         "scenario": s.name,
@@ -478,6 +508,7 @@ def project_2026() -> List[Dict]:
     }
     # Also: ProxyMarket WL deal in month 5 (optimistic)
     wl_deal_month = 5  # month ProxyMarket signs S1
+    wl_scenario = WL_SCENARIOS["s1_paid_pilot"]
 
     # Track cumulative customers by tier
     cumulative: Dict[str, float] = {t: 0.0 for t in tier_mix}
@@ -487,7 +518,7 @@ def project_2026() -> List[Dict]:
     }
 
     results = []
-    proxymarket_annual_booked = False
+    wl_annual_booked = False
 
     for m in range(1, 13):
         # Churn existing customers
@@ -510,10 +541,11 @@ def project_2026() -> List[Dict]:
         # WL ProxyMarket revenue
         wl_rev_this_month = 0.0
         if m == wl_deal_month:
-            wl_rev_this_month += WL_SCENARIOS["s1_paid_pilot"].upfront  # pilot fee
-        if m == wl_deal_month + WL_SCENARIOS["s1_paid_pilot"].pilot_months:
-            wl_rev_this_month += WL_SCENARIOS["s1_paid_pilot"].annual_license  # annual
-            proxymarket_annual_booked = True
+            wl_rev_this_month += wl_scenario.upfront  # pilot fee
+        # Annual license after pilot (one-time payment)
+        if m == wl_deal_month + wl_scenario.pilot_months and not wl_annual_booked:
+            wl_rev_this_month += wl_scenario.annual_license
+            wl_annual_booked = True
 
         # Variable costs
         vc_total = sum(

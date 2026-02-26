@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harkly — Financial Dashboard 2026</title>
+<style>
+:root {
+  --bg:#0d1117; --s1:#161b22; --s2:#21262d; --bd:#30363d;
+  --tx:#e6edf3; --mu:#7d8590; --ac:#7c3aed;
+  --gr:#3fb950; --rd:#f85149; --yl:#d29922;
+  --font:system-ui,-apple-system,sans-serif;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { background:var(--bg); color:var(--tx); font-family:var(--font); font-size:12px; min-height:100vh; }
+
+/* ── Header ── */
+.hdr { background:var(--s2); border-bottom:1px solid var(--bd); padding:9px 16px;
+       display:flex; align-items:center; gap:10px; }
+.hdr h1 { font-size:14px; font-weight:700; }
+.badge  { background:var(--ac); color:#fff; font-size:10px; padding:2px 7px; border-radius:10px; }
+#strip  { margin-left:auto; display:flex; gap:14px; font-size:11px; color:var(--mu); }
+#strip b { color:var(--tx); }
+.api-status { margin-left:10px; padding:2px 8px; border-radius:4px; font-size:10px; }
+.api-status.ok { background:var(--gr); color:#000; }
+.api-status.err { background:var(--rd); color:#fff; }
+
+/* ── Body ── */
+.body { display:flex; }
+.side { width:292px; background:var(--s1); border-right:1px solid var(--bd);
+        padding:10px; display:flex; flex-direction:column; gap:7px; flex-shrink:0; }
+.main { flex:1; padding:14px; display:flex; flex-direction:column; gap:12px; }
+
+/* ── Panels ── */
+.pnl { background:var(--s2); border:1px solid var(--bd); border-radius:7px; overflow:hidden; }
+.ph  { padding:6px 10px; font-size:10px; font-weight:700; text-transform:uppercase;
+       letter-spacing:.5px; color:var(--mu); border-bottom:1px solid var(--bd); }
+.pb  { padding:9px 10px; display:flex; flex-direction:column; gap:6px; }
+
+/* ── Fields ── */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; }
+.f  { display:flex; flex-direction:column; gap:2px; }
+.f label { font-size:10px; color:var(--mu); display:flex; justify-content:space-between; }
+.f label b { color:var(--tx); font-weight:600; }
+.f input[type=number], .f select {
+  background:var(--bg); border:1px solid var(--bd); color:var(--tx);
+  padding:4px 6px; border-radius:4px; font-size:11px; width:100%;
+}
+.f input[type=range] { width:100%; accent-color:var(--ac); cursor:pointer; margin-top:2px; }
+.f input[type=checkbox] { accent-color:var(--ac); cursor:pointer; }
+.f input:focus, .f select:focus { outline:1px solid var(--ac); border-color:var(--ac); }
+
+/* ── KPIs ── */
+.kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:7px; }
+.kpi  { background:var(--s1); border:1px solid var(--bd); border-radius:7px; padding:11px 12px; }
+.kpi .lbl { font-size:9px; color:var(--mu); text-transform:uppercase; letter-spacing:.4px; }
+.kpi .val { font-size:20px; font-weight:800; margin:3px 0 2px; }
+.kpi .sub { font-size:10px; color:var(--mu); }
+.kpi.ac .val { color:var(--ac); }
+
+/* ── Table wrapper ── */
+.tw  { background:var(--s1); border:1px solid var(--bd); border-radius:7px; overflow:hidden; }
+.ttl { padding:7px 12px; font-size:11px; font-weight:700;
+       border-bottom:1px solid var(--bd); background:var(--s2); }
+table { width:100%; border-collapse:collapse; font-size:11px; }
+th { padding:5px 9px; text-align:right; color:var(--mu); font-size:10px; font-weight:600;
+     background:var(--s2); border-bottom:1px solid var(--bd); white-space:nowrap; }
+th:first-child { text-align:left; }
+td { padding:4px 9px; text-align:right; border-bottom:1px solid var(--bd); white-space:nowrap; }
+td:first-child { text-align:left; font-weight:600; color:var(--mu); }
+tr:last-child td { border-bottom:none; }
+tr.tot td { font-weight:700; background:var(--s2); border-top:1px solid var(--bd); }
+tr:hover td { background:rgba(255,255,255,.025); }
+
+/* ── Sensitivity ── */
+.sens { display:grid; grid-template-columns:1fr 1fr 1fr; gap:7px; }
+.sc   { background:var(--s1); border:1px solid var(--bd); border-radius:7px; padding:11px 12px; }
+.sh   { font-size:11px; font-weight:700; margin-bottom:7px; }
+.sr   { display:flex; justify-content:space-between; padding:2px 0; font-size:11px; }
+.sk   { color:var(--mu); }
+
+/* ── WL events ── */
+.wlr { display:grid; grid-template-columns:52px 1fr 50px; gap:4px; margin-top:4px; }
+.wlr select { background:var(--bg); border:1px solid var(--bd); color:var(--tx);
+               padding:3px 5px; border-radius:4px; font-size:11px; }
+.wlr input[type=number] { background:var(--bg); border:1px solid var(--bd); color:var(--tx);
+               padding:3px 5px; border-radius:4px; font-size:11px; width:100%; }
+/* ── Manual sales ── */
+#mansales .g3 input { font-size:10px; padding:3px 4px; }
+/* ── Colors ── */
+.pos { color:var(--gr); } .neg { color:var(--rd); } .mu { color:var(--mu); }
+
+/* ── Loading ── */
+.loading { opacity:0.5; pointer-events:none; }
+</style>
+</head>
+<body>
+  <div class="hdr">
+    <h1>Harkly — Financial Dashboard 2026</h1>
+    <div class="badge">Backend: model.py</div>
+    <span id="apiStatus" class="api-status">Connecting...</span>
+    <div id="strip"></div>
+  </div>
+  <div class="body">
+    <aside class="side" id="side"></aside>
+    <main  class="main" id="main"></main>
+  </div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// API CONFIG
+// ══════════════════════════════════════════════════════
+const API_BASE = 'http://localhost:5000/api';
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+var S = {};
+var MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ══════════════════════════════════════════════════════
+// FORMATTERS
+// ══════════════════════════════════════════════════════
+function fmtU(v, d) {
+  d = d || 0;
+  if (v === 0) return '$0';
+  var abs = Math.abs(v);
+  var s = d === 0 ? Math.round(abs).toLocaleString('en') : abs.toFixed(d);
+  return (v < 0 ? '-$' : '$') + s;
+}
+function fmtP(v, d) { d = (d === undefined) ? 1 : d; return v.toFixed(d) + '%'; }
+function cls(v) { return v > 0 ? 'pos' : v < 0 ? 'neg' : ''; }
+function sumR(rows, key) { var s=0; for(var i=0;i<rows.length;i++) s+=(rows[i][key]||0); return s; }
+
+// ══════════════════════════════════════════════════════
+// TABLE BUILDERS
+// ══════════════════════════════════════════════════════
+function makeTable(id, title, headers, bodyRows, totRow) {
+  var el = document.getElementById(id);
+  if (!el) {
+    el = document.createElement('div');
+    el.id = id;
+    el.className = 'tw';
+    document.getElementById('main').appendChild(el);
+  }
+
+  var html = '<div class="ttl">' + title + '</div>';
+  html += '<table><thead><tr>';
+  for (var h=0; h<headers.length; h++) {
+    html += '<th>' + headers[h] + '</th>';
+  }
+  html += '</tr></thead><tbody>';
+
+  for (var r=0; r<bodyRows.length; r++) {
+    var row = bodyRows[r];
+    html += '<tr>';
+    for (var c=0; c<row.length; c++) {
+      var cellData = row[c];
+      if (typeof cellData === 'object' && cellData !== null) {
+        html += '<td class="' + (cellData.cls||'') + '">' + cellData.v + '</td>';
+      } else {
+        html += '<td>' + String(cellData) + '</td>';
+      }
+    }
+    html += '</tr>';
+  }
+
+  if (totRow) {
+    html += '<tr class="tot">';
+    for (var c=0; c<totRow.length; c++) {
+      var cellData = totRow[c];
+      if (typeof cellData === 'object' && cellData !== null) {
+        html += '<td class="' + (cellData.cls||'') + '">' + cellData.v + '</td>';
+      } else {
+        html += '<td>' + String(cellData) + '</td>';
+      }
+    }
+    html += '</tr>';
+  }
+
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function cell(v, c) { return {v:v, cls:c||''}; }
+function mu(v) { return cell(v, 'mu'); }
+
+// ══════════════════════════════════════════════════════
+// SEPARATE TABLE RENDER FUNCTIONS
+// ══════════════════════════════════════════════════════
+function renderPnLTable(base, tRev, tGp, tCogs, tArt, tDrw, tNet, gm, tRevS, tRevP, tRevE, tRevW) {
+  var headers = ['Мес','Revenue','COGS','Gross P.','GM%','Artem','Draw','Net','Start','Pro','Ent','WL'];
+  var bodyRows = [];
+  
+  for (var i=0; i<base.length; i++) {
+    var r = base[i];
+    var row = [];
+    row.push(r.mn);
+    row.push(fmtU(r.rev));
+    row.push(fmtU(r.tc));
+    row.push(cell(fmtU(r.gp), cls(r.gp)));
+    row.push(cell(fmtP(r.gm), cls(r.gm)));
+    row.push(mu(fmtU(r.art, 0)));
+    row.push(mu(fmtU(r.drw)));
+    row.push(cell(fmtU(r.net), cls(r.net)));
+    row.push(fmtU(r.rs));
+    row.push(fmtU(r.rp));
+    row.push(fmtU(r.re));
+    row.push(fmtU(r.rw));
+    bodyRows.push(row);
+  }
+  
+  var totRow = [
+    'ИТОГО',
+    fmtU(tRev),
+    fmtU(tCogs),
+    cell(fmtU(tGp), cls(tGp)),
+    cell(fmtP(gm), cls(tGp)),
+    fmtU(tArt, 0),
+    fmtU(tDrw),
+    cell(fmtU(tNet), cls(tNet)),
+    fmtU(tRevS), fmtU(tRevP), fmtU(tRevE), fmtU(tRevW)
+  ];
+  
+  makeTable('tbl-pl', 'P&L — Помесячно (Base)', headers, bodyRows, totRow);
+}
+
+function renderSensitivity(base, bear, bull) {
+  var sensEl = document.getElementById('sens');
+  var scenarios = [
+    {lbl: '🔴 Bear', rows: bear, mult: 0.8},
+    {lbl: '🟡 Base', rows: base, mult: 1.0},
+    {lbl: '🟢 Bull', rows: bull, mult: 1.2}
+  ];
+  
+  var html = '';
+  for (var i=0; i<scenarios.length; i++) {
+    var sc = scenarios[i];
+    var rv = sumR(sc.rows, 'rev');
+    var gv = sumR(sc.rows, 'gp');
+    var nv = sumR(sc.rows, 'net');
+    var dv = sc.rows[11];
+    
+    html += '<div class="sc">';
+    html += '<div class="sh">' + sc.lbl + ' <span class="mu" style="font-weight:400">× ' + sc.mult + ' органика</span></div>';
+    html += row2('Revenue', fmtU(rv));
+    html += row2('Gross P.', fmtU(gv), cls(gv));
+    html += row2('Net', fmtU(nv), cls(nv));
+    html += row2('Dec MRR', fmtU(dv.rev));
+    html += row2('Dec Paying', dv.paying);
+    html += '</div>';
+  }
+  sensEl.innerHTML = html;
+}
+
+function renderRevenueTable(base, tRev, tRevS, tRevP, tRevE, tRevW, tCvr, tCfx) {
+  var headers = ['Мес','Start','Pro','Ent','WL','Total','Var COGS','Fixed'];
+  var bodyRows = [];
+  
+  for (var i=0; i<base.length; i++) {
+    var r = base[i];
+    var row = [];
+    row.push(r.mn);
+    row.push(fmtU(r.rs));
+    row.push(fmtU(r.rp));
+    row.push(fmtU(r.re));
+    row.push(fmtU(r.rw));
+    row.push(cell('<b>'+fmtU(r.rev)+'</b>', ''));
+    row.push(mu(fmtU(r.cvr)));
+    row.push(mu(fmtU(r.cfx)));
+    bodyRows.push(row);
+  }
+  
+  var totRow = [
+    'ИТОГО',
+    fmtU(tRevS),
+    fmtU(tRevP),
+    fmtU(tRevE),
+    fmtU(tRevW),
+    fmtU(tRev),
+    fmtU(tCvr),
+    fmtU(tCfx)
+  ];
+  
+  makeTable('tbl-rev', 'Выручка по источникам', headers, bodyRows, totRow);
+}
+
+function renderCreditsTable(base, tCrT, tCrD, tCrW) {
+  var headers = ['Мес','Direct кр','WL кр','Issued total','Consumed','Breakage'];
+  var bodyRows = [];
+  
+  for (var i=0; i<base.length; i++) {
+    var r = base[i];
+    var cons = Math.round(r.crT * S.cons);
+    var brk = Math.round(r.crT * (1-S.cons));
+    var row = [];
+    row.push(r.mn);
+    row.push(mu(r.crD.toLocaleString('en')));
+    row.push(mu(r.crW.toLocaleString('en')));
+    row.push(r.crT.toLocaleString('en'));
+    row.push(mu(cons.toLocaleString('en')));
+    row.push(cell(brk.toLocaleString('en'), 'yl'));
+    bodyRows.push(row);
+  }
+  
+  var tBrk = Math.round(tCrT * (1-S.cons));
+  var tCons2 = Math.round(tCrT * S.cons);
+  
+  var totRow = [
+    'ИТОГО',
+    tCrD.toLocaleString('en'),
+    tCrW.toLocaleString('en'),
+    tCrT.toLocaleString('en'),
+    tCons2.toLocaleString('en'),
+    cell(tBrk.toLocaleString('en'), 'yl')
+  ];
+  
+  makeTable('tbl-cr', 'Кредиты — выдано и потреблено', headers, bodyRows, totRow);
+}
+
+// ══════════════════════════════════════════════════════
+// SIDEBAR BUILD
+// ══════════════════════════════════════════════════════
+function buildSide() {
+  function num(k, lbl, mn, mx, st) {
+    return '<div class="f"><label>' + lbl + '</label>' +
+      '<input type="number" data-k="' + k + '" value="' + S[k] + '" min="' + mn + '" max="' + mx + '" step="' + st + '"></div>';
+  }
+  function sld(k, lbl, mn, mx, st, dec) {
+    dec = dec || 1;
+    var v = S[k], dv = dispV(k, v, dec);
+    return '<div class="f"><label>' + lbl + ' <b id="d-' + k + '">' + dv + '</b></label>' +
+      '<input type="range" data-k="' + k + '" data-dec="' + dec + '" value="' + v + '" min="' + mn + '" max="' + mx + '" step="' + st + '"></div>';
+  }
+
+  var panels = [
+    { t:'📈 Рост', h:
+      sld('cm','Conv Mult (× Comet÷2 base)',0.3,2.0,0.05) +
+      '<div class="f"><label><input type="checkbox" data-k="useManualSales" ' + (S.useManualSales ? 'checked' : '') + '> Ручные продажи</label></div>' +
+      '<div class="f"><label>WL Events</label><div id="wlevt"></div></div>'
+    },
+    { t:'💰 Продажи по тарифам', h:
+      '<div id="mansales"></div>'
+    },
+    { t:'💰 Цены', h:
+      '<div class="g3">' + num('pS','Start $',10,500,10) + num('pP','Pro $',50,2000,50) + num('pE','Ent $',100,5000,100) + '</div>'
+    },
+    { t:'🎫 Кредиты', h:
+      '<div class="g2">' + num('freeDaily','Free кр/день',5,200,5) + num('freeDays','Акт.дней',5,30,1) + '</div>' +
+      '<div class="g2">' + num('crS','Start кр',50,5000,50) + num('crP','Pro кр',500,50000,500) + '</div>' +
+      '<div class="g2">' + num('crE','Ent кр',5000,200000,5000) + num('wlGift','WL Gift кр',0,50000,5000) + '</div>'
+    },
+    { t:'🔧 COGS', h:
+      sld('rawCogs','Raw COGS/credit',0.001,0.05,0.0005,4) +
+      sld('buffer','COGS Buffer ×',1.0,3.0,0.05,2) +
+      sld('cons','Consumption %',0.50,1.0,0.01,2)
+    },
+    { t:'🤝 WL Цены', h:
+      sld('wlFloor','Floor $/credit',0.005,0.10,0.001,3) +
+      sld('wlDisc','Скидка партнёру',0.05,0.50,0.01,2) +
+      '<div class="g2">' + num('wlBase','Base кр',10000,500000,10000) + num('wlPro','Pro кр',100000,2000000,50000) + '</div>' +
+      num('wlScale','Scale кр',500000,10000000,100000)
+    },
+    { t:'📉 Churn /мес', h:
+      '<div class="g2">' + sld('cF','Free %',0.05,0.60,0.01,2) + sld('cS','Start %',0.01,0.20,0.005,3) + '</div>' +
+      '<div class="g2">' + sld('cP','Pro %',0.005,0.15,0.005,3) + sld('cE','Ent %',0.001,0.10,0.002,3) + '</div>'
+    },
+    { t:'👥 Команда', h:
+      '<div class="g2">' + num('draw','Owner Draw $',0,10000,500) + num('drMo','С месяца',1,12,1) + '</div>' +
+      '<div class="g2">' + sld('artRate','Artem %',0,0.40,0.01,2) + '</div>' +
+      '<div class="g2">' + num('aiCost','AI costs $',0,5000,100) + num('aiMo','С месяца',1,12,1) + '</div>'
+    },
+  ];
+
+  var html = '';
+  for (var i=0; i<panels.length; i++) {
+    html += '<div class="pnl"><div class="ph">' + panels[i].t + '</div><div class="pb">' + panels[i].h + '</div></div>';
+  }
+  document.getElementById('side').innerHTML = html;
+  buildManSales();
+  buildWlEvt();
+  
+  // Add event listeners
+  var inputs = document.getElementById('side').querySelectorAll('input, select');
+  for (var i=0; i<inputs.length; i++) {
+    inputs[i].addEventListener('input', onInp);
+    inputs[i].addEventListener('change', onInp);
+  }
+}
+
+function dispV(k, v, dec) {
+  dec = dec || 1;
+  if (k === 'buffer' || k === 'cm') return '×' + parseFloat(v).toFixed(2);
+  var pcts = ['cons','cF','cS','cP','cE','artRate','wlDisc'];
+  if (pcts.indexOf(k) >= 0) return (v*100).toFixed(1) + '%';
+  return parseFloat(v).toFixed(dec);
+}
+
+function buildManSales() {
+  var c = document.getElementById('mansales');
+  if (!c) return;
+  var html = '';
+  for (var m=3; m<=12; m++) {
+    var sales = S.manualSales[m] || {si:0,pi:0,ei:0};
+    html += '<div class="f" style="margin-bottom:6px;">';
+    html += '<label style="font-size:9px;color:var(--mu);">' + MN[m-1] + '</label>';
+    html += '<div class="g3">';
+    html += '<input type="number" data-msale-m="' + m + '" data-msale-t="si" value="' + sales.si + '" min="0" max="1000" step="1" placeholder="Start" title="Start продажи">';
+    html += '<input type="number" data-msale-m="' + m + '" data-msale-t="pi" value="' + sales.pi + '" min="0" max="1000" step="1" placeholder="Pro" title="Pro продажи">';
+    html += '<input type="number" data-msale-m="' + m + '" data-msale-t="ei" value="' + sales.ei + '" min="0" max="1000" step="1" placeholder="Ent" title="Ent продажи">';
+    html += '</div></div>';
+  }
+  c.innerHTML = html;
+  
+  var inps = c.querySelectorAll('input[type=number]');
+  for (var i=0; i<inps.length; i++) {
+    inps[i].addEventListener('input', function() {
+      var m = parseInt(this.dataset.msaleM);
+      var t = this.dataset.msaleT;
+      var v = parseInt(this.value) || 0;
+      if (!S.manualSales[m]) S.manualSales[m] = {};
+      S.manualSales[m][t] = v;
+      recalc();
+    });
+  }
+}
+
+function buildWlEvt() {
+  var c = document.getElementById('wlevt');
+  if (!c) return;
+  var tiers = ['none','base','pro','scale'];
+  var tlbl  = {none:'— Нет —', base:'WL-Base', pro:'WL-Pro', scale:'WL-Scale'};
+  var html = '';
+  for (var i=0; i<4; i++) {
+    var ev = S.wlEvt[i] || {mo:3, t:'none', qty:0};
+    html += '<div class="wlr">';
+    html += '<select data-wmo="' + i + '">';
+    for (var j=0; j<MN.length; j++) {
+      html += '<option value="' + (j+1) + '"' + (ev.mo === j+1 ? ' selected' : '') + '>' + MN[j] + '</option>';
+    }
+    html += '</select><select data-wt="' + i + '">';
+    for (var j=0; j<tiers.length; j++) {
+      html += '<option value="' + tiers[j] + '"' + (ev.t === tiers[j] ? ' selected' : '') + '>' + tlbl[tiers[j]] + '</option>';
+    }
+    html += '</select>';
+    html += '<input type="number" data-wqty="' + i + '" value="' + ev.qty + '" min="0" max="100" step="1" placeholder="кол-во" title="Количество продаж (0=откл)">';
+    html += '</div>';
+  }
+  c.innerHTML = html;
+
+  var sels = c.querySelectorAll('select');
+  for (var i=0; i<sels.length; i++) {
+    sels[i].addEventListener('change', updateWlEvt);
+  }
+  var inps = c.querySelectorAll('input[type=number]');
+  for (var i=0; i<inps.length; i++) {
+    inps[i].addEventListener('input', updateWlEvt);
+  }
+}
+
+function updateWlEvt() {
+  var c = document.getElementById('wlevt');
+  if (!c) return;
+  var evts = [];
+  for (var j=0; j<4; j++) {
+    var mo = parseInt(c.querySelector('[data-wmo="'+j+'"]').value);
+    var t  = c.querySelector('[data-wt="'+j+'"]').value;
+    var qty = parseInt(c.querySelector('[data-wqty="'+j+'"]').value) || 0;
+    evts.push({mo:mo, t:t, qty:qty});
+  }
+  S.wlEvt = evts;
+  recalc();
+}
+
+function onInp(e) {
+  var k = e.target.dataset.k;
+  if (!k) return;
+  var v;
+  if (e.target.type === 'checkbox') {
+    v = e.target.checked;
+  } else {
+    v = parseFloat(e.target.value);
+  }
+  S[k] = v;
+  var dsp = document.getElementById('d-' + k);
+  if (dsp) dsp.textContent = dispV(k, v, parseInt(e.target.dataset.dec || 1));
+  recalc();
+}
+
+// ══════════════════════════════════════════════════════
+// MAIN RENDER FUNCTION
+// ══════════════════════════════════════════════════════
+function render(base, bear, bull) {
+  var tRev  = sumR(base,'rev');
+  var tGp   = sumR(base,'gp');
+  var tNet  = sumR(base,'net');
+  var tCogs = sumR(base,'tc');
+  var tArt  = sumR(base,'art');
+  var tDrw  = sumR(base,'drw');
+  var tRevS = sumR(base,'rs');
+  var tRevP = sumR(base,'rp');
+  var tRevE = sumR(base,'re');
+  var tRevW = sumR(base,'rw');
+  var tCvr  = sumR(base,'cvr');
+  var tCfx  = sumR(base,'cfx');
+  var tCrT  = sumR(base,'crT');
+  var tCrD  = sumR(base,'crD');
+  var tCrW  = sumR(base,'crW');
+  var gm    = tRev > 0 ? tGp/tRev*100 : 0;
+  var dec   = base[11];
+
+  // Header strip
+  document.getElementById('strip').innerHTML =
+    'Rev: <b>' + fmtU(tRev) + '</b> &nbsp; ' +
+    'GP: <b class="' + cls(tGp) + '">' + fmtU(tGp) + '</b> &nbsp; ' +
+    'Net: <b class="' + cls(tNet) + '">' + fmtU(tNet) + '</b> &nbsp; ' +
+    'Dec MRR: <b>' + fmtU(dec.rev) + '</b>';
+
+  // KPI cards
+  var kpiEl = document.getElementById('kpis');
+  kpiEl.innerHTML =
+    kpiCard('Revenue 2026', fmtU(tRev), '', 'COGS ' + fmtU(tCogs)) +
+    kpiCard('Gross Profit', fmtU(tGp), cls(tGp), 'GM ' + fmtP(gm)) +
+    kpiCard('Net Profit', fmtU(tNet), cls(tNet), 'Art ' + fmtU(tArt) + ' · Draw ' + fmtU(tDrw)) +
+    kpiCard('Dec MRR', fmtU(dec.rev), 'ac', 'ARR ' + fmtU(dec.rev * 12)) +
+    kpiCard('Dec Paying', dec.paying, '', dec.wn + ' WL · ' + dec.fi + ' Free');
+
+  // Render each table separately
+  renderPnLTable(base, tRev, tGp, tCogs, tArt, tDrw, tNet, gm, tRevS, tRevP, tRevE, tRevW);
+  renderSensitivity(base, bear, bull);
+  renderRevenueTable(base, tRev, tRevS, tRevP, tRevE, tRevW, tCvr, tCfx);
+  renderCreditsTable(base, tCrT, tCrD, tCrW);
+}
+
+function kpiCard(lbl, val, valCls, sub) {
+  return '<div class="kpi' + (valCls==='ac'?' ac':'') + '">' +
+    '<div class="lbl">' + lbl + '</div>' +
+    '<div class="val ' + (valCls==='ac'?'':valCls) + '">' + val + '</div>' +
+    '<div class="sub">' + sub + '</div></div>';
+}
+
+function row2(k, v, c) {
+  return '<div class="sr"><span class="sk">' + k + '</span><span class="' + (c||'') + '">' + v + '</span></div>';
+}
+
+// ══════════════════════════════════════════════════════
+// LOCAL SIMULATE (fallback when API unavailable)
+// ══════════════════════════════════════════════════════
+var BASE_G = {
+   3:{nf:15,f2s:.035,s2p:.020,p2e:.005},  4:{nf:18,f2s:.040,s2p:.020,p2e:.010},
+   5:{nf:20,f2s:.040,s2p:.025,p2e:.010},  6:{nf:25,f2s:.045,s2p:.025,p2e:.010},
+   7:{nf:28,f2s:.050,s2p:.030,p2e:.010},  8:{nf:30,f2s:.050,s2p:.030,p2e:.015},
+   9:{nf:33,f2s:.055,s2p:.035,p2e:.015}, 10:{nf:35,f2s:.055,s2p:.035,p2e:.015},
+  11:{nf:40,f2s:.060,s2p:.040,p2e:.015}, 12:{nf:45,f2s:.060,s2p:.040,p2e:.020},
+};
+
+var INFRA_T = [[100,57],[300,120],[700,220],[1e9,350]];
+function infraCost(u) { for (var i=0;i<INFRA_T.length;i++) { if (u<=INFRA_T[i][0]) return INFRA_T[i][1]; } return 350; }
+
+function zeroRow(m) {
+  return {m:m, mn:MN[m-1], fi:0, si:0, pi:0, ei:0, wn:0, du:0, paying:0,
+    rs:0, rp:0, re:0, rw:0, rev:0, cvD:0, cvW:0, cvr:0, cfx:0, tc:0,
+    gp:0, gm:0, art:0, drw:0, net:0, crT:0, crD:0, crW:0};
+}
+
+function simulateLocal(p, cm) {
+  cm = (cm === undefined) ? 1.0 : cm;
+  var ws  = p.wlFloor * (1 - p.wlDisc);
+  var ec  = p.rawCogs * p.buffer;
+  var frm = p.freeDaily * p.freeDays;
+  var WL  = {
+    base:  {cr:p.wlBase,  px:p.wlBase  * ws},
+    pro:   {cr:p.wlPro,   px:p.wlPro   * ws},
+    scale: {cr:p.wlScale, px:p.wlScale * ws},
+  };
+  function vc(cr) { return cr * p.cons * ec; }
+
+  var fu=0, su=0, pu=0, eu=0, stk=[], rows=[];
+
+  for (var m=1; m<=12; m++) {
+    if (m < 3) { rows.push(zeroRow(m)); continue; }
+
+    var g   = BASE_G[m];
+    var nf  = g.nf  * cm;
+    var f2s = g.f2s * cm;
+    var s2p = g.s2p * cm;
+    var p2e = g.p2e * cm;
+
+    if (p.useManualSales) {
+      fu = 0; su = 0; pu = 0; eu = 0;
+      var fi=0, si=0, pi=0, ei=0;
+    } else {
+      var sf = fu*(1-p.cF), ss=su*(1-p.cS), sp=pu*(1-p.cP), se=eu*(1-p.cE);
+      var uf = sf*f2s, us=ss*s2p, up=sp*p2e;
+      fu = Math.max(0, sf-uf+nf);
+      su = Math.max(0, ss-us+uf);
+      pu = Math.max(0, sp-up+us);
+      eu = Math.max(0, se+up);
+      var fi=Math.round(fu), si=Math.round(su), pi=Math.round(pu), ei=Math.round(eu);
+    }
+
+    if (p.useManualSales && p.manualSales[m]) {
+      var ms = p.manualSales[m];
+      si = ms.si || 0;
+      pi = ms.pi || 0;
+      ei = ms.ei || 0;
+    }
+
+    for (var ei2=0; ei2<p.wlEvt.length; ei2++) {
+      var ev = p.wlEvt[ei2];
+      var qty = ev.qty || 0;
+      if (ev.mo === m && ev.t !== 'none' && WL[ev.t] && qty > 0) {
+        for (var q=0; q<qty; q++) { stk.push(WL[ev.t]); }
+      }
+    }
+    var wn = stk.length;
+
+    var rs=si*p.pS, rp=pi*p.pP, re=ei*p.pE;
+    var rw=0; for (var i=0;i<stk.length;i++) rw += stk[i].px;
+    var rev = rs+rp+re+rw;
+
+    var crD = fi*frm + si*p.crS + pi*p.crP + ei*p.crE;
+    var crWr=0; for (var i=0;i<stk.length;i++) crWr += stk[i].cr;
+    var crW = crWr + wn*p.wlGift;
+    var crT = crD + crW;
+
+    var cvD=vc(crD), cvW=vc(crW), cvr=cvD+cvW;
+    var du  = fi+si+pi+ei;
+    var cfx = infraCost(du) + (m >= p.aiMo ? p.aiCost : 0);
+    var tc  = cvr + cfx;
+
+    var gp  = rev - tc;
+    var gm  = rev > 0 ? gp/rev*100 : 0;
+
+    var egp = Math.max(0, re - vc(ei*p.crE));
+    var wgp = Math.max(0, rw - cvW);
+    var art = (egp + wgp) * p.artRate;
+    var drw = m >= p.drMo ? p.draw : 0;
+    var net = gp - art - drw;
+
+    rows.push({m:m, mn:MN[m-1], fi:fi, si:si, pi:pi, ei:ei, wn:wn, du:du, paying:si+pi+ei+wn,
+      rs:rs, rp:rp, re:re, rw:rw, rev:rev,
+      cvD:cvD, cvW:cvW, cvr:cvr, cfx:cfx, tc:tc,
+      gp:gp, gm:gm, art:art, drw:drw, net:net,
+      crT:crT, crD:crD, crW:crW});
+  }
+  return rows;
+}
+
+// ══════════════════════════════════════════════════════
+// INIT & RECALC (API MODE with local fallback)
+// ══════════════════════════════════════════════════════
+function initMain() {
+  var m = document.getElementById('main');
+  m.innerHTML =
+    '<div class="kpis" id="kpis"></div>' +
+    '<div class="tw" id="tbl-pl"></div>' +
+    '<div class="sens" id="sens"></div>' +
+    '<div class="tw" id="tbl-rev"></div>' +
+    '<div class="tw" id="tbl-cr"></div>';
+}
+
+async function recalc() {
+  // Try API first, fallback to local
+  try {
+    const response = await fetch(API_BASE + '/simulate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(S),
+      signal: AbortSignal.timeout(3000)
+    });
+    
+    if (!response.ok) throw new Error('API error');
+    
+    const data = await response.json();
+    render(data.base, data.bear, data.bull);
+    
+    document.getElementById('apiStatus').textContent = 'Connected (API)';
+    document.getElementById('apiStatus').className = 'api-status ok';
+  } catch (err) {
+    // Fallback to local simulation
+    var base = simulateLocal(S, S.cm);
+    var bear = simulateLocal(S, S.cm * 0.8);
+    var bull = simulateLocal(S, S.cm * 1.2);
+    render(base, bear, bull);
+    
+    document.getElementById('apiStatus').textContent = 'Offline (local)';
+    document.getElementById('apiStatus').className = 'api-status err';
+  } finally {
+    document.getElementById('main').classList.remove('loading');
+  }
+}
+
+async function initState() {
+  try {
+    const response = await fetch(API_BASE + '/state', { signal: AbortSignal.timeout(2000) });
+    if (!response.ok) throw new Error('API error');
+    
+    S = await response.json();
+    
+    buildSide();
+    initMain();
+    await recalc();
+  } catch (err) {
+    // Use hardcoded defaults
+    S = {
+      freeDaily:25, freeDays:15,
+      crS:250, crP:5000, crE:25000, wlGift:25000,
+      pS:50, pP:250, pE:500,
+      rawCogs:0.0085, buffer:1.50, cons:0.85,
+      cF:.20, cS:.05, cP:.03, cE:.01,
+      aiCost:1000, aiMo:3, draw:2000, drMo:5, artRate:.20,
+      wlFloor:.020, wlDisc:.25,
+      wlBase:150000, wlPro:500000, wlScale:2000000,
+      cm:1.0,
+      useManualSales: false,
+      manualSales: {
+        3:{si:0,pi:0,ei:0}, 4:{si:0,pi:0,ei:0}, 5:{si:0,pi:0,ei:0}, 6:{si:0,pi:0,ei:0},
+        7:{si:0,pi:0,ei:0}, 8:{si:0,pi:0,ei:0}, 9:{si:0,pi:0,ei:0}, 10:{si:0,pi:0,ei:0},
+        11:{si:0,pi:0,ei:0}, 12:{si:0,pi:0,ei:0}
+      },
+      wlEvt:[{mo:3,t:'base',qty:1},{mo:6,t:'pro',qty:1},{mo:9,t:'base',qty:1},{mo:12,t:'scale',qty:1}],
+    };
+    
+    buildSide();
+    initMain();
+    await recalc();
+  }
+}
+
+// Start app
+initState();
+</script>
+</body>
+</html>
