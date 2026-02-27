@@ -3,6 +3,58 @@
 > Format: `## [YYYY-MM-DD] [agent-id] — [decision title]`
 
 ---
+## Session 2026-02-27 — Infrastructure: session commands + context economy regulation
+
+**Decisions:**
+- 3-tier session model: /startgsession (global) | /startHsession (harkly) | /startTsession (tLOS)
+- context-economy-regulation.md принята — постоянная регуляция для всех агентов и сессий
+- /continue создан — для возобновления работы после context limit
+- tLOS: nopoint сообщил о большом апдейте + первом enterprise user, детали pending
+
+**Files changed:**
+- `~/.claude/commands/` — startHsession, closeHsession, startTsession, closeTsession, continue (новые)
+- `~/.claude/commands/startgsession/H/T.md` — обновлены (context economy header)
+- `rules/regulations/context-economy-regulation.md` — создан
+- `rules/global-constitution.md` — §6 обновлён
+- `CLAUDE.md` — блок ⚡ экономии контекста добавлен
+- `development/harkly/memory/current-context-harkly.md` — создан
+- `development/harkly/memory/handshake-harkly.md` — создан
+- `development/tLOS/memory/handshake-tLOS.md` — создан (placeholder, big update pending)
+
+**Tasks completed:** глобальный resync, harkly memory bootstrap, session infrastructure
+**Tasks open:** tLOS briefing (nopoint), HARKLY-03 CPO call, HARKLY-05 web platform, OPS-TODO-01
+
+**Risks / flags:**
+- OPS-TODO-01 (unencrypted .env credentials) — критический, не решён
+- tLOS реальное состояние неизвестно — память не отражает действительность
+
+---
+
+## [2026-02-27] [assistant] — Global context resync: harkly docs sprint complete, project memory bootstrapped
+
+- Tags: `[harkly, resync, context-update, economics, silicon-sampling, partnership, memory-bootstrap]`
+
+**Что произошло между 2026-02-26 и 2026-02-27 (работа без сессионных команд):**
+- Harkly docs sprint завершён: product-brief-v2.md → v2.1 (ready for CPO send)
+- Economics model финализирован: results.md, harkly-financial-2026.md (pessimistic: $28,650 rev 2026)
+- Partnership docs suite создан: partnership-scenarios.md, white-label-partner-offer.md, roadmap-proxymarket.md, use-case-scenarios.md, call-scenario-proxymarket.md, proxymarket-cpo-questionnaire.md
+- Silicon sampling experiment запущен: experiments/silicon_conses_1.md (Пятёрочка+, 20 personas, r=0.85 proof of concept)
+- Desktop MVP подтверждён working (node_modules установлен, production use)
+
+**Закрытые эпики:**
+- HARKLY-01 → DONE (product-brief-v2.md v2.1 + full docs suite)
+- HARKLY-02 → DONE (npm install + desktop running)
+- HARKLY-04 → DONE (economics model complete)
+
+**Открытые:**
+- HARKLY-03: CPO созвон — nopoint
+- HARKLY-05 (new): Web-платформа SaaS dev, target 1 апреля
+
+**Структурное изменение:**
+- Создан development/harkly/memory/ с project-level context и handshake
+- Предложена стратегия lightweight project sessions (см. handshake.md)
+
+---
 
 ## [2026-02-24] [comet] — Harkly: позиционирование ProxyMarket-first, трехслойная модель, PRD v2 draft
 
