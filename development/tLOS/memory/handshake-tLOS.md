@@ -4,30 +4,17 @@
 
 ---
 
-## ⏳ PENDING — Большой апдейт
-
-nopoint сообщил что в tLOS произошёл **большой апдейт** и появился **первый enterprise user**.
-Детали не зафиксированы — необходимо получить от nopoint и обновить этот файл + current-context-tLOS.md.
-
-**Обязательные вопросы для следующей сессии:**
-- Что именно изменилось в tLOS (архитектура, код, стек)?
-- Кто первый enterprise user (компания, сценарий использования, тариф)?
-- Какие новые ветки открыты или закрыты?
-
----
-
 ## Где мы сейчас
 
-Последнее известное состояние (2026-02-22): scaffold только, нет активных веток.
-**Реальное состояние неизвестно** — запросить от nopoint при следующем /startTsession.
+tLOS перенесён в `nospace/development/tLOS/core`, запускается через `grid.bat run`, работает (localhost:5173). Открыта ветка `mcb-v1` — первый enterprise продукт для Артёма (proxy.market).
 
 ---
 
 ## Следующий приоритет
 
-1. Получить от nopoint детали большого апдейта
-2. Обновить current-context-tLOS.md и этот файл
-3. Зафиксировать enterprise user в episodic-context
+1. **Спроектировать UI mcb-seo по BB-фреймворку** — 3 этажа (Стратегия / Тактика / Операция), какие сущности на каком этаже, какие фреймы на холсте tLOS
+2. Получить от Артёма числовые цели Владимира (для расчёта Разрывов в деньгах)
+3. Написать WIT-интерфейс mcb-seo актора
 
 ---
 
@@ -35,7 +22,7 @@ nopoint сообщил что в tLOS произошёл **большой апд
 
 | Branch | Task | Status |
 |---|---|---|
-| Неизвестно | — | pending nopoint briefing |
+| mcb-v1 | Marketing Command Board для proxy.market | open — spec готов, UI design next |
 
 ---
 
@@ -43,14 +30,19 @@ nopoint сообщил что в tLOS произошёл **большой апд
 
 | Нужно | Файл |
 |---|---|
-| Конституция | development/tLOS/rules/tLOS-constitution.md |
+| MCB branch spec | development/tLOS/branches/mcb-v1/spec.md |
+| MCB техдок (от Артёма) | /nospace/docs/tLOS/MCB/Marketing Command Board (MCB).md |
+| MCB данные proxy.market | /nospace/docs/tLOS/MCB/mcb_context.md |
+| BB-фреймворк | /nospace/docs/tLOS/BB-framework/BB-00-Manifest-v2.md |
+| tLOS код (актуальный) | /nospace/development/tLOS/core/ |
+| tLOS документация | /nopoint/tLOS_docs/The-Last-OS-tlos-/ |
 | Текущее состояние | development/tLOS/memory/current-context-tLOS.md |
-| Семантика | development/tLOS/memory/semantic-context-tLOS.md |
 
 ---
 
 ## Открытые вопросы
 
-- [ ] Детали большого апдейта — nopoint briefing
-- [ ] Enterprise user: кто, что, условия
-- [ ] Нужен ли apd в tLOS-constitution.md под новый стек/требования?
+- [ ] UI mcb-seo: какие фреймы на каком этаже холста tLOS
+- [ ] Числовые цели Владимира (MRR, органика, нейровыдача)
+- [ ] Telegram-парсинг в v1 или откладываем?
+- [ ] Удалить старый `.tLOS` после проверки в следующей сессии

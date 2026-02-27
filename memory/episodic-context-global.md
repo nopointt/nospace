@@ -195,3 +195,26 @@
 - OPS-TODO-01 (unencrypted .env credentials) still unresolved — remains critical before team expansion
 
 <!-- Add new entries above this line. Oldest entries at the bottom. -->
+
+---
+## Session 2026-02-27 — tLOS: первый enterprise user + перенос core
+
+**Decisions:**
+- Первый enterprise user: Артём (proxy.market), Marketing Command Board (MCB)
+- tLOS активная версия: `.tLOS` (Cycle 14, multi-agent), НЕ `the-last-os` (wasmCloud)
+- tLOS перенесён: `.tLOS` -> `nospace/development/tLOS/core` (robocopy, все чеки прошли)
+- BB-subset для MCB v1: Подвал + Операция + Тактика + Стратегия (без Крыши и мета)
+- Запуск через `grid.bat run` из core/, стек живой на localhost:5173
+
+**Files changed:**
+- `development/tLOS/branches/mcb-v1/spec.md` — создан, полный spec MCB
+- `development/tLOS/memory/handshake-tLOS.md` — обновлён
+- `development/tLOS/memory/current-context-tLOS.md` — обновлён
+- `development/tLOS/core/` — создан (перенос из .tLOS)
+
+**Tasks completed / open:**
+- [done] tLOS идентифицирован и запущен
+- [done] tLOS перенесён в nospace/development/tLOS/core
+- [done] Ветка mcb-v1 открыта, spec написан
+- [open] UI mcb-seo по BB-фреймворку (следующая сессия)
+- [open] Числовые цели Владимира от Артёма
