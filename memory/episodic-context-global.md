@@ -194,6 +194,35 @@
 **Risks / flags:**
 - OPS-TODO-01 (unencrypted .env credentials) still unresolved — remains critical before team expansion
 
+---
+## Session 2026-02-28 — tLOS: Phase 1 node-v1 SHIPPED — E2E пайплайн работает
+
+**Decisions:**
+- Tauri v2 вместо браузера — tLOS теперь нативное Windows-приложение (frameless, decorations:false)
+- Blossom (BUD-01) для бинарной дистрибуции патчей — external HTTP boundary, Zero-Web2 не нарушен
+- `grid` и `tlos` как глобальные PowerShell команды (profile functions)
+- nopoint identity создан: Nostr npub `npub18xvx74029skh84hgdawyxht0827057ulzvddlyx0dvsnq0ehk20sgsqysw`
+
+**Files changed:**
+- `core/shell/frontend/src-tauri/` — Tauri v2 обёртка создана
+- `core/shell/frontend/src-tauri/target/release/bundle/nsis/tLOS_0.1.0_x64-setup.exe` — готов
+- `core/kernel/tlos-nostr/` — NIP-44 транспорт (nostr-sdk 0.37, Secp256k1)
+- `core/kernel/tlos-patch-send/` — dev tool: Blossom BUD-01 upload + kind:30000 Nostr publish
+- `core/kernel/tlos-patch-daemon/` — full node daemon: receive, SHA256 verify, NATS notify
+- `core/shell/frontend/src/components/PatchDialog.tsx` — liquid glass dialog (создан)
+- `core/shell/src/main.rs` — NATS→WebSocket bridge для patch.incoming (добавлен)
+- `core/grid.ps1` — обновлён: npm run dev → npm run tauri:dev
+
+**Tasks completed:**
+- [done] Tauri native app + tLOS_0.1.0_x64-setup.exe
+- [done] tlos-nostr + tlos-patch-send + tlos-patch-daemon (compile clean)
+- [done] PatchDialog в SolidJS (liquid glass, bottom-right, русский текст)
+- [done] E2E тест: Blossom upload ✅, Nostr relay (damus.io) ✅, event published ✅
+
+**Tasks open:**
+- [open] Настройка машины Артёма: installer + daemon + обмен npub
+- [open] MCB оставшиеся фреймы (ждём API доступы)
+
 <!-- Add new entries above this line. Oldest entries at the bottom. -->
 
 ---

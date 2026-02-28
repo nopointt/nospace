@@ -1,57 +1,69 @@
 ---
 # CURRENT CONTEXT — tLOS
-> Project-level snapshot. Updated when a branch closes or a sprint ends.
-> Agents working in branches do NOT read global memory (token conservation).
-> Tags: [tLOS, project, state, epics, blockers]
 > Last updated: 2026-02-28
 ---
 
 ## Active Epics
 
-| Epic ID | Branch | Description | Status | Owner Agent |
-|---|---|---|---|---|
-| epic-mcb-v1 | mcb-v1 | Marketing Command Board — первый enterprise user (proxy.market) | OPEN — 6 MCB frames реализованы, MCB — дефолтный экран, рендер требует подтверждения в браузере | nopoint |
+| Epic ID | Branch | Description | Status |
+|---|---|---|---|
+| epic-mcb-v1 | mcb-v1 | Marketing Command Board — Артём / proxy.market | OPEN — 6 frames реализованы, McbSeoFrame готов |
+| epic-node-v1 | node-v1 | Dev Node + Full Node — Nostr Native Phase 1 | **SHIPPED** — E2E пайплайн работает, ждём настройки машины Артёма |
 
 ## Project State
 
 | Key | Value | Last Updated |
 |---|---|---|
-| project_phase | first-enterprise-user | 2026-02-28 |
-| kernel_status | запускается через grid.ps1 — фоновые процессы без отдельных окон, логи в branches/mcb-v1/logs/ | 2026-02-28 |
-| shell_status | localhost:5173 — MCB frames как дефолт (STORAGE_KEY=v4), mcb команда через replaceComponents | 2026-02-28 |
-| last_commit | — (не коммитили в эту сессию) | 2026-02-28 |
-| open_branches | 1 (mcb-v1) | 2026-02-28 |
-| first_enterprise_user | Артём / proxy.market | 2026-02-27 |
+| project_phase | first-enterprise-user + node-v1 | 2026-02-28 |
+| shell_status | Tauri native app (decorations:false) — запуск через `grid` или `tlos open` | 2026-02-28 |
+| installer | `tLOS_0.1.0_x64-setup.exe` собран, готов к отправке Артёму | 2026-02-28 |
+| node_architecture | ADR-002 v3 — Nostr Native + Secp256k1 (nostr-sdk) + NIP-44, Phase 1 | 2026-02-28 |
+| transport_phase1 | Nostr NIP-44 (SHIPPED) — Blossom BUD-01 для бинарей | 2026-02-28 |
+| transport_phase3 | libp2p DCUTR — только когда нод 20+ | 2026-02-28 |
+| nopoint_nostr_npub | npub18xvx74029skh84hgdawyxht0827057ulzvddlyx0dvsnq0ehk20sgsqysw | 2026-02-28 |
+| identity_file | ~/.tlos/identity.key — создан на машине nopoint | 2026-02-28 |
+| blossom_server | blossom.primal.net — работает, требует ["x", sha256] tag в BUD-01 auth | 2026-02-28 |
+| wasmcloud_status | ОТКЛОНЁН — custom Wasmtime host в Phase 3+ | 2026-02-28 |
+| storage_key | tlos-canvas-state-mcb-v1 (MCB frames дефолт) | 2026-02-28 |
+| shell_bridge_port | 3001 | 2026-02-27 |
 | tlos_core_path | nospace/development/tLOS/core | 2026-02-27 |
-| tlos_running | grid.ps1 run — сервисы в фоне (-WindowStyle Hidden), логи в terminal + файл | 2026-02-28 |
-| shell_bridge_port | 3001 (port 3000 blocked by Windows HTTP.sys) | 2026-02-27 |
-| mcb_frames_default | ДА — MCB_FRAMES дефолтный стейт при первом открытии | 2026-02-28 |
-| storage_key | tlos-canvas-state-v4 | 2026-02-28 |
+| cost | $0 — только free open source + публичные Nostr relays | 2026-02-28 |
 
 ## Blockers
 
 | Blocker | Layer | Raised | Resolution |
 |---|---|---|---|
-| Нет доступов к API (Alytics, Topvisor, Метрика, Админка) | mcb-v1 / Подвал | 2026-02-27 | Ждём от Артёма |
-| Цели Владимира не зафиксированы в числах | mcb-v1 / Стратегия | 2026-02-27 | Ждём от Артёма |
-| MCB frame рендер не подтверждён | shell / frontend | 2026-02-28 | User видит "окна без дизайна" — дизайн есть в .tsx, нужен hard refresh браузера + проверка F12 console |
-| grid.ps1 фоновые логи не протестированы | kernel | 2026-02-28 | Новый подход Start-Job + Receive-Job не подтверждён |
+| Нет доступов к API (Alytics, Topvisor, Метрика) | mcb-v1 | 2026-02-27 | Ждём от Артёма |
+| Цели не зафиксированы в числах | mcb-v1 | 2026-02-27 | Ждём от Артёма |
+| Артём не настроил tlos-patch-daemon | node-v1 | 2026-02-28 | Нужно: установить tLOS-setup.exe, запустить daemon с --dev-npub nopoint |
 
 ## Architecture Snapshot
 
-- **L0 Meta:** governance layer — docs and constitutions
-- **L1 Grid:** NATS mesh — running (nats-server via grid.ps1)
-- **L2 Kernel:** Rust — tlos-shell-bridge(:3001), tlos-fs-bridge, tlos-shell-exec; запускаются фоном через -WindowStyle Hidden
-- **L3 Shell:** SolidJS + Vite — localhost:5173, MCB frames дефолтный стейт
-- **Canvas state:** `src/data/mcb-frames.ts` — единственный источник правды для MCB_FRAMES
-- **Core path:** `C:\Users\noadmin\nospace\development\tLOS\core`
-- **Old path (backup):** `C:\Users\noadmin\.tLOS` — IGNORE, старая копия
-- **Agent roles:** Claude=orchestrator (no code — НАРУШЕНО в этой сессии), Qwen=coder (via CLI `-y` flag)
-- **Qwen CLI:** `qwen -y -p "prompt"` для записи файлов
-- **Logs:** `branches/mcb-v1/logs/{service}.log` — логи каждого сервиса
+- **L0 Meta:** ADR-002 v3 + constitutions
+- **L1 Grid:** NATS локально + Nostr NIP-44 для межнодовой связи (Phase 1, SHIPPED)
+- **L2 Kernel:** Rust сервисы; Phase 3+: custom Wasmtime host
+- **L3 Shell:** SolidJS + Tauri native app (WebView2, frameless, 1440x900)
+- **Identity:** Secp256k1 (nostr-sdk) — реализовано, ~/.tlos/identity.key
+- **Transport Phase 1:** Nostr NIP-44 (Secp256k1, kind:30000) + Blossom BUD-01
+- **Transport Phase 3:** libp2p DCUTR (когда нод 20+)
+- **Patch pipeline:** tlos-patch-send → Blossom → Nostr → tlos-patch-daemon → NATS → PatchDialog
+- **Hot-swap Phase 1:** restart actor (простой)
+- **Hot-swap Phase 3:** Wasmtime atomic pointer swap (zero downtime)
+- **Core path:** C:\Users\noadmin\nospace\development\tLOS\core
+- **ADR-002 v3:** docs/tLOS/docs/technical/adr/ADR-002-node-architecture.md
+- **Known tech debt:** tlos-identity (Ed25519) vs nostr-sdk (Secp256k1) — разные кривые, работает но несогласованно. Будущее: унифицировать на Secp256k1.
 
-## Last Consolidation
+## Node Roadmap — Phase 1
 
-- **Reviewer Run:** —
-- **Entities Merged:** —
-- **Next Scheduled Run:** every 10 commits or weekly
+| Task | Status |
+|---|---|
+| tlos-identity: Ed25519 keypair + load_or_create | ✅ DONE |
+| tlos-nostr: nostr-sdk клиент + NIP-44 | ✅ DONE |
+| Publish kind:30000 патч с dev node (tlos-patch-send) | ✅ DONE |
+| Subscribe + verify + apply на full node (tlos-patch-daemon) | ✅ DONE |
+| PatchDialog в SolidJS shell (liquid glass) | ✅ DONE |
+| Windows installer (tLOS_0.1.0_x64-setup.exe) | ✅ DONE |
+| Tauri native app (frameless, decorations:false) | ✅ DONE |
+| grid CLI глобальная команда (PowerShell profile) | ✅ DONE |
+| E2E тест: dev→self патч через Nostr + Blossom | ✅ DONE (2026-02-28) |
+| E2E тест с Артёмом: установка + daemon + PatchDialog | TODO |
