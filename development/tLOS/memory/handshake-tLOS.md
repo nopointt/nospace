@@ -1,20 +1,20 @@
 # HANDSHAKE — tLOS
 > Читай этот файл в начале любой tLOS-сессии.
-> Updated: 2026-02-27 by Assistant
+> Updated: 2026-02-28 by Assistant
 
 ---
 
 ## Где мы сейчас
 
-tLOS перенесён в `nospace/development/tLOS/core`, запускается через `grid.bat run`, работает (localhost:5173). Открыта ветка `mcb-v1` — первый enterprise продукт для Артёма (proxy.market).
+MCB-v1 в работе. Стек запускается через `grid.ps1 run` (сервисы в фоне, логи в терминал + `branches/mcb-v1/logs/`). Shell на localhost:5173 — MCB 6 фреймов как дефолтный экран. Дизайн фреймов реализован в .tsx, но рендер не подтверждён в браузере.
 
 ---
 
 ## Следующий приоритет
 
-1. **Спроектировать UI mcb-seo по BB-фреймворку** — 3 этажа (Стратегия / Тактика / Операция), какие сущности на каком этаже, какие фреймы на холсте tLOS
-2. Получить от Артёма числовые цели Владимира (для расчёта Разрывов в деньгах)
-3. Написать WIT-интерфейс mcb-seo актора
+1. **Подтвердить рендер MCB фреймов** — запустить grid.ps1 run, открыть localhost:5173, сделать hard refresh (Ctrl+Shift+R), проверить F12 console на ошибки. Если "Frame crashed" — читать ошибку.
+2. **Протестировать grid.ps1 логи** — убедиться что логи идут в main terminal с префиксами `[service-name]` и пишутся в `branches/mcb-v1/logs/`
+3. **Команда mcb** — убедиться что ввод `mcb` в омнибаре заменяет канвас на 6 MCB фреймов
 
 ---
 
@@ -22,7 +22,7 @@ tLOS перенесён в `nospace/development/tLOS/core`, запускаетс
 
 | Branch | Task | Status |
 |---|---|---|
-| mcb-v1 | Marketing Command Board для proxy.market | open — spec готов, UI design next |
+| mcb-v1 | Marketing Command Board для proxy.market | open — фреймы реализованы, нужно подтвердить рендер |
 
 ---
 
@@ -30,19 +30,20 @@ tLOS перенесён в `nospace/development/tLOS/core`, запускаетс
 
 | Нужно | Файл |
 |---|---|
+| MCB frames константа | core/shell/frontend/src/data/mcb-frames.ts |
+| Canvas state hook | core/shell/frontend/src/hooks/useComponents.ts |
+| App + mcb команда | core/shell/frontend/src/App.tsx |
+| Grid лончер | core/grid.ps1 |
 | MCB branch spec | development/tLOS/branches/mcb-v1/spec.md |
-| MCB техдок (от Артёма) | /nospace/docs/tLOS/MCB/Marketing Command Board (MCB).md |
-| MCB данные proxy.market | /nospace/docs/tLOS/MCB/mcb_context.md |
-| BB-фреймворк | /nospace/docs/tLOS/BB-framework/BB-00-Manifest-v2.md |
-| tLOS код (актуальный) | /nospace/development/tLOS/core/ |
-| tLOS документация | /nopoint/tLOS_docs/The-Last-OS-tlos-/ |
+| HTML дизайн-спеки фреймов | development/tLOS/branches/mcb-v1/{Strategy-frame, SEO-command-panel, ...} |
 | Текущее состояние | development/tLOS/memory/current-context-tLOS.md |
 
 ---
 
 ## Открытые вопросы
 
-- [ ] UI mcb-seo: какие фреймы на каком этаже холста tLOS
-- [ ] Числовые цели Владимира (MRR, органика, нейровыдача)
-- [ ] Telegram-парсинг в v1 или откладываем?
-- [ ] Удалить старый `.tLOS` после проверки в следующей сессии
+- [ ] Рендер MCB фреймов: user видит "окна без дизайна" — нужен hard refresh + F12 console
+- [ ] grid.ps1 Start-Job логи: работают ли Receive-Job в цикле на Windows?
+- [ ] Правило Qwen-as-coder нарушено в этой сессии — в следующей строго: Claude промптит, Qwen кодирует через `qwen -y -p "..."`
+- [ ] Получить числовые цели Владимира (MRR, органика, нейровыдача) от Артёма
+- [ ] API доступы (Alytics, Topvisor, Метрика) — ждём от Артёма
