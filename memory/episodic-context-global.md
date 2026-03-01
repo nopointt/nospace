@@ -247,3 +247,34 @@
 - [done] Ветка mcb-v1 открыта, spec написан
 - [open] UI mcb-seo по BB-фреймворку (следующая сессия)
 - [open] Числовые цели Владимира от Артёма
+
+---
+## Session 2026-03-01 — Harkly: GTM стратегия + Silicon Persona концепт
+
+**Decisions:**
+- Cold outreach стратегия: H-06 (Steam/мобильные игры) — первая ниша для теста
+- Data-first подход: готовый анализ + silicon persona как gift в первом сообщении
+- Silicon Persona = portable MD файл synthetic consumer, откалиброванного на реальных отзывах → кидается в любой LLM → PMF тестирование без юзер-интервью
+- AI Perception Layer полностью удалён из продукта (только CX Analysis + CX Prediction)
+- Harkly не имеет вертикального фокуса — анализируем любой CX с публичными отзывами
+
+**Files changed:**
+- `branches/landing-coldoutreach/hypotheses.md` — 10 lean-format нишевых гипотез
+- `branches/landing-coldoutreach/mobile-games-offer.md` — H-06 оффер + шаблоны сообщений
+- `branches/landing-coldoutreach/osint-cx-research.md` — OSINT+CX исследование (Qwen)
+- `branches/landing-coldoutreach/spec.md` — убран e-commerce таргет
+- `rules/harkly-constitution.md` — убрана e-commerce вертикаль из § 1 и § 2
+- `memory/current-context-harkly.md` — добавлен GTM state, silicon persona, новые метрики
+
+**Tasks completed:**
+- OSINT методология для CX Analysis — исследование готово
+- 10 нишевых гипотез оформлены как lean hypotheses с приоритизацией
+- H-06 mobile games: оффер, шаблоны outreach (A/B/C/D варианты), операционный план
+- Найдены бесплатные инструменты: Steam JSON API, google-play-scraper, Gemini free tier
+- Qwen CLI подтверждён как рабочий инструмент для тяжёлых исследовательских задач
+
+**Open:**
+- Silicon Persona MD шаблон — нужно разработать формат
+- Первый реальный Steam анализ (5 игр) + кластеризация
+- Отправить 15 outreach сообщений, замерить reply rate
+- CPO ProxyMarket созвон (HARKLY-03)
