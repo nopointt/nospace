@@ -29,6 +29,41 @@
 - tLOS реальное состояние неизвестно — память не отражает действительность
 
 ---
+## Session 2026-03-02 — Multi-agent system bootstrap + G3 methodology
+
+**Decisions:**
+- Claude = Coach + Orchestrator (новая роль зафиксирована глобально)
+- G3 Dialectical Autocoding принят как методология разработки
+- 3 бесплатных агента активированы: qwen-cli, opencode/minimax-m2.5-free, opencode/trinity-large-preview-free
+- Gemini CLI установлен (требует ключ; старый ключ скомпрометирован — нужна замена)
+- CLAUDE.md перемещён в ~/.claude/CLAUDE.md (глобальный, один на всё)
+- Agent Monitor Dashboard создан через G3 сессию (TASK-MONITOR-001, 1 turn, APPROVED)
+
+**Files changed:**
+- `~/.claude/CLAUDE.md` — перемещён из nospace/CLAUDE.md, добавлены секции Multi-Agent + G3
+- `~/.claude/commands/g3.md` — новая slash-команда для G3 сессий
+- `~/.claude/projects/.../memory/MEMORY.md` — добавлены агенты, G3, agent-monitor
+- `nospace/tools/agent-monitor/` — новый проект (server.js, dashboard.html, 3x .cmd, start.cmd)
+- `nospace/memory/current-context-global.md` — active_agents обновлён, g3/multi-agent добавлены
+
+**Tasks completed:**
+- G3 методология исследована (через Qwen CLI как research agent)
+- /g3 slash-команда создана
+- Gemini CLI установлен и протестирован
+- OpenCode CLI настроен на бесплатные модели (minimax, trinity)
+- Agent Monitor Dashboard реализован по G3 (Qwen Player, Claude Coach)
+
+**Tasks open / carried over:**
+- HARKLY-03 CPO ProxyMarket — pending nopoint
+- HARKLY-05 web platform — in-progress
+- OPS-TODO-01 — unencrypted .env — критический
+- Gemini API ключ нужно заменить (старый публично опубликован в чате)
+- tLOS briefing — pending
+
+**Risks / flags:**
+- Gemini API ключ скомпрометирован — отозвать и заменить на aistudio.google.com
+
+---
 
 ## [2026-02-27] [assistant] — Global context resync: harkly docs sprint complete, project memory bootstrapped
 

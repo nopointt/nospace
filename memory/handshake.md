@@ -1,4 +1,4 @@
-# HANDSHAKE — 2026-02-27
+# HANDSHAKE — 2026-03-02
 > Operative context for the next session. Read this LAST during /startgsession.
 > Written by: Assistant Agent at session close.
 
@@ -6,8 +6,9 @@
 
 ## 🔴 CRITICAL — Read First
 
-- **tLOS: UNKNOWN STATE** — nopoint сообщил о большом апдейте и первом enterprise user. Детали не зафиксированы. При первой tLOS сессии: запусти `/startTsession` и попроси nopoint рассказать что произошло.
-- **OPS-TODO-01:** `private_knowledge/context/longterm/cloudflare-root.env` и `neon-db-master.env` не зашифрованы. CRITICAL перед расширением команды.
+1. **Gemini API ключ скомпрометирован** — старый ключ опубликован в чате. Отозвать на aistudio.google.com и создать новый перед использованием Gemini CLI.
+2. **OPS-TODO-01** — .env файлы не зашифрованы. Критический риск безопасности, требует действий nopoint.
+3. **Claude теперь Coach + Orchestrator** — роль изменилась. 3 бесплатных агента готовы к делегированию задач через `/g3`.
 
 ---
 
@@ -15,54 +16,39 @@
 
 | Item | Status | Next Action |
 |---|---|---|
-| tLOS: big update + enterprise user | pending briefing | /startTsession → спросить nopoint |
-| HARKLY-03: CPO ProxyMarket call | pending | nopoint schedules |
-| HARKLY-05: Web-платформа SaaS | in-progress | архитектура → start разработки |
-| OPS-TODO-01: encrypt .env | critical | nopoint: age encrypt |
+| HARKLY-05 web platform | in-progress | продолжить dev |
+| HARKLY-03 CPO ProxyMarket | pending | nopoint schedules call |
+| OPS-TODO-01 encrypt .env | blocked | nopoint action required |
+| Gemini API ключ | compromised | заменить на aistudio.google.com |
+| tLOS enterprise update | unknown | nopoint briefing at /startTsession |
 
 ---
 
 ## Context Snapshot
 
 **Workspace phase:** active-dev
-**Active projects:** tLOS (статус неизвестен — big update), harkly (active, pre-launch)
-**Last action:** Закрытие глобальной сессии после создания session infrastructure
-
----
-
-## Session Infrastructure (новое — все готово)
-
-- `/startHsession` + `/closeHsession` — harkly (~2 файла)
-- `/startTsession` + `/closeTsession` — tLOS (~2-3 файла)
-- `/continue` — возобновление после context limit (1 файл)
-- Context economy regulation активна во всех сессиях и командах
+**Active projects:** harkly (active), tLOS (pause)
+**Last action:** Multi-agent system bootstrap завершён. G3 methodology активирована. Agent Monitor Dashboard создан через первую G3 сессию (APPROVED, 1 turn).
 
 ---
 
 ## Open Decisions
 
-- [ ] tLOS: big update детали + enterprise user (кто, условия?)
-- [ ] Web SaaS стек: Cloudflare Workers + D1 vs PostgreSQL-RU
-- [ ] Data residency: RU vs Cloudflare — юристы ProxyMarket
-- [ ] prd-horizon-1.md (Comet): актуально или закрыто?
-- [ ] Claude ↔ Comet async channel format
+- [ ] Когда заменить Gemini API ключ и добавить в env
+- [ ] Нужен ли prd-horizon-1.md отдельно или product-brief-v2.md достаточно (Comet task)
 
 ---
 
 ## Files Changed This Session
 
-- `memory/current-context-global.md`, `episodic-context-global.md`, `handshake.md`
-- `development/harkly/memory/current-context-harkly.md`, `handshake-harkly.md` (новые)
-- `development/tLOS/memory/handshake-tLOS.md` (новый, placeholder)
-- `rules/regulations/context-economy-regulation.md` (новый)
-- `rules/global-constitution.md`, `CLAUDE.md` (обновлены)
-- `~/.claude/commands/` — startHsession, closeHsession, startTsession, closeTsession, continue (новые)
-- `~/.claude/commands/startgsession/H/T.md` (обновлены — context economy header)
+- `~/.claude/CLAUDE.md` — перемещён из nospace/, добавлены Multi-Agent System + G3
+- `~/.claude/commands/g3.md` — новая slash-команда G3
+- `~/.claude/projects/.../memory/MEMORY.md` — агенты + G3 + dashboard
+- `nospace/tools/agent-monitor/` — новый проект (server.js, dashboard.html, 3x .cmd, start.cmd)
+- `nospace/memory/current-context-global.md` — active_agents + g3 + multi_agent_system обновлены
 
 ---
 
 ## Recommended First Action Next Session
 
-> tLOS → `/startTsession` + briefing от nopoint.
-> Harkly → `/startHsession`.
-> Глобально → `/startgsession` (дорого, только при необходимости).
+> Заменить Gemini API ключ (aistudio.google.com → новый ключ → добавить в env). Затем `/startHsession` для продолжения HARKLY-05.

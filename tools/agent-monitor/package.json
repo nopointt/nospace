@@ -1,0 +1,12 @@
+{
+  "name": "agent-monitor",
+  "version": "1.0.0",
+  "description": "Lightweight AI agent monitoring tool for Windows",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["agent", "monitor", "dashboard"],
+  "author": "",
+  "license": "MIT"
+}
