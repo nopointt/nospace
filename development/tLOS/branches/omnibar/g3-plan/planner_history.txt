@@ -1,0 +1,5 @@
+2026-03-02T00:00:00 TASK-TLOS-001-OMNIBAR-REFACTOR SESSION OPEN
+  Branch: omnibar | File: Omnibar.tsx
+  Pre-existing code reviewed by Coach — 3 critical issues found
+  Requirements contract created (21 REQs)
+  Turn 1 starting — delegating to OpenCode

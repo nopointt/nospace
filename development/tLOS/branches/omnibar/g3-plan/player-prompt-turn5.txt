@@ -1,0 +1,156 @@
+You are the Player in a G3 coding session. Apply exactly these changes to:
+FILE: C:/Users/noadmin/nospace/development/tLOS/core/shell/frontend/src/components/Omnibar.tsx
+
+Read the full file first, then apply ALL changes below. This is SolidJS + TypeScript.
+
+===========================
+CHANGE 1 — Outer wrapper: flex-row → flex-col
+===========================
+The outer wrapper div (line ~269) currently uses flex-row. Change it to flex-col:
+
+FIND:
+        <div class="fixed bottom-12 left-1/2 -translate-x-1/2 flex flex-row items-end gap-2 z-[1000]">
+
+REPLACE WITH:
+        <div class="fixed bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-[1000]">
+
+===========================
+CHANGE 2 — Add slideInUp animation to existing <style> tag
+===========================
+FIND the end of the existing <style> block:
+                .panel-slide-left  { animation: slideInLeft  0.18s ease-out; }
+                .panel-slide-right { animation: slideInRight 0.18s ease-out; }
+            `}</style>
+
+REPLACE WITH:
+                .panel-slide-left  { animation: slideInLeft  0.18s ease-out; }
+                .panel-slide-right { animation: slideInRight 0.18s ease-out; }
+                @keyframes slideInUp {
+                    from { opacity: 0; transform: translateY(8px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                }
+                .panel-slide-up { animation: slideInUp 0.18s ease-out; }
+            `}</style>
+
+===========================
+CHANGE 3 — Insert context panel (above) + open inner row div
+===========================
+After the closing </style> tag and before "Panel A" comment, insert the context panel
+and open a new inner flex-row div.
+
+FIND:
+            `}</style>
+            {/* Panel A — Agent State (LEFT) */}
+
+REPLACE WITH:
+            `}</style>
+            {/* Context panel — floats ABOVE the omnibar row */}
+            <Show when={activePanel() === 'context'}>
+                <div class="w-[560px] bg-zinc-900/95 backdrop-blur-xl border border-zinc-700/50 rounded-2xl shadow-2xl panel-slide-up p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">Context</span>
+                        <button onClick={() => setActivePanel('none')} class="p-1 hover:bg-zinc-800 rounded transition-colors">
+                            <svg class="w-3 h-3 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[10px] text-zinc-500">
+                            <span>Token usage</span>
+                            <span>{fmtTokens(contextUsed())} / {fmtTokens(contextTotal)}</span>
+                        </div>
+                        <div class="w-full h-0.5 bg-zinc-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-tlos-cyan transition-all duration-300" style={{ width: `${Math.min((contextUsed() / contextTotal) * 100, 100)}%` }}></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-zinc-500">
+                        <span>Messages</span><span>{messages().length}</span>
+                    </div>
+                    <button onClick={clearContext} class="text-[10px] text-red-400/60 hover:text-red-400 transition-colors">
+                        clear context
+                    </button>
+                </div>
+            </Show>
+            {/* Inner row: left panels + omnibar + right panels */}
+            <div class="flex flex-row items-end gap-2">
+            {/* Panel A — Agent State (LEFT) */}
+
+===========================
+CHANGE 4 — Remove context panel from inside the omnibar body
+===========================
+Inside the omnibar body, find and REMOVE this entire block (the context panel that was
+previously inline — it now lives outside):
+
+FIND AND DELETE this entire block:
+                {/* Context panel — appears above history when open */}
+                <Show when={activePanel() === 'context'}>
+                    <div class="shrink-0 border-b border-zinc-700/50 p-3 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">Context</span>
+                            <button onClick={() => setActivePanel('none')} class="p-1 hover:bg-zinc-800 rounded transition-colors">
+                                <svg class="w-3 h-3 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[10px] text-zinc-500">
+                                <span>Token usage</span>
+                                <span>{fmtTokens(contextUsed())} / {fmtTokens(contextTotal)}</span>
+                            </div>
+                            <div class="w-full h-0.5 bg-zinc-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-tlos-cyan transition-all duration-300" style={{ width: `${Math.min((contextUsed() / contextTotal) * 100, 100)}%` }}></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-zinc-500">
+                            <span>Messages</span><span>{messages().length}</span>
+                        </div>
+                        <button onClick={clearContext} class="text-[10px] text-red-400/60 hover:text-red-400 transition-colors">
+                            clear context
+                        </button>
+                    </div>
+                </Show>
+
+Leave the history Show block that comes after it:
+                {/* Message history — always visible when expanded */}
+                <Show when={isExpanded()}>
+
+===========================
+CHANGE 5 — Close the inner row div before closing the outer wrapper
+===========================
+At the very end of the JSX return, find:
+
+            </Show>
+        </div>
+    );
+
+REPLACE WITH:
+            </Show>
+            </div>
+        </div>
+    );
+
+(The first new </div> closes the inner "flex flex-row" row. The second closes the outer "flex flex-col" wrapper.)
+
+===========================
+CHANGE 6 — togglePanel: auto-expand from both collapsed AND max when opening context
+===========================
+FIND:
+        if (panel === 'context' && historyState() === 'max') { setHistoryState('expanded'); }
+
+REPLACE WITH:
+        if (panel === 'context' && historyState() !== 'expanded') { setHistoryState('expanded'); }
+
+===========================
+VERIFICATION CHECKLIST (check after ALL changes):
+===========================
+1. Outer wrapper uses flex-col (not flex-row)
+2. Inner row div (flex flex-row items-end gap-2) wraps Panel A + Panel B + main omnibar + Panel C
+3. Context panel Show block is BEFORE the inner row div (so it appears above)
+4. Context panel has class "panel-slide-up"
+5. @keyframes slideInUp is present in the <style> tag
+6. NO context panel Show block inside the omnibar body
+7. History Show block (flex-1 overflow-y-auto) is still present inside omnibar body
+8. togglePanel uses historyState() !== 'expanded' for context (covers both collapsed and max)
+9. File closes properly: inner row </div> then outer wrapper </div>

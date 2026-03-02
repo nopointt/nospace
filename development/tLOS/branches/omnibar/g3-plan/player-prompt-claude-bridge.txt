@@ -1,0 +1,232 @@
+You are the Player in a G3 coding session. Implement a new service: tlos-claude-bridge.
+
+This is a Node.js service that replaces the Rust NIM bridge with Claude Code CLI as the AI backend.
+Use the Claude Code CLI subprocess instead of NIM HTTP SSE.
+
+============================
+TASK 1 — Create kernel/tlos-claude-bridge/package.json
+============================
+FILE: C:/Users/noadmin/nospace/development/tLOS/core/kernel/tlos-claude-bridge/package.json
+
+Content:
+{
+  "name": "tlos-claude-bridge",
+  "version": "1.0.0",
+  "description": "Claude Code CLI bridge for tLOS via NATS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "nats": "^2.28.2"
+  }
+}
+
+============================
+TASK 2 — Create kernel/tlos-claude-bridge/index.js
+============================
+FILE: C:/Users/noadmin/nospace/development/tLOS/core/kernel/tlos-claude-bridge/index.js
+
+Implement exactly this logic:
+
+```javascript
+'use strict';
+
+const { connect, StringCodec } = require('nats');
+const { spawn } = require('child_process');
+
+const NATS_URL = process.env.NATS_URL || 'nats://localhost:4222';
+const MODEL_NAME = 'claude-sonnet-4-6';
+const sc = StringCodec();
+
+// Map: tLOS sessionId -> { claudeSessionId, prevTextLen }
+// prevTextLen tracks how much text was already sent (for delta extraction)
+const sessions = new Map();
+
+function publish(nc, subject, obj) {
+    nc.publish(subject, sc.encode(JSON.stringify(obj)));
+}
+
+async function handleChat(nc, sessionId, content) {
+    const session = sessions.get(sessionId) || { claudeSessionId: null, prevTextLen: 0 };
+
+    const args = [
+        '-p', content,
+        '--output-format', 'stream-json',
+        '--include-partial-messages'
+    ];
+
+    if (session.claudeSessionId) {
+        args.push('--resume', session.claudeSessionId);
+    }
+
+    // Unset CLAUDECODE to bypass nested session restriction
+    const env = Object.assign({}, process.env);
+    delete env.CLAUDECODE;
+
+    const child = spawn('claude', args, { env, shell: false });
+
+    let buf = '';
+    let currentTextLen = 0; // tracks chars already published for current assistant message
+
+    child.stdout.on('data', (chunk) => {
+        buf += chunk.toString();
+        const lines = buf.split('\n');
+        buf = lines.pop(); // keep incomplete last line
+
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed) continue;
+
+            let msg;
+            try { msg = JSON.parse(trimmed); } catch { continue; }
+
+            // Capture claude session_id for resume (multi-turn)
+            if (msg.type === 'system' && msg.subtype === 'init' && msg.session_id) {
+                sessions.set(sessionId, { claudeSessionId: msg.session_id, prevTextLen: 0 });
+                currentTextLen = 0;
+            }
+
+            // Extract text delta from assistant messages
+            if (msg.type === 'assistant' && msg.message && msg.message.content) {
+                for (const block of msg.message.content) {
+                    if (block.type === 'text' && typeof block.text === 'string') {
+                        const fullText = block.text;
+                        const delta = fullText.slice(currentTextLen);
+                        if (delta.length > 0) {
+                            currentTextLen = fullText.length;
+                            publish(nc, 'tlos.shell.broadcast', {
+                                type: 'agent:token',
+                                payload: { sessionId, delta, done: false }
+                            });
+                        }
+                    }
+                }
+            }
+
+            // result = done
+            if (msg.type === 'result') {
+                // Update stored session
+                const stored = sessions.get(sessionId);
+                if (stored) stored.prevTextLen = 0;
+                currentTextLen = 0;
+
+                publish(nc, 'tlos.shell.broadcast', {
+                    type: 'agent:token',
+                    payload: { sessionId, delta: '', done: true }
+                });
+            }
+        }
+    });
+
+    child.stderr.on('data', (chunk) => {
+        const text = chunk.toString().trim();
+        if (text) console.error('[claude stderr]', text);
+    });
+
+    child.on('error', (err) => {
+        console.error('[claude spawn error]', err.message);
+        publish(nc, 'tlos.shell.broadcast', {
+            type: 'agent:token',
+            payload: { sessionId, delta: `[Error: ${err.message}]`, done: true }
+        });
+    });
+
+    child.on('close', (code) => {
+        if (code !== 0) {
+            publish(nc, 'tlos.shell.broadcast', {
+                type: 'agent:token',
+                payload: { sessionId, delta: '', done: true }
+            });
+        }
+    });
+}
+
+async function main() {
+    console.log('[tlos-claude-bridge] connecting to NATS:', NATS_URL);
+    const nc = await connect({ servers: NATS_URL });
+    console.log('[tlos-claude-bridge] connected');
+
+    // Publish ready status
+    publish(nc, 'tlos.shell.broadcast', {
+        type: 'agent:status',
+        payload: { ready: true, model: MODEL_NAME }
+    });
+
+    console.log(`[tlos-claude-bridge] online — model=${MODEL_NAME}`);
+
+    const sub = nc.subscribe('tlos.shell.events');
+
+    for await (const msg of sub) {
+        let parsed;
+        try { parsed = JSON.parse(sc.decode(msg.data)); } catch { continue; }
+
+        if (parsed.type !== 'agent:chat') continue;
+
+        const { sessionId, content } = parsed;
+        if (!sessionId || !content) continue;
+
+        handleChat(nc, sessionId, content).catch(err => {
+            console.error('[handleChat error]', err.message);
+        });
+    }
+
+    await nc.drain();
+}
+
+main().catch(err => {
+    console.error('[fatal]', err);
+    process.exit(1);
+});
+```
+
+============================
+TASK 3 — Install nats npm dependency
+============================
+Run this command in the new directory:
+  cd C:/Users/noadmin/nospace/development/tLOS/core/kernel/tlos-claude-bridge && npm install
+
+============================
+TASK 4 — Update grid.ps1 to add the new service
+============================
+FILE: C:/Users/noadmin/nospace/development/tLOS/core/grid.ps1
+
+Find the $Services array. Replace the existing "agent-bridge" entry:
+    @{ name = "agent-bridge"; title = "agent-bridge";  dir = $Kernel;   cmd = "cargo run --bin tlos-agent-bridge";             optional = $true  },
+
+Replace it with TWO entries:
+    @{ name = "agent-bridge"; title = "NIM bridge";    dir = $Kernel;   cmd = "cargo run --bin tlos-agent-bridge";             optional = $true  },
+    @{ name = "claude-bridge"; title = "Claude bridge"; dir = (Join-Path $Kernel "tlos-claude-bridge"); cmd = "node index.js"; optional = $true  },
+
+Also add the claude-bridge availability check. Find the block that checks for the NIM key (around line 52-58):
+    if ($svc.optional -and $svc.name -eq "agent-bridge") {
+        $nimKeyPath = Join-Path $env:USERPROFILE ".tlos\nim-key"
+        if (-not (Test-Path $nimKeyPath)) {
+            Write-Host "  skip  $($svc.title)  (~/.tlos/nim-key not found)" -ForegroundColor DarkGray
+            continue
+        }
+    }
+
+ADD a new check right after that block (after the closing brace on line 58):
+    if ($svc.optional -and $svc.name -eq "claude-bridge") {
+        $claudeAvailable = $null -ne (Get-Command claude -ErrorAction SilentlyContinue)
+        if (-not $claudeAvailable) {
+            Write-Host "  skip  $($svc.title)  (claude CLI not found)" -ForegroundColor DarkGray
+            continue
+        }
+        $claudeBridgeDeps = Join-Path $Kernel "tlos-claude-bridge\node_modules"
+        if (-not (Test-Path $claudeBridgeDeps)) {
+            Write-Host "  installing claude-bridge deps..." -ForegroundColor DarkYellow
+            & npm install --prefix (Join-Path $Kernel "tlos-claude-bridge") | Out-Null
+        }
+    }
+
+============================
+VERIFICATION CHECKLIST:
+============================
+1. kernel/tlos-claude-bridge/package.json exists with nats dependency
+2. kernel/tlos-claude-bridge/index.js exists with full implementation
+3. kernel/tlos-claude-bridge/node_modules/ exists (npm install ran)
+4. grid.ps1 has claude-bridge entry in $Services array
+5. grid.ps1 has claude availability check block
+6. No syntax errors in index.js (node --check index.js)

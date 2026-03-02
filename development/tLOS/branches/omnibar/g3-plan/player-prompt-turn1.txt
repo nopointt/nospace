@@ -1,0 +1,35 @@
+You are the Player in a G3 coding session. Fix exactly 4 bugs in this file.
+
+TARGET FILE: C:/Users/noadmin/nospace/development/tLOS/core/shell/frontend/src/components/Omnibar.tsx
+
+This is a SolidJS + TypeScript component.
+
+IMPORTANT SOLIDJS RULES:
+- createRef does NOT exist in SolidJS (it is React API). Do not use it.
+- In SolidJS, use: let containerRef!: HTMLDivElement;
+- In JSX, bind ref as: ref={el => (containerRef = el)}
+- Access ref directly as containerRef (NOT containerRef.current)
+
+FIX 1 (CRITICAL - compile error):
+- Remove "createRef" from the import on line 1
+- Line 168: replace "const containerRef = createRef<HTMLDivElement>();" with "let containerRef!: HTMLDivElement;"
+- Line 172: replace "containerRef.current && !containerRef.current.contains" with "containerRef && !containerRef.contains"
+- Line 277: replace "ref={containerRef}" with "ref={el => (containerRef = el)}"
+
+FIX 2 (layout bug):
+- Line 359: The omnibar main div has class starting with "relative bg-zinc-900/95 backdrop-blur-xl..."
+- Add "w-[560px]" to that class string
+
+FIX 3 (visual bug):
+- Line 494: The input row div currently has: class="relative p-4 border-t border-zinc-700/50"
+- Change it to conditionally apply border only when expanded.
+- New class: use a template literal where border-t and border-zinc-700/50 only appear when isExpanded() is true
+- Also remove the classList prop from that same div (the rounded-b-2xl classList is no longer needed)
+
+FIX 4 (state machine bug):
+- Lines 76-81: the togglePanel function needs one additional line at the top:
+  if (panel === 'context' && historyState() === 'max') { setHistoryState('expanded'); }
+- Keep the rest of the function identical
+
+Make ONLY these 4 changes. Do not rewrite or restructure anything else.
+After editing, verify the file no longer contains "createRef" and no longer contains "containerRef.current".

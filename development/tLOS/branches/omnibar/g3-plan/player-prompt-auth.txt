@@ -1,0 +1,343 @@
+You are the Player in a G3 coding session. Implement Claude auth status + sign-in flow across 2 files.
+
+IMPORTANT CONTEXT:
+- spawn('claude.cmd', ...) fails with ENOENT because the npm bin dir may not be in PATH when Node.js bridge starts from PowerShell grid.ps1
+- Fix: resolve the absolute path to claude.cmd at module startup using execSync('where claude.cmd')
+- Auth check: read ~/.claude.json and look for known auth fields
+- Sign-in flow: on 'agent:auth:login' NATS message -> spawn 'claude.cmd login' in a new CMD window (opens browser OAuth)
+
+============================
+CHANGE 1 — tlos-claude-bridge/index.js
+============================
+FILE: C:/Users/noadmin/nospace/development/tLOS/core/kernel/tlos-claude-bridge/index.js
+
+--- STEP A: Add fs and path requires at top ---
+
+FIND (line 1-5):
+'use strict';
+
+const { connect, StringCodec } = require('nats');
+const { spawn } = require('child_process');
+
+const NATS_URL = process.env.NATS_URL || 'nats://localhost:4222';
+
+REPLACE WITH:
+'use strict';
+
+const { connect, StringCodec } = require('nats');
+const { spawn, execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+const NATS_URL = process.env.NATS_URL || 'nats://localhost:4222';
+
+--- STEP B: Add CLAUDE_EXE resolution + auth helpers after MODEL_NAME line ---
+
+FIND:
+const MODEL_NAME = 'claude-sonnet-4-6';
+const sc = StringCodec();
+
+REPLACE WITH:
+const MODEL_NAME = 'claude-sonnet-4-6';
+const sc = StringCodec();
+
+// Resolve absolute path to claude at startup (avoids ENOENT when npm bin not in PATH)
+let CLAUDE_EXE = process.platform === 'win32' ? 'claude.cmd' : 'claude';
+try {
+    const found = execSync(
+        process.platform === 'win32' ? 'where claude.cmd' : 'which claude',
+        { encoding: 'utf8', timeout: 3000 }
+    ).split('\n')[0].replace(/\r/g, '').trim();
+    if (found) CLAUDE_EXE = found;
+    console.log('[tlos-claude-bridge] claude resolved:', CLAUDE_EXE);
+} catch (e) {
+    console.warn('[tlos-claude-bridge] claude not found in PATH, using fallback:', CLAUDE_EXE);
+}
+
+// Auth status: read ~/.claude.json for known account/token fields
+function getAuthStatus() {
+    const claudeJson = path.join(process.env.USERPROFILE || process.env.HOME || '', '.claude.json');
+    let authed = false;
+    try {
+        const data = JSON.parse(fs.readFileSync(claudeJson, 'utf8'));
+        authed = !!(
+            data.oauthAccount ||
+            data.primaryAccountId ||
+            data.oauthToken ||
+            data.accessToken ||
+            data.claudeAiOAuthAccount ||
+            (data.accounts && Object.keys(data.accounts).length > 0)
+        );
+    } catch { /* not found or invalid */ }
+    return { found: true, authed, path: CLAUDE_EXE };
+}
+
+function publishAuthStatus(nc) {
+    publish(nc, 'tlos.shell.broadcast', {
+        type: 'agent:auth:status',
+        payload: getAuthStatus()
+    });
+}
+
+--- STEP C: Replace hardcoded claudeExe inside handleChat ---
+
+FIND:
+    const claudeExe = process.platform === 'win32' ? 'claude.cmd' : 'claude';
+    const child = spawn(claudeExe, args, { env, shell: false });
+
+REPLACE WITH:
+    const child = spawn(CLAUDE_EXE, args, { env, shell: false });
+
+--- STEP D: Publish auth status on startup (after existing agent:status publish) ---
+
+FIND:
+    // Publish ready status
+    publish(nc, 'tlos.shell.broadcast', {
+        type: 'agent:status',
+        payload: { ready: true, model: MODEL_NAME }
+    });
+
+    console.log(`[tlos-claude-bridge] online — model=${MODEL_NAME}`);
+
+REPLACE WITH:
+    // Publish ready status
+    publish(nc, 'tlos.shell.broadcast', {
+        type: 'agent:status',
+        payload: { ready: true, model: MODEL_NAME }
+    });
+
+    // Publish initial auth status
+    publishAuthStatus(nc);
+
+    console.log(`[tlos-claude-bridge] online — model=${MODEL_NAME}`);
+
+--- STEP E: Handle auth message types BEFORE the existing agent:chat filter ---
+
+FIND:
+        if (parsed.type !== 'agent:chat') continue;
+
+        // Only handle Claude provider (or unspecified for backwards compat)
+
+REPLACE WITH:
+        // Auth: status request
+        if (parsed.type === 'agent:auth:request') {
+            publishAuthStatus(nc);
+            continue;
+        }
+
+        // Auth: login — open new terminal window running 'claude login' (browser OAuth)
+        if (parsed.type === 'agent:auth:login') {
+            if (process.platform === 'win32') {
+                spawn('cmd.exe', ['/c', 'start', 'cmd', '/k', `"${CLAUDE_EXE}" login`], {
+                    detached: true, stdio: 'ignore'
+                }).unref();
+            } else {
+                spawn('sh', ['-c', `"${CLAUDE_EXE}" login`], {
+                    detached: true, stdio: 'ignore'
+                }).unref();
+            }
+            // Re-check auth after 10 seconds (user completes browser login)
+            setTimeout(() => publishAuthStatus(nc), 10000);
+            continue;
+        }
+
+        if (parsed.type !== 'agent:chat') continue;
+
+        // Only handle Claude provider (or unspecified for backwards compat)
+
+============================
+CHANGE 2 — Omnibar.tsx: claudeAuth signal + auth UI in Model panel
+============================
+FILE: C:/Users/noadmin/nospace/development/tLOS/core/shell/frontend/src/components/Omnibar.tsx
+
+--- STEP A: Add ClaudeAuthStatus interface ---
+
+FIND:
+interface NimStatus {
+    online: boolean;
+    model: string;
+    error?: string;
+}
+
+REPLACE WITH:
+interface NimStatus {
+    online: boolean;
+    model: string;
+    error?: string;
+}
+
+interface ClaudeAuthStatus {
+    found: boolean;
+    authed: boolean;
+    path?: string;
+}
+
+--- STEP B: Add claudeAuth signal after claudeModel signal ---
+
+FIND:
+    const [claudeModel, setClaudeModel] = createSignal(
+        localStorage.getItem('tlos-claude-model') || 'claude-sonnet-4-6'
+    );
+
+REPLACE WITH:
+    const [claudeModel, setClaudeModel] = createSignal(
+        localStorage.getItem('tlos-claude-model') || 'claude-sonnet-4-6'
+    );
+    const [claudeAuth, setClaudeAuth] = createSignal<ClaudeAuthStatus>({ found: false, authed: false });
+
+--- STEP C: Handle agent:auth:status in kernel subscription ---
+
+FIND:
+                if (parsed.type === 'agent:context') {
+                    const { used } = parsed.payload;
+                    if (used !== undefined) {
+                        setContextUsed(used);
+                    }
+                }
+
+REPLACE WITH:
+                if (parsed.type === 'agent:context') {
+                    const { used } = parsed.payload;
+                    if (used !== undefined) {
+                        setContextUsed(used);
+                    }
+                }
+
+                if (parsed.type === 'agent:auth:status') {
+                    setClaudeAuth(parsed.payload);
+                }
+
+--- STEP D: Request auth status on mount (after existing agent:ping) ---
+
+FIND:
+        // Subscribe to kernel messages
+        kernel.send(JSON.stringify({ type: 'agent:ping' }));
+
+REPLACE WITH:
+        // Subscribe to kernel messages
+        kernel.send(JSON.stringify({ type: 'agent:ping' }));
+        kernel.send(JSON.stringify({ type: 'agent:auth:request' }));
+
+--- STEP E: Update nimDisplayText to show auth state for Claude ---
+
+FIND:
+    const nimDisplayText = createMemo(() => {
+        if (selectedProvider() === 'claude') {
+            const m = CLAUDE_MODELS.find(m => m.id === claudeModel());
+            return (m ? m.label : 'Claude') + ' · online';
+        }
+
+REPLACE WITH:
+    const nimDisplayText = createMemo(() => {
+        if (selectedProvider() === 'claude') {
+            if (!claudeAuth().authed) return 'Claude · not signed in';
+            const m = CLAUDE_MODELS.find(m => m.id === claudeModel());
+            return (m ? m.label : 'Claude') + ' · online';
+        }
+
+--- STEP F: Update nimDisplayColor to show red when not authed ---
+
+FIND:
+    const nimDisplayColor = createMemo(() => {
+        if (selectedProvider() === 'claude') return 'text-zinc-400';
+
+REPLACE WITH:
+    const nimDisplayColor = createMemo(() => {
+        if (selectedProvider() === 'claude') {
+            return claudeAuth().authed ? 'text-zinc-400' : 'text-red-400/80';
+        }
+
+--- STEP G: Replace static "Status: online" section in Model panel with dynamic auth section ---
+
+FIND:
+                        {/* Claude model selector */}
+                        <Show when={selectedProvider() === 'claude'}>
+                            <div class="space-y-1.5">
+                                <span class="text-[10px] uppercase tracking-wider text-zinc-500">Model</span>
+                                <div class="space-y-1">
+                                    <For each={CLAUDE_MODELS}>
+                                        {(m) => (
+                                            <button
+                                                onClick={() => { setClaudeModel(m.id); localStorage.setItem('tlos-claude-model', m.id); }}
+                                                class={`w-full text-left px-2 py-1.5 rounded-lg text-[11px] font-mono transition-colors ${claudeModel() === m.id ? 'bg-tlos-cyan/20 text-tlos-cyan border border-tlos-cyan/30' : 'bg-zinc-800/50 text-zinc-400 hover:bg-zinc-800'}`}
+                                            >
+                                                {m.label}
+                                            </button>
+                                        )}
+                                    </For>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[10px] uppercase tracking-wider text-zinc-500">Status</span>
+                                <span class="text-xs text-zinc-400">online</span>
+                            </div>
+                        </Show>
+
+REPLACE WITH:
+                        {/* Claude model selector + auth */}
+                        <Show when={selectedProvider() === 'claude'}>
+                            {/* Auth status */}
+                            <div class="space-y-1.5">
+                                <span class="text-[10px] uppercase tracking-wider text-zinc-500">Connection</span>
+                                <Show when={claudeAuth().authed}>
+                                    <div class="flex items-center gap-1.5">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                                        <span class="text-xs text-zinc-400">Connected</span>
+                                    </div>
+                                </Show>
+                                <Show when={!claudeAuth().authed}>
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center gap-1.5">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-red-400/80 flex-shrink-0" />
+                                            <span class="text-xs text-red-400/80">Not signed in</span>
+                                        </div>
+                                        <button
+                                            onClick={() => kernel.send(JSON.stringify({ type: 'agent:auth:login' }))}
+                                            class="w-full px-2 py-1.5 rounded-lg text-[11px] font-mono bg-tlos-cyan/20 text-tlos-cyan border border-tlos-cyan/30 hover:bg-tlos-cyan/30 transition-colors"
+                                        >
+                                            Sign in with Claude
+                                        </button>
+                                    </div>
+                                </Show>
+                            </div>
+                            {/* Model selector (only when authed) */}
+                            <Show when={claudeAuth().authed}>
+                                <div class="space-y-1.5">
+                                    <span class="text-[10px] uppercase tracking-wider text-zinc-500">Model</span>
+                                    <div class="space-y-1">
+                                        <For each={CLAUDE_MODELS}>
+                                            {(m) => (
+                                                <button
+                                                    onClick={() => { setClaudeModel(m.id); localStorage.setItem('tlos-claude-model', m.id); }}
+                                                    class={`w-full text-left px-2 py-1.5 rounded-lg text-[11px] font-mono transition-colors ${claudeModel() === m.id ? 'bg-tlos-cyan/20 text-tlos-cyan border border-tlos-cyan/30' : 'bg-zinc-800/50 text-zinc-400 hover:bg-zinc-800'}`}
+                                                >
+                                                    {m.label}
+                                                </button>
+                                            )}
+                                        </For>
+                                    </div>
+                                </div>
+                            </Show>
+                        </Show>
+
+============================
+VERIFICATION CHECKLIST:
+============================
+1. index.js: `fs` and `path` are required at top
+2. index.js: CLAUDE_EXE resolved via execSync('where claude.cmd') at startup, logs resolved path
+3. index.js: getAuthStatus() reads ~/.claude.json for auth fields
+4. index.js: publishAuthStatus() publishes agent:auth:status to tlos.shell.broadcast
+5. index.js: handleChat uses CLAUDE_EXE (not hardcoded claude.cmd)
+6. index.js: publishAuthStatus called on startup
+7. index.js: handles agent:auth:request (re-publishes status)
+8. index.js: handles agent:auth:login (spawns 'cmd /c start cmd /k "CLAUDE_EXE login"', setTimeout re-check)
+9. Omnibar.tsx: ClaudeAuthStatus interface exists
+10. Omnibar.tsx: claudeAuth signal initialized to { found: false, authed: false }
+11. Omnibar.tsx: kernel subscription handles agent:auth:status -> setClaudeAuth
+12. Omnibar.tsx: onMount sends agent:auth:request
+13. Omnibar.tsx: nimDisplayText shows 'Claude · not signed in' when !claudeAuth().authed
+14. Omnibar.tsx: nimDisplayColor returns 'text-red-400/80' when !claudeAuth().authed
+15. Omnibar.tsx: Model panel shows green "Connected" dot when authed
+16. Omnibar.tsx: Model panel shows red "Not signed in" + "Sign in with Claude" button when !authed
+17. Omnibar.tsx: Model selector only shown when authed
+18. TypeScript: run `npx tsc --noEmit` in frontend dir — must have zero errors

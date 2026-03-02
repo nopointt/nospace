@@ -347,3 +347,25 @@
 - Первый реальный Steam анализ (5 игр) + кластеризация
 - Отправить 15 outreach сообщений, замерить reply rate
 - CPO ProxyMarket созвон (HARKLY-03)
+
+---
+## Session 2026-03-02 — tLOS: Claude Code integration as Eidolon AI backend
+
+**Decisions:**
+- tlos-claude-bridge: Node.js service spawning `claude` CLI subprocess as AI backend (BYOK via Claude Code subscription)
+- Provider routing: `provider` field in `agent:chat` NATS messages routes to claude-bridge or nim-bridge
+- Auth UI: Model panel shows Connection status + "Sign in with Claude" button (triggers `claude login` OAuth)
+- Product model confirmed: tLOS = spatial OS + Claude Code + prebuilt AI config (CLAUDE.md, rules/, agents/) bundled
+
+**Files changed:**
+- `core/kernel/tlos-claude-bridge/index.js` — NEW + auth + path resolution + cmd.exe fix
+- `core/kernel/tlos-claude-bridge/package.json` — NEW
+- `core/shell/frontend/src/components/Omnibar.tsx` — provider selector UI + auth status
+- `core/kernel/tlos-agent-bridge/src/main.rs` — provider filter (skip claude messages)
+- `core/grid.ps1` — claude-bridge service entry + availability check
+
+**Tasks completed / open:**
+- ✅ tlos-claude-bridge implemented (NATS + subprocess + session resume + delta streaming)
+- ✅ Provider selector UI (Claude/NVIDIA toggle + model list)
+- ✅ Auth UI (Connected / Sign in with Claude)
+- ❌ Windows subprocess still hangs — cmd.exe /c fix insufficient, needs further diagnosis

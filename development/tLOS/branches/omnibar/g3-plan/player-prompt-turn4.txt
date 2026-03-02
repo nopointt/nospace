@@ -1,0 +1,228 @@
+You are the Player in a G3 coding session. Apply exactly these 8 changes to:
+FILE: C:/Users/noadmin/nospace/development/tLOS/core/shell/frontend/src/components/Omnibar.tsx
+
+This is a SolidJS + TypeScript component. Read the full file first, then apply ALL changes below.
+
+===========================
+CURRENT FILE STATE — READ BEFORE APPLYING FIXES
+===========================
+A previous agent partially applied changes and introduced a compile error:
+- The declaration "let containerRef!: HTMLDivElement;" is ALREADY MISSING (was accidentally removed)
+- The mousedown handler block at lines ~168-178 still references containerRef (compile error)
+- ref={containerRef} on wrapper div at line ~276 still references containerRef (compile error)
+FIX 1 (agentHealth idle = grey) is already applied — do NOT re-apply it.
+
+===========================
+FIX 1 — ALREADY DONE — SKIP THIS
+===========================
+agentHealth memo already returns { color: 'ring-zinc-600', text: 'text-zinc-500' } for idle.
+Do NOT change it.
+
+===========================
+FIX 2 — Remove click-outside-to-collapse + fix compile error
+===========================
+The file currently has a compile error. Fix it by doing BOTH of these:
+
+STEP A — Remove the mousedown onMount block entirely (around lines 168-178):
+Find and remove this entire block:
+    // Click outside handling
+    onMount(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (containerRef && !containerRef.contains(e.target as Node)) {
+                setHistoryState('collapsed');
+                setActivePanel('none');
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        onCleanup(() => document.removeEventListener('mousedown', handleClickOutside));
+    });
+
+STEP B — Remove ref={containerRef} from the wrapper div (around line 276):
+  CURRENT: <div ref={containerRef} class="fixed bottom-12 left-1/2 -translate-x-1/2 flex flex-row items-end gap-2 z-[1000]">
+  NEW:     <div class="fixed bottom-12 left-1/2 -translate-x-1/2 flex flex-row items-end gap-2 z-[1000]">
+
+(The let containerRef! declaration is already gone — do NOT add it back.)
+Keep ESC handler. Keep the collapse button in the header.
+
+===========================
+FIX 3 — Fix agent indicator click: switch between agent-state panels correctly
+===========================
+Find the agent indicator button onClick handler (around line 498-507).
+Replace the entire if/else block with a single line:
+  onClick={() => setActivePanel(prev => prev === 'agent-state' ? 'none' : 'agent-state')}
+
+CURRENT (buggy):
+    onClick={() => {
+        if (activePanel() === 'agent-state') {
+            setActivePanel('none');
+        } else if (activePanel() === 'agent-management') {
+            setActivePanel('none');
+        } else {
+            setActivePanel('agent-state');
+        }
+    }}
+
+NEW (single line):
+    onClick={() => setActivePanel(prev => prev === 'agent-state' ? 'none' : 'agent-state')}
+
+===========================
+FIX 4 — Context n/m numbers more visible
+===========================
+Find the context display button in the header (around line 370-374).
+It looks like:
+    class="text-[9px] text-zinc-600 hover:text-zinc-400 transition-colors"
+Change it to:
+    class="text-[10px] text-zinc-300 hover:text-zinc-100 transition-colors"
+
+===========================
+FIX 5 — Model status display: name + state
+===========================
+a) Change nimDisplayText createMemo (around lines 60-65):
+   CURRENT:
+     const nimDisplayText = createMemo(() => {
+         const status = nimStatus();
+         if (status.error) return status.error;
+         if (status.online) return shortModelName(status.model);
+         return 'offline';
+     });
+   NEW:
+     const nimDisplayText = createMemo(() => {
+         const status = nimStatus();
+         const shortName = shortModelName(status.model);
+         if (status.error) return shortName + ' · ' + status.error;
+         if (status.online) return shortName + ' · online';
+         return shortName + ' · offline';
+     });
+
+b) In the EXISTING onMount block that contains "kernel.subscribe" (around line 85-151),
+   add this line BEFORE the "const unsubscribe = kernel.subscribe" line:
+     kernel.send(JSON.stringify({ type: 'agent:ping' }));
+   Place it so it reads:
+     kernel.send(JSON.stringify({ type: 'agent:ping' }));
+     const unsubscribe = kernel.subscribe((msg) => {
+
+===========================
+FIX 6 — Panel height proportional to TUI state
+===========================
+For each of the three side panel divs (agent-state w-60, agent-management w-60, model w-60),
+change their class from:
+  "w-60 bg-zinc-900/98 border border-zinc-700/50 rounded-2xl shadow-2xl flex flex-col"
+To:
+  {`w-60 bg-zinc-900/95 backdrop-blur-xl border border-zinc-700/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${historyState() === 'max' ? 'h-[600px]' : 'h-[360px]'}`}
+
+Also update the togglePanel function (around line 76-82) to auto-expand when opening a side panel
+while omnibar is collapsed. Add this at the TOP of togglePanel, before the existing lines:
+  if ((panel === 'agent-state' || panel === 'agent-management' || panel === 'model') && historyState() === 'collapsed') {
+      setHistoryState('expanded');
+  }
+
+The full togglePanel should then be:
+    const togglePanel = (panel: 'agent-state' | 'agent-management' | 'model' | 'context') => {
+        if ((panel === 'agent-state' || panel === 'agent-management' || panel === 'model') && historyState() === 'collapsed') {
+            setHistoryState('expanded');
+        }
+        if (panel === 'context' && historyState() === 'max') { setHistoryState('expanded'); }
+        setActivePanel(prev => {
+            if (prev === panel) return 'none';
+            return panel;
+        });
+    };
+
+===========================
+FIX 7 — Slide-in animation for panels
+===========================
+Add a <style> tag inside the return JSX, as the FIRST child of the outer wrapper div
+(right after the opening <div class="fixed bottom-12 ..."> line):
+  <style>{`
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-12px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(12px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .panel-slide-left  { animation: slideInLeft  0.18s ease-out; }
+    .panel-slide-right { animation: slideInRight 0.18s ease-out; }
+  `}</style>
+
+Then add class "panel-slide-left" to Panel A (agent-state) div and Panel B (agent-management) div.
+Add class "panel-slide-right" to Panel C (model) div.
+
+===========================
+FIX 8 — Context frame opens ABOVE history, not instead of history
+===========================
+Currently the file has this structure (around lines 412-490):
+  <Show when={isExpanded()}>
+    <Show when={activePanel() === 'context'} fallback={<div class="flex-1 overflow-y-auto ...">...</div>}>
+      {/* Context Panel content that REPLACES history */}
+    </Show>
+  </Show>
+
+Replace the ENTIRE block from <Show when={isExpanded()}> through its closing </Show> with:
+
+  <Show when={isExpanded()}>
+    {/* Context panel — appears above history when open */}
+    <Show when={activePanel() === 'context'}>
+      <div class="shrink-0 border-b border-zinc-700/50 p-3 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">Context</span>
+          <button onClick={() => setActivePanel('none')} class="p-1 hover:bg-zinc-800 rounded transition-colors">
+            <svg class="w-3 h-3 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="space-y-1">
+          <div class="flex justify-between text-[10px] text-zinc-500">
+            <span>Token usage</span>
+            <span>{fmtTokens(contextUsed())} / {fmtTokens(contextTotal)}</span>
+          </div>
+          <div class="w-full h-0.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div class="h-full bg-tlos-cyan transition-all duration-300" style={{ width: `${Math.min((contextUsed() / contextTotal) * 100, 100)}%` }}></div>
+          </div>
+        </div>
+        <div class="flex justify-between text-[10px] text-zinc-500">
+          <span>Messages</span><span>{messages().length}</span>
+        </div>
+        <button onClick={clearContext} class="text-[10px] text-red-400/60 hover:text-red-400 transition-colors">
+          clear context
+        </button>
+      </div>
+    </Show>
+    {/* Message history — always visible when expanded */}
+    <div class="flex-1 overflow-y-auto p-4 space-y-3">
+      <For each={messages()}>
+        {(msg) => (
+          <div classList={{ 'flex justify-end': msg.role === 'user', 'flex justify-start': msg.role === 'ai' }}>
+            <div classList={{
+              'bg-zinc-800 rounded-2xl rounded-tr-sm px-4 py-2 max-w-[80%] text-tlos-text-1 text-sm font-mono': msg.role === 'user',
+              'text-tlos-cyan text-sm font-mono max-w-[80%]': msg.role === 'ai' && msg.streaming,
+              'text-tlos-text-1 text-sm font-mono max-w-[80%]': msg.role === 'ai' && !msg.streaming
+            }}>
+              {msg.content}
+              <Show when={msg.streaming}>
+                <span class="inline-block w-2 h-4 ml-1 align-middle bg-tlos-cyan animate-pulse"></span>
+              </Show>
+            </div>
+          </div>
+        )}
+      </For>
+    </div>
+  </Show>
+
+===========================
+IMPORTANT NOTES:
+===========================
+- Do NOT rewrite the whole file. Make only these targeted changes.
+- Do NOT change any other logic, styles, or handlers.
+- The file uses SolidJS: createSignal, createMemo, Show, For — these are reactive.
+- After ALL changes, verify:
+  1. No 'mousedown' document listener remains in the file
+  2. No 'containerRef' reference remains anywhere in the file
+  3. agentHealth memo returns grey (ring-zinc-600) for idle — already done
+  4. agent indicator onClick is a single line with prev === 'agent-state' logic
+  5. nimDisplayText returns "name · state" format
+  6. All 3 side panels have dynamic h-[360px]/h-[600px] class
+  7. @keyframes slideInLeft and slideInRight are present in a <style> tag
+  8. Context panel is a shrink-0 section above flex-1 history div (not replacing it)
