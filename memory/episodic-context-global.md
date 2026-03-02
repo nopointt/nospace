@@ -65,6 +65,40 @@
 
 ---
 
+## Session 2026-03-02 — tLOS: NIM AI bridge shipped + security hardening
+
+**Decisions:**
+- `tlos-agent-bridge` полностью переписан: old CLI spawner → NVIDIA NIM HTTP SSE bridge (meta/llama-3.1-8b-instruct)
+- NIM auth: ключ в `~/.tlos/nim-key`, grid.ps1 проверяет файл (не CLAUDE_API_KEY)
+- ADR-003 security hardening: NATS/WS binding → 127.0.0.1 (было 0.0.0.0)
+- Canvas default: пустой холст (было MCB_FRAMES при старте)
+
+**Files changed:**
+- `development/tLOS/core/kernel/tlos-agent-bridge/src/main.rs` — полная перезапись (NIM SSE)
+- `development/tLOS/core/kernel/tlos-agent-bridge/Cargo.toml` — добавлен reqwest
+- `development/tLOS/core/grid.ps1` — nim-key file check вместо CLAUDE_API_KEY
+- `development/tLOS/core/shell/frontend/src/hooks/useComponents.ts` — early return для agent messages, пустой default
+- `development/tLOS/core/shell/frontend/src/App.tsx` — 2 memory leaks (onResized + subscribeToKernel)
+- `development/tLOS/core/kernel/tlos-patch-daemon/src/main.rs` — CRITICAL path traversal fix (sanitize_path_component)
+- `docs/ecosystem-noadmin/adr/003-tlos-network-isolation.md` — ADR-003 создан
+- `development/tLOS/memory/current-context-tLOS.md` — обновлён
+- `development/tLOS/memory/handshake-tLOS.md` — перезаписан
+
+**Tasks completed:**
+- NIM AI pipeline E2E: Omnibar → NATS → agent-bridge → NIM API → token stream → Omnibar
+- Баг: agent:status/agent:token создавали canvas фреймы — исправлено
+- CRITICAL security: path traversal в patch-daemon — исправлено
+- Memory leaks App.tsx×2 — исправлены
+- localStorage очищен (WebView2 leveldb)
+
+**Tasks open:**
+- NIM key refresh (12h TTL) — ручной процесс, нет автоматизации
+- WebSocket → Tauri IPC (ADR-003 Phase 2, production milestone)
+- MCB омнибар команда `mcb` — не работает после редизайна
+- E2E с Артёмом — patch-daemon + installer
+
+---
+
 ## [2026-02-27] [assistant] — Global context resync: harkly docs sprint complete, project memory bootstrapped
 
 - Tags: `[harkly, resync, context-update, economics, silicon-sampling, partnership, memory-bootstrap]`
