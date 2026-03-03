@@ -1,20 +1,20 @@
 # HANDSHAKE — harkly
 > Читай этот файл в начале любой harkly-сессии.
-> Updated: 2026-03-01 by Assistant
+> Updated: 2026-03-03 by Assistant
 
 ---
 
 ## Где мы сейчас
 
-**Pre-launch, GTM phase started.** Desktop MVP работает. Cold outreach стратегия определена: ниша H-06 (мобильные игры / Steam), data-first подход с silicon persona как gift в первом сообщении. Шаблоны и план готовы — нужен первый реальный анализ и отправка.
+**Pre-launch, pipeline MVP готов.** CX OSINT Pipeline (7 Python файлов, DuckDB, Qwen) работает end-to-end. Первый Silicon Persona MD сгенерирован для Simteract (Taxi Life, 93/100 OSINT). Следующий шаг — отправить первые 15 outreach.
 
 ---
 
 ## Следующий приоритет
 
-1. **Silicon Persona MD — разработать шаблон формата** — ключевой продукт для lead magnet. Что входит: behavioral profile, pain clusters, quotes, PMF questions. Без шаблона нельзя отправить gift.
-2. **Первый тестовый анализ H-06** — выбрать 5 Steam-игр (Mixed рейтинг), вытащить отзывы через Steam JSON API, кластеризовать через Qwen CLI, записать главный инсайт.
-3. **Отправить 15 outreach сообщений** — персонализированный шаблон D (с реальными кластерами + silicon persona), Twitter/TG фаундерам игровых студий.
+1. **Исправить баг Key Quotes** — в report.md показывает `[[...]` вместо реальных цитат. Проблема в JSON parsing `cluster.quotes` в report.py.
+2. **Запустить validate.py для Simteract** — чтобы заполнить OSINT score в отчёте. `python validate.py --min-score 50` (предварительно нужно добавить appid 1351240 в candidates или запустить collect.py).
+3. **Отправить 15 outreach** — Simteract (@simteract) — первый приоритет. Gift: persona.md. Шаблон: mobile-games-offer.md.
 4. **Созвон с CPO ProxyMarket** (HARKLY-03) — nopoint организует. Перед созвоном отправить product-brief-v2.md.
 
 ---
@@ -24,38 +24,47 @@
 | Нужно | Файл |
 |---|---|
 | Состояние проекта | development/harkly/memory/current-context-harkly.md |
-| Конституция проекта | development/harkly/rules/harkly-constitution.md |
-| Гипотезы ниш (10 штук) | development/harkly/branches/landing-coldoutreach/hypotheses.md |
+| Pipeline spec | development/harkly/branches/cx_osint_pipeline/pipeline-spec.md |
+| Pipeline src | development/harkly/branches/cx_osint_pipeline/src/ |
+| Сгенерированный persona.md | development/harkly/branches/cx_osint_pipeline/output/reports/1351240_Taxi Life_ A City Driving Simulator_persona.md |
+| Гипотезы ниш | development/harkly/branches/landing-coldoutreach/hypotheses.md |
 | H-06 оффер + шаблоны | development/harkly/branches/landing-coldoutreach/mobile-games-offer.md |
-| OSINT+CX исследование | development/harkly/branches/landing-coldoutreach/osint-cx-research.md |
 | Product Brief (для CPO) | docs/harkly/product-brief-v2.md |
-
----
-
-## Ключевые инсайты сессии (2026-03-01)
-
-- **Silicon Persona** = portable MD файл синтетического клиента → кидается в любой LLM → PMF тестирование без юзер-интервью. Это и lead magnet, и самостоятельный продукт.
-- **Data-first cold outreach** даёт 12–18% reply rate vs 3–5% generic (Belkins 2025, 16.5M emails)
-- **Steam JSON API** полностью бесплатный: `store.steampowered.com/appreviews/{appid}?json=1`
-- **hiQ v. LinkedIn** прецедент: публичный скрапинг юридически чист в США
-- **Конкуренты**: Wonderflow $30K/год — mid-market окно ($1.5–3K/мес) свободно
-- **Qwen CLI** работает как внешний агент для тяжёлых задач (исследования, анализ)
 
 ---
 
 ## Открытые вопросы
 
-- [ ] Формат Silicon Persona MD — что входит? Как структурировать?
-- [ ] Какую конкретно Steam-игру берём для первого демо-анализа?
+- [ ] Key Quotes bug: как правильно парсить JSON-массив из DuckDB cluster.quotes в report.py?
+- [ ] Нужен ли validate step перед analyze, или достаточно `_ensure_candidate()`?
 - [ ] Silicon Persona — отдельный продукт или только lead magnet для Harkly?
 - [ ] Web SaaS стек: Cloudflare Workers + D1 или PostgreSQL-RU?
 - [ ] CPO ProxyMarket созвон — когда?
 
 ---
 
+## Tech: Pipeline Quick Reference
+
+```bash
+# Полный прогон (find + validate + analyze top candidate)
+python pipeline.py --mode full --genre Simulation --min-reviews 1000
+
+# Анализ конкретной игры
+python pipeline.py --mode analyze --appid 1351240
+
+# Только валидация кандидатов
+python pipeline.py --mode validate --genre Indie
+```
+
+**Windows quirks:** `qwen.cmd` (не `qwen`). Qwen = text analysis only. Trinity/opencode = shell executor.
+
+---
+
 ## Обновляй этот файл
 
-После каждой сессии — 5 строк сюда. Не нужен полный episodic log для рутинной работы.
+После каждой сессии — 5 строк сюда.
 Формат: `[дата] что сделано | что следующее`
 
 `[2026-03-01] OSINT research (Qwen), 10 ниш гипотез, H-06 оффер+шаблоны, silicon persona концепт | Silicon Persona MD шаблон + первый Steam анализ`
+`[2026-03-03] Steam API OK, OSINT scoring layer, Wild Eight (abandoned), Simteract найден (93/100), Trinity написал pipeline (7 файлов) | Исправить код Trinity → pipeline готов`
+`[2026-03-03] Исправлено 6 runtime багов (DuckDB params, timestamp, qwen.cmd, stdin, Win filenames), pipeline работает end-to-end, 195 reviews → 7 clusters → report.md + persona.md сгенерированы | Fix Key Quotes bug → validate Simteract → 15 outreach`

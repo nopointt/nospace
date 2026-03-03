@@ -369,3 +369,31 @@
 - ✅ Provider selector UI (Claude/NVIDIA toggle + model list)
 - ✅ Auth UI (Connected / Sign in with Claude)
 - ❌ Windows subprocess still hangs — cmd.exe /c fix insufficient, needs further diagnosis
+
+---
+## Session 2026-03-03 — Harkly: CX OSINT Pipeline MVP working, first Silicon Persona generated
+
+**Decisions:**
+- Steam/H-06 выбрана как первая ниша (32/32 по competitive score — наименее конкурентна, ЛПР доступны)
+- CX OSINT Pipeline stack: Python 3 + DuckDB + Qwen CLI (stdin) + stdlib urllib — $0 зависимостей
+- Simteract (Taxi Life, appid 1351240) — первый целевой лид, OSINT 93/100
+- Qwen CLI: text analysis only через stdin; Trinity/opencode — для shell execution на Windows
+
+**Files changed:**
+- `development/harkly/branches/cx_osint_pipeline/src/db.py` — полная перезапись (DuckDB params как list, _to_dicts, clusters PK fix)
+- `development/harkly/branches/cx_osint_pipeline/src/reviews.py` — Unix timestamp → datetime, playtime KeyError fix
+- `development/harkly/branches/cx_osint_pipeline/src/cluster.py` — qwen.cmd, stdin, encoding
+- `development/harkly/branches/cx_osint_pipeline/src/report.py` — Windows filename sanitization
+- `development/harkly/branches/cx_osint_pipeline/src/pipeline.py` — _ensure_candidate() added
+- `development/harkly/branches/cx_osint_pipeline/pipeline-spec.md` — полная спецификация pipeline
+
+**Tasks completed:**
+- ✅ 6 runtime bugs fixed в Trinity-generated code (pipeline полностью рабочий)
+- ✅ 195 reviews Taxi Life → 7 clusters (Qwen) → report.md + persona.md
+- ✅ Первый Silicon Persona MD сгенерирован — готов как outreach gift
+
+**Tasks open:**
+- [ ] Fix Key Quotes bug (JSON parsing cluster.quotes в report.py)
+- [ ] Run validate.py для Simteract (OSINT score в отчёте = N/A)
+- [ ] Отправить 15 outreach @simteract
+- [ ] CPO ProxyMarket созвон (HARKLY-03)
