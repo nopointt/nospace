@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Harkly — Scene 01</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  #stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: #000;
+    overflow: hidden;
+    transform-origin: center center;
+    flex-shrink: 0;
+  }
+  .headline {
+    position: absolute;
+    left: 100px;
+    right: 100px;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    font-size: 72px;
+    font-weight: 300;
+    line-height: 1.25;
+    color: #fff;
+    opacity: 0;
+    letter-spacing: -0.01em;
+  }
+  #line1 { top: 220px; }
+  #line2 { top: 220px; }
+  #line3 { top: 220px; }
+
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    /* all particles anchored at center of stage */
+    left: 540px;
+    top: 960px;
+    transform: translate(-50%, -50%);
+  }
+
+  #core-orb {
+    position: absolute;
+    left: 540px;
+    top: 960px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    box-shadow: 0 0 30px 10px rgba(255,255,255,0.5);
+  }
+
+  #ring {
+    position: absolute;
+    left: 540px;
+    top: 960px;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.65);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    box-shadow: 0 0 50px rgba(255,255,255,0.12), inset 0 0 50px rgba(255,255,255,0.06);
+  }
+
+  #ring2 {
+    position: absolute;
+    left: 540px;
+    top: 960px;
+    width: 440px;
+    height: 440px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+
+  #wordmark {
+    position: absolute;
+    left: 50%;
+    top: 1160px;
+    transform: translateX(-50%);
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    font-size: 32px;
+    font-weight: 200;
+    letter-spacing: 0.65em;
+    color: #fff;
+    white-space: nowrap;
+    opacity: 0;
+    padding-left: 0.65em; /* compensate letter-spacing on last char */
+  }
+
+  #tagline {
+    position: absolute;
+    left: 50%;
+    top: 1232px;
+    transform: translateX(-50%);
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+    opacity: 0;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="headline" id="line1">Your customers<br>are speaking.</div>
+  <div class="headline" id="line2">The signal is there.<br>Buried in noise.</div>
+  <div class="headline" id="line3">Harkly listens.</div>
+  <div id="core-orb"></div>
+  <div id="ring"></div>
+  <div id="ring2"></div>
+  <div id="wordmark">HARKLY</div>
+  <div id="tagline">hear what they really mean</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+// ── Scale stage to fit browser window ──────────────────────────────
+function scaleStage() {
+  const s = document.getElementById('stage');
+  const scaleX = window.innerWidth  / 1080;
+  const scaleY = window.innerHeight / 1920;
+  const scale  = Math.min(scaleX, scaleY);
+  s.style.transform = `scale(${scale})`;
+}
+scaleStage();
+window.addEventListener('resize', scaleStage);
+
+// ── Create particles ────────────────────────────────────────────────
+const stage = document.getElementById('stage');
+const COUNT = 22;
+const particles = [];
+
+for (let i = 0; i < COUNT; i++) {
+  const el = document.createElement('div');
+  el.className = 'particle';
+
+  const size   = 4 + Math.random() * 10;
+  const angle  = (i / COUNT) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+  const radius = 100 + Math.random() * 300;
+  const ox     = Math.cos(angle) * radius;  // offset from center
+  const oy     = Math.sin(angle) * radius;
+
+  gsap.set(el, {
+    width:  size,
+    height: size,
+    x: ox,
+    y: oy,
+    opacity: 0,
+    boxShadow: `0 0 ${size * 2}px rgba(255,255,255,0.6)`
+  });
+
+  stage.appendChild(el);
+  particles.push({ el, ox, oy, angle, radius, size });
+}
+
+// ── Timeline ────────────────────────────────────────────────────────
+const tl = gsap.timeline();
+
+// SCENE 1 — "Your customers are speaking."
+tl.to('#line1', { opacity: 1, duration: 0.9, ease: 'power2.out' }, 0.5);
+
+// Particles drift in
+particles.forEach((p, i) => {
+  tl.to(p.el, { opacity: 0.35 + Math.random() * 0.65, duration: 0.5, ease: 'power1.out' },
+    1.0 + i * 0.06);
+
+  // Continuous idle float (secondary action — outside main tl)
+  gsap.to(p.el, {
+    x: p.ox + (Math.random() - 0.5) * 30,
+    y: p.oy + (Math.random() - 0.5) * 30,
+    duration: 2.0 + Math.random() * 2.5,
+    ease: 'sine.inOut',
+    repeat: -1,
+    yoyo: true,
+    delay: Math.random() * 3
+  });
+});
+
+tl.to({}, { duration: 1.2 }, 3.2); // hold
+
+tl.to('#line1', { opacity: 0, duration: 0.5, ease: 'power2.in' }, 4.4);
+
+// SCENE 1B — "The signal is there. Buried in noise."
+tl.to('#line2', { opacity: 1, duration: 0.8, ease: 'power2.out' }, 5.0);
+tl.to({}, { duration: 1.4 }, 6.2); // hold
+
+// ANTICIPATION — particles scatter outward before converging (Disney #2)
+particles.forEach((p, i) => {
+  const a2 = p.angle + (Math.random() - 0.5) * 0.8;
+  const r2 = p.radius * (1.1 + Math.random() * 0.2);
+  tl.to(p.el, {
+    x: Math.cos(a2) * r2,
+    y: Math.sin(a2) * r2,
+    duration: 0.4,
+    ease: 'power2.out'
+  }, 7.6 + i * 0.015);
+});
+
+tl.to({}, { duration: 0.1 }, 8.05);
+tl.to('#line2', { opacity: 0, duration: 0.5, ease: 'power2.in' }, 8.05);
+
+// CONVERGENCE — all particles fly to center (slow in / slow out)
+particles.forEach((p, i) => {
+  tl.to(p.el, {
+    x: (Math.random() - 0.5) * 4,
+    y: (Math.random() - 0.5) * 4,
+    width:   2.5,
+    height:  2.5,
+    opacity: 1,
+    duration: 0.9,
+    ease: 'power3.inOut'
+  }, 8.5 + i * 0.02);
+});
+
+// Core orb materialises
+tl.to('#core-orb', { opacity: 1, duration: 0.25, ease: 'power3.out' }, 9.4);
+
+// Particles dissolve into orb
+particles.forEach((p, i) => {
+  tl.to(p.el, { opacity: 0, duration: 0.2 }, 9.45 + i * 0.008);
+});
+
+// SQUASH & STRETCH (Disney #1)
+tl.to('#core-orb', { scaleX: 1.6, scaleY: 0.65, duration: 0.09, ease: 'power4.in'  }, 9.65);
+tl.to('#core-orb', { scaleX: 0.7, scaleY: 1.5,  duration: 0.08, ease: 'power4.out' }, 9.74);
+tl.to('#core-orb', { scaleX: 1,   scaleY: 1,    duration: 0.55, ease: 'elastic.out(1, 0.4)' }, 9.82);
+
+// Orb glow brightens
+tl.to('#core-orb', {
+  boxShadow: '0 0 80px 28px rgba(255,255,255,0.6)',
+  duration: 0.5
+}, 9.65);
+
+// RING expands (follow through — Disney #6)
+tl.to('#ring',  { scale: 1, opacity: 1, duration: 0.65, ease: 'power2.out' }, 10.0);
+tl.to('#ring2', { scale: 1, opacity: 1, duration: 0.8,  ease: 'power2.out' }, 10.12);
+
+// Ring pulse (appeal)
+tl.to('#ring', {
+  boxShadow: '0 0 90px rgba(255,255,255,0.28), inset 0 0 60px rgba(255,255,255,0.1)',
+  duration: 1.0, ease: 'sine.inOut', yoyo: true, repeat: 1
+}, 10.3);
+
+// SCENE 3 — "Harkly listens."
+tl.to('#line3',   { opacity: 1, duration: 1.0, ease: 'power2.out' }, 10.5);
+tl.to('#wordmark',{ opacity: 1, duration: 1.1, ease: 'power2.out' }, 11.5);
+tl.to('#tagline', { opacity: 1, duration: 1.1, ease: 'power2.out' }, 12.0);
+
+// Hold final frame
+tl.to({}, { duration: 2.5 }, 13.5);
+
+// Fade to black
+tl.to('#stage', { opacity: 0, duration: 1.5, ease: 'power2.in' }, 16.0);
+</script>
+</body>
+</html>

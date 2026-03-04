@@ -2,12 +2,12 @@
 # CURRENT CONTEXT — harkly
 > Project-level snapshot. Read at start of every harkly session.
 > Tags: [harkly, project, state, epics, blockers]
-> Last updated: 2026-03-03 by Assistant
+> Last updated: 2026-03-04 by Assistant
 ---
 
 ## Project Phase
 
-**pre-launch** — CX OSINT Pipeline работает end-to-end. Первый Silicon Persona MD сгенерирован для Simteract/Taxi Life. Следующий шаг: отправить первые 15 outreach.
+**pre-launch** — CX OSINT Pipeline работает end-to-end. Instagram ветка открыта: аудитория определена (CX/UX researchers first, PMs secondary), воронка решена (Harkly Enthusiast $9+ донат), GSAP видео PoC готов. Следующий шаг: контент-столпы + визуальная идентичность + Playwright MP4 pipeline.
 
 ## Active Epics
 
@@ -17,6 +17,7 @@
 | HARKLY-05 | Web-платформа SaaS dev — target 1 апреля 2026 | in-progress | nopoint |
 | HARKLY-06 | Landing page + Cold outreach | **in-progress** — pipeline готов, persona.md сгенерирован; нужна отправка первых 15 outreach | nopoint |
 | HARKLY-07 | CX OSINT Pipeline — autonomous pipeline | ✅ MVP done — 7 файлов Python, DuckDB, Qwen кластеризация, Silicon Persona MD output | nopoint |
+| HARKLY-08 | Instagram — контент и аккаунт | **in-progress** — аудитория и воронка решены, визуальная идентичность в работе | nopoint |
 
 ## Product State
 
@@ -28,7 +29,21 @@
 | **CX OSINT Pipeline** | **✅ MVP working** | Автономный Python pipeline: Steam Spy → OSINT scoring → reviews → Qwen clustering → report.md + persona.md |
 | **Silicon Persona (MD format)** | **✅ First generated** | Taxi Life persona.md создан — готов как lead magnet для outreach |
 | Web SaaS Platform | 🔧 In dev | Cloudflare Workers + D1/PostgreSQL-RU |
+| Research Hub | 🔧 Planned | Aggregator: Playwright scraper → Qwen summary → CF D1/Workers/Pages; title+summary+link модель |
+| GSAP Video Pipeline | 🔧 PoC ready | scene-01.html работает; Playwright MP4 recorder не настроен |
 | White-label infra | 🔧 Planned | Для партнёров, target Q1 2026 |
+
+## Instagram Strategy (HARKLY-08)
+
+- **Аудитория (primary):** CX/UX researchers, CX-специалисты
+- **Аудитория (secondary):** Product Managers
+- **Позиционирование аккаунта:** "исследовательская лаборатория клиентского опыта"
+- **Воронка:** Instagram → Landing → Harkly Enthusiast донат ($9 min, без потолка) → Research Hub + Alpha test + Telegram
+- **"Harkly Enthusiast":** lifetime статус, voluntary donation, якорная подсказка "$25–50 most common"
+- **Research Hub стек:** Playwright headless → Qwen 3.5 (title+summary+tags+relevance) → CF D1 → CF Workers API → CF Pages фронт
+- **Контент-столпы:** TBD — nopoint проведёт исследование конкурентов (промпт готов)
+- **Визуальная идентичность:** в работе у nopoint
+- **Видео формат:** GSAP HTML → Playwright recordVideo → MP4 1080×1920
 
 ## Docs / Artifacts Ready
 
@@ -50,6 +65,7 @@
 | **Pipeline Spec** | **branches/cx_osint_pipeline/pipeline-spec.md** | ✅ Done — полная спецификация |
 | **Taxi Life CX Report** | **branches/cx_osint_pipeline/output/reports/1351240_Taxi Life_ A City Driving Simulator_report.md** | ✅ Generated |
 | **Taxi Life Silicon Persona** | **branches/cx_osint_pipeline/output/reports/1351240_Taxi Life_ A City Driving Simulator_persona.md** | ✅ Generated — lead magnet ready |
+| **GSAP Video PoC** | **video-tests/scene-01.html** | ✅ PoC — "The Signal in the Noise", 12 Disney principles applied |
 
 ## GTM Strategy (Cold Outreach)
 
@@ -100,6 +116,9 @@
 | Web platform architecture decision | 2026-02-27 | Нужно решение nopoint → CTO |
 | Key Quotes bug в report.md | 2026-03-03 | `[[...]` вместо реальных цитат — JSON parsing cluster.quotes |
 | OSINT score = N/A в отчёте | 2026-03-03 | Запустить validate.py для appid 1351240 |
+| Контент-столпы Instagram | 2026-03-04 | nopoint проводит исследование конкурентов |
+| Визуальная идентичность | 2026-03-04 | nopoint рисует |
+| Playwright MP4 pipeline | 2026-03-04 | PoC HTML готов, runner не настроен |
 
 ## Key Numbers
 
@@ -115,3 +134,4 @@
 | Desktop launch date | running now |
 | Web SaaS launch target | 1 апреля 2026 |
 | First target studio | Simteract (Taxi Life) — OSINT 93/100 |
+| Harkly Enthusiast min donation | $9 (anchor suggestion: $25–50) |
