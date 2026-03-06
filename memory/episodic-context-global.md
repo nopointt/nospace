@@ -397,3 +397,29 @@
 - [ ] Run validate.py для Simteract (OSINT score в отчёте = N/A)
 - [ ] Отправить 15 outreach @simteract
 - [ ] CPO ProxyMarket созвон (HARKLY-03)
+
+---
+## Session 2026-03-06 — Harkly: scope pivot to prod-ready Layer 1 + G3 sentiment done
+
+**Decisions:**
+- Цель изменена с "демо партнёрам" на "prod-ready Layer 1, доступный по вебу"
+- ProxyMarket → on hold (юр. блокер: законность парсинга СНГ площадок)
+- Phase 2 (Durable Objects, CRDT, white-label) — деферировано до запуска Layer 1
+- G3 rule enforced: Claude = Coach only, MiniMax = Player
+
+**Files changed:**
+- `cx-platform/src/etl/sentiment.rs` — NEW, rule-based sentiment scorer
+- `cx-platform/src/etl/normalize.rs` — вызывает sentiment::score() после очистки
+- `cx-platform/src/etl/store.rs` — пишет sentiment в БД
+- `cx-platform/src/api/routes/researches.rs` — SentimentDistribution в API
+- `cx-platform-web/lib/api.ts` — sentiment в Signal и AnalyticsResponse
+- `cx-platform-web/app/researches/[id]/analytics/page.tsx` — sentiment distribution UI
+- `cx-platform-web/app/researches/[id]/page.tsx` — sentiment badges на сигналах
+
+**Tasks completed / open:**
+- ✅ JWT auth (G3 #2)
+- ✅ Sentiment scoring end-to-end (G3 #3) — cargo check ✅, tsc ✅
+- ✅ Пользователь nopointttt@gmail.com зарегистрирован (admin)
+- ❌ G3 #4: Create Research форма + auth guard + logout
+- ❌ G3 #5: Rate limiting + validation
+- ❌ Deploy to public URL
