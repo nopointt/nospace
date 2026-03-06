@@ -423,3 +423,25 @@
 - ❌ G3 #4: Create Research форма + auth guard + logout
 - ❌ G3 #5: Rate limiting + validation
 - ❌ Deploy to public URL
+
+---
+## Session 2026-03-06 — Harkly: разработка приостановлена, фокус на деньги
+
+**Decisions:**
+- cx-platform Layer 1 технически завершён (G3 #1-#5), код на GitHub
+- CF Workers отклонён как деплой — tokio::spawn несовместим с Workers
+- Render выбран как деплой платформа (не задеплоено)
+- "Harkly в tLOS" (Tauri/SolidJS) — обсуждено, отложено
+- **Разработка Harkly приостановлена — nopoint смещает фокус на заработок денег**
+
+**Files changed:**
+- `development/harkly/cx-platform/` — 60 файлов G3 #2-#5 запушены на GitHub
+- `development/harkly/memory/current-context-harkly.md` — статус → paused
+- `development/harkly/memory/handshake-harkly.md` — обновлён
+
+**Tasks completed / open:**
+- ✅ G3 #1-#5 все завершены и верифицированы Coach
+- ✅ Код запушен на nopointt/nospace
+- ❌ Deploy не сделан (Render, конфиги не написаны)
+- ❌ G3 #4 UI (Create Research форма) — паузa
+- ❌ H-06 outreach Simteract — не отправлено

@@ -6,15 +6,15 @@
 
 ## Где мы сейчас
 
-cx-platform Layer 1 в финальном production-ready спринте. JWT auth и sentiment scoring завершены (G3 #2, #3). Цель — prod-ready Layer 1, доступный по вебу без white-label. Следующее: Create Research форма в UI + deploy.
+cx-platform Layer 1 технически завершён (G3 #1-#5 ✅, код запушен на GitHub). Разработка **приостановлена** — nopoint смещает фокус на заработок денег. Deploy не сделан (Render выбран, конфиги не написаны).
 
 ---
 
 ## Следующий приоритет
 
-1. **G3 #4** — Create Research форма в UI + auth guard (редирект на /login) + logout кнопка
-2. **G3 #5** — Rate limiting на API + input validation (appid, limit)
-3. **Deploy** — выбрать хостинг (VPS/Railway/Fly.io) и выложить на публичный URL с HTTPS
+1. **Деньги** — разработка Harkly на паузе до решения денежного вопроса
+2. **При возобновлении:** Deploy на Render (Dockerfile + render.yaml → Web Service + PostgreSQL + Static Site)
+3. **При возобновлении:** G3 #4 — Create Research форма в UI + auth guard + logout
 
 ---
 
@@ -27,12 +27,14 @@ cx-platform Layer 1 в финальном production-ready спринте. JWT a
 | Next.js frontend | development/harkly/cx-platform-web/app/ |
 | Запуск демо | development/harkly/cx-platform-web/start-demo.ps1 |
 | API типы (TS) | development/harkly/cx-platform-web/lib/api.ts |
+| GitHub репо | nopointt/nospace (монорепо) |
 
 ---
 
 ## Открытые вопросы
 
-- [ ] Где деплоить? VPS (Hetzner/DO) vs Railway vs Fly.io
+- [ ] Когда возобновляем разработку Harkly?
+- [ ] Harkly как отдельный SaaS vs интеграция в tLOS (tLOS = Tauri/SolidJS, shell web-deployable)?
 - [ ] ProxyMarket: законность парсинга СНГ площадок — нужна юр. консультация
 - [ ] H-06 outreach: когда отправляем первые 15 сообщений Simteract?
 
@@ -43,4 +45,4 @@ cx-platform Layer 1 в финальном production-ready спринте. JWT a
 После каждой сессии — 5 строк сюда.
 Формат: `[дата] что сделано | что следующее`
 
-`2026-03-06` JWT auth работает, пользователь зарегистрирован | G3 #3 sentiment scoring done (cargo check ✅, tsc ✅) | Цель уточнена: prod-ready Layer 1, не демо | G3 #4: Create Research форма + auth guard + logout
+`2026-03-06` G3 #5 rate limiting + input validation done | код (60 файлов) запушен на GitHub | CF Workers отклонён (tokio::spawn) | Render выбран как деплой | Разработка приостановлена — фокус на деньги

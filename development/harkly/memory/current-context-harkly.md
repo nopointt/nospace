@@ -7,14 +7,14 @@
 
 ## Project Phase
 
-**pre-launch** — cx-platform Layer 1 завершает production-ready sprint. JWT auth + sentiment scoring готовы. Цель: prod-ready Layer 1 accessible по вебу (без white-label). Следующее: Create Research UI + deploy.
+**paused** — cx-platform Layer 1 технически готов (G3 #1-#5 ✅, код на GitHub). Deploy не завершён. Разработка приостановлена — приоритет сместился на заработок денег. Возобновление: по решению nopoint.
 
 ## Active Epics
 
 | Epic ID | Description | Status | Owner |
 |---|---|---|---|
 | HARKLY-03 | ProxyMarket partnership | **on-hold** — юр. блокер (законность парсинга СНГ площадок) | nopoint |
-| HARKLY-05 | cx-platform Layer 1 — prod-ready, web accessible | **in-progress** | nopoint |
+| HARKLY-05 | cx-platform Layer 1 — prod-ready, web accessible | **⏸ paused** — код готов, deploy не сделан | nopoint |
 | HARKLY-06 | Cold outreach Steam indie games | **in-progress** — pipeline готов, persona.md сгенерирован; нужна отправка первых 15 outreach | nopoint |
 | HARKLY-08 | Instagram — контент и аккаунт | **in-progress** — аудитория и воронка решены, визуальная идентичность в работе | nopoint |
 | HARKLY-09 | cx-platform Rust backend — Phase 1 | **✅ done** | nopoint |
@@ -28,11 +28,11 @@
 | CX Analysis (Reality Layer) | ✅ Working | Парсинг отзывов + NLP + Behavioral Taxonomy; ZenRows fallback |
 | CX Prediction (Silicon Sampling) | ✅ Proof-of-concept | silicon_conses_1.md — Пятёрочка+ тест, r=0.85–0.90 |
 | **CX OSINT Pipeline** | **✅ MVP working** | Автономный Python pipeline: Steam Spy → OSINT scoring → reviews → Qwen clustering → report.md + persona.md |
-| **cx-platform Rust backend** | **✅ Phase 1 + JWT + Sentiment** | Multi-source ETL: Steam + Reddit + GOG. JWT auth (register/login). Sentiment scoring rule-based. cargo check ✅ |
-| **cx-platform-web Next.js** | **🔧 In-progress** | Dashboard + signals table + analytics (sentiment dist). ❌ Create Research форма в UI не готова. Auth guard не готов. |
+| **cx-platform Rust backend** | **✅ G3 #1-#5 done** | JWT auth, Sentiment scoring, Rate limiting, Input validation. Код на GitHub (nopointt/nospace). cargo check ✅ |
+| **cx-platform-web Next.js** | **⏸ paused** | Dashboard + signals table + analytics. ❌ Create Research форма + auth guard не готовы. Нет деплоя. |
 | **Partner Demo** | **✅ Ready** | start-demo.ps1 — одна команда запускает Rust :3000 + Next.js :3001 |
 | **Silicon Persona (MD format)** | **✅ First generated** | Taxi Life persona.md создан — готов как lead magnet для outreach |
-| Web SaaS Platform | 🔧 In dev | Цель: prod-ready Layer 1 without white-label |
+| Web SaaS Platform | ⏸ Paused | Deploy платформа выбрана (Render), но не задеплоено |
 | Research Hub | 🔧 Planned | Aggregator: Playwright scraper → Qwen summary → CF D1/Workers/Pages |
 | White-label infra | 🔧 Deferred | Для партнёров, после Layer 1 запуска |
 
@@ -43,9 +43,16 @@
 | G3 #1 | Reddit + GOG Tier 1 sources | ✅ done |
 | G3 #2 | JWT auth (register/login/middleware) | ✅ done |
 | G3 #3 | Sentiment scoring rule-based | ✅ done |
-| G3 #4 | Create Research форма в UI + auth guard + logout | ❌ next |
-| G3 #5 | Rate limiting + input validation | ❌ todo |
-| — | Deploy to public URL (HTTPS) | ❌ todo |
+| G3 #5 | Rate limiting + input validation | ✅ done |
+| G3 #4 | Create Research форма в UI + auth guard + logout | ❌ paused |
+| — | Deploy to public URL (Render: API + Static) | ❌ paused |
+
+## Deploy — Техническое решение (готово к исполнению)
+
+- **CF Workers отклонён** — tokio::spawn несовместим с Workers CPU limit
+- **Render (all-in-one):** Web Service (Rust API, Docker) + PostgreSQL (free 90d) + Static Site (Next.js)
+- **GitHub:** весь код на `nopointt/nospace` — root dirs: `development/harkly/cx-platform/` и `development/harkly/cx-platform-web/`
+- **Вопрос tLOS:** обсуждалось "Harkly в tLOS" (Tauri + SolidJS) — отложено
 
 ## OSINT Sources — cx-platform
 
@@ -64,9 +71,11 @@
 - **JWT:** `POST /api/v1/auth/register`, `POST /api/v1/auth/login` → Bearer token, 7 days
 - **Auth user:** nopointttt@gmail.com зарегистрирован, role=admin
 - **Sentiment:** rule-based, -1.0 до 1.0, поле `sentiment REAL` в signals таблице
+- **Rate limiting:** governor 0.6, 60 req/min per IP, X-Forwarded-For aware, HTTP 429 + Retry-After
 - **Multi-source ETL:** Steam (always) + Reddit (reddit_query optional) + GOG (gog_product_id optional)
 - **Kill old server:** `taskkill /F /IM cx-platform.exe` перед rebuild
-- **G3 rule:** Claude = Coach only. MiniMax = Player. Промпт через файл (`cat spec.md` в аргумент).
+- **G3 rule:** Claude = Coach only. Player = Qwen/MiniMax. Промпт через файл (`cat spec.md`).
+- **tLOS:** Tauri (не Electron), SolidJS + Vite. Один Tauri API import в App.tsx — shell потенциально web-deployable.
 
 ## Instagram Strategy (HARKLY-08)
 
@@ -92,11 +101,12 @@
 | Blocker | Raised | Resolution |
 |---|---|---|
 | ProxyMarket: законность парсинга СНГ данных | 2026-03-06 | Юр. консультация нужна — on hold до разрешения |
-| cx-platform: Create Research нет в UI | 2026-03-06 | G3 #4 следующий |
-| cx-platform: нет деплоя | 2026-03-06 | После G3 #4 + #5 |
+| cx-platform: Deploy не сделан | 2026-03-06 | Render выбран, Dockerfile + render.yaml не написаны. Паузa. |
+| cx-platform: Create Research нет в UI | 2026-03-06 | G3 #4 — паузa |
 | Key Quotes bug в report.md | 2026-03-03 | `[[...]` вместо реальных цитат — JSON parsing |
 | Контент-столпы Instagram | 2026-03-04 | nopoint проводит исследование конкурентов |
 | Визуальная идентичность | 2026-03-04 | nopoint рисует |
+| **Разработка Harkly приостановлена** | 2026-03-06 | Фокус на заработок денег. Возобновление: по решению nopoint. |
 
 ## Docs / Artifacts Ready
 
@@ -108,13 +118,14 @@
 | Silicon Sampling Exp #1 | docs/harkly/experiments/silicon_conses_1.md | ✅ Done |
 | Taxi Life Silicon Persona | branches/cx_osint_pipeline/output/reports/..._persona.md | ✅ Generated |
 | Partner Demo | cx-platform/start-demo.ps1 | ✅ One-command demo |
-| G3 Task Files | cx-platform/_g3_*.md | ✅ Stages 1–3 done |
+| G3 Task Files | cx-platform/_g3_*.md + g3-plan/ + .g3/sessions/ | ✅ Stages 1–5 done |
+| cx-platform GitHub | nopointt/nospace — development/harkly/cx-platform/ | ✅ Pushed 2026-03-06 |
 
 ## Key Numbers
 
 | Metric | Value |
 |---|---|
-| Web SaaS launch target | asap — prod-ready Layer 1 |
+| Web SaaS launch target | paused — возобновить после решения денежного вопроса |
 | First target studio | Simteract (Taxi Life) — OSINT 93/100 |
 | Harkly Enthusiast min donation | $9 (anchor suggestion: $25–50) |
 | Silicon sampling correlation | r = 0.85–0.90 |
