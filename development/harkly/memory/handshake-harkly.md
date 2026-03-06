@@ -6,15 +6,17 @@
 
 ## Где мы сейчас
 
-cx-platform Layer 1 технически завершён (G3 #1-#5 ✅, код запушен на GitHub). Разработка **приостановлена** — nopoint смещает фокус на заработок денег. Deploy не сделан (Render выбран, конфиги не написаны).
+H-06 Cold Outreach в активной фазе: game_scout.py собирает целевые игры (11929 кандидатов, ~335 собрано на момент закрытия сессии — скрипт работал в фоне). outreach_pipeline.py обновлён с динамическим subject line и peer-to-peer тоном. Разработка платформы (cx-platform) на паузе — приоритет на быстрые деньги через outreach.
 
 ---
 
 ## Следующий приоритет
 
-1. **Деньги** — разработка Harkly на паузе до решения денежного вопроса
-2. **При возобновлении:** Deploy на Render (Dockerfile + render.yaml → Web Service + PostgreSQL + Static Site)
-3. **При возобновлении:** G3 #4 — Create Research форма в UI + auth guard + logout
+1. Дождаться завершения game_scout → получить полный targets.json
+2. Вручную отфильтровать targets.json — убрать крупных паблишеров (Focus, SEGA, Bandai Namco, Nacon, 2K, EA, Ubisoft)
+3. Запустить `batch_pipeline.py --dry-run` на первые 10 игр — проверить сгенерированные письма
+4. Настроить Gmail app password + отправить первые 15 outreach
+5. Отредактировать `outreach_strategy.md` — заполнить открытые вопросы (цена, домен, Stripe)
 
 ---
 
@@ -22,21 +24,23 @@ cx-platform Layer 1 технически завершён (G3 #1-#5 ✅, код 
 
 | Нужно | Файл |
 |---|---|
-| Контекст проекта | development/harkly/memory/current-context-harkly.md |
-| Rust backend | development/harkly/cx-platform/src/ |
-| Next.js frontend | development/harkly/cx-platform-web/app/ |
-| Запуск демо | development/harkly/cx-platform-web/start-demo.ps1 |
-| API типы (TS) | development/harkly/cx-platform-web/lib/api.ts |
-| GitHub репо | nopointt/nospace (монорепо) |
+| Список целевых игр | `branches/cx_osint_pipeline/output/targets.json` |
+| Скрипт сбора игр | `branches/cx_osint_pipeline/game_scout.py` |
+| Outreach pipeline | `branches/cx_osint_pipeline/outreach_pipeline.py` |
+| Пакетная отправка | `branches/cx_osint_pipeline/batch_pipeline.py` |
+| Стратегия (черновик) | `branches/cx_osint_pipeline/outreach_strategy.md` |
+| Player profile pipeline | `branches/cx_osint_pipeline/player_profile_pipeline.py` |
 
 ---
 
 ## Открытые вопросы
 
-- [ ] Когда возобновляем разработку Harkly?
-- [ ] Harkly как отдельный SaaS vs интеграция в tLOS (tLOS = Tauri/SolidJS, shell web-deployable)?
-- [ ] ProxyMarket: законность парсинга СНГ площадок — нужна юр. консультация
-- [ ] H-06 outreach: когда отправляем первые 15 сообщений Simteract?
+- [ ] Gmail app password для --send флага
+- [ ] Домен / sender address (harkly.io?) — ждём Artem
+- [ ] Stripe для payment link в follow-up
+- [ ] Формат отчёта: MD или PDF?
+- [ ] Финальная цена: $49 или $99 за первый отчёт?
+- [ ] Когда вводить subscription offer ($49/mo)?
 
 ---
 
@@ -46,3 +50,5 @@ cx-platform Layer 1 технически завершён (G3 #1-#5 ✅, код 
 Формат: `[дата] что сделано | что следующее`
 
 `2026-03-06` G3 #5 rate limiting + input validation done | код (60 файлов) запушен на GitHub | CF Workers отклонён (tokio::spawn) | Render выбран как деплой | Разработка приостановлена — фокус на деньги
+
+`2026-03-06` game_scout запущен (11929 кандидатов), outreach_pipeline обновлён (dynamic subject + peer tone), outreach_strategy.md создан | следующее: дождаться targets.json, ручная фильтрация, --dry-run первых 10

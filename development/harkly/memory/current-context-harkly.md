@@ -2,7 +2,7 @@
 # CURRENT CONTEXT — harkly
 > Project-level snapshot. Read at start of every harkly session.
 > Tags: [harkly, project, state, epics, blockers]
-> Last updated: 2026-03-06 by Assistant
+> Last updated: 2026-03-06 by Assistant (session 2)
 ---
 
 ## Project Phase
@@ -15,7 +15,7 @@
 |---|---|---|---|
 | HARKLY-03 | ProxyMarket partnership | **on-hold** — юр. блокер (законность парсинга СНГ площадок) | nopoint |
 | HARKLY-05 | cx-platform Layer 1 — prod-ready, web accessible | **⏸ paused** — код готов, deploy не сделан | nopoint |
-| HARKLY-06 | Cold outreach Steam indie games | **in-progress** — pipeline готов, persona.md сгенерирован; нужна отправка первых 15 outreach | nopoint |
+| HARKLY-06 | Cold outreach Steam indie games | **in-progress** — game_scout запущен (11929 кандидатов, ~335 собрано); outreach_pipeline обновлён (dynamic subject + peer tone); стратегия записана | nopoint |
 | HARKLY-08 | Instagram — контент и аккаунт | **in-progress** — аудитория и воронка решены, визуальная идентичность в работе | nopoint |
 | HARKLY-09 | cx-platform Rust backend — Phase 1 | **✅ done** | nopoint |
 | HARKLY-10 | CX Community Building | **planned** — Instagram + Research Hub + Harkly Enthusiast + Telegram | nopoint |
@@ -107,6 +107,9 @@
 | Контент-столпы Instagram | 2026-03-04 | nopoint проводит исследование конкурентов |
 | Визуальная идентичность | 2026-03-04 | nopoint рисует |
 | **Разработка Harkly приостановлена** | 2026-03-06 | Фокус на заработок денег. Возобновление: по решению nopoint. |
+| Gmail app password не настроен | 2026-03-06 | Нужен для --send флага в batch_pipeline |
+| Domain / sender (harkly.io?) | 2026-03-06 | Ждём Artem |
+| Stripe не настроен | 2026-03-06 | Нужен для payment link в follow-up emails |
 
 ## Docs / Artifacts Ready
 
@@ -117,6 +120,8 @@
 | Financial Model 2026 | docs/harkly/economics/harkly-financial-2026.md | ✅ Done |
 | Silicon Sampling Exp #1 | docs/harkly/experiments/silicon_conses_1.md | ✅ Done |
 | Taxi Life Silicon Persona | branches/cx_osint_pipeline/output/reports/..._persona.md | ✅ Generated |
+| Cold Outreach Strategy | branches/cx_osint_pipeline/outreach_strategy.md | ✅ Draft — edit before use |
+| targets.json (in progress) | branches/cx_osint_pipeline/output/targets.json | ⏳ game_scout running — 335 игр из ~11929 |
 | Partner Demo | cx-platform/start-demo.ps1 | ✅ One-command demo |
 | G3 Task Files | cx-platform/_g3_*.md + g3-plan/ + .g3/sessions/ | ✅ Stages 1–5 done |
 | cx-platform GitHub | nopointt/nospace — development/harkly/cx-platform/ | ✅ Pushed 2026-03-06 |
