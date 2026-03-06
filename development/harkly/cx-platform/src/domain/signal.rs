@@ -29,4 +29,5 @@ pub struct RawSignal {
     pub author: Option<String>,
     pub metadata: serde_json::Value,
     pub collected_at: DateTime<Utc>,
+    pub sentiment: Option<f32>,
 }

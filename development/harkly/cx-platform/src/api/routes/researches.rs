@@ -19,9 +19,7 @@ pub struct CreateResearchRequest {
     pub appid: u32,
     #[serde(default = "default_limit")]
     pub limit: usize,
-    /// Optional: Reddit search query (e.g. "Taxi Life game")
     pub reddit_query: Option<String>,
-    /// Optional: GOG product ID for reviews
     pub gog_product_id: Option<u32>,
 }
 
@@ -31,6 +29,18 @@ fn default_limit() -> usize { 500 }
 pub struct CreateResearchResponse {
     pub id: Uuid,
     pub state: String,
+}
+
+#[derive(Serialize)]
+struct ErrorResponse {
+    error: String,
+}
+
+fn validation_error(msg: &str) -> (StatusCode, Json<ErrorResponse>) {
+    (
+        StatusCode::BAD_REQUEST,
+        Json(ErrorResponse { error: msg.to_string() }),
+    )
 }
 
 #[derive(Deserialize)]
@@ -52,6 +62,7 @@ pub struct SignalRow {
     pub content: String,
     pub author: Option<String>,
     pub collected_at: chrono::DateTime<chrono::Utc>,
+    pub sentiment: Option<f32>,
 }
 
 #[derive(Serialize)]
@@ -66,7 +77,35 @@ pub async fn create_research(
     State(pool): State<PgPool>,
     Extension(tenant): Extension<TenantContext>,
     Json(body): Json<CreateResearchRequest>,
-) -> Result<impl IntoResponse, StatusCode> {
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    // REQ-006: appid must be > 0
+    if body.appid == 0 {
+        return Err(validation_error("appid must be positive"));
+    }
+
+    // REQ-007: limit must be in [1, 1000]
+    if body.limit < 1 || body.limit > 1000 {
+        return Err(validation_error("limit must be between 1 and 1000"));
+    }
+
+    // REQ-008: name must be non-empty and ≤ 200 chars
+    if body.name.is_empty() {
+        return Err(validation_error("name cannot be empty"));
+    }
+    if body.name.len() > 200 {
+        return Err(validation_error("name must be at most 200 characters"));
+    }
+
+    // REQ-009: reddit_query if provided must be non-empty and ≤ 300 chars
+    if let Some(ref query) = body.reddit_query {
+        if query.is_empty() {
+            return Err(validation_error("reddit_query cannot be empty"));
+        }
+        if query.len() > 300 {
+            return Err(validation_error("reddit_query must be at most 300 characters"));
+        }
+    }
+
     let tenant_id = tenant.tenant_id;
 
     let research_id: Uuid = sqlx::query_scalar(
@@ -78,9 +117,8 @@ pub async fn create_research(
     .bind(&body.name)
     .fetch_one(&pool)
     .await
-    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, Json(ErrorResponse { error: "Internal server error".to_string() })))?;
 
-    // Collect sources list
     let pool_clone = pool.clone();
     let appid = body.appid;
     let limit = body.limit;
@@ -93,7 +131,6 @@ pub async fn create_research(
             Err(_) => return,
         };
 
-        // Per-source limit: split evenly among active sources
         let source_count = 1
             + if reddit_query.is_some() { 1 } else { 0 }
             + if gog_product_id.is_some() { 1 } else { 0 };
@@ -101,13 +138,11 @@ pub async fn create_research(
 
         let mut all_raw = Vec::new();
 
-        // Steam (always)
         let steam = SteamSource::new(appid, &cfg.steam_base_url);
         if let Ok(raw) = steam.fetch(per_source).await {
             all_raw.extend(raw);
         }
 
-        // Reddit (optional)
         if let Some(ref query) = reddit_query {
             let reddit = RedditSource::new(query);
             if let Ok(raw) = reddit.fetch(per_source).await {
@@ -115,7 +150,6 @@ pub async fn create_research(
             }
         }
 
-        // GOG (optional)
         if let Some(product_id) = gog_product_id {
             let gog = GogSource::new(product_id);
             if let Ok(raw) = gog.fetch(per_source).await {
@@ -168,8 +202,8 @@ pub async fn list_signals(
     .await
     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    let rows = sqlx::query_as::<_, (Uuid, String, Option<String>, String, Option<String>, chrono::DateTime<chrono::Utc>)>(
-        r#"SELECT id, source_type, source_url, content, author, collected_at
+    let rows = sqlx::query_as::<_, (Uuid, String, Option<String>, String, Option<String>, chrono::DateTime<chrono::Utc>, Option<f32>)>(
+        r#"SELECT id, source_type, source_url, content, author, collected_at, sentiment
            FROM signals
            WHERE tenant_id = $1 AND research_id = $2
            ORDER BY collected_at DESC
@@ -185,13 +219,14 @@ pub async fn list_signals(
 
     let signals = rows
         .into_iter()
-        .map(|(id, source_type, source_url, content, author, collected_at)| SignalRow {
+        .map(|(id, source_type, source_url, content, author, collected_at, sentiment)| SignalRow {
             id,
             source_type,
             source_url,
             content,
             author,
             collected_at,
+            sentiment,
         })
         .collect();
 
@@ -265,11 +300,19 @@ pub struct SourceRow {
 }
 
 #[derive(Serialize)]
+pub struct SentimentDistribution {
+    pub positive: i64,
+    pub neutral: i64,
+    pub negative: i64,
+}
+
+#[derive(Serialize)]
 pub struct AnalyticsResponse {
     pub total: i64,
     pub by_date: Vec<ByDateRow>,
     pub top_authors: Vec<AuthorRow>,
     pub source_breakdown: Vec<SourceRow>,
+    pub sentiment: SentimentDistribution,
 }
 
 pub async fn get_analytics(
@@ -328,6 +371,20 @@ pub async fn get_analytics(
     .await
     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
+    let sentiment_row = sqlx::query_as::<_, (i64, i64, i64)>(
+        r#"SELECT
+            COUNT(*) FILTER (WHERE sentiment > 0.1) as positive,
+            COUNT(*) FILTER (WHERE sentiment <= 0.1 AND sentiment >= -0.1) as neutral,
+            COUNT(*) FILTER (WHERE sentiment < -0.1) as negative
+           FROM signals
+           WHERE tenant_id = $1 AND research_id = $2"#,
+    )
+    .bind(tenant_id)
+    .bind(research_id)
+    .fetch_one(&pool)
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
     Ok(Json(AnalyticsResponse {
         total,
         by_date: by_date_rows
@@ -342,5 +399,10 @@ pub async fn get_analytics(
             .into_iter()
             .map(|(source_type, count)| SourceRow { source_type, count })
             .collect(),
+        sentiment: SentimentDistribution {
+            positive: sentiment_row.0,
+            neutral: sentiment_row.1,
+            negative: sentiment_row.2,
+        },
     }))
 }

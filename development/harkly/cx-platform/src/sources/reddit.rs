@@ -107,6 +107,7 @@ impl OsintSource for RedditSource {
                         "url": post.url
                     }),
                     collected_at,
+                    sentiment: None,
                 });
             }
 

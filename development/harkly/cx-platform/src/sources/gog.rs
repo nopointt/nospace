@@ -92,6 +92,7 @@ impl OsintSource for GogSource {
                         "rating": item.rating
                     }),
                     collected_at,
+                    sentiment: None,
                 });
             }
 
