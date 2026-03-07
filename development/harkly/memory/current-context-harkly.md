@@ -2,7 +2,7 @@
 # CURRENT CONTEXT — harkly
 > Project-level snapshot. Read at start of every harkly session.
 > Tags: [harkly, project, state, epics, blockers]
-> Last updated: 2026-03-06 by Assistant (session 2)
+> Last updated: 2026-03-07 by Assistant (session 3)
 ---
 
 ## Project Phase
@@ -15,7 +15,7 @@
 |---|---|---|---|
 | HARKLY-03 | ProxyMarket partnership | **on-hold** — юр. блокер (законность парсинга СНГ площадок) | nopoint |
 | HARKLY-05 | cx-platform Layer 1 — prod-ready, web accessible | **⏸ paused** — код готов, deploy не сделан | nopoint |
-| HARKLY-06 | Cold outreach Steam indie games | **in-progress** — game_scout запущен (11929 кандидатов, ~335 собрано); outreach_pipeline обновлён (dynamic subject + peer tone); стратегия записана | nopoint |
+| HARKLY-06 | Cold outreach Steam indie games | **in-progress** — 300+ игр собрано, отзывы сжаты (semcomp ✅), 12 email-вариантов для A/B теста спроектированы (×30 каждый = 360 писем). Ожидание: email sender (Brevo) + Figma MCP (токен добавлен) | nopoint |
 | HARKLY-08 | Instagram — контент и аккаунт | **in-progress** — аудитория и воронка решены, визуальная идентичность в работе | nopoint |
 | HARKLY-09 | cx-platform Rust backend — Phase 1 | **✅ done** | nopoint |
 | HARKLY-10 | CX Community Building | **planned** — Instagram + Research Hub + Harkly Enthusiast + Telegram | nopoint |
@@ -107,9 +107,10 @@
 | Контент-столпы Instagram | 2026-03-04 | nopoint проводит исследование конкурентов |
 | Визуальная идентичность | 2026-03-04 | nopoint рисует |
 | **Разработка Harkly приостановлена** | 2026-03-06 | Фокус на заработок денег. Возобновление: по решению nopoint. |
-| Gmail app password не настроен | 2026-03-06 | Нужен для --send флага в batch_pipeline |
+| Email sender не настроен | 2026-03-07 | Brevo выбран (300/day free, без карты). SPF/DKIM/DMARC нужны. Domain warmup 3 нед. перед mass send. |
 | Domain / sender (harkly.io?) | 2026-03-06 | Ждём Artem |
-| Stripe не настроен | 2026-03-06 | Нужен для payment link в follow-up emails |
+| LemonSqueezy создан, Stripe отложен | 2026-03-07 | LemonSqueezy Merchant-of-record принимает карты глобально. Прямая checkout ссылка без лендинга. |
+| Figma MCP — перезапуск Claude | 2026-03-07 | Токен добавлен в ~/.claude.json. Нужен рестарт Claude Code для активации. |
 
 ## Docs / Artifacts Ready
 
