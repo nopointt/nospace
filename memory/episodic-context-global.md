@@ -468,3 +468,43 @@
 - ❌ Deploy не сделан (Render, конфиги не написаны)
 - ❌ G3 #4 UI (Create Research форма) — паузa
 - ❌ H-06 outreach Simteract — не отправлено
+
+---
+## Session 2026-03-08 — Harkly: E2+E3 frontend готовы, паттерн параллельной разработки
+
+**Decisions:**
+- Параллельный паттерн зафиксирован: 2 сабагента в background + Claude кодит одновременно (~50% экономии)
+- `prisma migrate dev` не работает с Supabase pooler — использовать SQL напрямую в Dashboard
+- Custom subagents (`~/.claude/agents/`) недоступны через `subagent_type` — только `general-purpose`
+
+**Files changed:**
+- `harkly-saas/prisma/schema.prisma` — extraction_total, extraction_done, extraction_processed, annotation
+- `harkly-saas/src/components/extract/ExtractPage.tsx` — Evidence Extractor UI
+- `harkly-saas/src/app/api/projects/[id]/extraction/` — 5 новых API routes
+- `nospace/tools/token-counter/count.ts` — SQLite persistence + --history flag
+
+**Tasks completed / open:**
+- ✅ E2 Corpus Triage (source list, screening, finalization, polling)
+- ✅ E3 Evidence Extractor (5 API routes, UI, seed 40 extractions, schema)
+- ✅ Token Counter SQLite per-session history
+- ❌ SQL миграция E3 — нужно применить в Supabase Dashboard
+- ❌ E4 Insight Canvas — следующий
+
+---
+## Session 2026-03-08 — Harkly: все Layer 1 эпики завершены (E0-E6)
+
+**Decisions:**
+- Стадия 3 G3 Frontend Build закрыта — E0 Scaffold, E1 Framing, E2 Corpus, E3 Extract, E4 Canvas, E5 Notebook, E6 Share
+- Следующий этап: Tech Debt Analysis + SQL миграции в Supabase
+
+**Files changed:**
+- `harkly-saas/src/app/` — 12+ новых routes + pages
+- `harkly-saas/prisma/` — schema + seed + 3 migrations
+- `harkly-saas/src/components/` — insights/, notebook/, share/
+
+**Tasks completed / open:**
+- ✅ E4 Insight Canvas (Fact Pack, Evidence Map, Empathy Map + artifacts API)
+- ✅ E5 Research Notebook (sidebar, notes CRUD, keyword auto-surfacing)
+- ✅ E6 Share + Export (ShareLink, public /share/[token], ZIP, clipboard)
+- ⏳ SQL миграции E3/E4/E6 применить в Supabase Dashboard
+- ⏳ Стадия 4 Tech Debt Analysis

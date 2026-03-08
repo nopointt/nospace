@@ -2,93 +2,83 @@
 # CURRENT CONTEXT — harkly
 > Project-level snapshot. Read at start of every harkly session.
 > Tags: [harkly, project, state, epics, blockers]
-> Last updated: 2026-03-08 by Assistant (session 4)
+> Last updated: 2026-03-08 by Assistant (session 6)
 ---
 
 ## Project Phase
 
-**PIVOT — saas-v1 активна.** Harkly сменил направление: больше не CX-платформа для Steam-игр, теперь — **desk research automation SaaS** для CX/UX/Research Ops профессионалов. Первичная аудитория: RU + СНГ (домен harkly.ru). Технический стек зафиксирован. Ведётся подготовка к запуску Opus для business design.
+**Стадия 3 — G3 Frontend Build ЗАВЕРШЕНА.** Все эпики Layer 1 (E0→E6) реализованы.
+Следующий шаг: **Стадия 4 — Tech Debt Analysis** + применить SQL миграции в Supabase.
 
 ## Active Epics
 
 | Epic ID | Description | Status | Owner |
 |---|---|---|---|
-| HARKLY-11 | **saas-v1** — desk research automation SaaS | **🔥 active** — Research Foundation (Стадия 0): enemy.md написан, hero.md требует веб-исследования | Sonnet + nopoint |
-| HARKLY-06 | Cold outreach Steam indie games | **⏸ on-hold** — 12 email-вариантов готовы, Brevo не настроен, warmup не начат | nopoint |
-| HARKLY-08 | Instagram — контент и аккаунт | **in-progress** — аудитория и воронка решены | nopoint |
-| HARKLY-05 | cx-platform Layer 1 (Steam/CX) | **⏸ archived** — код на GitHub, не деплоен, приоритет снят | — |
+| HARKLY-11 | **saas-v1** — Стадия 3 G3 Frontend Build | ✅ DONE — все E0-E6 завершены | Sonnet + nopoint |
+| HARKLY-06 | Cold outreach Steam indie games | **⏸ on-hold** | nopoint |
 | HARKLY-03 | ProxyMarket partnership | **on-hold** — юр. блокер | nopoint |
 
 ## saas-v1 — Дорожная карта (6 стадий)
 
 | Стадия | Название | Статус |
 |---|---|---|
-| 0 | Research Foundation | **🔥 в процессе** — enemy.md ✅ (домен-знания), hero.md ❌ нужно веб-исследование |
-| 1 | Business Design (Opus) | **🔒 после Стадии 0** — промпт готов, нужно добавить hero/enemy/competitives |
-| 2 | Spec Lock | 🔒 после Стадии 1 |
-| 3 | Product Design | 🔒 после Стадии 1 |
-| 4 | Infrastructure Setup | ⏳ nopoint делает параллельно |
-| 5 | MVP Build (G3) | 🔒 после Стадии 3+4 |
-| 6 | Beta Launch | 🔒 после Стадии 5 |
+| 0 | Research Foundation | ✅ DONE |
+| 1 | Business Design (Opus) | ✅ DONE — opus_business_brief.md написан |
+| 2 | Spec Lock | ✅ DONE — 8 спек (E0, E0.5, E1-E6), DoR 100% |
+| 3 | G3 Frontend Build | ✅ DONE — E0-E6 все завершены |
+| 4 | Tech Debt Analysis | 🔥 следующий |
+| 5 | G3 Backend Build | 🔒 после Стадий 3+4 |
+| 6 | Manual Testing + Beta | 🔒 |
 
-## Product State — saas-v1
+## Product State — saas-v1 Frontend
 
-| Компонент | Статус | Заметки |
+| Компонент | Статус | Маршрут |
 |---|---|---|
-| Spine-процесс (гипотеза) | ✅ задокументирован | Framing → Planning → Ingestion → Extraction → Synthesis → Notebook. Opus может изменить. |
-| Layer 1 архитектура | ✅ задокументирована | 6 модулей: Framing Studio, Source Planner, Corpus Ingest, Evidence Extractor, Insight Canvas, Signals & Notebook |
-| enemy.md | ⚠️ v0 из домен-знания | Написан структурно. Требует веб-исследования (50+ страниц) для валидации |
-| hero.md | ❌ не написан | Нужно веб-исследование (r/UXResearch, surveys, LinkedIn) → ICP Card формат |
-| opus_business_brief_prompt.md | ⚠️ требует обновления | Стек обновлён ✅. Нужно добавить в список чтения: hero.md + enemy.md + competitives.md + инструкция "spine = гипотеза" |
-| competitives.md | ✅ готов | Детальный teardown 6 кластеров конкурентов. Добавить в Opus. |
-| Opus business brief (результат) | ❌ | После Стадии 0 + обновления промпта |
-| Инфраструктура | ❌ | Vercel / YC PG / Supabase / Modal — аккаунты не настроены |
+| E0 Scaffold + Auth | ✅ DONE | `/auth/login`, `/app/dashboard` |
+| E1 Framing Studio | ✅ DONE | `/app/projects/[id]/frame` |
+| E2 Corpus Triage | ✅ DONE | `/app/projects/[id]/corpus` |
+| E3 Evidence Extractor | ✅ DONE | `/app/projects/[id]/extract` |
+| E4 Insight Canvas | ✅ DONE | `/app/projects/[id]/canvas` |
+| E5 Research Notebook | ✅ DONE | `/app/projects/[id]/notebook` |
+| E6 Share + Export | ✅ DONE | `/app/projects/[id]/share` + `/share/[token]` |
 
-## Технический стек — saas-v1 (финальный)
+## Технический стек — saas-v1
 
-| Слой | Технология |
-|---|---|
-| Runtime | Bun |
-| Framework | Next.js 14 App Router + shadcn/ui |
-| ORM | Prisma (2 datasource: YC PG + Supabase) |
-| Auth + PII (152-ФЗ) | Yandex Cloud Managed PG (ru-central1) |
-| Analytics DB | Supabase (публичные данные) |
-| Deploy | Vercel |
-| Python pipeline | Modal.com |
-| Парсинг fallback | ZenRows |
-| Домен | harkly.ru |
+| Слой | Технология | Где |
+|---|---|---|
+| Runtime | Bun | локально |
+| Framework | Next.js 16 App Router + shadcn/ui | Vercel |
+| ORM | Prisma 7 (adapter-pg) | — |
+| Auth + DB | Supabase (itkzskhsjcfokvrdtjlv) | US |
+| CI/CD | GitHub Actions | — |
+| Repo | `harkly-saas` | `nospace/development/harkly/harkly-saas/` |
 
 ## Blockers
 
 | Blocker | Raised | Resolution |
 |---|---|---|
-| hero.md — нет веб-исследования | 2026-03-08 | Запустить агент в новой сессии. Писать из веб-данных (r/UXResearch, surveys). Сохранить в файл напрямую. |
-| enemy.md — только домен-знание | 2026-03-08 | Агент остановлен из-за лимитов контекста. Перезапустить → agent должен ПИСАТЬ в файл, не возвращать в контекст |
-| opus_business_brief_prompt.md не обновлён | 2026-03-08 | Добавить: hero.md, enemy.md, competitives.md + spine-инструкцию |
-| Инфраструктура не настроена | 2026-03-08 | nopoint: создать аккаунты Vercel / YC / Supabase / Modal |
-| Email sender не настроен (HARKLY-06) | 2026-03-07 | Brevo: SPF/DKIM/DMARC + domain warmup 3 нед. |
+| SQL миграция E3 не применена | 2026-03-08 | Supabase Dashboard → SQL Editor: `ALTER TABLE research_projects ADD COLUMN IF NOT EXISTS extraction_total INTEGER NOT NULL DEFAULT 0, extraction_done INTEGER NOT NULL DEFAULT 0; ALTER TABLE documents ADD COLUMN IF NOT EXISTS extraction_processed BOOLEAN NOT NULL DEFAULT false; ALTER TABLE extractions ADD COLUMN IF NOT EXISTS annotation TEXT;` |
+| SQL миграция E4 не применена | 2026-03-08 | Supabase Dashboard → SQL Editor: `prisma/migrations/e4_artifacts.sql` |
+| SQL миграция E6 не применена | 2026-03-08 | Supabase Dashboard → SQL Editor: `prisma/migrations/e6_share.sql` |
+| prisma migrate dev зависает | 2026-03-08 | Использовать `prisma db push` с DIRECT_URL или SQL напрямую |
 
 ## Docs / Artifacts Ready
 
 | Артефакт | Файл | Статус |
 |---|---|---|
-| Полный roadmap saas-v1 | `.claude/plans/eager-juggling-flame.md` | ✅ 6 стадий задокументированы |
-| Layer 1 архитектура | `branches/saas-v1/harkly_layer1_architecture.md` | ✅ |
-| 5 методологических школ | `branches/saas-v1/methodology_schools_detailed.md` | ✅ |
-| Jobs matrix | `branches/saas-v1/jobs_matrix_automation.md` | ✅ |
-| Конкурентный teardown | `branches/saas-v1/competitives.md` | ✅ → добавить в Opus |
-| Opus business brief промпт | `branches/saas-v1/opus_business_brief_prompt.md` | ⚠️ нужно обновить |
-| UI brief (черновик) | `branches/saas-v1/harkly_ui_brief.md` | ✅ |
-| Enemy Statement v0 | `branches/saas-v1/enemy.md` | ⚠️ v0 из домен-знания |
-| Branch spec | `branches/saas-v1/spec.md` | ⚠️ AC пусто |
-| Cold Outreach Strategy | `branches/cx_osint_pipeline/outreach_strategy.md` | ✅ Draft |
+| Полный roadmap saas-v1 | `.claude/plans/eager-juggling-flame.md` | ✅ |
+| Opus business brief | `branches/saas-v1/opus_business_brief.md` | ✅ |
+| Спеки E0-E6 | `branches/saas-v1/specs/` | ✅ DoR 100% |
+| Prisma schema | `harkly-saas/prisma/schema.prisma` | ✅ все модели (E0-E6) |
+| Seed data | `harkly-saas/prisma/seed.ts` | ✅ 12 corpus + 40 extractions + 3 artifacts + 5 notes + 1 sharelink |
+| E6 Share migration | `harkly-saas/prisma/migrations/e6_share.sql` | ⚠️ применить в Supabase |
+| E4 Artifacts migration | `harkly-saas/prisma/migrations/e4_artifacts.sql` | ⚠️ применить в Supabase |
+| Epics log | `harkly/memory/epics-log-harkly.md` | ✅ E0-E6 залогированы |
+| Token Counter | `nospace/tools/token-counter/count.ts` | ✅ |
 
-## Ключевые решения этой сессии (2026-03-08)
+## Ключевые решения (session 6)
 
-- **Продуктовый пивот** подтверждён и задокументирован: Harkly = desk research automation SaaS
-- **Домен**: harkly.ru — первичная аудитория RU + СНГ
-- **Враг переопределён**: не "парадигма опросов", а **фрагментация workflow** (4-8 несвязанных инструментов)
-- **hero/enemy формат**: ICP Card + Enemy Statement. Источник: реальное веб-исследование
-- **Spine = гипотеза**: Opus может предложить улучшения
-- **Opus запуск**: через Claude Code (`claude --model claude-opus-4-6`) + Read tool для файлов
-- **Продуктовое видение синхронизировано** с nopoint
+- **Все эпики E0-E6 завершены** — Стадия 3 закрыта
+- **fflate** для ZIP export (in-memory, no temp files)
+- **Public /share/[token]** — вне `/app/*`, middleware не трогает
+- **Parallel subagent pattern** — 2 Qwen одновременно работает стабильно на всех эпиках
