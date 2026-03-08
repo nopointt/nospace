@@ -2,18 +2,20 @@
 # CURRENT CONTEXT — harkly
 > Project-level snapshot. Read at start of every harkly session.
 > Tags: [harkly, project, state, epics, blockers]
-> Last updated: 2026-03-08 by Assistant (session 9)
+> Last updated: 2026-03-08 by Assistant (session 10)
 ---
 
 ## Project Phase
 
-**Стадия 4 + Critical Debt ПОЛНОСТЬЮ ЗАВЕРШЕНЫ.** Build чистый. Добавлена промежуточная Стадия 3.5 — Figma Design (редизайн frontend на основе реального дизайна).
-Следующий шаг: **Стадия 3.5 — Figma Design Audit + Frontend Redesign.**
+**Стадия 3.5 IN PROGRESS — Canvas Workspace Redesign.**
+Design system применён (Inter, gray-100, Tailwind scale). NVIDIA NIM подключён для тестирования чата. Omnibar подключён к workspace. Floor architecture зафиксирована в памяти.
+Следующий шаг: **floor navigation + per-floor canvas content**.
 
 ## Active Epics
 
 | Epic ID | Description | Status | Owner |
 |---|---|---|---|
+| HARKLY-12 | **saas-v1** — Стадия 3.5 Canvas Workspace Redesign | 🔄 IN PROGRESS | Sonnet + nopoint |
 | HARKLY-11 | **saas-v1** — Стадия 3 G3 Frontend Build | ✅ DONE — все E0-E6 завершены | Sonnet + nopoint |
 | HARKLY-06 | Cold outreach Steam indie games | **⏸ on-hold** | nopoint |
 | HARKLY-03 | ProxyMarket partnership | **on-hold** — юр. блокер | nopoint |
@@ -27,11 +29,25 @@
 | 2 | Spec Lock | ✅ DONE — 8 спек (E0, E0.5, E1-E6), DoR 100% |
 | 3 | G3 Frontend Build | ✅ DONE — E0-E6 все завершены |
 | 4 | Tech Debt Analysis | ✅ DONE — tech-debt-frontend.md + ux-debt-report.md |
-| 3.5 | Figma Design Audit + Redesign | 🔓 READY — figma-design-auditor агент создан |
+| 3.5 | Canvas Workspace Redesign | 🔄 IN PROGRESS — design system ✅, NVIDIA NIM ✅, floor nav ⬜ |
 | 5 | G3 Backend Build | 🔒 — после Стадии 3.5 |
 | 6 | Manual Testing + Beta | 🔒 |
 
-## Product State — saas-v1 Frontend
+## Canvas Workspace — Компоненты (Стадия 3.5)
+
+| Компонент | Статус | Файл |
+|---|---|---|
+| ChatPanel | ✅ redesigned | `components/chat/ChatPanel.tsx` |
+| ChatSettingsBar | ✅ redesigned | `components/chat/ChatSettingsBar.tsx` |
+| AgentStatusBar | ✅ redesigned | `components/agents/AgentStatusBar.tsx` |
+| FloorBadge | ✅ redesigned | `components/canvas/FloorBadge.tsx` |
+| Omnibar | ✅ connected | `components/omnibar/Omnibar.tsx` |
+| CanvasToolbar | ✅ existing | `components/canvas/CanvasToolbar.tsx` |
+| NVIDIA NIM provider | ✅ connected | `useAgents.ts` + `providers/openai.ts` |
+| Floor navigation | ⬜ TODO | — |
+| Per-floor canvas content | ⬜ TODO | — |
+
+## Product State — saas-v1 Frontend (E0-E6, legacy routes)
 
 | Компонент | Статус | Маршрут |
 |---|---|---|
@@ -49,8 +65,10 @@
 |---|---|---|
 | Runtime | Bun | локально |
 | Framework | Next.js 16 App Router + shadcn/ui | Vercel |
+| Font | Inter (Google Fonts) | layout.tsx |
 | ORM | Prisma 7 (adapter-pg) | — |
 | Auth + DB | Supabase (itkzskhsjcfokvrdtjlv) | US |
+| AI Provider (test) | NVIDIA NIM (meta/llama-3.3-70b-instruct) | `.env.local` |
 | CI/CD | GitHub Actions | — |
 | Repo | `harkly-saas` | `nospace/development/harkly/harkly-saas/` |
 
@@ -59,8 +77,8 @@
 | Blocker | Raised | Resolution |
 |---|---|---|
 | prisma migrate dev зависает | 2026-03-08 | Использовать `DATABASE_URL=<DIRECT_URL> bunx prisma db execute --stdin` |
-| Security: project ownership not verified | 2026-03-08 | ✅ RESOLVED — verifyProjectAuth() в api-auth.ts, все 20 routes |
-| Zero test coverage | 2026-03-08 | Нужна тестовая инфраструктура (единственный оставшийся critical debt) |
+| Zero test coverage | 2026-03-08 | Нужна тестовая инфраструктура (critical debt) |
+| SQL миграции E4 + E6 | 2026-03-08 | ⚠️ не применены в Supabase — блокирует backend features |
 
 ## Docs / Artifacts Ready
 
@@ -68,26 +86,20 @@
 |---|---|---|
 | Полный roadmap saas-v1 | `.claude/plans/eager-juggling-flame.md` | ✅ |
 | Opus business brief | `branches/saas-v1/opus_business_brief.md` | ✅ |
+| Architecture Spec (Floor 0-5) | `branches/saas-v1/Harkly Architecture Spec.md` | ✅ |
+| Methodology schools (5 schools) | `branches/saas-v1/methodology_schools_detailed.md` | ✅ |
 | Спеки E0-E6 | `branches/saas-v1/specs/` | ✅ DoR 100% |
 | Prisma schema | `harkly-saas/prisma/schema.prisma` | ✅ все модели (E0-E6) |
-| Seed data | `harkly-saas/prisma/seed.ts` | ✅ 12 corpus + 40 extractions + 3 artifacts + 5 notes + 1 sharelink |
 | E6 Share migration | `harkly-saas/prisma/migrations/e6_share.sql` | ⚠️ применить в Supabase |
 | E4 Artifacts migration | `harkly-saas/prisma/migrations/e4_artifacts.sql` | ⚠️ применить в Supabase |
 | Epics log | `harkly/memory/epics-log-harkly.md` | ✅ E0-E6 залогированы |
-| Token Counter | `nospace/tools/token-counter/count.ts` | ✅ |
-| figma-design-auditor агент | `~/.claude/agents/figma-design-auditor.md` | ✅ создан |
 
-## Ключевые решения (session 6-9)
+## Ключевые решения (session 10)
 
-- **Все эпики E0-E6 завершены** — Стадия 3 закрыта
-- **fflate** для ZIP export (in-memory, no temp files)
-- **Public /share/[token]** — вне `/app/*`, middleware не трогает
-- **Parallel subagent pattern** — 2 Qwen одновременно работает стабильно на всех эпиках
-- **verifyProjectAuth()** — единый auth helper в `src/lib/api-auth.ts` для всех project-scoped routes
-- **Figma MCP** — исправлен через `--stdio` флаг (был HTTP mode, нужен stdio)
-- **Mock data** — гейт за `MOCK_EXTRACTIONS=true` / `MOCK_SOURCES=true` env flags
-- **ui-designer агент** — установлен из awesome-claude-subagents
-- **figma-design-auditor агент** — кастомный, читает Figma MCP → пишет design-audit.md → Claude делает план фиксов
-- **Figma REST API write = невозможно** — только Plugin API (в sandbox Figma). MCP = read-only
-- **Стадия 3.5** — добавлена: Figma Design Audit → Frontend Redesign (между Стадией 4 и 5)
-- **figma-developer-mcp** — требует рестарта Claude Code для загрузки инструментов
+- **Inter font** — заменён Geist на Inter (axiom template дизайн-система)
+- **Tailwind scale only** — убраны все `text-[Npx]` в canvas-компонентах, только `text-xs / text-sm / text-base`
+- **gray-100 borders** — заменены `border-[#D9D9D9]` на `border-gray-100`
+- **NVIDIA NIM** — `meta/llama-3.3-70b-instruct` как default agent (`custom` provider, OpenAI-compatible)
+- **Omnibar** — подключён к `/app/[workspaceId]` (был built но не импортирован)
+- **Floor architecture** — задокументирована в `handshake-harkly.md` (Floor 0-5, 5 методологических школ)
+- **useAgents version: 2** — бамп для сброса старого localStorage при смене default provider

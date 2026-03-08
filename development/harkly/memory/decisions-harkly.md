@@ -90,3 +90,16 @@
 - **Новая Стадия 3.5:** Figma Design Audit → Frontend Redesign — между Стадией 4 и 5
 - **figma-design-auditor агент:** `~/.claude/agents/figma-design-auditor.md` — читает Figma файл через MCP, документирует экраны, заполняет пробелы дизайн-решениями, пишет `design-audit.md`. Затем Claude делает план фиксов для frontend
 - **Workflow:** figma-design-auditor → design-audit.md → план фиксов (Claude) → Qwen имплементирует
+
+---
+
+## 2026-03-08 — Стадия 3.5: Canvas Workspace Redesign (session 10)
+
+- **Inter font:** заменён Geist на Inter (Google Fonts) — axiom digital design agency template за базу
+- **Tailwind scale only:** убраны все `text-[Npx]`, `w-[Npx]`, `h-[Npx]` в canvas-компонентах → только `text-xs / text-sm / text-base`, `h-4 / h-6 / h-9`, `w-6 / w-8`
+- **gray-100 borders:** `border-[#D9D9D9]` → `border-gray-100` во всех компонентах
+- **NVIDIA NIM:** подключён как default agent — `meta/llama-3.3-70b-instruct`, OpenAI-compatible endpoint `https://integrate.api.nvidia.com/v1`, ключ из `NEXT_PUBLIC_NVIDIA_NIM_KEY`
+- **Omnibar = chat:** Omnibar был построен (Cmd+K → dialog → FramingStudio) но не смонтирован. Подключён в `/app/[workspaceId]/page.tsx` через `use(props.params)` паттерн
+- **useAgents version: 2:** бамп для сброса старого localStorage с устаревшим default provider
+- **stream_options убран:** NVIDIA NIM не поддерживает `stream_options: { include_usage: true }` — убрано из `providers/openai.ts`
+- **Floor architecture зафиксирована:** Floor 0-5 + 5 методологических школ → `handshake-harkly.md` + `current-context-harkly.md`

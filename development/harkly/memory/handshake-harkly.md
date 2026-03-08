@@ -6,16 +6,38 @@
 
 ## Где мы сейчас
 
-**Стадия 4 DONE + новая Стадия 3.5 добавлена: Figma Design Audit + Frontend Redesign.**
-figma-design-auditor агент создан. Ждёт: рестарт Claude Code → URL Figma файла → запуск.
+**Стадия 3.5 IN PROGRESS — Canvas workspace redesign + Floor architecture.**
+- Canvas-based workspace активен на `/app/[workspaceId]` (маршрут `/app/main`)
+- ChatPanel, FloorBadge, CanvasToolbar, Omnibar — подключены и работают
+- Дизайн: Inter font, gray-100 borders, Tailwind scale без хардкода
+- Omnibar: Cmd+K → открывается → вводишь вопрос → FramingStudio
+
+## Продуктовая архитектура (важно!)
+
+**Floor Architecture (6 этажей):**
+- Floor 0 — Scratchpad: глобальный холст, Omnibar, PICOT Framing Studio
+- Floor 1 — Sources: коннекторы (Twitter, Reddit, upload), API keys
+- Floor 2 — Raw: скрининг корпуса (Include/Exclude/Maybe)
+- Floor 3 — Insights: NLP граф сущностей, тематики, цитаты
+- Floor 4 — Artifacts: Empathy Map, Fact Pack, Journey Map, Evidence Map
+- Floor 5 — Stakeholders: Presentation, Brief, Report
+
+**5 методологических школ Harkly автоматизирует:**
+- Academic/Cochrane–PRISMA: PICO-фрейм, скрининг, PRISMA-flow
+- IDEO/Design Thinking: Empathy Map, Customer Journey, Personas
+- McKinsey: Issue Tree, Fact Pack, Triangulation
+- MIT AI Lab: Research Notebook, Weak Signals, граф связей
+- Consumer Intelligence: агрегация OSINT-источников
+
+**Уникальная ниша:** все существующие инструменты заточены под свои панели/опросы. Harkly = первая платформа гоняющая открытые OSINT-источники через полный multi-методологический pipeline.
 
 ---
 
 ## Следующий приоритет
 
-1. **Рестарт Claude Code** — чтобы загрузился `figma-developer-mcp` (инструменты `mcp__figma__*`)
-2. **Стадия 3.5** — дать URL Figma файла → запустить `figma-design-auditor` → он пишет `design-audit.md`
-3. **После аудита** — я (Claude) читаю `design-audit.md` + текущий код → план фиксов → Qwen имплементирует
+1. **Стадия 3.5 продолжается** — floor navigation (кликабельный FloorBadge), per-floor canvas content
+2. **Стадия 5 Backend** — после завершения 3.5
+3. **SQL миграции E4 + E6** — не применены в Supabase (блокирует backend)
 
 ---
 
@@ -51,3 +73,4 @@ figma-design-auditor агент создан. Ждёт: рестарт Claude Co
 `2026-03-08 (s6)` E4 Insight Canvas + E5 Research Notebook + E6 Share+Export — ВСЕ ЭПИКИ LAYER 1 ЗАВЕРШЕНЫ. | следующее: SQL миграции → Стадия 4 Tech Debt
 `2026-03-08 (s8)` Figma MCP исправлен (--stdio). ui-designer агент. Весь critical tech debt закрыт: security (20 routes), Prisma try/catch, UX toasts, confirmations, ExtractPage fixes, mock feature flags. | следующее: Стадия 5 Backend
 `2026-03-08 (s9)` Добавлена Стадия 3.5. Figma write = невозможно (REST read-only). Создан figma-design-auditor агент. | следующее: рестарт CC → URL Figma → запуск аудита
+`2026-03-08 (s10)` Редизайн canvas workspace: Inter, axiom template дизайн-система, ChatPanel/FloorBadge/Omnibar/AgentStatusBar переделаны. Floor architecture + 5 методологических школ зафиксированы в памяти. Omnibar подключён (Cmd+K). | следующее: floor navigation, per-floor content
