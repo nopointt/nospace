@@ -1,20 +1,24 @@
 # HANDSHAKE — tLOS
 > Читай этот файл в начале любой tLOS-сессии.
-> Updated: 2026-03-02 by Assistant
+> Updated: 2026-03-08 by Assistant
 
 ---
 
 ## Где мы сейчас
 
-Claude Code интеграция реализована архитектурно: `tlos-claude-bridge` (Node.js) + provider selector UI в Omnibar (Claude/NVIDIA toggle, model list, auth status). **Но subprocess на Windows зависает** — клод не отвечает на сообщения, несмотря на cmd.exe /c fix. NIM pipeline работает. Auth UI показывает Connected корректно.
+**claude-bridge ПОЧИНЕН** (2026-03-08). Фиксы: `shell: true` вместо `cmd.exe /c` (двойное квотирование пути), `stdio: ['ignore','pipe','pipe']` (закрыт stdin), `--verbose` флаг (обязателен для stream-json), `delete env.CLAUDE_CODE + CLAUDE_CODE_ENTRYPOINT` (nested session bypass), `resultSeen` флаг (убирает дублирование ответов). End-to-end тест через NATS подтверждён.
+
+**Dispatcher починен** — wasm загрузка стала optional (graceful skip если math_worker.wasm не собран).
+
+**workspace-v1 создан** — sessions-map.md: 3 трека (A: Omnibar v2, B: BB Floors, C: Infra). Следующий шаг — nopoint запускает Opus с промптом, после этого Sonnet пишет tech spec.
 
 ---
 
 ## Следующий приоритет
 
-1. **BLOCKER: Починить claude-bridge subprocess** — `cmd.exe /c claude.cmd -p ...` зависает без вывода. Диагностика: запустить тест-скрипт отдельно, посмотреть stderr, попробовать `shell: true` или PowerShell wrapper. Возможно claude требует TTY или интерактивный терминал.
-2. **Session persistence** — `sessionId→claudeSessionId` теряется при рестарте bridge. Сохранять в `~/.tlos/sessions.json`.
-3. **Omnibar `mcb` command** — сломана команда запуска MCB фреймов после редизайна.
+1. **A-1 (nopoint)** — запустить Opus с промптом из `branches/omnibar/opus-prompt.md`, сохранить результат в `branches/omnibar/opus-output.md`
+2. **B-1 (Regular)** — прочитать `App.tsx` и `src/types/frame.ts`: понять canvas state architecture перед G3 B-2 (BB Floors). Можно делать сейчас.
+3. **C-1 (G3)** — починить `onLocalCommand('mcb')` в App.tsx. Быстро, не блокирует. Можно делать сейчас.
 
 ---
 
@@ -22,19 +26,24 @@ Claude Code интеграция реализована архитектурно
 
 | Branch | Task | Status |
 |---|---|---|
-| omnibar | Omnibar redesign + Claude Code integration (epic-eidolon-v1) | open — bridge broken |
-| mcb-v1 | Marketing Command Board для Артёма | blocked — ждём API доступы |
-| node-v1 | Nostr patch pipeline | shipped — ждём Артёма |
-| website-v1 | THELOS marketing site | open |
+| omnibar | omnibar-v2: production-ready Claude chat (epic-eidolon-v1) | OPEN — bridge работает, ждём Opus product spec |
+| workspace-v1 | Организация рабочего пространства + сессионная карта | OPEN — sessions-map.md создан |
+| mcb-v1 | Marketing Command Board для Артёма | BLOCKED — ждём API доступы от Артёма |
+| node-v1 | Nostr patch pipeline | SHIPPED — ждём Артёма |
+| website-v1 | THELOS marketing site | OPEN |
 
 ---
 
-## Архитектура AI pipeline
+## Архитектура AI pipeline (актуальная)
 
 ```
-Omnibar → agent:chat { provider: 'claude'|'nim', model }
+Omnibar → agent:chat { provider: 'claude'|'nim', model, sessionId }
   ├── provider='claude' → tlos-claude-bridge (Node.js, core/kernel/tlos-claude-bridge/)
-  │     └── cmd.exe /c claude.cmd -p ... --model ... --resume <id>
+  │     └── spawn(CLAUDE_EXE, ['-p', content, '--output-format', 'stream-json',
+  │                            '--verbose', '--include-partial-messages',
+  │                            '--model', model, '--resume', claudeSessionId?],
+  │                           { shell: true, stdio: ['ignore','pipe','pipe'],
+  │                             env: {…без CLAUDECODE/CLAUDE_CODE/CLAUDE_CODE_ENTRYPOINT} })
   └── provider='nim'   → tlos-agent-bridge (Rust)
         └── NVIDIA NIM HTTP SSE
 ```
@@ -52,6 +61,9 @@ Auth: bridge читает `~/.claude.json` → `agent:auth:status` → Omnibar C
 | NIM model | `meta/llama-3.1-8b-instruct` |
 | Claude default model | `claude-sonnet-4-6` |
 | Claude bridge path | `core/kernel/tlos-claude-bridge/index.js` |
+| tlos-cyan | `#06B6D4` (Tailwind cyan-500) |
+| tlos-primary | `#f2b90d` |
+| BB-framework | `docs/tLOS/BB-framework/BB-00-Manifest-v2.md` |
 
 ---
 
@@ -65,16 +77,38 @@ Auth: bridge читает `~/.claude.json` → `agent:auth:status` → Omnibar C
 | Omnibar | development/tLOS/core/shell/frontend/src/components/Omnibar.tsx |
 | Grid launcher | development/tLOS/core/grid.ps1 |
 | NIM bridge | development/tLOS/core/kernel/tlos-agent-bridge/src/main.rs |
-| ADR-003 security | docs/ecosystem-noadmin/adr/003-tlos-network-isolation.md |
+| Opus prompt | development/tLOS/branches/omnibar/opus-prompt.md |
+| Sessions map | development/tLOS/branches/workspace-v1/sessions-map.md |
+| BB-framework | docs/tLOS/BB-framework/BB-00-Manifest-v2.md |
+| BB-51 tLOS интеграция | docs/tLOS/BB-framework/BB-51.md |
+
+---
+
+## BB-framework — структура уровней
+
+9 уровней (здание + поле):
+
+```
+ФАСАД      — внешняя кибербезопасность (мета)
+СТЕНЫ      — внутренний мониторинг (мета)
+КАРКАС     — регуляция системы (мета)
+  КРЫША      — «Что могло бы быть?»
+  СТРАТЕГИЯ  — «Куда и Зачем?»
+  ТАКТИКА    — «Что и Когда?»
+  ОПЕРАЦИЯ   — «Как и Кто?»
+  ПОДВАЛ     — «На чём работает?»
+  ФУНДАМЕНТ  — «Что может нас опрокинуть?»
+```
+
+tLOS реализует Z-ось как этажи: 6 floors (Фундамент → Крыша), каждый floor = отдельный canvas state в localStorage (`tlos-canvas-z-{n}`). Навигация: Ctrl+Up/Down.
 
 ---
 
 ## Открытые вопросы
 
-- [ ] Почему claude subprocess зависает? (TTY requirement? CLAUDECODE still set? PATH issue?)
-- [ ] Session persistence для claude-bridge (disk)?
+- [ ] Session persistence для claude-bridge (disk) — `~/.tlos/sessions.json`
 - [ ] NIM key rotation: механизм автообновления
-- [ ] MCB омнибар: команда `mcb` — починить
+- [ ] MCB омнибар: команда `mcb` — починить (C-1)
 - [ ] WebSocket → Tauri IPC (ADR-003 Phase 2, production milestone)
 - [ ] Артём: когда пришлёт npub и доступы к API?
 - [ ] PatchDialog.tsx:19 — kernel.subscribe() cleanup не подтверждён (LOW risk)
