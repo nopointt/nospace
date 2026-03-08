@@ -2,13 +2,13 @@
 # CURRENT CONTEXT — harkly
 > Project-level snapshot. Read at start of every harkly session.
 > Tags: [harkly, project, state, epics, blockers]
-> Last updated: 2026-03-08 by Assistant (session 6)
+> Last updated: 2026-03-08 by Assistant (session 7)
 ---
 
 ## Project Phase
 
-**Стадия 3 — G3 Frontend Build ЗАВЕРШЕНА.** Все эпики Layer 1 (E0→E6) реализованы.
-Следующий шаг: **Стадия 4 — Tech Debt Analysis** + применить SQL миграции в Supabase.
+**Стадия 4 — Tech Debt Analysis ЗАВЕРШЕНА.** SQL миграции E3/E4/E5/E6 применены. Seed прошёл. Два debt-отчёта написаны.
+Следующий шаг: исправить критические issues (security + error feedback) → Стадия 5 Backend Build.
 
 ## Active Epics
 
@@ -26,7 +26,7 @@
 | 1 | Business Design (Opus) | ✅ DONE — opus_business_brief.md написан |
 | 2 | Spec Lock | ✅ DONE — 8 спек (E0, E0.5, E1-E6), DoR 100% |
 | 3 | G3 Frontend Build | ✅ DONE — E0-E6 все завершены |
-| 4 | Tech Debt Analysis | 🔥 следующий |
+| 4 | Tech Debt Analysis | ✅ DONE — tech-debt-frontend.md + ux-debt-report.md |
 | 5 | G3 Backend Build | 🔒 после Стадий 3+4 |
 | 6 | Manual Testing + Beta | 🔒 |
 
@@ -57,10 +57,9 @@
 
 | Blocker | Raised | Resolution |
 |---|---|---|
-| SQL миграция E3 не применена | 2026-03-08 | Supabase Dashboard → SQL Editor: `ALTER TABLE research_projects ADD COLUMN IF NOT EXISTS extraction_total INTEGER NOT NULL DEFAULT 0, extraction_done INTEGER NOT NULL DEFAULT 0; ALTER TABLE documents ADD COLUMN IF NOT EXISTS extraction_processed BOOLEAN NOT NULL DEFAULT false; ALTER TABLE extractions ADD COLUMN IF NOT EXISTS annotation TEXT;` |
-| SQL миграция E4 не применена | 2026-03-08 | Supabase Dashboard → SQL Editor: `prisma/migrations/e4_artifacts.sql` |
-| SQL миграция E6 не применена | 2026-03-08 | Supabase Dashboard → SQL Editor: `prisma/migrations/e6_share.sql` |
-| prisma migrate dev зависает | 2026-03-08 | Использовать `prisma db push` с DIRECT_URL или SQL напрямую |
+| prisma migrate dev зависает | 2026-03-08 | Использовать `DATABASE_URL=<DIRECT_URL> bunx prisma db execute --stdin` |
+| Security: project ownership not verified | 2026-03-08 | Все project-scoped API routes должны проверять `project.user_id === session.user.id` |
+| Zero test coverage | 2026-03-08 | Нужна тестовая инфраструктура перед Стадией 5 Backend |
 
 ## Docs / Artifacts Ready
 

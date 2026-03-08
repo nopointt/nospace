@@ -70,3 +70,13 @@
 - **Все Layer 1 эпики (E0-E6):** завершены в одну сессию (2026-03-08)
 - **Следующий:** Стадия 4 Tech Debt Analysis — Explore-агент по всему codebase → `specs/tech-debt-frontend.md`
 - **Блокер:** 3 SQL миграции (E3, E4, E6) не применены в Supabase → нужно до любого production тестирования
+
+---
+
+## 2026-03-08 — Стадия 4: Tech Debt выводы
+
+- **SQL миграции:** применять через `DATABASE_URL=<DIRECT_URL> bunx prisma db execute --stdin` (psql не нужен)
+- **Security hole:** project ownership check отсутствует во всех project-scoped routes → фиксить до beta
+- **UX priority #1:** error toasts на все API mutation catch blocks (сейчас silent failures)
+- **UX priority #2:** confirmation dialogs на destructive actions (delete note, archive project, bulk exclude)
+- **Стадия 4 завершена:** два отчёта в `branches/saas-v1/specs/` — tech-debt-frontend.md + ux-debt-report.md
