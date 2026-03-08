@@ -2,13 +2,13 @@
 # CURRENT CONTEXT — harkly
 > Project-level snapshot. Read at start of every harkly session.
 > Tags: [harkly, project, state, epics, blockers]
-> Last updated: 2026-03-08 by Assistant (session 8)
+> Last updated: 2026-03-08 by Assistant (session 9)
 ---
 
 ## Project Phase
 
-**Стадия 4 + Critical Debt ПОЛНОСТЬЮ ЗАВЕРШЕНЫ.** Security hole закрыт (verifyProjectAuth на всех 20 routes). UX toasts, confirmations, ExtractPage fixes, FinalizationModal — всё сделано. Build чистый.
-Следующий шаг: **Стадия 5 — G3 Backend Build.**
+**Стадия 4 + Critical Debt ПОЛНОСТЬЮ ЗАВЕРШЕНЫ.** Build чистый. Добавлена промежуточная Стадия 3.5 — Figma Design (редизайн frontend на основе реального дизайна).
+Следующий шаг: **Стадия 3.5 — Figma Design Audit + Frontend Redesign.**
 
 ## Active Epics
 
@@ -27,7 +27,8 @@
 | 2 | Spec Lock | ✅ DONE — 8 спек (E0, E0.5, E1-E6), DoR 100% |
 | 3 | G3 Frontend Build | ✅ DONE — E0-E6 все завершены |
 | 4 | Tech Debt Analysis | ✅ DONE — tech-debt-frontend.md + ux-debt-report.md |
-| 5 | G3 Backend Build | 🔓 READY — критический долг закрыт |
+| 3.5 | Figma Design Audit + Redesign | 🔓 READY — figma-design-auditor агент создан |
+| 5 | G3 Backend Build | 🔒 — после Стадии 3.5 |
 | 6 | Manual Testing + Beta | 🔒 |
 
 ## Product State — saas-v1 Frontend
@@ -74,8 +75,9 @@
 | E4 Artifacts migration | `harkly-saas/prisma/migrations/e4_artifacts.sql` | ⚠️ применить в Supabase |
 | Epics log | `harkly/memory/epics-log-harkly.md` | ✅ E0-E6 залогированы |
 | Token Counter | `nospace/tools/token-counter/count.ts` | ✅ |
+| figma-design-auditor агент | `~/.claude/agents/figma-design-auditor.md` | ✅ создан |
 
-## Ключевые решения (session 6-8)
+## Ключевые решения (session 6-9)
 
 - **Все эпики E0-E6 завершены** — Стадия 3 закрыта
 - **fflate** для ZIP export (in-memory, no temp files)
@@ -85,3 +87,7 @@
 - **Figma MCP** — исправлен через `--stdio` флаг (был HTTP mode, нужен stdio)
 - **Mock data** — гейт за `MOCK_EXTRACTIONS=true` / `MOCK_SOURCES=true` env flags
 - **ui-designer агент** — установлен из awesome-claude-subagents
+- **figma-design-auditor агент** — кастомный, читает Figma MCP → пишет design-audit.md → Claude делает план фиксов
+- **Figma REST API write = невозможно** — только Plugin API (в sandbox Figma). MCP = read-only
+- **Стадия 3.5** — добавлена: Figma Design Audit → Frontend Redesign (между Стадией 4 и 5)
+- **figma-developer-mcp** — требует рестарта Claude Code для загрузки инструментов

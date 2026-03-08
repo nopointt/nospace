@@ -80,3 +80,13 @@
 - **UX priority #1:** error toasts на все API mutation catch blocks (сейчас silent failures)
 - **UX priority #2:** confirmation dialogs на destructive actions (delete note, archive project, bulk exclude)
 - **Стадия 4 завершена:** два отчёта в `branches/saas-v1/specs/` — tech-debt-frontend.md + ux-debt-report.md
+
+---
+
+## 2026-03-08 — Стадия 3.5: Figma Design Audit
+
+- **Figma REST API = read-only для canvas:** создавать/редактировать ноды через внешний API невозможно — архитектурное ограничение Figma. Write access только через Figma Plugin API (sandbox внутри Figma app)
+- **figma-developer-mcp:** read-only MCP, требует рестарта Claude Code для загрузки инструментов (`mcp__figma__*`)
+- **Новая Стадия 3.5:** Figma Design Audit → Frontend Redesign — между Стадией 4 и 5
+- **figma-design-auditor агент:** `~/.claude/agents/figma-design-auditor.md` — читает Figma файл через MCP, документирует экраны, заполняет пробелы дизайн-решениями, пишет `design-audit.md`. Затем Claude делает план фиксов для frontend
+- **Workflow:** figma-design-auditor → design-audit.md → план фиксов (Claude) → Qwen имплементирует
