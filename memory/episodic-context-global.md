@@ -3,6 +3,29 @@
 > Format: `## [YYYY-MM-DD] [agent-id] — [decision title]`
 
 ---
+## Session 2026-03-08 — Harkly: продуктовый пивот → desk research automation SaaS
+
+**Decisions:**
+- Harkly сменил направление: больше не CX-платформа для Steam-игр, теперь desk research automation SaaS
+- Первичная аудитория: CX/UX/Research Ops в SaaS-компаниях 50-500 человек (RU+СНГ, harkly.ru)
+- Стек финальный: Next.js 14 + Bun + Vercel + YC PG (152-ФЗ) + Supabase + Modal.com
+- Враг переопределён: не "парадигма опросов" — фрагментация workflow (4-8 несвязанных инструментов)
+- Spine-процесс = гипотеза (Opus может предложить изменения)
+- Дорожная карта 6 стадий: Research → Business Design (Opus) → Spec → Product Design → Build → Beta
+
+**Files changed:**
+- `development/harkly/branches/saas-v1/enemy.md` — Enemy Statement v0 написан заново
+- `development/harkly/memory/current-context-harkly.md` — отражён пивот
+- `development/harkly/memory/handshake-harkly.md` — перезаписан под новое направление
+
+**Tasks completed / open:**
+- ✅ Roadmap 6 стадий задокументирован в `.claude/plans/eager-juggling-flame.md`
+- ✅ enemy.md v0 написан (структурно корректно, нужна валидация веб-данными)
+- ⏳ hero.md не написан — нужно веб-исследование (агент пишет в файл, не в контекст)
+- ⏳ opus_business_brief_prompt.md не обновлён (добавить hero + enemy + competitives)
+- ⏳ Opus не запущен
+
+---
 ## Session 2026-02-27 — Infrastructure: session commands + context economy regulation
 
 **Decisions:**
