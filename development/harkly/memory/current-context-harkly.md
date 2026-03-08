@@ -2,13 +2,13 @@
 # CURRENT CONTEXT — harkly
 > Project-level snapshot. Read at start of every harkly session.
 > Tags: [harkly, project, state, epics, blockers]
-> Last updated: 2026-03-08 by Assistant (session 7)
+> Last updated: 2026-03-08 by Assistant (session 8)
 ---
 
 ## Project Phase
 
-**Стадия 4 — Tech Debt Analysis ЗАВЕРШЕНА.** SQL миграции E3/E4/E5/E6 применены. Seed прошёл. Два debt-отчёта написаны.
-Следующий шаг: исправить критические issues (security + error feedback) → Стадия 5 Backend Build.
+**Стадия 4 + Critical Debt ПОЛНОСТЬЮ ЗАВЕРШЕНЫ.** Security hole закрыт (verifyProjectAuth на всех 20 routes). UX toasts, confirmations, ExtractPage fixes, FinalizationModal — всё сделано. Build чистый.
+Следующий шаг: **Стадия 5 — G3 Backend Build.**
 
 ## Active Epics
 
@@ -27,7 +27,7 @@
 | 2 | Spec Lock | ✅ DONE — 8 спек (E0, E0.5, E1-E6), DoR 100% |
 | 3 | G3 Frontend Build | ✅ DONE — E0-E6 все завершены |
 | 4 | Tech Debt Analysis | ✅ DONE — tech-debt-frontend.md + ux-debt-report.md |
-| 5 | G3 Backend Build | 🔒 после Стадий 3+4 |
+| 5 | G3 Backend Build | 🔓 READY — критический долг закрыт |
 | 6 | Manual Testing + Beta | 🔒 |
 
 ## Product State — saas-v1 Frontend
@@ -58,8 +58,8 @@
 | Blocker | Raised | Resolution |
 |---|---|---|
 | prisma migrate dev зависает | 2026-03-08 | Использовать `DATABASE_URL=<DIRECT_URL> bunx prisma db execute --stdin` |
-| Security: project ownership not verified | 2026-03-08 | Все project-scoped API routes должны проверять `project.user_id === session.user.id` |
-| Zero test coverage | 2026-03-08 | Нужна тестовая инфраструктура перед Стадией 5 Backend |
+| Security: project ownership not verified | 2026-03-08 | ✅ RESOLVED — verifyProjectAuth() в api-auth.ts, все 20 routes |
+| Zero test coverage | 2026-03-08 | Нужна тестовая инфраструктура (единственный оставшийся critical debt) |
 
 ## Docs / Artifacts Ready
 
@@ -75,9 +75,13 @@
 | Epics log | `harkly/memory/epics-log-harkly.md` | ✅ E0-E6 залогированы |
 | Token Counter | `nospace/tools/token-counter/count.ts` | ✅ |
 
-## Ключевые решения (session 6)
+## Ключевые решения (session 6-8)
 
 - **Все эпики E0-E6 завершены** — Стадия 3 закрыта
 - **fflate** для ZIP export (in-memory, no temp files)
 - **Public /share/[token]** — вне `/app/*`, middleware не трогает
 - **Parallel subagent pattern** — 2 Qwen одновременно работает стабильно на всех эпиках
+- **verifyProjectAuth()** — единый auth helper в `src/lib/api-auth.ts` для всех project-scoped routes
+- **Figma MCP** — исправлен через `--stdio` флаг (был HTTP mode, нужен stdio)
+- **Mock data** — гейт за `MOCK_EXTRACTIONS=true` / `MOCK_SOURCES=true` env flags
+- **ui-designer агент** — установлен из awesome-claude-subagents
