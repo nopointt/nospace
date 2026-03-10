@@ -302,3 +302,85 @@
 - VERIFY: Zep CE semantic search нужна проверка (Graphiti NIM entity extraction)
 - GITIGNORE: config.yaml + .env нужно добавить в .gitignore tlos-zep-bridge
 - SEC items остаются открытыми (PatchDialog Nostr sig, system prompt permissions)
+
+---
+
+## [2026-03-10 — сессия 9 — checkpoint 5] CHECKPOINT
+
+**Phase:** L2 Kernel Step 3 — Zep CE vector search investigation — BLOCKED, substring fallback ACCEPTED
+
+**Decisions:**
+- Zep CE v0.27.2 hardcodes `text-embedding-ada-002` (1536-dim OpenAI model) для embeddings; значение `llm.model` в конфиге игнорируется для embeddings
+- `llm.service` поддерживает только `openai` и `anthropic` (не `local`) — проверено experimentally
+- `nlp.server_url` в Zep CE используется для NER (named entity recognition), НЕ для vector embeddings
+- NIM не имеет модели `text-embedding-ada-002` → всегда 404 на vector search
+- Решение: substring fallback в zep-client.js уже реализован — достаточен для domain memory use case
+- nlp-server добавлен в стек (для NER Graphiti), model кэшируется в `zep_nlp_cache` Docker volume
+- Docker Desktop правило зафиксировано в MEMORY.md: все Docker операции только через Docker Desktop
+
+**Files changed:**
+- `core/kernel/tlos-zep-bridge/docker-compose.yml` — добавлен nlp сервис (zep-nlp-server), zep_nlp_cache volume, python3 healthcheck (wget не установлен в образе), убраны ZEP_EMBEDDINGS_* env vars
+- `core/kernel/tlos-zep-bridge/config.yaml.template` — итоговый вид: `llm.service: openai`, `nlp.server_url: http://nlp:5557`; перебрали: nvidia/nv-embed-v1, embeddings секция, ZEP_EMBEDDINGS_MODEL env var, service: local — все не работают
+- `~/.tlos/nim-key` — обновлён новым ключом `nvapi-Nr1pEDT...KTG2`
+- `~/.claude/projects/.../memory/MEMORY.md` — добавлено правило Docker Desktop
+
+**Completed:**
+- NIM key обновлён и применён
+- Диагностика: debug logging подтвердил что Zep вызывает `POST https://integrate.api.nvidia.com/v1/embeddings` (правильный URL) но с hardcoded model → 404
+- nlp-server healthcheck исправлен (python3 вместо wget)
+- zep_nlp_cache volume — модель all-MiniLM-L6-v2 кэшируется, не скачивается при каждом recreate
+
+**In progress:**
+- Zep container в crash loop (`service: local` невалидно) — нужен force-recreate с `service: openai`
+
+**Opened:**
+- DECISION: оставить nlp-server или убрать (только для NER, не нужен если NER не используется, ~450MB RAM)
+
+**Notes:**
+- Потрачено значительное время на итерации конфига: 6+ попыток (openai_endpoint_url → openai_endpoint → nvidia/nv-embed-v1 как model → embeddings секция → ZEP_EMBEDDINGS_* env vars → service:local)
+- Все попытки настроить NIM embeddings провалились — ограничение Zep CE v0.27 архитектурное
+- Для решения нужен либо: upgrade Zep CE до версии с поддержкой custom embedding model, либо OpenAI ключ, либо substring fallback (принято)
+
+---
+
+## [2026-03-10 — сессия 10 — checkpoint 6] CHECKPOINT
+
+**Phase:** L2 Kernel Step 3 — liteLLM proxy DONE, Zep CE replacement APPROVED
+
+**Decisions:**
+- liteLLM proxy (ghcr.io/berriai/litellm:main-latest) развёрнут и работает: маппинг `text-embedding-ada-002` → `nvidia/llama-3.2-nv-embedqa-1b-v2` (Matryoshka, dims=1536, input_type=query, encoding_format=float)
+- Подтверждено curl: liteLLM возвращает 1536-dim embeddings через NIM — идеальное совпадение с pgvector schema
+- Zep CE v0.27.2 имеет ВТОРОЙ hardcode: при старте вычисляет "expected 0" dims для embeddings → embedder никогда не активируется, даже с liteLLM proxy
+- NIM модель `nv-embed-v1` — fixed 4096-dim, НЕ поддерживает Matryoshka. `llama-3.2-nv-embedqa-1b-v2` — поддерживает, подтверждено NVIDIA Developer Forums
+- NIM embedding API требует `encoding_format: float` и `input_type` для асимметричных моделей — исправлено в litellm-config.yaml
+- **РЕШЕНИЕ: полностью заменить Zep CE** на direct pg+pgvector+liteLLM. zep-client.js переписывается с тем же API (addFact, getContext, searchFacts). docker-compose сокращается до 2 контейнеров (db + litellm). Экономия ~1.4GB RAM
+- Zep CE discontinued April 2025 (подтверждено blog.getzep.com). Open source фокус сместился на Graphiti
+- Summarize Service будет реализован через liteLLM chat/completions + pg таблицу summaries (не через Zep built-in summarizer)
+
+**Files changed:**
+- `core/kernel/tlos-zep-bridge/litellm-config.yaml` — NEW: liteLLM proxy config (2 model mappings: embedding + chat)
+- `core/kernel/tlos-zep-bridge/docker-compose.yml` — добавлен litellm сервис, восстановлен nlp, обновлён zep depends_on
+- `core/kernel/tlos-zep-bridge/config.yaml.template` — openai_endpoint изменён на http://litellm:4000/v1
+- `memory/current-context-tLOS.md` — обновлён project_phase, zep_bridge status, blockers, L2 roadmap step 3
+- `memory/handshake-tLOS.md` — переписан с новым состоянием
+
+**Completed:**
+- liteLLM Docker container deployed, healthy, tested (port 4000)
+- NIM embedding через liteLLM: 1536-dim confirmed (curl test)
+- Исследование: Zep CE source analysis — embedder disabled by "expected 0" dims (unfixable without Go code changes)
+- Исследование: NVIDIA NIM embedding models — nv-embed-v1 (4096 fixed) vs llama-3.2-nv-embedqa-1b-v2 (Matryoshka, configurable)
+- Решение по архитектуре: Zep CE → pg+pgvector+liteLLM (одобрено nopoint)
+
+**In progress:**
+- Rewrite zep-client.js → direct pg+liteLLM calls (same API surface)
+- Simplify docker-compose: db + litellm only (remove zep, graphiti, neo4j, nlp)
+
+**Opened:**
+- ARCH: Summarize Service design (liteLLM chat + pg summaries table + trigger mechanism)
+- Update agent-system-architecture.md: Zep → pg+liteLLM в Layer Map
+
+**Notes:**
+- liteLLM image pull ~1 min, container ~120MB RAM, startup ~5s — lightweight
+- liteLLM requires NIM_API_KEY env var (mapped from NIM_KEY in docker-compose)
+- Zep Graphiti (OSS) — actively maintained, can be re-added later for knowledge graph (L2 Step 4+)
+- Текущий стек: 6 контейнеров (~1.6GB RAM). После замены: 2 контейнера (~160MB RAM). Огромная экономия для 3.7GB WSL2 limit
