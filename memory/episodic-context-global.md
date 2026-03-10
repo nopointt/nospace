@@ -565,3 +565,19 @@
 - ✅ L2 Kernel Step 3 DONE — Zep CE LIVE, 200 OK на :8000
 - ⏳ Verify Zep CE semantic search (Graphiti NIM extraction)
 - ⏳ SEC: PatchDialog Nostr sig + system prompt permissions
+
+---
+## Session 2026-03-10 — tLOS: agent-system-architecture.md v3 locked as master roadmap
+
+**Decisions:**
+- `docs/agent-system-architecture.md` = single source of truth for tLOS roadmap (L2 Steps 1–5, L3 Agent Hierarchy 6–9, L4 CMA Full 10–13, Dockerization D1–D6)
+- Always-On Kernel: all services except Tauri Shell move to Docker with restart:unless-stopped
+- Desktop shortcut pattern: .lnk → tlos-app.exe (kernel always running, shell opens instantly)
+
+**Files changed:**
+- `docs/agent-system-architecture.md` — v2→v3, accurate implementation status, full roadmap
+- `Desktop/tLOS.lnk` + `AppData/Local/tLOS/monolith.ico` — created
+
+**Tasks completed / open:**
+- Done: arch doc v3, desktop shortcut, MEMORY.md nav ref
+- Open: Dockerization D1–D6 (next session), L2 Step 5 Agent Frames

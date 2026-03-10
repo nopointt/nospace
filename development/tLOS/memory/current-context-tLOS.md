@@ -1,6 +1,6 @@
 ---
 # CURRENT CONTEXT — tLOS
-> Last updated: 2026-03-10 (session 10 checkpoint 6)
+> Last updated: 2026-03-10 (session 11 close)
 ---
 
 ## Active Epics
@@ -18,19 +18,21 @@
 
 | Key | Value | Last Updated |
 |---|---|---|
-| project_phase | L2 Kernel Step 3 — REPLACING Zep CE with pg+pgvector+liteLLM direct (Zep CE dead project, embedder broken) | 2026-03-10 |
+| project_phase | L2 Kernel 4/5 DONE. Архитектурный роадмап зафиксирован в `docs/agent-system-architecture.md` v3. Следующий приоритет: Dockerization (D1–D6) + L2 Step 5. | 2026-03-10 |
 | shell_status | Tauri native app (decorations:false) — запуск через `grid.ps1 run` | 2026-03-10 |
 | installer | `tLOS_0.1.0_x64-setup.exe` собран, готов к отправке Артёму | 2026-02-28 |
 | agent_bridge | NIM HTTP SSE bridge — meta/llama-3.1-8b-instruct via NVIDIA NIM API | 2026-03-02 |
-| claude_bridge | tlos-claude-bridge — FULL: XML memory, microagents, stable sessionId, context compaction + Letta + Zep domain context | 2026-03-10 |
+| claude_bridge | tlos-claude-bridge — FULL: XML memory, microagents, stable sessionId, context compaction + Letta + domain memory (pg+liteLLM) | 2026-03-10 |
 | langgraph_bridge | tlos-langgraph-bridge — Python service: NATS → LangGraph (orchestrator→worker) + G3 cyclic subgraph | 2026-03-10 |
-| zep_bridge | **REPLACING** — Zep CE v0.27.2 has 2 hardcodes: (1) embedding model ada-002, (2) embedder disabled when expected dims=0. liteLLM proxy works (1536-dim confirmed) but Zep won't call it. Decision: replace with direct pg+pgvector+liteLLM. Stack: db(pgvector) + litellm only. | 2026-03-10 |
+| domain_memory | **DONE** — pg+pgvector+liteLLM. zep-client.js rewritten: direct pg (tlos_facts table, vector(1536), HNSW cosine) + liteLLM embeddings (NIM Matryoshka). Docker: db:5433 + litellm:4000 + qdrant:6333. ~861MB RAM. | 2026-03-10 |
+| associative_routing | **DONE** — qdrant-client.js (tlos-global collection, djb2 dedup, cosine search). index.js: searchAssociative per-message → `<associative_context>` block. agent:zep:add_fact syncs to Qdrant. | 2026-03-10 |
 | dispatcher | tlos-dispatcher — FIXED (graceful wasm skip, no crash on missing math_worker.wasm) | 2026-03-08 |
-| eidolon | Eidolon AI backend LIVE — context summarization, stable sessions, nearLimit compaction, Zep domain context | 2026-03-10 |
+| eidolon | Eidolon AI backend LIVE — context summarization, stable sessions, nearLimit compaction, domain context | 2026-03-10 |
 | session_continuity | Omnibar: stable `conversationSessionId` per conversation → claude-bridge resumes correctly | 2026-03-10 |
 | context_summarization | bridge: nearLimit → summarizeConversation() → new session with `<PREVIOUS_CONTEXT_SUMMARY>` | 2026-03-10 |
-| domain_memory | claude-bridge: getDomainContext() → `<domain_memory>` XML block в system prompt (on new session) | 2026-03-10 |
 | nim_key_path | ~/.tlos/nim-key — ОБНОВЛЁН 2026-03-10 (новый ключ от nopoint) | 2026-03-10 |
+| agent_arch_doc | `docs/agent-system-architecture.md` v3 — единственный источник истины по роадмапу. L2(1-5)+L3(6-9)+L4(10-13)+Dockerization(D1-D6). | 2026-03-10 |
+| desktop_shortcut | `Desktop/tLOS.lnk` → `AppData/Local/tLOS/tlos-app.exe`. Icon: monolith.ico (прозрачный фон, проблема отображения не решена). | 2026-03-10 |
 
 ## Blockers
 
@@ -43,15 +45,15 @@
 | ~~mcb команда не показывала фреймы~~ | App.tsx | 2026-03-10 | **RESOLVED** — resetViewport() после replaceComponents |
 | Нет доступов к API (Alytics, Topvisor, Метрика) | mcb-v1 | 2026-02-27 | Ждём от Артёма |
 | Артём не настроил tlos-patch-daemon | node-v1 | 2026-02-28 | Нужно: tLOS-setup.exe + daemon с --dev-npub nopoint |
-| ~~**Zep CE upgrade**~~ — mem0 не давал векторный поиск | zep-bridge | 2026-03-10 | **RESOLVED** — Zep CE Docker stack LIVE (port 8000) |
-| **Zep CE vector search** — v0.27 hardcodes ada-002 + embedder "expected 0" dims | zep-bridge | 2026-03-10 | **REPLACING** — Zep CE удаляется. Замена: direct pg+pgvector+liteLLM (zep-client.js rewrite, same API) |
-| **liteLLM proxy** — works, 1536-dim via NIM llama-3.2-nv-embedqa-1b-v2 Matryoshka confirmed | zep-bridge | 2026-03-10 | **DONE** — proxy ready, Zep replacement in progress |
+| ~~**Zep CE vector search**~~ | zep-bridge | 2026-03-10 | **RESOLVED** — Zep CE полностью заменён на pg+pgvector+liteLLM. Vector search working (cosine HNSW). |
+| ~~**liteLLM proxy**~~ | zep-bridge | 2026-03-10 | **RESOLVED** — liteLLM proxy deployed, 1536-dim NIM embeddings confirmed. |
+| **Local PG conflict** | infra | 2026-03-10 | **RESOLVED** — Docker pg exposed on port 5433 (local PG on 5432). zep-client.js uses 5433. |
 
 ## Architecture Snapshot
 
 - **L0 Meta:** ADR-002 v3 + constitutions
 - **L1 Grid:** NATS локально + Nostr NIP-44 для межнодовой связи (Phase 1, SHIPPED)
-- **L2 Kernel:** Rust сервисы + агент-система как ядро: LangGraph (Python) + Letta (session memory) + Zep/mem0 (domain CMA V1) + Qdrant (vector, TODO); все self-hosted, управляются grid.ps1, общаются через NATS
+- **L2 Kernel:** Rust сервисы + агент-система как ядро: LangGraph (Python) + Letta (session memory) + pg+pgvector+liteLLM (domain memory) + Qdrant (vector, TODO); все self-hosted, управляются grid.ps1, общаются через NATS
 - **L3 Shell:** SolidJS + Tauri native app (WebView2, frameless, 1440x900)
 - **Identity:** Secp256k1 (nostr-sdk) — реализовано, ~/.tlos/identity.key
 - **Claude AI pipeline:** Omnibar → agent:chat{provider:'claude', model} → NATS → claude-bridge → `claude --print` (stdin) → NATS → Omnibar
@@ -64,6 +66,21 @@
   - **Domain memory:** `getDomainContext()` → ZepClient.getContext('development-domain') → `<domain_memory>` injected on new session
   - **agent:zep:add_fact** NATS event → ZepClient.addFact (fire-and-forget)
   - Compaction UI: `agent:summarizing` event → Omnibar shows `⚙️ compacting...` indicator
+- **Domain Memory pipeline (replaces Zep CE):** zep-client.js → PostgreSQL (pgvector 0.5.1, port 5433) + liteLLM proxy (port 4000) → NIM embeddings
+  - Table: `tlos_facts` (id, domain, content, metadata JSONB, embedding vector(1536), created_at)
+  - Index: HNSW cosine (`vector_cosine_ops`) on embedding column
+  - API: isAvailable, ensureDomain, addFact, getFacts, searchFacts (vector cosine), getContext
+  - Embeddings: liteLLM maps `text-embedding-ada-002` → NIM `llama-3.2-nv-embedqa-1b-v2` (Matryoshka, 1536-dim)
+  - Chat: liteLLM maps `meta/llama-3.1-70b-instruct` → NIM passthrough (for future Summarize Service)
+  - Docker Compose: `core/kernel/tlos-zep-bridge/docker-compose.yml`; 3 services (db + litellm + qdrant)
+  - 14 seed facts auto-inserted on first `ensureDomain('development-domain')`
+  - Fallback: substring search if liteLLM unavailable
+- **Associative Routing (L2 Step 4):** qdrant-client.js → Qdrant v1.13.0 (port 6333) → `tlos-global` collection
+  - Functions: isAvailable, ensureCollection, upsert, addGlobal, search, searchAssociative
+  - djb2 hash for deterministic point IDs (dedup on upsert)
+  - index.js: `searchAssociative(content, 5)` per-message → `<associative_context>` block injected into prompt
+  - agent:zep:add_fact → ZepClient.addFact (pg) + QdrantClient.addGlobal (qdrant) in parallel
+  - Healthcheck: `bash -c ':> /dev/tcp/localhost/6333'` (qdrant image has no python3)
 - **LangGraph pipeline:** tlos.shell.events → tlos-langgraph-bridge → LangGraph (orchestrator→worker) → tlos.shell.broadcast
   - subscribe: `tlos.shell.events`, message type `agent:graph:run`
   - publish: `agent:graph:token` (streaming chunks), `agent:graph:error`, `agent:graph:status`
@@ -71,17 +88,6 @@
   - G3 cyclic subgraph: player→coach→conditional edge (passed/iter≥3→END, else→player)
   - Singleton compiled graph in bridge_handler.py (pre-compile at import)
   - run_in_executor for graph.invoke (async-safe)
-- **Zep CE pipeline (V2):** ZepClient в claude-bridge → Zep CE Docker stack (port 8000) → PostgreSQL+pgvector + Neo4j + Graphiti
-  - **API VERSION: /api/v1/ (CE edition, NOT /api/v2/ which is Zep Cloud)**
-  - zep-client.js: isAvailable, ensureDomain, addFact, getFacts, searchFacts, getContext (6 functions, zero-throw)
-  - ensureDomain: POST /api/v1/user (singular) + POST /api/v1/sessions (domain → user + session)
-  - addFact: POST /api/v1/sessions/{domain}-session/memory (messages)
-  - searchFacts: POST /api/v1/sessions/{domain}-session/search {text, limit} (vector search; fallback substring)
-  - getContext: GET /api/v1/sessions/{domain}-session/memory → summary.content (LLM-generated by Zep)
-  - Development domain: 14 seed facts, автосид при первом ensureDomain
-  - Docker Compose: `core/kernel/tlos-zep-bridge/docker-compose.yml`; config: `config.yaml` (generated from template, gitignored)
-  - NIM LLM: Graphiti uses `MODEL_NAME=meta/llama-3.1-70b-instruct` + `OPENAI_BASE_URL=https://integrate.api.nvidia.com/v1`
-  - **config.yaml + .env** — gitignored (содержат NIM key); grid.ps1 генерирует из `config.yaml.template` при старте
 - **NIM AI pipeline:** Omnibar → agent:chat{provider:'nim'} → NATS → agent-bridge → NVIDIA NIM SSE → NATS → Omnibar
 - **Auth:** claude-bridge reads ~/.claude.json, publishes agent:auth:status; Omnibar кэширует в localStorage
 - **Frame filtering:** useComponents.ts фильтрует все agent:* events (включая agent:summarizing)
@@ -89,11 +95,11 @@
 - **tlos_action cards:** Chat.tsx парсит ` ```tlos_action ` блоки → ⚡ карточки
 - **MessageStatus:** `kernel.ts` экспортирует `MessageStatus = 'streaming' | 'complete' | 'error'`
 - **Core path:** C:\Users\noadmin\nospace\development\tLOS\core
-- **Agent system architecture:** `docs/agent-system-architecture.md` — L2 Kernel: LangGraph + Letta + Zep + Qdrant внутри tLOS, self-hosted, grid.ps1. Иерархия: Orchestrator(Eidolon) → Chief → Lead → Senior → G3(Coach↔Player). CMA: Session(Letta) → Domain(Zep) → Project(Zep) → Global(Zep).
+- **Agent system architecture:** `docs/agent-system-architecture.md` — L2 Kernel: LangGraph + Letta + pg+liteLLM + Qdrant внутри tLOS, self-hosted, grid.ps1. Иерархия: Orchestrator(Eidolon) → Chief → Lead → Senior → G3(Coach↔Player). CMA: Session(Letta) → Domain(pg+liteLLM) → Project(pg+liteLLM) → Global(pg+liteLLM).
 - **Letta service:** `letta server --port 8283` — optional в grid.ps1; client: `core/kernel/tlos-claude-bridge/letta-client.js`
 - **LangGraph service:** `uv run python main.py` — optional в grid.ps1; `core/kernel/tlos-langgraph-bridge/`
-- **Zep CE service:** `docker compose up` — optional в grid.ps1; `core/kernel/tlos-zep-bridge/` (port 8000). grid.ps1 генерирует config.yaml из template + NIM key перед стартом.
-- **Known tech debt:** tlos-identity (Ed25519) vs nostr-sdk (Secp256k1) — разные кривые. `lettaAgentIds` Map в bridge теряется при рестарте. `asyncio.get_event_loop()` deprecated в Python 3.10+ (bridge_handler.py LOW). model не прокидывается через GraphState в worker_node (LOW). Zep CE graphiti NIM integration нужна верификация (add fact + semantic search test).
+- **Domain Memory service:** `docker compose up` — optional в grid.ps1; `core/kernel/tlos-zep-bridge/` (db:5433, litellm:4000). NIM_KEY env var from ~/.tlos/nim-key.
+- **Known tech debt:** tlos-identity (Ed25519) vs nostr-sdk (Secp256k1) — разные кривые. `lettaAgentIds` Map в bridge теряется при рестарте. `asyncio.get_event_loop()` deprecated в Python 3.10+ (bridge_handler.py LOW). model не прокидывается через GraphState в worker_node (LOW). grid.ps1 may still reference Zep-specific startup (needs update). config.yaml.template и mem0-wrapper.py — legacy files to clean up.
 
 ## L2 Kernel Roadmap
 
@@ -101,8 +107,8 @@
 |-----|--------|--------|
 | 1 | Letta self-hosted + tlos-claude-bridge migration | ✅ DONE (G3 TLOS-07) |
 | 2 | tlos-langgraph-bridge — Python service + LangGraph + G3 subgraph | ✅ DONE (G3 TLOS-08) |
-| 3 | Domain Memory — pg+pgvector+liteLLM (replacing Zep CE, which is dead/broken) | 🔄 IN PROGRESS — liteLLM done, zep-client.js rewrite next |
-| 4 | Qdrant self-hosted + Associative Routing | ⬜ TODO |
+| 3 | Domain Memory — pg+pgvector+liteLLM (replaced Zep CE) | ✅ DONE — zep-client.js rewritten, vector search working |
+| 4 | Qdrant self-hosted + Associative Routing | ✅ DONE — qdrant-client.js, tlos-global collection, per-message assoc context |
 | 5 | tLOS Agent Frames (agent-status, g3-session, memory-viewer) | ⬜ TODO (параллельно) |
 
 ## Omnibar Roadmap (branch: omnibar)
@@ -130,7 +136,7 @@
 | Context summarization (LLM-based compaction at nearLimit) | ✅ DONE (2026-03-10) |
 | Omnibar command `mcb` fix (viewport reset) | ✅ DONE (2026-03-10) |
 | Letta integration: persistent memory blocks (G3 session) | ✅ DONE (2026-03-10) |
-| Zep domain memory: <domain_memory> in system prompt | ✅ DONE — V2 Zep CE (semantic search, 2026-03-10) |
+| Domain memory: `<domain_memory>` in system prompt | ✅ DONE — pg+pgvector+liteLLM (vector search, 2026-03-10) |
 | SEC: PatchDialog Nostr signature verification | TODO — needs nostr-tools |
 | SEC: System prompt file permissions (world-readable) | TODO |
 | FEATURE: microagents harkly.md, nostr.md, rust.md | TODO |
@@ -142,9 +148,9 @@ Session 3 additions: 3 more bugs fixed (sessionId, mcb viewport, agent:summarizi
 Remaining open: SEC (PatchDialog sig, system prompt permissions).
 
 Priority next:
-1. Verify Zep CE semantic search works (add fact → search → confirm Graphiti NIM extraction)
-2. SEC: PatchDialog Nostr signature verification (needs nostr-tools)
-3. SEC: System prompt file permissions
+1. SEC: PatchDialog Nostr signature verification (needs nostr-tools)
+2. SEC: System prompt file permissions
+3. Summarize Service design (liteLLM chat + pg summaries)
 
 ## THELOS Brand System (зафиксировано 2026-02-28)
 

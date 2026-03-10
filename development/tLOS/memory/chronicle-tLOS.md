@@ -384,3 +384,121 @@
 - liteLLM requires NIM_API_KEY env var (mapped from NIM_KEY in docker-compose)
 - Zep Graphiti (OSS) — actively maintained, can be re-added later for knowledge graph (L2 Step 4+)
 - Текущий стек: 6 контейнеров (~1.6GB RAM). После замены: 2 контейнера (~160MB RAM). Огромная экономия для 3.7GB WSL2 limit
+
+---
+
+## [2026-03-10 — сессия 10 — checkpoint 7] CHECKPOINT
+
+**Phase:** L2 Kernel Step 3 — **DONE**. Zep CE fully replaced with pg+pgvector+liteLLM.
+
+**Decisions:**
+- zep-client.js полностью переписан: direct pg (Pool, `tlos_facts` table) + liteLLM /v1/embeddings (NIM Matryoshka 1536-dim)
+- docker-compose.yml упрощён: 2 сервиса (db + litellm), удалены zep, graphiti, neo4j, nlp
+- pg exposed on port 5433 (не 5432 — конфликт с локальным PostgreSQL 17.9 на Windows)
+- npm `pg` package добавлен в claude-bridge dependencies
+- tlos_facts schema: id SERIAL, domain VARCHAR, content TEXT, metadata JSONB, embedding vector(1536), created_at TIMESTAMPTZ
+- HNSW cosine index (`vector_cosine_ops`) создаётся автоматически при ensureSchema()
+- 14 seed facts авто-вставляются с embeddings при первом ensureDomain('development-domain')
+- Fallback: substring search если liteLLM недоступен
+- API surface сохранён: isAvailable, ensureDomain, addFact, getFacts, searchFacts, getContext
+
+**Files changed:**
+- `core/kernel/tlos-claude-bridge/zep-client.js` — ПОЛНОСТЬЮ ПЕРЕПИСАН: pg Pool + liteLLM fetch → tlos_facts table + vector search
+- `core/kernel/tlos-claude-bridge/package.json` — добавлен `pg` dependency
+- `core/kernel/tlos-claude-bridge/package-lock.json` — NEW (npm install pg)
+- `core/kernel/tlos-zep-bridge/docker-compose.yml` — упрощён до 2 сервисов (db:5433 + litellm:4000)
+- `core/kernel/tlos-zep-bridge/litellm-config.yaml` — обновлены комментарии (primary service, не "remaps Zep")
+- `memory/current-context-tLOS.md` — обновлён: Step 3 DONE, Architecture Snapshot переписан
+- `memory/handshake-tLOS.md` — переписан с финальным состоянием
+
+**Completed:**
+- zep-client.js rewrite: all 6 API functions working with direct pg+liteLLM
+- Vector semantic search CONFIRMED: query "NIM embedding Matryoshka" → top result "L2 Kernel Step 3" (score 0.362)
+- docker-compose simplified: 6 → 2 containers. RAM: ~1.6GB → ~811MB
+- 4 containers removed: zep (unhealthy), graphiti, neo4j, nlp
+- Port conflict resolved: Docker pg on 5433, local PG on 5432
+- Git commit + push: submodule (feat: replace Zep CE) + nospace (feat: submodule pointer)
+- L2 Kernel Step 3 roadmap status → ✅ DONE
+
+**In progress:**
+- (nothing — Step 3 complete)
+
+**Opened:**
+- CLEANUP: grid.ps1 may reference Zep-specific startup
+- CLEANUP: config.yaml.template, mem0-wrapper.py — legacy files
+- DOCS: agent-system-architecture.md needs update (Zep → pg+liteLLM)
+- ARCH: Summarize Service design (liteLLM chat + pg summaries)
+
+**Notes:**
+- liteLLM container ~790MB RAM (heavier than expected from checkpoint 6 estimate of ~120MB — Python runtime overhead)
+- db container ~20MB RAM — very lightweight
+- Total stack ~811MB vs previous ~1.6GB — saved ~800MB
+- Local PostgreSQL 17.9 running on Windows caused initial connection failure (role "zep" does not exist) — resolved by mapping Docker port to 5433
+
+---
+
+## [2026-03-10 — checkpoint 8] CHECKPOINT
+
+**Phase:** L2 Kernel Step 4 — DONE. Qdrant self-hosted + Associative Routing fully implemented.
+
+**Decisions:**
+- G3 подход: Coach написал 3 спеки (spec-a-docker, spec-b-client, spec-c-integration), Player A + Player B запущены параллельно (async agents via Agent tool)
+- Qdrant healthcheck: `bash -c ':> /dev/tcp/localhost/6333'` — python3/curl нет в qdrant образе, bash tcp единственный вариант
+- Associative Routing: tlos-global коллекция для всех доменов; djb2 для dedup; per-message searchAssociative; двойная запись (pg + Qdrant) при add_fact
+- djb2 → детерминированные int IDs — upsert идемпотентен
+
+**Files changed:**
+- `core/kernel/tlos-claude-bridge/qdrant-client.js` — NEW: Qdrant REST client (isAvailable, ensureCollection, upsert, addGlobal, search, searchAssociative)
+- `core/kernel/tlos-zep-bridge/docker-compose.yml` — добавлен qdrant/qdrant:v1.13.0 (6333/6334, qdrant_data, bash tcp healthcheck)
+- `core/kernel/tlos-claude-bridge/index.js` — QdrantClient: import + startup init + per-message assoc search + addGlobal sync
+- `branches/feat-qdrant-v1/spec-a-docker.md` — NEW
+- `branches/feat-qdrant-v1/spec-b-client.md` — NEW
+- `branches/feat-qdrant-v1/spec-c-integration.md` — NEW
+- `memory/current-context-tLOS.md` — Step 4 DONE, Architecture Snapshot обновлён
+- `memory/handshake-tLOS.md` — переписан
+
+**Completed:**
+- qdrant-client.js: 6 функций, zero-throw, native fetch
+- searchAssociative тест: query "spatial OS SolidJS" → score 0.638 (semantic match confirmed)
+- Dedup тест: повторный addGlobal → кол-во results не растёт
+- Docker stack: 3 containers healthy (db:21MB + litellm:791MB + qdrant:49MB = ~861MB)
+- Git commit + push: submodule + nospace pointer
+- L2 Step 4 → ✅ DONE
+
+**In progress:**
+- (nothing — Step 4 complete)
+
+**Opened:**
+- L2 Step 5: tLOS Agent Frames (agent-status, g3-session, memory-viewer)
+- SEED: sync tlos_facts seed data → tlos-global Qdrant при старте bridge
+
+**Notes:**
+- Player B завершился ~34s (1 tool call), Player A ~95s (5 tool calls включая docker compose up)
+- gRPC порт 6334 expose для будущего использования
+
+---
+
+## [2026-03-10 — сессия 11] CLOSE
+
+**Phase:** Архитектурная сессия — роадмап зафиксирован, desktop shortcut создан
+
+**Decisions:**
+- `docs/agent-system-architecture.md` v3 = единственный источник истины по роадмапу (L2+L3+L4+Dockerization)
+- Always-On Kernel концепция: всё кроме Tauri Shell → Docker с restart:unless-stopped
+- Desktop shortcut = простой .lnk на tlos-app.exe (kernel всегда up → shell открывается мгновенно)
+- Следующий приоритет: Dockerization (D1–D6), затем L2 Step 5
+
+**Files changed:**
+- `docs/agent-system-architecture.md` — ПОЛНОСТЬЮ ПЕРЕПИСАН v2→v3: статус каждого компонента, L3/L4 роадмап, Dockerization раздел, Shell Shortcut
+- `AppData/Local/tLOS/monolith.ico` — создан (Pillow RGBA, PNG-in-ICO, прозрачный фон)
+- `Desktop/tLOS.lnk` — создан desktop shortcut на tlos-app.exe
+- `~/.claude/projects/.../memory/MEMORY.md` — роадмап nav ref + Docker stack обновлён
+
+**Completed:**
+- agent-system-architecture.md актуализирован (было: v2 устаревший, стало: v3 с реальным статусом)
+- Desktop shortcut tLOS.lnk создан
+- MEMORY.md: roadmap doc зафиксирован как главный навигационный документ
+
+**Opened:**
+- Dockerization D1-D6 (следующая сессия)
+- Icon transparency: возможно работает (прозрачность A=0 подтверждена), но тёмные обои делают её неразличимой — нужно проверить на светлом фоне

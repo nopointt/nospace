@@ -1,5 +1,5 @@
-# nospace — Agent System Architecture v2
-> Status: DRAFT — обсуждение 2026-03-10
+# nospace — Agent System Architecture v3
+> Status: АКТУАЛЬНО — обновлено 2026-03-10 (сессия 11)
 > Автор: nopoint + Assistant (Claude Sonnet 4.6)
 > Tags: [architecture, agents, memory, langgraph, letta, cma, tlos]
 
@@ -32,20 +32,23 @@ nopoint
 
 ### Роли
 
-| Уровень | Агент | Задача |
-|---|---|---|
-| L0 | nopoint | Намерения. Общается только с Orchestrator через tLOS Omnibar |
-| L1 | **Orchestrator (Eidolon)** | Claude Sonnet. Принимает намерение, маршрутизирует по доменам |
-| L2 | **Chief Agent** | Mini-orchestrator домена. Получает задачу от Orchestrator, декомпозирует на Leads |
-| L3 | **Lead** | Sub-domain. Декомпозирует задачу, планирует G3-сессии, компилирует Special memory для Senior |
-| L4 | **Senior** | Пишет спеки на основе Special memory, запускает G3-сессии |
-| L5 | **G3: Coach + Player** | Dialectical Autocoding. Coach верифицирует, Player (Worker) реализует |
+| Уровень | Агент | Задача | Статус |
+|---|---|---|---|
+| L0 | nopoint | Намерения. Общается только с Orchestrator через tLOS Omnibar | — |
+| L1 | **Orchestrator (Eidolon)** | Claude Sonnet. Принимает намерение, маршрутизирует по доменам | ✅ LIVE (tlos-claude-bridge) |
+| L2 | **Chief Agent** | Mini-orchestrator домена. Декомпозирует задачи на Leads | ⬜ NOT IMPLEMENTED |
+| L3 | **Lead** | Sub-domain. Планирует G3-сессии, компилирует Special memory | ⬜ NOT IMPLEMENTED |
+| L4 | **Senior** | Пишет спеки на основе Special memory, запускает G3 | ⬜ NOT IMPLEMENTED |
+| L5 | **G3: Coach + Player** | Dialectical Autocoding. Coach верифицирует, Player реализует | ✅ LIVE (manual, CLI agents) |
+
+> **Важно:** Сейчас работает только L1 (Eidolon) + L5 (G3 вручную через Orchestrator как Coach).
+> Уровни L2–L4 — архитектурный план, реализация не начата.
 
 ---
 
 ## 3. G3 — Dialectical Autocoding
 
-Запускается Senior-ом. Cyclic subgraph в LangGraph.
+Запускается Senior-ом (сейчас — Orchestrator вручную). Cyclic subgraph в LangGraph.
 
 ```
 Senior → [spec] → Coach
@@ -61,6 +64,8 @@ Senior → [spec] → Coach
 - **Player/Worker**: реализует, не может объявить задачу выполненной самостоятельно
 - Цикл продолжается до прохождения верификации Coach
 
+**Текущая реализация G3:** Orchestrator выступает Coach напрямую. Players — встроенные Agent tool агенты (backend-developer, code-reviewer) или CLI агенты (Qwen, OpenCode). `build_g3_subgraph()` в LangGraph реализует циклический граф (player→coach→conditional edge: pass/iter≥3→END).
+
 ---
 
 ## 4. Память — Continuum Memory Architecture (CMA)
@@ -73,13 +78,13 @@ CMA — не статичный набор тиров. Это **процессн
 
 ### 5 обязательных свойств CMA
 
-| Свойство | Что означает |
-|---|---|
-| **Persistent Storage** | Память сохраняется между сессиями. Агент накапливает идентичность, не пересобирает с нуля |
-| **Selective Retention** | Retrieval мутирует память. То, что достали, становится доступнее; конкуренты ослабевают |
-| **Associative Routing** | Память хранит структуру: люди → проекты, события → следствия. Активация распространяется по связям |
-| **Temporal Continuity** | Эпизоды определяются порядком. Явные временные рёбра и границы эпизодов |
-| **Consolidation + Abstraction** | Детальные эпизоды выцветают → складываются в схемы высшего порядка |
+| Свойство | Что означает | Статус |
+|---|---|---|
+| **Persistent Storage** | Память сохраняется между сессиями | ✅ Letta (session) + pg (domain) |
+| **Selective Retention** | Retrieval мутирует память. То, что достали — становится доступнее | ⬜ не реализовано |
+| **Associative Routing** | Память хранит структуру: люди→проекты, события→следствия. Активация по связям | ✅ Qdrant `tlos-global` + per-message searchAssociative |
+| **Temporal Continuity** | Эпизоды определяются порядком. Явные временные рёбра и границы эпизодов | ⬜ не реализовано |
+| **Consolidation + Abstraction** | Детальные эпизоды выцветают → складываются в схемы высшего порядка | ⬜ частично (context compaction в bridge) |
 
 ### Lifecycle CMA
 
@@ -89,160 +94,212 @@ Ingest → Activation → Retrieval (с мутацией) → Consolidation
 
 **Consolidation triggers:** конец G3-сессии + лимит контекстного окна.
 
+**Текущая реализация:** Ingest (addFact → pg + Qdrant) и Retrieval (searchFacts + searchAssociative) работают. Selective Retention и полноценная Consolidation не реализованы.
+
 ### 5 уровней памяти
 
-| Уровень | Кто имеет | Организация |
-|---|---|---|
-| **Global** | Только Orchestrator | CMA lifecycle на уровне всего workspace |
-| **Project** | Только Orchestrator | Разделена по доменам; каждый домен-раздел → своя CMA структура |
-| **Domain** | Chief + Leads | CMA на уровне домена |
-| **Special** | Senior | Lead дистиллирует из Domain memory → Senior пишет спеки |
-| **Session** | Workers + Coaches | Letta: core / archival / recall memory blocks |
+| Уровень | Кто имеет | Реализация | Статус |
+|---|---|---|---|
+| **Session** | Workers + Coaches | Letta: core / archival / recall memory blocks | ✅ LIVE (letta-client.js) |
+| **Domain** | Chief + Leads | pg+pgvector: `tlos_facts` table + HNSW cosine | ✅ LIVE (zep-client.js) |
+| **Project** | Только Orchestrator | pg+pgvector (planned, same infra) | ⬜ not implemented |
+| **Global** | Только Orchestrator | pg+pgvector (planned, same infra) | ⬜ not implemented |
+| **Special** | Senior | Lead дистиллирует из Domain → Senior пишет спеки | ⬜ not implemented |
 
-### Уровни абстракции памяти
+### Associative Routing (реализован)
 
-Чем выше уровень — тем выше абстракция (CMA Consolidation):
-
-```
-Session   → raw эпизоды G3-сессий (детально, конкретно)
-Domain    → консолидированные паттерны домена
-Project   → проектные решения и архитектура
-Global    → высокоуровневые схемы workspace
-```
-
-Информация движется **вверх через consolidation**, но никогда вниз напрямую.
+- **Qdrant** `tlos-global` коллекция — cosine HNSW, 1536-dim (NIM Matryoshka)
+- Per-message: `searchAssociative(content, 5)` → `<associative_context>` block инжектируется в prompt
+- Double-write: `agent:zep:add_fact` → pg (Domain) + Qdrant (Global) одновременно
+- djb2 hash для детерминированных point IDs (идемпотентный upsert)
 
 ---
 
-## 5. tLOS Layer Map
-
-Агент-система встраивается в существующую tLOS архитектуру:
+## 5. tLOS Layer Map (актуальное состояние)
 
 ```
-L3 Shell  — SolidJS + Tauri (Omnibar, canvas frames, визуализация агентов)
-              ↕ WebSocket → shell-bridge
-L2 Kernel — Rust сервисы + kernel сервисы агент-системы:
-  ├── tlos-claude-bridge      (есть)  ← Eidolon / Orchestrator Phase 1
-  ├── tlos-langgraph-bridge   (новый) ← NATS ↔ LangGraph Python service
-  ├── tlos-letta-bridge       (новый) ← NATS ↔ Letta REST API
-  ├── tlos-zep-bridge         (новый) ← NATS ↔ Zep REST API
-  ├── tlos-qdrant-bridge      (новый) ← NATS ↔ Qdrant REST API
-  ├── tlos-shell-bridge       (есть)
-  ├── tlos-dispatcher         (есть)
-  ├── tlos-fs-bridge          (есть)
-  └── tlos-shell-exec         (есть)
+L3 Shell  — SolidJS + Tauri (Omnibar, canvas frames)
+              ↕ NATS
+L2 Kernel — kernel сервисы:
+  ├── tlos-claude-bridge      (✅ LIVE)  ← Eidolon/Orchestrator + domain memory + assoc routing
+  │     ├── letta-client.js             ← Letta REST (session memory, port 8283)
+  │     ├── zep-client.js               ← direct pg+liteLLM (domain memory, port 5433/4000)
+  │     └── qdrant-client.js            ← Qdrant REST (associative routing, port 6333)
+  ├── tlos-langgraph-bridge   (✅ LIVE)  ← NATS ↔ LangGraph Python service
+  ├── tlos-shell-bridge       (✅ LIVE)
+  ├── tlos-dispatcher         (✅ LIVE)
+  ├── tlos-fs-bridge          (✅ LIVE)
+  └── tlos-shell-exec         (✅ LIVE)
 L1 Grid   — NATS (единый transport, Zero-Web2)
 L0 Meta   — ADR-002, конституции
 ```
 
-**Self-hosted сервисы** (Docker, запускаются через grid.ps1):
+### Docker stack (актуальный)
 
 ```
-letta-server    localhost:8283  ← Letta REST API + memory persistence
-zep-server      localhost:8000  ← Zep REST API + temporal knowledge graph
-qdrant-server   localhost:6333  ← Qdrant REST API + vector store
-langgraph-svc   NATS agent      ← Python service, LangGraph engine
+tlos-zep-bridge/docker-compose.yml — 3 контейнера, ~861MB RAM:
+  db        port 5433  ← PostgreSQL + pgvector 0.5.1 (~21MB RAM)
+  litellm   port 4000  ← liteLLM proxy → NIM embeddings + chat (~791MB RAM)
+  qdrant    port 6333  ← Qdrant v1.13.0 (~49MB RAM)
 ```
 
-Все коммуникации через NATS. Никакого прямого HTTP между внутренними компонентами.
+Запуск: `docker compose up` из `tlos-zep-bridge/`. NIM_KEY env var из `~/.tlos/nim-key`.
+Letta запускается отдельно: `letta server --port 8283` (через grid.ps1 optional).
+
+> **Примечание:** В архитектуре v2 планировались отдельные NATS-сервисы `tlos-zep-bridge` и `tlos-qdrant-bridge`. Принято решение встроить клиенты напрямую в `tlos-claude-bridge` — проще, меньше NATS overhead.
 
 ---
 
-## 6. Технический стек
+## 6. Технический стек (актуальный)
 
-| Компонент | Роль |
-|---|---|
-| **tLOS** | Sovereign spatial OS. Desktop shell (Tauri + SolidJS). Единая точка взаимодействия nopoint с системой. Визуализирует агентов, сессии, memory, аналитику токенов на бесконечном canvas |
-| **LangGraph** | Граф всей системы. Каждый агент = нода. G3 = cyclic subgraph. Orchestrator = supervisor node |
-| **Letta** | Session memory для Workers + Coaches. Memory blocks (core, archival, recall), редактируются самими агентами. Shared blocks внутри домена |
-| **Zep** | Substrate для Domain / Project / Global memory. Temporal knowledge graph + vector search = полная CMA |
-| **Qdrant** | Vector store для ассоциативного retrieval (Associative Routing в CMA) |
-| **Claude Sonnet** | Orchestrator (Eidolon) + Chiefs + Leads + Seniors + Coaches |
-
-### tLOS как UI слой
-
-tLOS — не просто shell. Это **spatial interface для всей multi-agent системы**:
-- **Omnibar** → точка входа nopoint → Eidolon (Orchestrator)
-- **Canvas frames** → визуализация агентов, статусов, G3-сессий, memory состояния
-- **NATS** → транспорт между tLOS shell и LangGraph-сервисом (Zero-Web2)
-- **tlos-langgraph-bridge** → NATS-to-LangGraph адаптер (аналог tlos-claude-bridge)
+| Компонент | Роль | Статус |
+|---|---|---|
+| **tLOS** | Sovereign spatial OS. Desktop shell (Tauri + SolidJS). Единая точка взаимодействия | ✅ LIVE |
+| **LangGraph** | Граф управления. G3 = cyclic subgraph. Orchestrator → worker (реализован). Chief/Lead/Senior ноды — не реализованы | ✅ частично |
+| **Letta** | Session memory для Workers + Coaches. Memory blocks. Shared blocks — не реализованы | ✅ частично |
+| **pg + pgvector** | Domain memory substrate. `tlos_facts` (1536-dim HNSW cosine) | ✅ LIVE |
+| **liteLLM** | Embedding proxy → NIM llama-3.2-nv-embedqa-1b-v2 (Matryoshka, 1536-dim) | ✅ LIVE |
+| **Qdrant** | Associative Routing. `tlos-global` collection, cosine HNSW | ✅ LIVE |
+| **Claude Sonnet** | Orchestrator (Eidolon) + G3 Coach | ✅ LIVE |
 
 ---
 
-## 6. Letta + LangGraph — интеграция
+## 7. Текущий LangGraph граф
 
-**Схема:** Letta агенты вызываются как LangGraph-ноды.
+Реализован в `tlos-langgraph-bridge/graph.py`:
 
 ```
-tLOS Omnibar → NATS → tlos-langgraph-bridge → LangGraph
-LangGraph = control flow (routing, state transitions, cyclic G3 loops)
-Letta     = stateful memory layer для Workers и Coaches
-Zep       = CMA substrate для Domain / Project / Global memory
+build_graph():       agent:graph:run → orchestrator_node → worker_node → END
+build_g3_subgraph(): g3_player_node → g3_coach_node → conditional edge
+                     passed OR iter≥3 → END; else → g3_player_node
 ```
 
-Каждый Worker/Coach = LangGraph нода, обёрнутая вокруг Letta-агента с персистентными memory blocks.
+**Не реализованы:** Chief-ноды, Lead-ноды, Senior-нода, routing между доменами, Shared Letta blocks между нодами одного домена.
 
 ---
 
-## 7. Special Memory — компиляция
+## 8. Special Memory — компиляция (план)
 
 Lead запускает явный шаг `distill_to_special_memory`:
 
 ```
 Lead получает задачу от Chief
-  └── CMA retrieval по Domain memory (Zep + Qdrant)
+  └── CMA retrieval по Domain memory (pg + Qdrant)
         └── Lead фильтрует по релевантности к задаче
               └── Пишет результат в Special memory Senior
                     └── Senior читает Special memory → пишет спеку → запускает G3
 ```
 
-Lead решает что релевантно — это агентный шаг, не автоматический pipeline.
+**Статус:** не реализован. Сейчас Orchestrator выполняет роль Lead+Senior вручную.
 
 ---
 
-## 8. Вспомогательные службы
+## 9. Вспомогательные службы (план)
 
-| Служба | Задача |
-|---|---|
-| **Summarize Service** | Мониторит контекстные окна всех агентов. При приближении к лимиту — триггерит CMA consolidation |
-| **Regulatory Agents** | Следят за соответствием директории правилам (naming, file-size, rbac) |
-| **Token Counter Service** | Учёт расхода по агентам, планирование, бюджетирование |
-
----
-
-## 9. Open Questions
-
-- [ ] Модель для Workers/Players — Sonnet или Haiku/дешевле?
-- [ ] Zep: Docker self-hosted — privacy 152-ФЗ совместимо?
-- [ ] Как разграничить Domain memory между Chiefs (чтобы Frontend Lead не читал Marketing domain)?
-- [ ] Какие canvas frame-типы для визуализации агентов и G3-сессий в tLOS?
+| Служба | Задача | Статус |
+|---|---|---|
+| **Summarize Service** | liteLLM chat/completions + pg `summaries` table. Триггер на nearLimit. | ⬜ not implemented |
+| **Regulatory Agents** | Следят за соответствием naming, file-size, rbac | ⬜ not implemented |
+| **Token Counter Service** | Учёт расхода по агентам, бюджетирование | ✅ LIVE (tools/token-counter, вне tLOS) |
 
 ---
 
-## 10. Следующие шаги
+## 10. Роадмап
+
+### L2 Kernel (текущий спринт)
+
+| Шаг | Задача | Статус |
+|---|---|---|
+| 1 | Letta self-hosted + session memory | ✅ DONE |
+| 2 | tlos-langgraph-bridge + G3 subgraph | ✅ DONE |
+| 3 | Domain Memory — pg+pgvector+liteLLM | ✅ DONE |
+| 4 | Qdrant + Associative Routing | ✅ DONE |
+| 5 | tLOS Agent Frames (agent-status, g3-session, memory-viewer) | ⬜ TODO |
+
+### L3 Agent Hierarchy (следующий спринт, после L2 complete)
+
+| Шаг | Задача | Зависимости |
+|---|---|---|
+| 6 | Chief/Development нода в LangGraph | L2 Step 5 |
+| 7 | Lead/Frontend + Lead/Backend ноды | Шаг 6 |
+| 8 | Senior нода + Special memory distillation | Шаг 7 |
+| 9 | Shared Letta memory blocks между нодами домена | Шаг 7 |
+
+### L4 CMA Full (будущее)
+
+| Шаг | Задача | Зависимости |
+|---|---|---|
+| 10 | Selective Retention (retrieval → pg update) | L3 complete |
+| 11 | Temporal Continuity (эпизодные рёбра в pg) | Шаг 10 |
+| 12 | Consolidation Service (G3-end + nearLimit triggers) | Шаг 11 |
+| 13 | Project + Global memory тиры (pg multi-domain) | Шаг 12 |
+
+---
+
+## 11. Докеризация системы
+
+### Текущее состояние
+
+| Сервис | Где запускается | Статус |
+|---|---|---|
+| db (PostgreSQL + pgvector) | Docker | ✅ |
+| litellm (NIM proxy) | Docker | ✅ |
+| qdrant | Docker | ✅ |
+| letta-server | uv tool (native Windows) | ⬜ не докеризован |
+| tlos-langgraph-bridge | uv / Python (native) | ⬜ не докеризован |
+| tlos-claude-bridge | Node.js (native) | ⬜ не докеризован |
+| tLOS Shell (Tauri) | native .exe | 🔒 остаётся native (десктоп) |
+
+### Цель: Always-On Kernel
+
+Всё кроме Shell переходит в Docker с `restart: unless-stopped`.
+Docker Desktop запускается с Windows (автозапуск).
+Результат: kernel всегда работает в фоне. Никакого `grid.ps1 run` для старта сервисов.
 
 ```
-Шаг 1: Letta self-hosted                           (1 сессия)
-  docker run letta/letta:latest -p 8283:8283
-  Обновить tlos-claude-bridge: sessionLogs → Letta memory blocks
-  Решает tech debt: compaction summary переживает bridge restart
-  grid.ps1: добавить letta-server в $Services
-
-Шаг 2: tlos-langgraph-bridge + LangGraph            (2-3 сессии)
-  Python service: LangGraph + nats-py subscriber
-  Минимальный граф: Orchestrator → G3 subgraph
-  grid.ps1: добавить langgraph-svc в $Services
-
-Шаг 3: Zep self-hosted + Domain memory              (1-2 сессии)
-  docker run ghcr.io/getzep/zep:latest -p 8000:8000
-  Первая Domain memory: Development домен
-  grid.ps1: добавить zep-server в $Services
-
-Шаг 4: Qdrant self-hosted + Associative Routing     (1 сессия)
-  docker run qdrant/qdrant:latest -p 6333:6333
-  Связать с Zep для vector search
-  grid.ps1: добавить qdrant-server в $Services
-
-Шаг 5: tLOS Agent Frames                            (параллельно)
-  Canvas frame-типы: agent-status, g3-session, memory-viewer
+Windows boot
+  └── Docker Desktop (autostart)
+        └── docker compose up (auto, restart: unless-stopped)
+              ├── db:5433
+              ├── litellm:4000
+              ├── qdrant:6333
+              ├── letta:8283          ← перевести в Docker
+              ├── langgraph-svc       ← перевести в Docker
+              └── claude-bridge:3000  ← перевести в Docker (Node.js)
 ```
+
+### Shell Shortcut (следствие Always-On)
+
+Если kernel всегда up → Shell запускается мгновенно, без ожидания сервисов.
+
+**Варианты shortcut:**
+- **Windows .lnk** → указывает на `tLOS_0.1.0_x64-setup.exe` (или `tlos.exe` после установки)
+- **PowerShell one-liner** → `Start-Process "$env:LOCALAPPDATA\tLOS\tlos.exe"` — можно повесить на Win+T или как плитку
+- **Windows Terminal profile** → кнопка в taskbar запускает shell (если нужен терминал-режим)
+
+Самый простой путь: **обычный ярлык .lnk** на рабочем столе / в taskbar → Tauri .exe.
+grid.ps1 остаётся для dev-режима (rebuild, logs, stop).
+
+### Роадмап докеризации
+
+| Шаг | Задача | Приоритет |
+|---|---|---|
+| D1 | Dockerfile для tlos-claude-bridge (Node 22 alpine) | MEDIUM |
+| D2 | Dockerfile для tlos-langgraph-bridge (Python 3.12 slim + uv) | MEDIUM |
+| D3 | Letta Docker image (`letta/letta:latest`, port 8283) | LOW — uv работает |
+| D4 | Единый `docker-compose.yml` для всех kernel сервисов | зависит от D1–D3 |
+| D5 | Docker Desktop autostart + Always-On режим | зависит от D4 |
+| D6 | Shell shortcut (.lnk / taskbar pin) | зависит от D5 |
+
+> **Примечание D1:** claude-bridge читает `~/.tlos/nim-key`, `~/.claude.json`, `~/.tlos/sessions.json` — нужен volume mount для `%USERPROFILE%/.tlos` и `%USERPROFILE%/.claude.json`.
+> **Примечание D2:** langgraph-bridge использует subprocess для `claude --print` — внутри контейнера нужен claude CLI + credentials. Нетривиально, низкий приоритет.
+
+---
+
+## 12. Open Questions
+
+- [ ] Модель для Workers/Players — Sonnet или Haiku (cost)?
+- [ ] Как разграничить Domain memory между Chiefs (Frontend не читает Marketing)?
+- [ ] Shared Letta blocks: один агент пишет → все агенты домена видят — нужна блокировка?
+- [ ] CMA Selective Retention — как реализовать мутацию retrieval score в pg?
+- [ ] Summarize Service: отдельный NATS-сервис или часть tlos-claude-bridge?
