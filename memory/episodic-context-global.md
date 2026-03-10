@@ -657,3 +657,22 @@
 - ✅ Legacy files archived
 - ⬜ Rebuild claude-bridge (docker compose build)
 - ⬜ L3 Step 6: Agent Hierarchy (next milestone)
+
+---
+## Session 2026-03-10 — tLOS: Full Docker Stack (NATS + Rust services)
+
+**Decisions:**
+- Полный перенос всех нативных сервисов в Docker: NATS + shell-bridge + dispatcher + fs-bridge + shell-exec + agent-bridge
+- grid.ps1 теперь только `docker compose up -d` (12 сервисов) + Tauri frontend (native only)
+- lettaAgentIds Map персистируется в `~/.tlos/letta-agents.json` (pre-L3 critical fix)
+- Полный рефактор/debthunting отложен до после L3 Step 9
+
+**Files changed:**
+- `core/kernel/docker-compose.yml` — 12 сервисов (было 6)
+- `core/kernel/Dockerfile.rust-services` — NEW multi-stage Rust build
+- `core/kernel/tlos-shell-bridge/src/server.rs` — TLOS_BIND_HOST env var
+- `core/kernel/tlos-claude-bridge/index.js` — letta-agents.json persistence
+- `core/grid.ps1` — Docker-only launcher
+
+**Tasks completed / open:**
+- ✅ Full Docker infra shipped / ⏳ First build Rust image needed / ⏳ L3 Step 6 next

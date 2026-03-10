@@ -637,3 +637,33 @@
 - Rebuild claude-bridge нужен для kernel:ping + memory handlers
 - L3 Step 6 — Agent Hierarchy (новая ветка l3-agents)
 - docker-v1 remote branch — удалить вручную: git push origin --delete docker-v1
+
+---
+
+## [2026-03-10 — сессия 16] CLOSE
+
+**Phase:** L2 Kernel ALL DONE (5/5) — Full Docker Stack + pre-L3 fixes
+
+**Decisions:**
+- Полный перенос всех нативных сервисов в Docker (NATS + 5 Rust сервисов); grid.ps1 теперь только Docker compose + Tauri
+- lettaAgentIds Map персистируется в `~/.tlos/letta-agents.json` (pre-L3 critical fix)
+- server.rs: TLOS_BIND_HOST env var вместо хардкода 127.0.0.1 (Docker networking)
+- WORKSPACE_ROOT авто-резолвится в grid.ps1 (Split-Path $Root -Parent)
+- agent-bridge в Docker через profiles:nim (опциональный, только если есть NIM key)
+- Полный рефактор/debthunting — отложен до после L3 Step 9
+
+**Files changed:**
+- `core/kernel/tlos-claude-bridge/index.js` — lettaAgentIds persistence: loadLettaAgents/saveLettaAgents, ~/.tlos/letta-agents.json
+- `core/kernel/docker-compose.yml` — NATS service + 5 Rust сервисов + NATS_URL fix (host.docker.internal → nats)
+- `core/kernel/Dockerfile.rust-services` — NEW: multi-stage Rust build (rust:1.82-slim-bookworm builder + debian:bookworm-slim runtime)
+- `core/kernel/tlos-shell-bridge/src/server.rs` — TLOS_BIND_HOST env var (default 127.0.0.1)
+- `core/grid.ps1` — полная замена: Docker-only, WORKSPACE_ROOT, nim profile, только Tauri native
+
+**Completed:**
+- pre-L3 fix: lettaAgentIds Map persistence → L3 агенты переживут рестарт Docker
+- Full Docker infra: NATS + shell-bridge + dispatcher + fs-bridge + shell-exec + agent-bridge в Docker
+- grid.ps1 упрощён: `docker compose up -d` + Tauri frontend (всё остальное в Docker)
+
+**Opened:**
+- First build Rust Docker image (~10 мин, `docker compose build shell-bridge dispatcher fs-bridge shell-exec`)
+- L3 Step 6 — Agent Hierarchy (новая ветка l3-agents)

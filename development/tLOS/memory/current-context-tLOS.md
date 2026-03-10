@@ -1,6 +1,6 @@
 ---
 # CURRENT CONTEXT — tLOS
-> Last updated: 2026-03-10 (session 15 close)
+> Last updated: 2026-03-10 (session 16 close)
 ---
 
 ## Active Epics
@@ -20,7 +20,7 @@
 
 | Key | Value | Last Updated |
 |---|---|---|
-| project_phase | **L2 Kernel ALL DONE (5/5)** — session 15. Agent Frames shipped: agent-status, memory-viewer, g3-session. Omnibar: `kernel` + `g3` commands. docker-v1 merged → main. Legacy files archived. Следующий приоритет: L3 Agent Hierarchy (Step 6). | 2026-03-10 |
+| project_phase | **L2 Kernel ALL DONE (5/5)** — session 16. Full Docker stack: NATS + 5 Rust services (shell-bridge, dispatcher, fs-bridge, shell-exec, agent-bridge) в Docker. lettaAgentIds persistence fix. grid.ps1 Docker-only. Следующий приоритет: L3 Agent Hierarchy (Step 6). | 2026-03-10 |
 | shell_status | Tauri native app (decorations:false) — запуск через `grid.ps1 run` | 2026-03-10 |
 | installer | `tLOS_0.1.0_x64-setup.exe` собран, готов к отправке Артёму | 2026-02-28 |
 | agent_bridge | NIM HTTP SSE bridge — meta/llama-3.1-8b-instruct via NVIDIA NIM API | 2026-03-02 |
@@ -36,7 +36,7 @@
 | agent_arch_doc | `docs/agent-system-architecture.md` v3 — единственный источник истины по роадмапу. L2(1-5)+L3(6-9)+L4(10-13)+Dockerization(D1-D6). | 2026-03-10 |
 | desktop_shortcut | `Desktop/tLOS.lnk` → `AppData/Local/tLOS/tlos-app.exe`. Icon: monolith.ico (прозрачный фон, проблема отображения не решена). | 2026-03-10 |
 | dockerization | **D1-D6 ALL DONE** — Dockerfiles: tlos-claude-bridge (node:22-alpine) + tlos-langgraph-bridge (python:3.12-slim+Node22). Unified compose: `core/kernel/docker-compose.yml` (6 services). `.env`: NIM_KEY (gitignored). grid.ps1 обновлён. NATS: `-a 0.0.0.0`. Inter-container env vars. All 6 containers online. D5: `core/kernel/.env` создан. D6: Desktop/tLOS.lnk создан. Docker Desktop autostart → ручной шаг nopoint. | 2026-03-10 |
-| docker_compose_unified | `core/kernel/docker-compose.yml` — 6 сервисов: db:5433, litellm:4000, qdrant:6333, letta:8283, langgraph-bridge, claude-bridge. NATS=host.docker.internal:4222. Env vars: QDRANT_URL=qdrant:6333, LITELLM_URL=litellm:4000, LETTA_URL=letta:8283, DB_HOST=db, DB_PORT=5432. | 2026-03-10 |
+| docker_compose_unified | `core/kernel/docker-compose.yml` — **12 сервисов** (session 16): nats:4222, db:5433, litellm:4000, qdrant:6333, letta:8283, langgraph-bridge, claude-bridge, shell-bridge:3001, dispatcher, fs-bridge, shell-exec, agent-bridge(profile:nim). NATS_URL=nats://nats:4222 (internal). WORKSPACE_ROOT через .env (grid.ps1 auto). | 2026-03-10 |
 
 ## Blockers
 
@@ -104,10 +104,11 @@
 - **Letta service:** `letta/letta:latest` Docker image — порт 8283; volume `letta_data:/root/.letta`
 - **LangGraph service:** Docker `core/kernel/tlos-langgraph-bridge/Dockerfile` (python:3.12-slim+Node22+uv+claude CLI)
 - **Domain Memory + All Kernel services:** `docker compose up` из `core/kernel/` — **unified compose** `core/kernel/docker-compose.yml` (6 services). NIM_KEY env var from ~/.tlos/nim-key. grid.ps1: `docker-kernel` service.
-- **Dockerization D1-D6 ALL DONE:** claude-bridge + langgraph-bridge + unified compose + grid.ps1 + `.env` (NIM_KEY) + Desktop/tLOS.lnk. Docker Desktop autostart → ручной шаг nopoint. Rebuild needed: `docker compose build claude-bridge && docker compose up -d claude-bridge`.
+- **Full Docker stack (session 16):** grid.ps1 теперь только `docker compose up -d` + Tauri. NATS в Docker (nats:latest, 4222+8222). 5 Rust сервисов: shell-bridge(3001), dispatcher, fs-bridge, shell-exec, agent-bridge(profile:nim). `kernel/Dockerfile.rust-services` — multi-stage Rust build. server.rs: TLOS_BIND_HOST env var (0.0.0.0 в Docker). WORKSPACE_ROOT auto → fs-bridge + shell-exec volume mount.
+- **lettaAgentIds persistence (session 16):** `~/.tlos/letta-agents.json` — Map сохраняется при каждом новом агенте. Пережитает рестарт Docker.
 - **Agent Frames (L2 Step 5):** AgentStatusFrame (kernel:ping → kernel:status, 30s poll), MemoryViewerFrame (memory:get-facts + memory:search), G3SessionFrame (agent:graph:run + streaming). Omnibar: `kernel` → agent-status+memory-viewer, `g3` → g3-session. Files: `core/shell/frontend/src/components/frames/AgentStatusFrame.tsx`, `MemoryViewerFrame.tsx`, `G3SessionFrame.tsx`, `data/kernel-frames.ts`, `data/g3-frames.ts`.
-- **Rebuild required:** `docker compose build claude-bridge && docker compose up -d claude-bridge` (для kernel:ping + memory handlers в index.js)
-- **Known tech debt:** tlos-identity (Ed25519) vs nostr-sdk (Secp256k1) — разные кривые. `lettaAgentIds` Map в bridge теряется при рестарте. `asyncio.get_event_loop()` deprecated в Python 3.10+ (bridge_handler.py LOW). model не прокидывается через GraphState в worker_node (LOW). Legacy files archived: `core/kernel/archive/` (zep-client.js, config.yaml.template, mem0-wrapper.py).
+- **First build required:** `docker compose build shell-bridge dispatcher fs-bridge shell-exec agent-bridge && docker compose up -d` (первый раз ~10 мин Rust compile). Потом `grid.ps1 run`.
+- **Known tech debt:** tlos-identity (Ed25519) vs nostr-sdk (Secp256k1) — разные кривые. `asyncio.get_event_loop()` deprecated в Python 3.10+ (bridge_handler.py LOW). model не прокидывается через GraphState в worker_node (LOW). Legacy files archived: `core/kernel/archive/`. Полный рефактор → после L3 Step 9.
 
 ## L2 Kernel Roadmap
 
