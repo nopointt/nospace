@@ -545,3 +545,23 @@
 - ✅ E6 Share + Export (ShareLink, public /share/[token], ZIP, clipboard)
 - ⏳ SQL миграции E3/E4/E6 применить в Supabase Dashboard
 - ⏳ Стадия 4 Tech Debt Analysis
+
+---
+## Session 2026-03-10 — tLOS: L2 Kernel Step 3 DONE — Zep CE Docker stack LIVE
+
+**Decisions:**
+- Zep CE v0.27.2 (Docker: PostgreSQL+pgvector HNSW + Neo4j + Graphiti + Zep) заменяет mem0 V1
+- Конфигурация через монтируемый `/app/config.yaml`; grid.ps1 генерирует из шаблона + NIM key
+- Graphiti использует NIM (llama-3.1-70b-instruct) как OpenAI-compatible LLM для entity extraction
+- Semantic search: `POST /api/v2/graph/search` (Graphiti + Neo4j) — заменяет substring search
+
+**Files changed:**
+- `core/kernel/tlos-zep-bridge/docker-compose.yml` — СОЗДАН
+- `core/kernel/tlos-zep-bridge/config.yaml.template` — СОЗДАН
+- `core/kernel/tlos-claude-bridge/zep-client.js` — ПЕРЕПИСАН (Zep CE API)
+- `core/grid.ps1` — ОБНОВЛЁН (docker compose вместо mem0-wrapper)
+
+**Tasks completed / open:**
+- ✅ L2 Kernel Step 3 DONE — Zep CE LIVE, 200 OK на :8000
+- ⏳ Verify Zep CE semantic search (Graphiti NIM extraction)
+- ⏳ SEC: PatchDialog Nostr sig + system prompt permissions
