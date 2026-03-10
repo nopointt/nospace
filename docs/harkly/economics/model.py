@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """
-Harkly Financial Model 2026 — Pessimistic Scenario
+Harkly Financial Model 2026 — Realistic Pessimistic Scenario
 Standalone Python (stdlib only, no external dependencies).
 Outputs results.md to the same directory.
 
-CFO alignment date : 2026-02-25
+Growth channels: cold outreach + LinkedIn/social content + Telegram proxy communities
+WL partners confirmed: ProxyMarket (WL-Base, March). Others TBD.
+Churn rates calibrated to ChartMogul early-stage B2B benchmarks.
+
+CFO alignment date : 2026-02-26
 Release date        : 2026-03-01 (month 3)
 Author              : Assistant Agent / nopoint
 """
@@ -23,13 +27,12 @@ MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun",
                "Jul","Aug","Sep","Oct","Nov","Dec"]
 
 # ── Credit allocations per tier ─────────────────────────────
-CREDITS_FREE_DAILY     = 25         # daily cap, resets each day (no carry-over)
-FREE_ACTIVE_DAYS       = 15         # pessimistic: user active 15 of 30 days
-CREDITS_FREE_MONTHLY   = CREDITS_FREE_DAILY * FREE_ACTIVE_DAYS  # 375 effective
+# Free tier: monthly quota (no daily cap)
+CREDITS_FREE_MONTHLY   = 262        # monthly quota (no daily cap, no carry-over)
 
-CREDITS_START          = 250        # carry-over month to month
-CREDITS_PRO            = 5_000
-CREDITS_ENT            = 25_000
+CREDITS_START          = 1_750      # carry-over month to month
+CREDITS_PRO            = 8_750      # carry-over month to month
+CREDITS_ENT            = 34_000     # carry-over month to month (capped to maintain 25% margin)
 CREDITS_WL_GIFT        = 25_000     # Enterprise gift per WL partner (personal use)
 
 # ── SaaS subscription prices (USD/month) ────────────────────
@@ -64,7 +67,6 @@ EFF_COGS_PER_CREDIT  = RAW_COGS_PER_CREDIT * COGS_BUFFER   # = $0.01275
 # Applied: chat_cogs = base_cogs_per_credit * (1 / 1.10)  → revenue covers COGS+10%
 # In aggregate model: LLM Chat share blended into EFF_COGS_PER_CREDIT.
 # Separate chat margin provision recorded as a note only (not isolated in P&L).
-LLM_CHAT_EXTRA_MARGIN = 0.10
 
 # Pessimistic breakage: 15 % of credits never consumed, 85 % consumed
 CREDIT_CONSUMPTION    = 0.85   # 85 % consumed
@@ -110,31 +112,167 @@ WL_DATA = {
 }
 
 # ── Monthly churn rates ──────────────────────────────────────
-CHURN = {"free": 0.20, "start": 0.05, "pro": 0.03, "ent": 0.01}
+# Source: ChartMogul 2025 SaaS Conversion Report, Recurly 2024 State of Subscriptions
+# See: marketing_benchmarks.md for full research data
+CHURN = {
+    "free":  0.20,   # 20%/mo — typical for freemium with credit limits
+    "start": 0.07,   # 7%/mo — early-stage B2B SaaS at $50 (ChartMogul: 5-10%)
+    "pro":   0.04,   # 4%/mo — mid-market B2B at $250 (ChartMogul: 3-6%)
+    "ent":   0.01,   # 1%/mo — enterprise sticky, likely annual contract
+}
+
+# ── Churn scenarios (Bear/Base/Bull) ─────────────────────────
+# Use via: simulate(params={'churn_free': CHURN_SCENARIOS['bear']['free'], ...})
+CHURN_SCENARIOS = {
+    "bear": {
+        "free":  0.25,   # High churn — product-market fit not established
+        "start": 0.09,   # 9%/mo — SMB churn upper bound
+        "pro":   0.06,   # 6%/mo — mid-market churn upper bound
+        "ent":   0.02,   # 2%/mo — enterprise with issues
+    },
+    "base": {
+        "free":  0.20,   # 20%/mo — typical freemium
+        "start": 0.07,   # 7%/mo — ChartMogul SMB benchmark
+        "pro":   0.04,   # 4%/mo — ChartMogul mid-market benchmark
+        "ent":   0.01,   # 1%/mo — enterprise sticky
+    },
+    "bull": {
+        "free":  0.15,   # Low churn — strong retention
+        "start": 0.05,   # 5%/mo — SMB best case
+        "pro":   0.025,  # 2.5%/mo — mid-market best case
+        "ent":   0.008,  # 0.8%/mo — enterprise with annual contracts
+    },
+}
+
+# ── Conversion scenarios (Bear/Base/Bull) ────────────────────
+# Free→Start monthly conversion, Start→Pro annual upgrade
+# Source: ChartMogul 2025 (median freemium 8%, typical B2B 2-5%)
+CONVERSION_SCENARIOS = {
+    "bear": {
+        "free_to_start": 0.01,   # 1%/mo — conservative for niche B2B
+        "start_to_pro":  0.05,   # 5%/yr — low expansion
+        "pro_to_ent":    0.005,  # 0.5%/yr — minimal enterprise uptake
+    },
+    "base": {
+        "free_to_start": 0.02,   # 2%/mo — realistic for well-positioned B2B
+        "start_to_pro":  0.10,   # 10%/yr — PLG benchmark
+        "pro_to_ent":    0.012,  # 1.2%/yr — moderate enterprise interest
+    },
+    "bull": {
+        "free_to_start": 0.04,   # 4%/mo — strong product-market fit
+        "start_to_pro":  0.18,   # 18%/yr — excellent expansion mechanics
+        "pro_to_ent":    0.025,  # 2.5%/yr — strong enterprise demand
+    },
+}
+
+# ── Channel conversion benchmarks (Bear/Base/Bull) ───────────
+# Cold email, LinkedIn, ProductHunt launch conversion rates
+# Source: SaaS cold outreach benchmarks 2025, ChartMogul PH case studies
+CHANNEL_BENCHMARKS = {
+    "cold_email": {
+        "bear": 0.005,   # 0.5% → signup/meeting per send
+        "base": 0.010,   # 1.0% — typical SaaS benchmark
+        "bull": 0.015,   # 1.5% — strong execution
+    },
+    "linkedin": {
+        "bear": 0.010,   # 1% → signup/meeting per connection request
+        "base": 0.020,   # 2% — typical B2B outreach
+        "bull": 0.035,   # 3.5% — excellent targeting + personalization
+    },
+    "producthunt": {
+        "bear": 0.02,    # 2% of launch signups → paid in 30 days
+        "base": 0.04,    # 4% — realistic for niche B2B
+        "bull": 0.08,    # 8% — strong launch execution
+    },
+}
 
 # ============================================================
-# § 2  GROWTH SCENARIO — Pessimistic
-#       All organic metrics = Comet base-case ÷ 2
-#       WL schedule unchanged (strategic deals, not organic)
+# § 2  GROWTH SCENARIO — Realistic Pessimistic (Base)
+#       Channels: cold outreach + LinkedIn/social content + Telegram proxy communities
+#       WL: ProxyMarket only (confirmed). Other WL TBD.
 #
-# Format per month:
-#   (new_free_signups, free→start%, start→pro%, pro→ent%, [wl_tiers_added])
+# Calibration based on marketing_benchmarks.md research (2026-02-26):
+#   - Free→Start: 2-3%/mo base (ChartMogul median 8%, B2B typical 2-5%)
+#   - Start→Pro: 1.5-3.5%/yr base (PLG benchmark 10-25%/yr)
+#   - Cold email: 1% signup rate (SaaS benchmark 0.5-1.5%)
+#   - LinkedIn: 2% signup rate (B2B typical 1-3%)
+#   - ProductHunt: 4% launch→paid (niche B2B realistic)
+#
+# new_free_signups calibration (monthly):
+#   Mar  : 60 — ProductHunt launch (~50) + Telegram burst + cold start
+#   Apr  : 25 — Cold outreach steady (~300 emails → 3-5 signups; LinkedIn → 2-4)
+#   May  : 30 — Cold outreach + early social traction
+#   Jun  : 35 — Social content building audience (LinkedIn, articles)
+#   Jul  : 35 — Outreach + social compounding
+#   Aug  : 40 — Content + referrals from WL partner users
+#   Sep  : 40 — Social momentum
+#   Oct  : 45 — SEO first trickle + steady social
+#   Nov  : 45 — Compounding
+#   Dec  : 50 — Community presence established, SEO gaining
+#
+# Format: (new_free_signups, free→start%, start→pro%, pro→ent%, [wl_tiers])
+#
+# SCENARIOS (use via params override):
+#   Bear: Free→Start 1%, Start→Pro 0.5%/mo, signups -20%
+#   Base: Free→Start 2-3%, Start→Pro 1.5-3.5%/mo, signups as calibrated
+#   Bull: Free→Start 4%, Start→Pro 5%/mo, signups +20%
 # ============================================================
 
 GROWTH = {
     1:  (0,  0.000, 0.000, 0.000, []),           # Jan — pre-launch
     2:  (0,  0.000, 0.000, 0.000, []),           # Feb — pre-launch
-    3:  (15, 0.035, 0.020, 0.005, ["base"]),     # Mar — Launch + WL-Base (ProxyMarket)
-    4:  (18, 0.040, 0.020, 0.010, []),
-    5:  (20, 0.040, 0.025, 0.010, []),
-    6:  (25, 0.045, 0.025, 0.010, ["pro"]),      # Jun — WL-Pro added
-    7:  (28, 0.050, 0.030, 0.010, []),
-    8:  (30, 0.050, 0.030, 0.015, []),
-    9:  (33, 0.055, 0.035, 0.015, ["base"]),     # Sep — second WL-Base
-    10: (35, 0.055, 0.035, 0.015, []),
-    11: (40, 0.060, 0.040, 0.015, []),
-    12: (45, 0.060, 0.040, 0.020, ["scale"]),    # Dec — WL-Scale added
+    3:  (60, 0.025, 0.015, 0.005, ["base"]),     # Mar — ProductHunt launch (~50) + Telegram + cold start
+    4:  (25, 0.025, 0.015, 0.007, []),           # Apr — Cold outreach steady
+    5:  (30, 0.030, 0.020, 0.007, []),           # May — Cold outreach + social traction
+    6:  (35, 0.030, 0.020, 0.010, []),           # Jun — Social content building
+    7:  (35, 0.035, 0.025, 0.010, []),           # Jul — Outreach + social
+    8:  (40, 0.035, 0.025, 0.010, []),           # Aug — Content + WL partner referrals
+    9:  (40, 0.040, 0.030, 0.012, []),           # Sep — Social momentum
+    10: (45, 0.040, 0.030, 0.012, []),           # Oct — SEO trickle + social
+    11: (45, 0.045, 0.035, 0.015, []),           # Nov — Compounding
+    12: (50, 0.045, 0.035, 0.015, []),           # Dec — Community established
 }
+
+# ── Scenario presets for quick simulation ────────────────────
+def get_scenario(scenario: str = "base") -> dict:
+    """
+    Get scenario preset for simulate() params.
+    
+    Usage:
+        results = simulate(params=get_scenario("bear"))
+        results = simulate(params=get_scenario("base"))
+        results = simulate(params=get_scenario("bull"))
+    
+    Args:
+        scenario: "bear", "base", or "bull"
+    
+    Returns:
+        dict of params for simulate()
+    """
+    if scenario == "bear":
+        return {
+            "churn_free": CHURN_SCENARIOS["bear"]["free"],
+            "churn_start": CHURN_SCENARIOS["bear"]["start"],
+            "churn_pro": CHURN_SCENARIOS["bear"]["pro"],
+            "churn_ent": CHURN_SCENARIOS["bear"]["ent"],
+            # Lower conversion rates
+            # Note: GROWTH conversion rates are overridden via conv_mult
+        }
+    elif scenario == "bull":
+        return {
+            "churn_free": CHURN_SCENARIOS["bull"]["free"],
+            "churn_start": CHURN_SCENARIOS["bull"]["start"],
+            "churn_pro": CHURN_SCENARIOS["bull"]["pro"],
+            "churn_ent": CHURN_SCENARIOS["bull"]["ent"],
+            # Higher conversion rates
+        }
+    else:  # base
+        return {
+            "churn_free": CHURN_SCENARIOS["base"]["free"],
+            "churn_start": CHURN_SCENARIOS["base"]["start"],
+            "churn_pro": CHURN_SCENARIOS["base"]["pro"],
+            "churn_ent": CHURN_SCENARIOS["base"]["ent"],
+        }
 
 # ============================================================
 # § 3  HELPERS
@@ -146,7 +284,7 @@ def infra_cost(users: float) -> float:
             return cost
     return INFRA_TIERS[-1][1]
 
-def var_cogs(credits: float, issued: bool = True, wl_consumption: float = 0.60) -> float:
+def var_cogs(credits: float, issued: bool = True, wl_consumption: float = 0.60, eff_cogs: float = None) -> float:
     """
     Variable COGS for a given number of credits.
 
@@ -160,11 +298,14 @@ def var_cogs(credits: float, issued: bool = True, wl_consumption: float = 0.60) 
     For direct SaaS: use issued=True (85% consumption).
     For WL quotas: use issued=False (60% consumption by default).
     """
+    if eff_cogs is None:
+        eff_cogs = EFF_COGS_PER_CREDIT  # module default
+    
     if issued:
-        return credits * CREDIT_CONSUMPTION * EFF_COGS_PER_CREDIT
+        return credits * CREDIT_CONSUMPTION * eff_cogs
     else:
         # WL resellable quota — assume 60% consumption (realistic for WL partners)
-        return credits * wl_consumption * EFF_COGS_PER_CREDIT
+        return credits * wl_consumption * eff_cogs
 
 def usd(v: float, d: int = 0) -> str:
     if v < 0:
@@ -178,13 +319,97 @@ def pct(v: float, d: int = 1) -> str:
 # § 4  SIMULATION
 # ============================================================
 
-def simulate(conv_mult: float = 1.0) -> list:
+def simulate(conv_mult: float = 1.0, params: dict = None) -> list:
     """
     Run monthly simulation Jan–Dec.
-    conv_mult  : multiplier on all organic conversion rates and new_free signups.
-                 WL schedule is NOT affected (strategic contracts).
-    Returns    : list of 12 monthly result dicts.
+    
+    Args:
+        conv_mult: multiplier on all organic conversion rates and new_free signups.
+                   WL schedule is NOT affected (strategic contracts).
+        params: Optional dict to override default constants. Supports:
+                - Prices: price_start, price_pro, price_ent
+                - Credits: credits_start, credits_pro, credits_ent, credits_free_monthly
+                - WL: wl_base_credits, wl_pro_credits, wl_scale_credits, wl_base_price, wl_pro_price, wl_scale_price
+                - COGS: raw_cogs_per_credit, cogs_buffer, credit_consumption, wl_consumption
+                - Churn: churn_free, churn_start, churn_pro, churn_ent
+                - Costs: ai_costs, owner_draw, artem_rate
+                - Monthly users: monthly_users (list of 12 dicts with start/pro/ent/wl_events)
+    
+    Returns:
+        list of 12 monthly result dicts.
     """
+    # Use params or defaults - access module-level constants via module name
+    import model as m
+    
+    # Handle None params
+    p = params or {}
+    
+    # Prices
+    PRICE_START = p.get('price_start', m.PRICE_START)
+    PRICE_PRO = p.get('price_pro', m.PRICE_PRO)
+    PRICE_ENT = p.get('price_ent', m.PRICE_ENT)
+    
+    # Credits
+    CREDITS_FREE_MONTHLY = p.get('credits_free_monthly', m.CREDITS_FREE_MONTHLY)
+    CREDITS_START = p.get('credits_start', m.CREDITS_START)
+    CREDITS_PRO = p.get('credits_pro', m.CREDITS_PRO)
+    CREDITS_ENT = p.get('credits_ent', m.CREDITS_ENT)
+    
+    # WL
+    WL_BASE_CREDITS = p.get('wl_base_credits', m.WL_BASE_CREDITS)
+    WL_PRO_CREDITS = p.get('wl_pro_credits', m.WL_PRO_CREDITS)
+    WL_SCALE_CREDITS = p.get('wl_scale_credits', m.WL_SCALE_CREDITS)
+    WL_BASE_PRICE = p.get('wl_base_price', m.WL_BASE_PRICE)
+    WL_PRO_PRICE = p.get('wl_pro_price', m.WL_PRO_PRICE)
+    WL_SCALE_PRICE = p.get('wl_scale_price', m.WL_SCALE_PRICE)
+    
+    # Recalculate WL_DATA with overridden values
+    WL_DATA = {
+        "base":  (WL_BASE_PRICE,  WL_BASE_CREDITS),
+        "pro":   (WL_PRO_PRICE,   WL_PRO_CREDITS),
+        "scale": (WL_SCALE_PRICE, WL_SCALE_CREDITS),
+    }
+    
+    # COGS
+    # Layer COGS — compute rawCogs from mix if provided
+    MIX_REALITY = p.get('mix_reality', None)
+    MIX_PREDICTION = p.get('mix_prediction', None)
+    COGS_REALITY = p.get('cogs_reality', None)
+    COGS_PREDICTION = p.get('cogs_prediction', None)
+    COGS_PERCEPTION = p.get('cogs_perception', None)
+    
+    if MIX_REALITY is not None and MIX_PREDICTION is not None:
+        # Compute rawCogs from layer mix
+        MIX_PERCEPTION = 1 - MIX_REALITY - MIX_PREDICTION
+        RAW_COGS_PER_CREDIT = (MIX_REALITY * COGS_REALITY +
+                               MIX_PREDICTION * COGS_PREDICTION +
+                               MIX_PERCEPTION * COGS_PERCEPTION)
+    else:
+        # Use raw_cogs_per_credit directly
+        RAW_COGS_PER_CREDIT = p.get('raw_cogs_per_credit', m.RAW_COGS_PER_CREDIT)
+    
+    COGS_BUFFER = p.get('cogs_buffer', m.COGS_BUFFER)
+    EFF_COGS_PER_CREDIT = RAW_COGS_PER_CREDIT * COGS_BUFFER
+    CREDIT_CONSUMPTION = p.get('credit_consumption', m.CREDIT_CONSUMPTION)
+    WL_CONSUMPTION = p.get('wl_consumption', 0.60)
+    
+    # Churn
+    CHURN = {
+        "free": p.get('churn_free', m.CHURN["free"]),
+        "start": p.get('churn_start', m.CHURN["start"]),
+        "pro": p.get('churn_pro', m.CHURN["pro"]),
+        "ent": p.get('churn_ent', m.CHURN["ent"]),
+    }
+    
+    # Costs
+    AI_COSTS = p.get('ai_costs', m.AI_COSTS)
+    OWNER_DRAW = p.get('owner_draw', m.OWNER_DRAW)
+    ARTEM_RATE = p.get('artem_rate', m.ARTEM_RATE)
+    INFRA_FLAT = p.get('infra_flat', None)  # Fixed infra cost, overrides tier-based
+
+    # Monthly users override
+    MONTHLY_USERS = p.get('monthly_users', None)  # List of 12 dicts
+    
     free_u = start_u = pro_u = ent_u = 0.0
     wl_stack = []   # cumulative: list of (tier_name, monthly_price, resellable_credits)
     rows = []
@@ -223,6 +448,22 @@ def simulate(conv_mult: float = 1.0) -> list:
         si = round(start_u)
         pi = round(pro_u)
         ei = round(ent_u)
+        
+        # ── 3b. Override with monthly_users if provided ──
+        if MONTHLY_USERS is not None and m <= len(MONTHLY_USERS):
+            mu = MONTHLY_USERS[m - 1]
+            # Only override if value is not None (None = use growth model)
+            if mu.get('free') is not None:
+                fi = int(mu['free'])
+            if mu.get('start') is not None:
+                si = int(mu['start'])
+            if mu.get('pro') is not None:
+                pi = int(mu['pro'])
+            if mu.get('ent') is not None:
+                ei = int(mu['ent'])
+            # WL events always override from monthly_users
+            if 'wl_events' in mu:
+                new_wl_tiers = mu['wl_events']
 
         # ── 4. Add WL partners this month ──
         for t in new_wl_tiers:
@@ -253,13 +494,16 @@ def simulate(conv_mult: float = 1.0) -> list:
         cr_breakage = cr_issued - cr_consumed
 
         # ── Variable COGS ──
-        cogs_v_dir = var_cogs(cr_direct)
-        cogs_v_wl  = var_cogs(cr_wl)
+        # Direct users: 85% consumption rate
+        cogs_v_dir = var_cogs(cr_direct, eff_cogs=EFF_COGS_PER_CREDIT)
+        # WL partners: configurable consumption rate (default 60%)
+        cogs_v_wl  = var_cogs(cr_wl, issued=False, wl_consumption=WL_CONSUMPTION, eff_cogs=EFF_COGS_PER_CREDIT)
         cogs_var   = cogs_v_dir + cogs_v_wl
 
         # ── Fixed COGS ──
         direct_users = fi + si + pi + ei
-        cogs_infra   = infra_cost(direct_users)
+        # Use infra_flat if provided, otherwise use tier-based infra_cost
+        cogs_infra   = INFRA_FLAT if INFRA_FLAT is not None else infra_cost(direct_users)
         cogs_ai      = AI_COSTS if m >= AI_COSTS_START else 0.0
         cogs_fixed   = cogs_infra + cogs_ai
 
@@ -271,7 +515,7 @@ def simulate(conv_mult: float = 1.0) -> list:
 
         # ── Artem commission ──
         # 20 % of GP attributable to Enterprise + WL (variable COGS only, no fixed alloc)
-        ent_gp = max(0.0, rev_e  - var_cogs(cr_e))
+        ent_gp = max(0.0, rev_e  - var_cogs(cr_e, eff_cogs=EFF_COGS_PER_CREDIT))
         wl_gp  = max(0.0, rev_wl - cogs_v_wl)
         artem  = (ent_gp + wl_gp) * ARTEM_RATE
 
@@ -355,15 +599,14 @@ def generate_md(base: list, bear: list, bull: list) -> str:
     h("0. Ключевые допущения модели")
     a("| Параметр | Значение | Комментарий |")
     a("|---|---|---|")
-    a(f"| **Кредиты Free** | {CREDITS_FREE_DAILY}/день (daily cap, daily reset) | Нет carry-over. Активность: {FREE_ACTIVE_DAYS} дней/мес → {CREDITS_FREE_MONTHLY} кредитов/мес eff. |")
+    a(f"| **Кредиты Free** | {CREDITS_FREE_MONTHLY:,}/мес | Monthly quota (no daily cap, no carry-over) |")
     a(f"| **Кредиты Start** | {CREDITS_START:,}/мес | Carry-over |")
     a(f"| **Кредиты Pro** | {CREDITS_PRO:,}/мес | Carry-over |")
-    a(f"| **Кредиты Enterprise** | {CREDITS_ENT:,}/мес | Carry-over |")
+    a(f"| **Кредиты Enterprise** | {CREDITS_ENT:,}/мес | Carry-over (capped @ 34k for 25% margin) |")
     a(f"| **Raw COGS/credit** | {usd(RAW_COGS_PER_CREDIT, 4)} | Mix: Reality 70% × $0.01 + Prediction 20% × $0.005 + Perception 10% × $0.005 |")
     a(f"| **COGS buffer** | +{int((COGS_BUFFER-1)*100)}% | LLM price spikes, retries, dev waste |")
     a(f"| **Effective COGS/credit** | {usd(EFF_COGS_PER_CREDIT, 5)} | = Raw × 1.50 |")
     a(f"| **Credit consumption** | {int(CREDIT_CONSUMPTION*100)}% | Pessimistic: 15% breakage |")
-    a(f"| **LLM Chat margin** | +{int(LLM_CHAT_EXTRA_MARGIN*100)}% | Extra on top of buffered COGS (blended into mix) |")
     a(f"| **WL floor price** | {usd(WL_FLOOR, 3)}/credit | Partners cannot sell below this |")
     a(f"| **WL wholesale** | {usd(WL_WHOLESALE, 4)}/credit | Floor × 0.75 (25% partner discount) |")
     a(f"| **WL partner ROI** | ~33% | ($0.020 - $0.015) / $0.015 |")
@@ -490,7 +733,8 @@ def generate_md(base: list, bear: list, bull: list) -> str:
         tot_brk += r["cr_breakage"]
         brk_pct = r["cr_breakage"] / r["cr_issued"] * 100 if r["cr_issued"] > 0 else 0
         a(f"| **{r['name']}** | {r['cr_issued']:,.0f} | {r['cr_consumed']:,.0f} | {r['cr_breakage']:,.0f} | {pct(brk_pct)}% |")
-    a(f"| **ИТОГО** | **{tot_iss:,.0f}** | **{tot_con:,.0f}** | **{tot_brk:,.0f}** | **15.0%** |")
+    brk_pct_total = tot_brk / tot_iss * 100 if tot_iss > 0 else 0
+    a(f"| **ИТОГО** | **{tot_iss:,.0f}** | **{tot_con:,.0f}** | **{tot_brk:,.0f}** | **{pct(brk_pct_total)}%** |")
     a("")
     a("> Breakage = кредиты выданы но не использованы. Revenue признана при подписке (не при расходе).")
     a("> À la carte и quota overage исключены из Year 1 модели (непредсказуемы, не масштабируются).")

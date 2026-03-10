@@ -43,4 +43,50 @@
   Consolidation_status: clean
 ```
 
+- Entity: nopoint
+  Type: Person
+  Tags: [human, founder, CEO, L0]
+  Attributes: Creator, primary decision-maker, L0 authority
+  Relations:
+    - Founder_of: [harkly, tLOS, nospace_Workspace]
+    - Partner_of: Artem
+  Facts:
+    - "nopoint — не склоняется (nopoint'а — неверно, просто 'nopoint')."
+    - "L0 в иерархии агентов. Единственный, кто принимает архитектурные решения."
+    - "CEO harkly. Роль по отношению к Артем уточняется."
+  Last_updated: 2026-03-10
+  Consolidation_status: new
+
+- Entity: harkly_Project
+  Type: Project
+  Tags: [harkly, SaaS, consumer-intelligence, research]
+  Attributes: Consumer Intelligence Platform, AI-first, desk research automation
+  Relations:
+    - Part_of: nospace_Workspace
+    - Team: [nopoint, Artem]
+    - Stack: [Next.js 14, Prisma, Supabase, Vercel, Modal.com, Yandex Cloud PG]
+    - Memory_tier: Project
+  Facts:
+    - "Продукт: автоматизация desk research для UX/CX исследователей."
+    - "3 слоя: Reality (данные) + Prediction (silicon sampling) + AI Perception."
+    - "Лендинг live: harkly-saas.vercel.app (deployed 2026-03-10)."
+    - "Фронтенд E0-E6 завершён (G3 сессии #1-#4). Следующее: Стадия 5 Backend Build."
+    - "Монетизация: Free (300 кредитов) + $50/$250/$500 + WL $500/мес."
+    - "152-ФЗ: персданные → Yandex Cloud ru-central1, аналитика → Supabase (US)."
+  Last_updated: 2026-03-10
+  Consolidation_status: new
+
+- Entity: Artem
+  Type: Person
+  Tags: [human, team, harkly, co-founder]
+  Attributes: Co-founder harkly, partner nopoint
+  Relations:
+    - Partner_of: nopoint
+    - Involved_in: [harkly]
+  Facts:
+    - "Присоединился 2026-03-10. Co-founder harkly, роли между nopoint и artem не определены."
+    - "Не связан с ProxyMarket в контексте harkly. ProxyMarket — отдельный трек, не активен."
+  Last_updated: 2026-03-10
+  Consolidation_status: new
+
 <!-- Append new entity blocks above this line. Reviewer merges happen below during consolidation. -->

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Liquid Glass SEO Command Panel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0a0a0f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-alert {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex items-center justify-center p-6">
+<!-- SEO Command Panel Container -->
+<div class="glass-panel w-full max-w-[900px] rounded-2xl overflow-hidden relative group/design-root">
+<!-- Header -->
+<header class="flex items-center justify-between border-b border-white/10 px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</div>
+<h2 class="text-white text-xl font-bold tracking-tight">MCB-SEO</h2>
+</div>
+<div class="flex gap-3">
+<button class="glass-card flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors">
+<span class="size-2 rounded-full bg-amber-500 animate-pulse"></span>
+<span class="text-amber-400 font-bold text-sm">74 / 100</span>
+</button>
+<div class="glass-card flex items-center px-3 py-1.5 rounded-lg text-slate-400 text-xs font-medium uppercase tracking-wider">
+                    Updated 14:32
+                </div>
+</div>
+</header>
+<!-- Metric Chips -->
+<div class="px-6 pt-6 pb-4 flex flex-wrap gap-3">
+<div class="glass-card flex items-center gap-2 px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-green-400 text-[18px]">trending_up</span>
+<span class="text-slate-200 text-sm font-medium">Organic <span class="text-green-400 font-bold">6,173</span></span>
+</div>
+<div class="glass-card flex items-center gap-2 px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-amber-400 text-[18px]">trending_flat</span>
+<span class="text-slate-200 text-sm font-medium">TOP-10: <span class="text-amber-400 font-bold">125</span></span>
+</div>
+<div class="glass-card flex items-center gap-2 px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-red-400 text-[18px]">trending_down</span>
+<span class="text-slate-200 text-sm font-medium">Neural: <span class="text-red-400 font-bold">232</span></span>
+</div>
+</div>
+<!-- Alert Strip -->
+<div class="px-6 pb-6">
+<div class="glass-alert rounded-lg px-4 py-2.5 flex items-center gap-3">
+<span class="material-symbols-outlined text-red-400 text-[20px]">warning</span>
+<p class="text-red-200 text-sm font-medium">Neural −12% — blog section missing</p>
+</div>
+</div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 pb-6">
+<!-- LEFT COLUMN: Revenue Gaps -->
+<div class="flex flex-col h-full">
+<h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">monetization_on</span> Revenue Gaps
+                </h3>
+<div class="flex flex-col gap-3 flex-1">
+<!-- Row 1 -->
+<div class="glass-card p-4 rounded-xl flex justify-between items-center group hover:bg-white/10 transition-colors cursor-default">
+<div>
+<p class="text-white text-sm font-semibold">Neural search</p>
+<p class="text-slate-500 text-xs mt-0.5">Visibility drop</p>
+</div>
+<p class="text-red-400 font-bold text-sm tracking-tight">−₽45,000<span class="text-xs font-normal text-slate-500">/mo</span></p>
+</div>
+<!-- Row 2 -->
+<div class="glass-card p-4 rounded-xl flex justify-between items-center group hover:bg-white/10 transition-colors cursor-default">
+<div>
+<p class="text-white text-sm font-semibold">TOP-10 plateau</p>
+<p class="text-slate-500 text-xs mt-0.5">Stagnant growth</p>
+</div>
+<p class="text-red-400 font-bold text-sm tracking-tight">−₽32,000<span class="text-xs font-normal text-slate-500">/mo</span></p>
+</div>
+<!-- Row 3 -->
+<div class="glass-card p-4 rounded-xl flex justify-between items-center group hover:bg-white/10 transition-colors cursor-default">
+<div>
+<p class="text-white text-sm font-semibold">Otzovik 3.4</p>
+<p class="text-slate-500 text-xs mt-0.5">Reputation loss</p>
+</div>
+<p class="text-red-400 font-bold text-sm tracking-tight">−₽24,000<span class="text-xs font-normal text-slate-500">/mo</span></p>
+</div>
+</div>
+<!-- Total Gap Footer -->
+<div class="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
+<span class="text-slate-400 text-sm font-medium">Total gap</span>
+<span class="text-white text-lg font-bold">−₽101,000<span class="text-sm font-normal text-slate-500">/mo</span></span>
+</div>
+</div>
+<!-- RIGHT COLUMN: Next Actions -->
+<div class="flex flex-col h-full">
+<h3 class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">checklist</span> Next Actions
+                </h3>
+<div class="flex flex-col gap-3 flex-1">
+<!-- Action 1 -->
+<div class="glass-card p-3 rounded-xl flex items-center gap-3 hover:bg-white/10 transition-colors cursor-pointer group">
+<div class="size-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-medium truncate">Create blog section</p>
+<p class="text-slate-500 text-xs truncate">Content structure needed</p>
+</div>
+<div class="size-6 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center text-[10px] text-white font-bold" title="Assigned to Alex">A</div>
+</div>
+<!-- Action 2 -->
+<div class="glass-card p-3 rounded-xl flex items-center gap-3 hover:bg-white/10 transition-colors cursor-pointer group">
+<div class="size-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]"></div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-medium truncate">Fix indexing errors</p>
+<p class="text-slate-500 text-xs truncate">24 pages affected</p>
+</div>
+<div class="size-6 rounded-full bg-gradient-to-tr from-purple-500 to-pink-400 flex items-center justify-center text-[10px] text-white font-bold" title="Assigned to Maria">M</div>
+</div>
+<!-- Action 3 -->
+<div class="glass-card p-3 rounded-xl flex items-center gap-3 hover:bg-white/10 transition-colors cursor-pointer group">
+<div class="size-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+<div class="flex-1 min-w-0">
+<p class="text-white text-sm font-medium truncate">Respond to reviews</p>
+<p class="text-slate-500 text-xs truncate">Otzovik platform</p>
+</div>
+<div class="size-6 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-[10px] text-white font-bold" title="Assigned to Sarah">S</div>
+</div>
+</div>
+<!-- Hypothesis Section -->
+<div class="mt-4 pt-4 border-t border-white/10">
+<div class="flex items-center justify-between mb-2">
+<span class="text-slate-400 text-xs font-medium">Hypothesis in progress</span>
+<span class="text-amber-400 text-xs font-bold">Day 9/30</span>
+</div>
+<p class="text-white text-sm font-semibold mb-3">FAQ blocks on geo-pages</p>
+<div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+<div class="bg-amber-500 h-1.5 rounded-full" style="width: 30%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

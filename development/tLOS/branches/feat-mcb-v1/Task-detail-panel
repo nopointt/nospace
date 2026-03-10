@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Liquid Glass Task Detail Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#0a0a0f",
+                        "glass-border": "rgba(255, 255, 255, 0.08)",
+                        "glass-bg": "rgba(16, 34, 22, 0.6)",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    backdropBlur: {
+                        "glass": "20px"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #050507;
+            background-image: radial-gradient(at 0% 0%, hsla(145,56%,12%,1) 0, transparent 50%), radial-gradient(at 100% 100%, hsla(145,56%,12%,1) 0, transparent 50%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        /* Custom scrollbar for the panel content if it overflows */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-slate-100">
+<!-- Main Canvas Area Simulator -->
+<div class="relative w-full h-full flex items-center justify-center p-4">
+<!-- Task Detail Panel -->
+<div class="relative w-full max-w-[420px] max-h-[90vh] flex flex-col rounded-2xl border border-glass-border bg-[#0a0a0f]/80 backdrop-blur-glass shadow-2xl shadow-black/50 overflow-hidden">
+<!-- Header -->
+<div class="flex items-center justify-between px-6 py-5 border-b border-glass-border shrink-0">
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 text-slate-400">
+<span class="material-symbols-outlined text-[18px]">task</span>
+<span class="text-xs font-semibold uppercase tracking-wider">Task</span>
+</div>
+<!-- Status Badge -->
+<div class="flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-0.5 border border-amber-500/20">
+<div class="size-1.5 rounded-full bg-amber-500"></div>
+<span class="text-xs font-medium text-amber-500">In Queue</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-white transition-colors rounded-lg p-1 hover:bg-white/5">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex flex-col flex-1 overflow-y-auto custom-scrollbar p-6 gap-6">
+<!-- Title & Meta -->
+<div class="flex flex-col gap-4">
+<h1 class="text-xl font-bold leading-tight text-white">Create Blog Section — 5 Articles</h1>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-gradient-to-br from-primary to-emerald-700 flex items-center justify-center text-background-dark font-bold text-sm ring-2 ring-white/10" data-alt="User Avatar with initial H">
+                                H
+                            </div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-200">Helga · vzletagency</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 text-slate-400 bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span class="text-xs font-medium">Mar 15, 2026</span>
+</div>
+</div>
+</div>
+<!-- Expected Impact Card -->
+<div class="p-4 rounded-xl bg-gradient-to-r from-primary/10 to-transparent border border-primary/20 flex flex-col gap-1 relative overflow-hidden group">
+<div class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/5 to-transparent"></div>
+<span class="text-xs font-medium text-primary/80 uppercase tracking-wide z-10">Expected Impact</span>
+<div class="flex items-baseline gap-2 z-10">
+<span class="text-2xl font-bold text-primary">+₽38,000/mo</span>
+<span class="text-xs font-medium text-primary bg-primary/20 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px]">trending_up</span>
+                            20%
+                        </span>
+</div>
+<p class="text-sm text-slate-300 z-10 mt-1">Gap closed: Neural search coverage</p>
+</div>
+<!-- Subtasks -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<h3 class="text-sm font-semibold text-slate-300">Subtasks</h3>
+<span class="text-xs text-slate-500">0/4</span>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Task Item 1 -->
+<label class="group flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/5">
+<div class="relative flex items-center mt-0.5">
+<input class="peer appearance-none size-4 border border-slate-600 rounded bg-transparent checked:bg-primary checked:border-primary transition-all" type="checkbox"/>
+<span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[14px] text-background-dark opacity-0 peer-checked:opacity-100 pointer-events-none font-bold">check</span>
+</div>
+<span class="text-sm text-slate-300 group-hover:text-slate-100 transition-colors">Define 5 article topics from informational cluster</span>
+</label>
+<!-- Task Item 2 -->
+<label class="group flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/5">
+<div class="relative flex items-center mt-0.5">
+<input class="peer appearance-none size-4 border border-slate-600 rounded bg-transparent checked:bg-primary checked:border-primary transition-all" type="checkbox"/>
+<span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[14px] text-background-dark opacity-0 peer-checked:opacity-100 pointer-events-none font-bold">check</span>
+</div>
+<span class="text-sm text-slate-300 group-hover:text-slate-100 transition-colors">Write briefs for each article</span>
+</label>
+<!-- Task Item 3 -->
+<label class="group flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/5">
+<div class="relative flex items-center mt-0.5">
+<input class="peer appearance-none size-4 border border-slate-600 rounded bg-transparent checked:bg-primary checked:border-primary transition-all" type="checkbox"/>
+<span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[14px] text-background-dark opacity-0 peer-checked:opacity-100 pointer-events-none font-bold">check</span>
+</div>
+<span class="text-sm text-slate-300 group-hover:text-slate-100 transition-colors">Publish + submit to Yandex indexing</span>
+</label>
+<!-- Task Item 4 -->
+<label class="group flex items-start gap-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/5">
+<div class="relative flex items-center mt-0.5">
+<input class="peer appearance-none size-4 border border-slate-600 rounded bg-transparent checked:bg-primary checked:border-primary transition-all" type="checkbox"/>
+<span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[14px] text-background-dark opacity-0 peer-checked:opacity-100 pointer-events-none font-bold">check</span>
+</div>
+<span class="text-sm text-slate-300 group-hover:text-slate-100 transition-colors">Monitor neural search delta in 2 weeks</span>
+</label>
+</div>
+</div>
+<!-- Notes Section -->
+<div class="flex flex-col gap-2">
+<h3 class="text-sm font-semibold text-slate-300">Notes</h3>
+<div class="p-3 rounded-lg bg-white/5 border border-white/5 text-sm text-slate-400 italic">
+                        Blocked on: content writer assignment
+                    </div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="p-6 pt-4 border-t border-glass-border bg-[#0a0a0f]/50 shrink-0">
+<div class="grid grid-cols-2 gap-3 mb-3">
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg border border-primary text-primary hover:bg-primary hover:text-background-dark transition-all font-semibold text-sm w-full col-span-2 shadow-[0_0_15px_-3px_rgba(19,236,91,0.3)]">
+<span>Mark Done</span>
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white transition-all font-medium text-sm">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>Reassign</span>
+</button>
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg border border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500 hover:text-red-300 transition-all font-medium text-sm">
+<span class="material-symbols-outlined text-[18px]">block</span>
+<span>Block</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

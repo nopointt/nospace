@@ -2,20 +2,22 @@
 # CURRENT CONTEXT — GLOBAL
 > Structured snapshot of workspace state. Updated when an epic or major branch closes.
 > Tags: [workspace, global, state, epics, blockers]
-> Last updated: 2026-03-02 by Assistant
+> Last updated: 2026-03-10 by Assistant
 ---
 
 ## Active Epics
 
 | Epic ID | Project | Description | Status | Owner Agent |
 |---|---|---|---|---|
-| HARKLY-03 | harkly | Созвон с CPO ProxyMarket | pending | nopoint |
-| HARKLY-05 | harkly | Web-платформа SaaS (API + white-label) — запуск 1 апреля | in-progress | nopoint |
+| HARKLY-05 | harkly | Web-платформа SaaS — Стадия 5 G3 Backend Build | in-progress | nopoint + artem |
 
 ## Closed Epics (since last global update)
 
 | Epic ID | Project | Description | Closed | Result |
 |---|---|---|---|---|
+| HARKLY-03 | harkly | Партнёрство ProxyMarket | 2026-03-10 | Закрыт. ProxyMarket не активен. Артем — отдельная единица, co-founder harkly |
+| HARKLY-13 | harkly | Лендинг + деплой | 2026-03-10 | harkly-saas.vercel.app live, waitlist → Telegram |
+| HARKLY-11 | harkly | Стадия 3 G3 Frontend Build (E0-E6) | 2026-03-08 | все 6 эпиков фронтенда завершены |
 | HARKLY-01 | harkly | PRD v2 + docs suite | 2026-02-26 | product-brief-v2.md v2.1 + full partnership docs suite |
 | HARKLY-02 | harkly | npm install + test scraper run | 2026-02-26 | node_modules installed, desktop MVP running |
 | HARKLY-04 | harkly | Economics model review | 2026-02-26 | results.md complete, financial model finalized |
@@ -24,13 +26,14 @@
 
 | Key | Value | Last Updated |
 |---|---|---|
-| workspace_phase | active-dev | 2026-02-27 |
-| active_projects | tLOS (pause), harkly (active) | 2026-02-27 |
-| active_agents | assistant (Claude Code, L1 — Coach+Orchestrator), comet (Perplexity, L1), nopoint (human CEO), qwen-cli (Player, free), opencode-minimax (Player, free), opencode-trinity (Player, free), gemini-cli (Player, requires key) | 2026-03-02 |
-| harkly_phase | pre-launch — CPO call pending, web platform in dev, desktop MVP live | 2026-02-27 |
+| workspace_phase | active-dev | 2026-03-10 |
+| active_projects | tLOS (pause), harkly (active) | 2026-03-10 |
+| active_agents | assistant (Claude Code, L1 — Coach+Orchestrator), comet (Perplexity, L1), nopoint (human CEO, co-founder), artem (human, co-founder — роли уточняются), qwen-cli (Player, free), opencode-minimax (Player, free), opencode-trinity (Player, free), gemini-cli (Player, requires key) | 2026-03-10 |
+| harkly_phase | active-dev — лендинг live (harkly-saas.vercel.app), Стадия 5 G3 Backend Build следующий | 2026-03-10 |
+| harkly_team | nopoint (CEO/founder), artem (co-founder, роли TBD) | 2026-03-10 |
 | harkly_positioning | Consumer Intelligence Platform, 3 слоя: Reality + Prediction (silicon) + AI Perception | 2026-02-26 |
-| harkly_partner_track | Hybrid (Enterprise + white-label), ProxyMarket first | 2026-02-26 |
-| harkly_infra | Cloudflare Workers + D1/PostgreSQL-RU + BullMQ + ZenRows fallback | 2026-02-24 |
+| harkly_partner_track | Hybrid (Enterprise + white-label) — ProxyMarket не активен, возможно прокси-трек в будущем | 2026-03-10 |
+| harkly_infra | Next.js 14 App Router (Vercel) + Prisma + Supabase (US, analytics) + Yandex Cloud PG ru-central1 (персданные, 152-ФЗ) + Modal.com (Python pipeline) | 2026-03-07 |
 | harkly_monetization | Free (300 кредитов) + $50/$250/$500 тарифы + WL $500/мес | 2026-02-26 |
 | harkly_desktop | MVP работает, используется в production (silicon sampling Пятёрочка+) | 2026-02-27 |
 | harkly_economics | Модель завершена. Pessimistic: $28,650 revenue 2026, GM breakeven Oct 2026 | 2026-02-26 |
@@ -45,10 +48,9 @@
 | Blocker | Affects | Raised | Resolution |
 |---|---|---|---|
 | OPS-TODO-01: encrypt .env через age | security | 2026-02-22 | nopoint action required — CRITICAL before team expansion |
-| Созвон с CPO ProxyMarket не состоялся | HARKLY-03 | 2026-02-24 | nopoint schedules |
-| Data residency: RU-юрисдикция или Cloudflare? | harkly infra | 2026-02-24 | Нужно согласовать с юристами ProxyMarket |
-| Calibration data для Prediction Layer | harkly product | 2026-02-24 | Уточнить на созвоне с CPO |
-| prd-horizon-1.md (Comet task) — не выполнен | — | 2026-02-24 | product-brief-v2.md v2.1 фактически заменяет — решить нужен ли отдельный Comet-файл |
+| Роли Артем vs nopoint не определены | harkly team | 2026-03-10 | nopoint + artem согласуют |
+| Calibration data для Prediction Layer | harkly product | 2026-02-24 | Уточнить с Артем |
+| SQL миграции E4 + E6 не применены в Supabase | harkly backend | 2026-03-08 | Применить до старта Стадии 5 |
 | tLOS: большой апдейт + первый enterprise user — детали не зафиксированы | tLOS | 2026-02-27 | nopoint briefing required at next /startTsession |
 
 ## Last Consolidation

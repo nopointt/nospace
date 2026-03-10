@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Liquid Glass Gap Detail Panel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(16, 22, 34, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-8 font-display bg-[url('https://images.unsplash.com/photo-1634655377962-e6e7b446e7e9?q=80&amp;w=2864&amp;auto=format&amp;fit=crop')] bg-cover bg-center" data-alt="Abstract dark liquid gradient background">
+<!-- Main Panel Container -->
+<div class="glass-panel w-full max-w-[400px] rounded-xl overflow-hidden flex flex-col text-slate-100">
+<!-- Header -->
+<div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-lg">analytics</span>
+<span class="text-xs font-semibold uppercase tracking-wider">Gap Detail</span>
+</div>
+<button class="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex flex-col p-5 gap-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
+<!-- Title & Severity -->
+<div class="space-y-3">
+<h1 class="text-2xl font-bold leading-tight text-white">Neural Search Coverage</h1>
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400">
+<span class="material-symbols-outlined text-[16px] fill-1">error</span>
+<span class="text-xs font-bold">Critical</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/50 border border-slate-700/50 text-red-300">
+<span class="material-symbols-outlined text-[16px]">currency_ruble</span>
+<span class="text-xs font-bold">−45,000/mo impact</span>
+</div>
+</div>
+</div>
+<!-- Diagnosis Section -->
+<div class="space-y-3">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Diagnosis</h3>
+<div class="divide-y divide-white/5 rounded-lg border border-white/5 bg-white/[0.02]">
+<div class="grid grid-cols-[100px_1fr] gap-4 p-3">
+<span class="text-sm text-slate-400">Root cause</span>
+<span class="text-sm font-medium text-slate-200">Blog section absent</span>
+</div>
+<div class="grid grid-cols-[100px_1fr] gap-4 p-3">
+<span class="text-sm text-slate-400">Attribution</span>
+<span class="text-sm font-medium text-slate-200">Competitors 368-458 vs our 232</span>
+</div>
+</div>
+</div>
+<!-- Recommended Actions -->
+<div class="space-y-4">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Recommended Actions</h3>
+<!-- Card 1: Primary -->
+<div class="glass-card rounded-lg p-4 group relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-white text-sm pr-4">Create blog — 5 info articles</h4>
+<span class="text-xs font-bold text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded border border-green-500/20">+₽38k/mo</span>
+</div>
+<p class="text-xs text-slate-400 mb-3">High impact recovery strategy based on competitor gap.</p>
+<button class="flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/80 transition-colors">
+                        Create Hypothesis
+                        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+<!-- Card 2: Secondary -->
+<div class="glass-card rounded-lg p-4 group relative">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-slate-200 text-sm pr-4">Optimize FAQ on product pages</h4>
+<span class="text-xs font-bold text-green-400/80 bg-green-500/5 px-1.5 py-0.5 rounded border border-green-500/10">+₽8k/mo</span>
+</div>
+<button class="flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/80 transition-colors mt-2">
+                        Create Hypothesis
+                        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+<!-- Card 3: Muted -->
+<div class="glass-card rounded-lg p-4 opacity-70 hover:opacity-100">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-slate-400 text-sm">Escalate to mcb-meta</h4>
+<span class="text-[10px] font-bold text-slate-500 border border-slate-700 rounded px-1.5 py-0.5 uppercase">Flag</span>
+</div>
+<p class="text-xs text-slate-500 mb-3">Assign to Vladimir for technical review.</p>
+<button class="w-full flex items-center justify-center gap-2 h-8 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors">
+                        Escalate
+                        <span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+</button>
+</div>
+</div>
+<!-- Footer -->
+<div class="pt-2 border-t border-white/5 flex justify-between items-center text-[10px] text-slate-600">
+<span>Data source: Neural analysis 21.01.2026</span>
+<span class="flex items-center gap-1 text-green-800">
+<span class="material-symbols-outlined text-[10px]">verified_user</span>
+                    trust: valid
+                </span>
+</div>
+</div>
+</div>
+</body></html>

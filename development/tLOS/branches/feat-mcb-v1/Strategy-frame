@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MCB — SEO Strategy Frame</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#0a0a0f", // Updated to user request for liquid glass dark style base
+                        "glass-border": "rgba(255, 255, 255, 0.08)",
+                        "glass-surface": "rgba(255, 255, 255, 0.03)",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex items-center justify-center p-6 bg-[url('https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?q=80&amp;w=2788&amp;auto=format&amp;fit=crop')] bg-cover bg-center bg-no-repeat bg-fixed relative" data-alt="Abstract dark fluid liquid glass background pattern">
+<!-- Overlay to darken background image -->
+<div class="absolute inset-0 bg-background-dark/80 backdrop-blur-xl"></div>
+<!-- Strategy Frame -->
+<div class="relative w-full max-w-[560px] rounded-xl border border-glass-border bg-glass-surface backdrop-blur-[20px] shadow-2xl overflow-hidden flex flex-col">
+<!-- Header -->
+<div class="flex items-start justify-between p-6 pb-2">
+<div>
+<h1 class="text-white text-xl font-bold tracking-tight mb-1">MCB — SEO Strategy</h1>
+<div class="flex items-center gap-3 text-sm">
+<span class="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20">Q2 2026</span>
+<span class="text-white/45">Deadline: April 30</span>
+</div>
+</div>
+<button class="text-white/45 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<!-- Status Bar -->
+<div class="px-6 py-4">
+<div class="relative flex flex-col gap-1 overflow-hidden rounded-lg bg-white/[0.03] p-4 border border-white/[0.05] pl-4 border-l-4 border-l-primary">
+<p class="text-white text-base font-semibold leading-tight">Отстаём от плана — SEO даёт 101k из 450k разрыва MRR</p>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="flex h-2 w-2 rounded-full bg-emerald-500"></span>
+<p class="text-white/60 text-xs font-medium uppercase tracking-wide">Trend: MRR gap ↓ improving</p>
+</div>
+</div>
+</div>
+<!-- Goals vs Reality -->
+<div class="px-6 py-2">
+<h2 class="text-white/90 text-sm font-semibold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">ads_click</span>
+                Goals vs Reality
+            </h2>
+<div class="space-y-5">
+<!-- Row 1: MRR -->
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-white font-medium">MRR Target</span>
+<div class="flex gap-3 text-xs">
+<span class="text-white/45">Current: 200k</span>
+<span class="text-white font-medium">Target: 450k</span>
+</div>
+</div>
+<div class="relative h-2 w-full rounded-full bg-white/[0.08]">
+<div class="absolute left-0 top-0 h-full rounded-full bg-primary" style="width: 45%"></div>
+</div>
+<p class="text-right text-xs text-white/45">Gap: -250k</p>
+</div>
+<!-- Row 2: Organic Traffic -->
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-white font-medium">Organic Traffic</span>
+<div class="flex gap-3 text-xs">
+<span class="text-white/45">Current: 12k</span>
+<span class="text-white font-medium">Target: 40k</span>
+</div>
+</div>
+<div class="relative h-2 w-full rounded-full bg-white/[0.08]">
+<div class="absolute left-0 top-0 h-full rounded-full bg-emerald-500" style="width: 30%"></div>
+</div>
+<p class="text-right text-xs text-white/45">Gap: -28k</p>
+</div>
+<!-- Row 3: Neural Search -->
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-white font-medium">Neural Search Visibility</span>
+<div class="flex gap-3 text-xs">
+<span class="text-white/45">Current: 5%</span>
+<span class="text-white font-medium">Target: 25%</span>
+</div>
+</div>
+<div class="relative h-2 w-full rounded-full bg-white/[0.08]">
+<div class="absolute left-0 top-0 h-full rounded-full bg-red-500" style="width: 20%"></div>
+</div>
+<p class="text-right text-xs text-white/45">Gap: -20%</p>
+</div>
+</div>
+</div>
+<!-- Where SEO loses money -->
+<div class="px-6 py-6 pb-2">
+<h2 class="text-white/90 text-sm font-semibold mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-red-400 text-[18px]">trending_down</span>
+                Where SEO loses money
+            </h2>
+<div class="flex flex-col gap-2">
+<!-- Item 1 -->
+<div class="flex items-center justify-between py-2 border-b border-white/[0.05]">
+<div class="flex items-center gap-3">
+<div class="h-2 w-2 rounded-full bg-red-500 shrink-0"></div>
+<span class="text-sm text-white/80">Блог отсутствует → нейровыдача не растёт</span>
+</div>
+<span class="text-sm font-medium text-red-400 tabular-nums">-₽52,000/mo</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between py-2 border-b border-white/[0.05]">
+<div class="flex items-center gap-3">
+<div class="h-2 w-2 rounded-full bg-primary shrink-0"></div>
+<span class="text-sm text-white/80">TOP-10 стагнация</span>
+</div>
+<span class="text-sm font-medium text-red-400 tabular-nums">-₽31,000/mo</span>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between py-2">
+<div class="flex items-center gap-3">
+<div class="h-2 w-2 rounded-full bg-primary shrink-0"></div>
+<span class="text-sm text-white/80">Репутация Отзовик</span>
+</div>
+<span class="text-sm font-medium text-red-400 tabular-nums">-₽18,000/mo</span>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-auto border-t border-white/[0.08] bg-black/20 p-6 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-white/45 uppercase tracking-wider font-medium">Total Loss</span>
+<span class="text-lg font-bold text-white tabular-nums">−₽101,000<span class="text-sm font-normal text-white/60">/mo</span></span>
+</div>
+<button class="group flex items-center gap-2 rounded-lg bg-white/[0.05] pl-4 pr-3 py-2 text-sm font-medium text-white hover:bg-white/[0.1] transition-all hover:pr-2">
+                Drill into SEO
+                <span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

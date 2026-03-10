@@ -347,20 +347,34 @@ function buildSide() {
       '<div class="g3">' + num('pS','Start $',10,500,10) + num('pP','Pro $',50,2000,50) + num('pE','Ent $',100,5000,100) + '</div>'
     },
     { t:'🎫 Кредиты', h:
-      '<div class="g2">' + num('freeDaily','Free кр/день',5,200,5) + num('freeDays','Акт.дней',5,30,1) + '</div>' +
-      '<div class="g2">' + num('crS','Start кр',50,5000,50) + num('crP','Pro кр',500,50000,500) + '</div>' +
-      '<div class="g2">' + num('crE','Ent кр',5000,200000,5000) + num('wlGift','WL Gift кр',0,50000,5000) + '</div>'
+      '<div class="g3">' + num('freeMonthly','Free кр/мес',100,1000,10) + '</div>' +
+      '<div class="g2">' + num('crS','Start кр',500,5000,50) + num('crP','Pro кр',5000,20000,500) + '</div>' +
+      '<div class="g2">' + num('crE','Ent кр',10000,50000,1000) + num('wlGift','WL Gift кр',0,50000,5000) + '</div>'
     },
     { t:'🔧 COGS', h:
-      sld('rawCogs','Raw COGS/credit',0.001,0.05,0.0005,4) +
+      '<div style="font-size:9px;color:var(--mu);margin-bottom:4px;">── LAYER COSTS ──</div>' +
+      sld('mixR','Reality mix %',0.50,0.90,0.01,2) +
+      num('cogsR','Reality $/cr',0.001,0.05,0.001) +
+      sld('mixP','Prediction mix %',0.05,0.40,0.01,2) +
+      num('cogsP','Prediction $/cr',0.001,0.02,0.0005) +
+      '<div class="f"><label>Perception mix % <b id="d-mixQ">10.0%</b></label><input type="text" disabled value="1 - mixR - mixP" style="opacity:0.5;font-size:10px;"></div>' +
+      num('cogsQ','Perception $/cr',0.001,0.02,0.0005) +
+      '<div style="font-size:9px;color:var(--mu);margin:6px 0 4px;">── COMPUTED ──</div>' +
+      '<div class="f"><label>Raw COGS/credit <b id="d-rawCogs">$0.0085</b></label><input type="text" disabled style="opacity:0.5;font-size:10px;"></div>' +
+      '<div class="f"><label>Eff COGS/credit <b id="d-effCogs">$0.0128</b></label><input type="text" disabled style="opacity:0.5;font-size:10px;"></div>' +
+      '<div style="font-size:9px;color:var(--mu);margin:6px 0 4px;">── EXISTING ──</div>' +
       sld('buffer','COGS Buffer ×',1.0,3.0,0.05,2) +
-      sld('cons','Consumption %',0.50,1.0,0.01,2)
+      sld('cons','Consumption % (direct)',0.50,1.0,0.01,2) +
+      sld('wlCons','Consumption % (WL)',0.30,0.90,0.01,2) +
+      '<div style="font-size:9px;color:var(--mu);margin:6px 0 4px;">── INFRA ──</div>' +
+      num('infraFlat','Infra $/mo (пусто=тиры)',0,1000,10)
     },
     { t:'🤝 WL Цены', h:
       sld('wlFloor','Floor $/credit',0.005,0.10,0.001,3) +
       sld('wlDisc','Скидка партнёру',0.05,0.50,0.01,2) +
       '<div class="g2">' + num('wlBase','Base кр',10000,500000,10000) + num('wlPro','Pro кр',100000,2000000,50000) + '</div>' +
-      num('wlScale','Scale кр',500000,10000000,100000)
+      num('wlScale','Scale кр',500000,10000000,100000) +
+      '<div class="g3" style="margin-top:6px;">' + num('wlBaseP','Base $',500,5000,100) + num('wlProP','Pro $',2000,15000,500) + num('wlScaleP','Scale $',10000,50000,1000) + '</div>'
     },
     { t:'📉 Churn /мес', h:
       '<div class="g2">' + sld('cF','Free %',0.05,0.60,0.01,2) + sld('cS','Start %',0.01,0.20,0.005,3) + '</div>' +
@@ -485,6 +499,19 @@ function onInp(e) {
   S[k] = v;
   var dsp = document.getElementById('d-' + k);
   if (dsp) dsp.textContent = dispV(k, v, parseInt(e.target.dataset.dec || 1));
+  
+  // Update computed COGS display
+  if (['mixR','mixP','cogsR','cogsP','cogsQ','buffer'].indexOf(k) >= 0) {
+    var mixQ = 1 - S.mixR - S.mixP;
+    var rawCogs = S.mixR * S.cogsR + S.mixP * S.cogsP + mixQ * S.cogsQ;
+    var effCogs = rawCogs * S.buffer;
+    document.getElementById('d-mixQ').textContent = (mixQ * 100).toFixed(1) + '%';
+    document.getElementById('d-rawCogs').textContent = '$' + rawCogs.toFixed(4);
+    document.getElementById('d-effCogs').textContent = '$' + effCogs.toFixed(4);
+    // Also update S.rawCogs for API call
+    S.rawCogs = rawCogs;
+  }
+  
   recalc();
 }
 
@@ -568,13 +595,14 @@ function simulateLocal(p, cm) {
   cm = (cm === undefined) ? 1.0 : cm;
   var ws  = p.wlFloor * (1 - p.wlDisc);
   var ec  = p.rawCogs * p.buffer;
-  var frm = p.freeDaily * p.freeDays;
+  var frm = p.freeMonthly || 262;  // monthly quota (no daily cap)
   var WL  = {
     base:  {cr:p.wlBase,  px:p.wlBase  * ws},
     pro:   {cr:p.wlPro,   px:p.wlPro   * ws},
     scale: {cr:p.wlScale, px:p.wlScale * ws},
   };
   function vc(cr) { return cr * p.cons * ec; }
+  function vcWL(cr) { return cr * p.wlCons * ec; }  // WL partners: 60% consumption
 
   var fu=0, su=0, pu=0, eu=0, stk=[], rows=[];
 
@@ -625,9 +653,10 @@ function simulateLocal(p, cm) {
     var crW = crWr + wn*p.wlGift;
     var crT = crD + crW;
 
-    var cvD=vc(crD), cvW=vc(crW), cvr=cvD+cvW;
+    var cvD=vc(crD), cvW=vcWL(crW), cvr=cvD+cvW;
     var du  = fi+si+pi+ei;
-    var cfx = infraCost(du) + (m >= p.aiMo ? p.aiCost : 0);
+    var infra = (p.infraFlat !== null && p.infraFlat !== undefined && !isNaN(p.infraFlat)) ? p.infraFlat : infraCost(du);
+    var cfx = infra + (m >= p.aiMo ? p.aiCost : 0);
     var tc  = cvr + cfx;
 
     var gp  = rev - tc;
@@ -703,16 +732,19 @@ async function initState() {
     initMain();
     await recalc();
   } catch (err) {
-    // Use hardcoded defaults
+    // Use hardcoded defaults (updated 2026)
     S = {
-      freeDaily:25, freeDays:15,
-      crS:250, crP:5000, crE:25000, wlGift:25000,
+      freeMonthly:262,  // monthly quota (no daily cap)
+      crS:1750, crP:8750, crE:34000, wlGift:25000,
       pS:50, pP:250, pE:500,
-      rawCogs:0.0085, buffer:1.50, cons:0.85,
+      rawCogs:0.0085, buffer:1.50, cons:0.85, wlCons:0.60,
+      mixR:0.70, mixP:0.20, cogsR:0.01, cogsP:0.005, cogsQ:0.005,
+      infraFlat:null,
       cF:.20, cS:.05, cP:.03, cE:.01,
       aiCost:1000, aiMo:3, draw:2000, drMo:5, artRate:.20,
       wlFloor:.020, wlDisc:.25,
       wlBase:150000, wlPro:500000, wlScale:2000000,
+      wlBaseP:2250, wlProP:7500, wlScaleP:30000,
       cm:1.0,
       useManualSales: false,
       manualSales: {

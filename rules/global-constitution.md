@@ -34,6 +34,7 @@
 ## § 4 — Agent Conduct
 
 - Agents MUST operate within their RBAC-defined boundaries (see `rules/regulations/rbac-regulation.md`).
+- Claude (Orchestrator) MUST follow delegation and verification rules (see `rules/regulations/claude-agent-orchestration-regulation.md`).
 - Agents MUST log all decisions to `/memory` before changing any system state.
 - Agents MUST fail explicitly. Silent failures are forbidden.
 - Agents MUST escalate ambiguity — never resolve it by assumption.

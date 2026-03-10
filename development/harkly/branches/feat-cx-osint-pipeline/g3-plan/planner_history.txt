@@ -1,0 +1,7 @@
+G3 SESSION OPEN — 2026-03-06
+2026-03-06 TASK-HARKLY-06-PLAYER-PROFILE-ENRICHMENT APPROVED after 4 turns (3a/3b/3c/3d)
+Turns: scaffold → enrichment+cache → classification+scoring → report+bugfix
+Files: player_profile_pipeline.py (522 lines), cache/, output/reports/
+TASK-HARKLY-06-PLAYER-PROFILE-ENRICHMENT
+Coach: Claude Sonnet 4.6
+Player: opencode/minimax-m2.5-free (fallback: qwen)
