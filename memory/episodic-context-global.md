@@ -600,3 +600,20 @@
 
 **Tasks completed / open:**
 - D1+D2+D4 DONE / D5 (autostart + .env) + D6 OPEN
+
+---
+## Session 2026-03-10 — tLOS: Always-On Docker Kernel полностью operational
+
+**Decisions:**
+- NATS bind `0.0.0.0` (не `127.0.0.1`) — обязательно для Docker `host.docker.internal`
+- Inter-container URLs через Docker service names, не `localhost`
+- `ZepClient` → `DomainMemory` (zep-client.js → domain-memory.js) — убрано legacy Zep брендирование
+
+**Files changed:**
+- `core/grid.ps1` — NATS fix
+- `core/kernel/docker-compose.yml` — inter-container env vars
+- `core/kernel/tlos-claude-bridge/{qdrant-client,letta-client,domain-memory,index,Dockerfile}.js` — networking + rename
+
+**Tasks completed / open:**
+- DONE: все 6 Docker сервисов online (Qdrant + Domain Memory + NATS + Claude bridge claude-sonnet-4-6)
+- OPEN: D5 (Docker Desktop autostart + NIM_KEY .env), L2 Step 5 (Agent Frames)

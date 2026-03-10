@@ -540,3 +540,36 @@
 **Opened:**
 - D5: Docker Desktop autostart + `core/kernel/.env` для NIM_KEY
 - D6: Shell shortcut (зависит от D5)
+
+---
+
+## [2026-03-10 — сессия 13] CLOSE
+
+**Phase:** L2 Kernel 4/5 DONE. Always-On Docker Kernel полностью operational — все 6 сервисов connected.
+
+**Decisions:**
+- NATS должен слушать на `0.0.0.0`, а не `127.0.0.1` — иначе Docker контейнеры не могут достучаться через `host.docker.internal`
+- Inter-container URLs через Docker service names (не localhost): `qdrant:6333`, `litellm:4000`, `letta:8283`, `db:5432`
+- `zep-client.js` → `domain-memory.js` — убрано legacy Zep брендирование, клиент переименован в DomainMemory
+
+**Files changed:**
+- `core/grid.ps1` — NATS: `-a 127.0.0.1` → `-a 0.0.0.0`
+- `core/kernel/tlos-langgraph-bridge/Dockerfile` — добавлен `PYTHONUNBUFFERED=1`
+- `core/kernel/tlos-claude-bridge/qdrant-client.js` — `localhost:6333` → `process.env.QDRANT_URL`
+- `core/kernel/tlos-claude-bridge/letta-client.js` — `localhost:8283` → `process.env.LETTA_URL`
+- `core/kernel/tlos-claude-bridge/zep-client.js` — `localhost` → `process.env.DB_HOST/DB_PORT`; `localhost:4000` → `process.env.LITELLM_URL`
+- `core/kernel/tlos-claude-bridge/domain-memory.js` — CREATE (копия zep-client.js — новое имя модуля)
+- `core/kernel/tlos-claude-bridge/index.js` — `ZepClient` → `DomainMemory`; log messages cleaned (убраны "Zep" упоминания)
+- `core/kernel/tlos-claude-bridge/Dockerfile` — `zep-client.js` → `domain-memory.js`
+- `core/kernel/docker-compose.yml` — добавлены env vars для claude-bridge: QDRANT_URL, LITELLM_URL, LETTA_URL, DB_HOST, DB_PORT
+
+**Completed:**
+- NATS connectivity fix для Docker стека ✅
+- Inter-container networking fix (все клиенты используют service names) ✅
+- ZepClient → DomainMemory rename ✅
+- All 6 containers verified online: Qdrant `associative routing enabled` + Domain memory `development domain ready` + NATS `connected` + `online claude-sonnet-4-6` ✅
+- Git commits: `3114745` (NATS fix + PYTHONUNBUFFERED), `c68a9de` (networking + DomainMemory rename)
+
+**Opened:**
+- D5: Docker Desktop autostart + `core/kernel/.env` для NIM_KEY
+- CLEANUP: удалить `zep-client.js` (orphaned legacy)
