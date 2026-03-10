@@ -6,17 +6,15 @@
 
 ## Где мы сейчас
 
-Eidolon работает end-to-end, OSS patterns applied (2026-03-10): Letta XML memory blocks, OpenHands microagents, assistant-ui tlos_action cards, markdown в Omnibar, agent:context payload исправлен. claude-bridge стабилен — stdin prompt, session turns tracking, nearLimit flag.
+Eidolon полностью операционен: session continuity (stable conversationSessionId), context compaction (LLM summarization at nearLimit), mcb команда починена. Все ARCH/BUG задачи из omnibar epic закрыты — остались только SEC и FEATURE.
 
 ---
 
 ## Следующий приоритет
 
-1. **BUG** — Омнибар команда `mcb` не работает (спавнит 6 MCB фреймов на холст)
-2. **SEC** — PatchDialog: верификация Nostr-подписи патчей (`nostr-tools`)
-3. **ARCH** — Context summarization: когда сессия Claude приближается к лимиту (нужно хранить message history в bridge, затем LLM-summarize)
-4. **FEATURE** — Добавить microagents для других доменов (harkly, rust, nostr)
-5. **SEC** — System prompt files: ограничить права доступа (world-readable)
+1. **SEC** — PatchDialog: верификация Nostr-подписи патчей (`nostr-tools`)
+2. **SEC** — System prompt files: ограничить права доступа (world-readable)
+3. **FEATURE** — Microagents для других доменов: harkly.md, nostr.md, rust.md
 
 ---
 
@@ -24,7 +22,7 @@ Eidolon работает end-to-end, OSS patterns applied (2026-03-10): Letta XM
 
 | Branch | Task | Status |
 |---|---|---|
-| omnibar | Eidolon backend + OSS patterns + bug fixes | **OPEN** — основная работа |
+| omnibar | Eidolon backend — все ARCH/BUG закрыты, остались SEC | **OPEN** |
 | workspace-v1 | Организация рабочего пространства | OPEN |
 | mcb-v1 | Marketing Command Board для Артёма | BLOCKED — ждём API доступы |
 | node-v1 | Nostr patch pipeline | SHIPPED — ждём Артёма |
@@ -42,6 +40,8 @@ Eidolon работает end-to-end, OSS patterns applied (2026-03-10): Letta XM
 | Agent config path | `core/agents/eidolon/` |
 | Microagents path | `core/agents/eidolon/microagents/` (canvas.md, solidjs.md) |
 | Session persistence | `~/.tlos/sessions.json` — формат: `{ claudeSessionId, turns }` |
+| Session ID | Omnibar `conversationSessionId` signal — stable per conversation, reset on clearContext() |
+| Context compaction | bridge `sessionLogs` in-memory; nearLimit → summarizeConversation() → new session + summary |
 | Memory blocks | XML-инжект: `<persona>` + `<workspace>` в placeholder `<!-- MEMORY_BLOCKS -->` |
 | tlos-cyan | `#06B6D4` |
 | tlos-primary | `#f2b90d` |
@@ -50,25 +50,22 @@ Eidolon работает end-to-end, OSS patterns applied (2026-03-10): Letta XM
 
 ---
 
-## Что было сделано (2026-03-10, сессия 2)
+## Что было сделано (2026-03-10, сессия 3)
 
-**OSS Patterns Applied:**
-- Letta memory pattern: `<persona>` + `<workspace>` XML blocks, fresh load per session
-- OpenHands microagent pattern: `microagents/canvas.md` + `microagents/solidjs.md` — keyword-triggered context
-- assistant-ui message parts: tlos_action blocks → ⚡ карточки в Chat.tsx
-- Markdown rendering в Omnibar (streaming = raw text, done = marked)
-- agent:context payload format fix (было сломано: missing wrapper + wrong field)
-- Session entry теперь `{ claudeSessionId, turns }` — backward compat
-- `nearLimit` flag когда > 80% контекста использовано
-- `MessageStatus` type в kernel.ts
+**Session ID fix (критический баг):**
+- Omnibar: `conversationSessionId` signal — stable per conversation, был `crypto.randomUUID()` per message
+- `clearContext()` теперь сбрасывает sessionId → настоящая "новая беседа"
 
-**Ключевые файлы:**
-- `core/agents/eidolon/system-prompt.md` — `<!-- MEMORY_BLOCKS -->` placeholder
-- `core/agents/eidolon/microagents/canvas.md` — NEW
-- `core/agents/eidolon/microagents/solidjs.md` — NEW
-- `core/kernel/tlos-claude-bridge/index.js` — XML injection, microagents, turns
-- `core/shell/frontend/src/components/Chat.tsx` — AiMessageContent + parseParts
-- `core/shell/frontend/src/components/Omnibar.tsx` — markdown AI, fixed agent:context
+**Context Compaction (полный ARCH):**
+- bridge `sessionLogs` — in-memory history per session `[{role, content}]`
+- `summarizeConversation()` — спавнит claude, возвращает summary string
+- `handleChat()`: проверяет `needsSummarization` ПЕРЕД обработкой → compaction → new session
+- Summary инжектируется как `<PREVIOUS_CONTEXT_SUMMARY>` в новую сессию
+- Omnibar: `isSummarizing` + `agent:summarizing` handler + `⚙️ compacting...` индикатор
+
+**MCB bug fix:**
+- App.tsx: `resetViewport()` после `replaceComponents([...MCB_FRAMES])` — фреймы теперь видны сразу
+- useComponents.ts: `agent:summarizing` добавлен в фильтр
 
 ---
 
@@ -83,7 +80,8 @@ Eidolon работает end-to-end, OSS patterns applied (2026-03-10): Letta XM
 | Eidolon system prompt | development/tLOS/core/agents/eidolon/system-prompt.md |
 | Microagents | development/tLOS/core/agents/eidolon/microagents/ |
 | Omnibar | development/tLOS/core/shell/frontend/src/components/Omnibar.tsx |
-| Chat (markdown + cards) | development/tLOS/core/shell/frontend/src/components/Chat.tsx |
+| App (mcb handler) | development/tLOS/core/shell/frontend/src/App.tsx |
+| useComponents (filter) | development/tLOS/core/shell/frontend/src/hooks/useComponents.ts |
 | Constants | development/tLOS/core/shell/frontend/src/constants.ts |
 | Grid launcher | development/tLOS/core/grid.ps1 |
 
@@ -91,17 +89,9 @@ Eidolon работает end-to-end, OSS patterns applied (2026-03-10): Letta XM
 
 ## Открытые вопросы
 
-- [x] Session persistence для claude-bridge → DONE
-- [x] Auth persistence в Omnibar → DONE
-- [x] Bug hunt sprint 1 → DONE (26/39)
-- [x] Markdown в Chat → DONE
-- [x] OSS patterns (Letta/OpenHands/assistant-ui) → DONE
-- [x] agent:context payload fix → DONE
-- [ ] NIM key rotation: механизм автообновления
-- [ ] MCB омнибар: команда `mcb` — починить
-- [ ] **SEC:** PatchDialog — нет верификации Nostr-подписи (нужен nostr-tools)
-- [ ] **SEC:** System prompt files world-readable
-- [ ] **ARCH:** Context summarization при overflow (HIGH complexity)
-- [ ] Добавить microagents: harkly.md, nostr.md, rust.md
+- [ ] SEC: PatchDialog — нет верификации Nostr-подписи (нужен nostr-tools)
+- [ ] SEC: System prompt files world-readable
+- [ ] FEATURE: microagents harkly.md, nostr.md, rust.md
+- [ ] Context compaction summary: сейчас in-memory (теряется при рестарте bridge) — нужно ли персистировать?
 - [ ] WebSocket → Tauri IPC (ADR-003 Phase 2)
 - [ ] Артём: npub + API доступы

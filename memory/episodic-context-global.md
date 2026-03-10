@@ -3,6 +3,24 @@
 > Format: `## [YYYY-MM-DD] [agent-id] — [decision title]`
 
 ---
+## Session 2026-03-10 (3) — tLOS: context compaction + session continuity + mcb fix
+
+**Decisions:**
+- Context compaction: bridge now tracks full message history in-memory (`sessionLogs`); when `nearLimit` fires, next message triggers `summarizeConversation()` → new Claude session with `<PREVIOUS_CONTEXT_SUMMARY>` injected (OpenHands compaction pattern)
+- Session ID stability: Omnibar `conversationSessionId` signal reused across all messages (was `crypto.randomUUID()` per-message — sessions never resumed)
+- MCB command fixed: `resetViewport()` called after `replaceComponents([...MCB_FRAMES])` so frames are visible immediately
+
+**Files changed:**
+- `core/kernel/tlos-claude-bridge/index.js` — sessionLogs, getSessionLog(), summarizeConversation(), handleChat() rewrite with compaction flow
+- `core/shell/frontend/src/components/Omnibar.tsx` — conversationSessionId signal, isSummarizing, agent:summarizing handler, ⚙️ indicator
+- `core/shell/frontend/src/App.tsx` — resetViewport() on mcb command
+- `core/shell/frontend/src/hooks/useComponents.ts` — agent:summarizing in filter
+
+**Tasks completed / open:**
+- ✅ Session continuity, context compaction, mcb viewport fix
+- [ ] SEC: PatchDialog Nostr sig, system prompt permissions; FEATURE: microagents expansion
+
+---
 ## Session 2026-03-10 — tLOS: OSS patterns applied to Eidolon agent architecture
 
 **Decisions:**
