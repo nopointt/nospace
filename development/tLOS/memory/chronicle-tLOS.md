@@ -573,3 +573,33 @@
 **Opened:**
 - D5: Docker Desktop autostart + `core/kernel/.env` для NIM_KEY
 - CLEANUP: удалить `zep-client.js` (orphaned legacy)
+
+---
+
+## [2026-03-10 — сессия 14] CLOSE
+
+**Phase:** Dockerization D1–D6 ALL DONE. Always-On Kernel complete. Seed sync pg→Qdrant.
+
+**Decisions:**
+- D5: `core/kernel/.env` с NIM_KEY — gitignored, Docker Compose читает автоматически
+- D6: Desktop/tLOS.lnk уже существовал (сессия 11) — считается done
+- Seed sync: `index.js` при старте bridge → `getFacts(50)` → `addGlobal` each fact (idempotent, djb2 dedup)
+- `agent-system-architecture.md` обновлён: Docker stack (6 сервисов), D1-D6 все ✅, domain-memory.js
+
+**Files changed:**
+- `core/kernel/.env` — CREATE (NIM_KEY, gitignored)
+- `core/kernel/tlos-claude-bridge/index.js` — seed sync pg→Qdrant на startup
+- `docs/agent-system-architecture.md` — Docker stack актуализирован (D1-D6 DONE)
+- `development/tLOS/branches/docker-v1/spec-d5.md` — CREATE (D5 documentation)
+
+**Completed:**
+- D5 ✅ — NIM_KEY .env создан, Docker Compose подхватывает
+- Seed sync ✅ — pg facts синкаются в Qdrant на startup
+- agent-system-architecture.md ✅ — актуальный статус всех компонентов
+- Dockerization D1-D6 ALL DONE ✅
+
+**Opened:**
+- Docker Desktop autostart — ручной шаг nopoint (Settings → General)
+- Rebuild claude-bridge нужен для seed sync (index.js изменён)
+- CLEANUP: zep-client.js + config.yaml.template + mem0-wrapper.py (rm отклонён дважды)
+- L2 Step 5: Agent Frames — следующий приоритет

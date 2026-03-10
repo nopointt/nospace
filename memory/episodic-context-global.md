@@ -617,3 +617,22 @@
 **Tasks completed / open:**
 - DONE: все 6 Docker сервисов online (Qdrant + Domain Memory + NATS + Claude bridge claude-sonnet-4-6)
 - OPEN: D5 (Docker Desktop autostart + NIM_KEY .env), L2 Step 5 (Agent Frames)
+
+---
+## Session 2026-03-10 — tLOS: Always-On Kernel D1-D6 ALL DONE
+
+**Decisions:**
+- D5: `core/kernel/.env` с NIM_KEY (gitignored) — Docker Compose читает автоматически
+- Seed sync: bridge startup синкает pg facts → Qdrant (idempotent, djb2 dedup)
+- Dockerization полностью завершена: 6 сервисов в Docker с `restart: unless-stopped`
+
+**Files changed:**
+- `core/kernel/.env` — NIM_KEY (gitignored)
+- `core/kernel/tlos-claude-bridge/index.js` — seed sync pg→Qdrant
+- `docs/agent-system-architecture.md` — D1-D6 все ✅, Docker stack актуализирован
+
+**Tasks completed / open:**
+- ✅ Dockerization D1-D6 complete. Always-On Kernel operational.
+- ⬜ Docker Desktop autostart (ручной шаг nopoint)
+- ⬜ Rebuild claude-bridge (для seed sync)
+- ⬜ L2 Step 5: Agent Frames (следующий)
