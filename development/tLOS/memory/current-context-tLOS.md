@@ -1,6 +1,6 @@
 ---
 # CURRENT CONTEXT — tLOS
-> Last updated: 2026-03-10 (session 14 close)
+> Last updated: 2026-03-10 (session 15 close)
 ---
 
 ## Active Epics
@@ -13,13 +13,14 @@
 | epic-website-v1 | website-v1 | THELOS Marketing Site | OPEN — brand system зафиксирована, сайт в разработке |
 | epic-eidolon-v1 | omnibar | Claude Code integration as Eidolon AI backend | **OPEN** — session persistence fix + context summarization + mcb fix shipped |
 | epic-workspace-v1 | workspace-v1 | Организация рабочего пространства nopoint + Артём | **OPEN** — sessions-map.md создан, 3 трека (A: Omnibar v2, B: BB Floors, C: Infra) |
-| epic-docker-v1 | docker-v1 | Dockerization D1–D6 — Always-On Kernel | **DONE** — D1-D6 все DONE. Docker Desktop autostart → ручной шаг nopoint |
+| epic-docker-v1 | docker-v1 | Dockerization D1–D6 — Always-On Kernel | **CLOSED** — merged → main (session 15) |
+| epic-l2-step5 | — | L2 Step 5 — Agent Frames (agent-status, memory-viewer, g3-session) | **DONE** — shipped session 15 |
 
 ## Project State
 
 | Key | Value | Last Updated |
 |---|---|---|
-| project_phase | L2 Kernel 4/5 DONE. **Dockerization D1-D6 ALL DONE** (session 14). Always-On Kernel: все 6 сервисов online. `core/kernel/.env` с NIM_KEY создан. Seed sync pg→Qdrant добавлен в bridge startup. Следующий приоритет: L2 Step 5 (Agent Frames). | 2026-03-10 |
+| project_phase | **L2 Kernel ALL DONE (5/5)** — session 15. Agent Frames shipped: agent-status, memory-viewer, g3-session. Omnibar: `kernel` + `g3` commands. docker-v1 merged → main. Legacy files archived. Следующий приоритет: L3 Agent Hierarchy (Step 6). | 2026-03-10 |
 | shell_status | Tauri native app (decorations:false) — запуск через `grid.ps1 run` | 2026-03-10 |
 | installer | `tLOS_0.1.0_x64-setup.exe` собран, готов к отправке Артёму | 2026-02-28 |
 | agent_bridge | NIM HTTP SSE bridge — meta/llama-3.1-8b-instruct via NVIDIA NIM API | 2026-03-02 |
@@ -104,7 +105,9 @@
 - **LangGraph service:** Docker `core/kernel/tlos-langgraph-bridge/Dockerfile` (python:3.12-slim+Node22+uv+claude CLI)
 - **Domain Memory + All Kernel services:** `docker compose up` из `core/kernel/` — **unified compose** `core/kernel/docker-compose.yml` (6 services). NIM_KEY env var from ~/.tlos/nim-key. grid.ps1: `docker-kernel` service.
 - **Dockerization D1-D6 ALL DONE:** claude-bridge + langgraph-bridge + unified compose + grid.ps1 + `.env` (NIM_KEY) + Desktop/tLOS.lnk. Docker Desktop autostart → ручной шаг nopoint. Rebuild needed: `docker compose build claude-bridge && docker compose up -d claude-bridge`.
-- **Known tech debt:** tlos-identity (Ed25519) vs nostr-sdk (Secp256k1) — разные кривые. `lettaAgentIds` Map в bridge теряется при рестарте. `asyncio.get_event_loop()` deprecated в Python 3.10+ (bridge_handler.py LOW). model не прокидывается через GraphState в worker_node (LOW). `zep-client.js` — orphaned legacy file (domain-memory.js его заменил, нужно удалить). config.yaml.template и mem0-wrapper.py — legacy files to clean up.
+- **Agent Frames (L2 Step 5):** AgentStatusFrame (kernel:ping → kernel:status, 30s poll), MemoryViewerFrame (memory:get-facts + memory:search), G3SessionFrame (agent:graph:run + streaming). Omnibar: `kernel` → agent-status+memory-viewer, `g3` → g3-session. Files: `core/shell/frontend/src/components/frames/AgentStatusFrame.tsx`, `MemoryViewerFrame.tsx`, `G3SessionFrame.tsx`, `data/kernel-frames.ts`, `data/g3-frames.ts`.
+- **Rebuild required:** `docker compose build claude-bridge && docker compose up -d claude-bridge` (для kernel:ping + memory handlers в index.js)
+- **Known tech debt:** tlos-identity (Ed25519) vs nostr-sdk (Secp256k1) — разные кривые. `lettaAgentIds` Map в bridge теряется при рестарте. `asyncio.get_event_loop()` deprecated в Python 3.10+ (bridge_handler.py LOW). model не прокидывается через GraphState в worker_node (LOW). Legacy files archived: `core/kernel/archive/` (zep-client.js, config.yaml.template, mem0-wrapper.py).
 
 ## L2 Kernel Roadmap
 
@@ -114,7 +117,7 @@
 | 2 | tlos-langgraph-bridge — Python service + LangGraph + G3 subgraph | ✅ DONE (G3 TLOS-08) |
 | 3 | Domain Memory — pg+pgvector+liteLLM (replaced Zep CE) | ✅ DONE — zep-client.js rewritten, vector search working |
 | 4 | Qdrant self-hosted + Associative Routing | ✅ DONE — qdrant-client.js, tlos-global collection, per-message assoc context |
-| 5 | tLOS Agent Frames (agent-status, g3-session, memory-viewer) | ⬜ TODO (параллельно) |
+| 5 | tLOS Agent Frames (agent-status, g3-session, memory-viewer) | ✅ DONE — session 15. Omnibar: `kernel` + `g3` |
 
 ## Omnibar Roadmap (branch: omnibar)
 

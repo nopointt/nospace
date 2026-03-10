@@ -603,3 +603,37 @@
 - Rebuild claude-bridge нужен для seed sync (index.js изменён)
 - CLEANUP: zep-client.js + config.yaml.template + mem0-wrapper.py (rm отклонён дважды)
 - L2 Step 5: Agent Frames — следующий приоритет
+
+---
+
+## [2026-03-10 — сессия 15] CLOSE
+
+**Phase:** L2 Kernel ALL DONE 5/5. Agent Frames shipped. docker-v1 merged → main.
+
+**Decisions:**
+- Agent Frames реализованы через NATS request/response: kernel:ping → kernel:status, memory:get-facts/search → memory:facts/search-results
+- G3SessionFrame использует существующий LangGraph pipeline (agent:graph:run/token/status/error) без изменений в backend
+- Legacy файлы не удаляются — архивируются в `core/kernel/archive/` (новое правило nopoint)
+- docker-v1 branch merged → main (fast-forward не получилось, merge commit feb4d72)
+
+**Files changed:**
+- `core/shell/frontend/src/types/frame.ts` — +3 типа: agent-status, memory-viewer, g3-session
+- `core/shell/frontend/src/components/frames/AgentStatusFrame.tsx` — CREATE
+- `core/shell/frontend/src/components/frames/MemoryViewerFrame.tsx` — CREATE
+- `core/shell/frontend/src/components/frames/G3SessionFrame.tsx` — CREATE
+- `core/shell/frontend/src/data/kernel-frames.ts` — CREATE
+- `core/shell/frontend/src/data/g3-frames.ts` — CREATE
+- `core/shell/frontend/src/components/DynamicComponent.tsx` — +3 imports + Switch cases
+- `core/shell/frontend/src/App.tsx` — +kernel + g3 Omnibar commands
+- `core/kernel/tlos-claude-bridge/index.js` — +kernel:ping, memory:get-facts, memory:search handlers
+- `core/kernel/archive/` — CREATE: zep-client.js, config.yaml.template, mem0-wrapper.py
+
+**Completed:**
+- L2 Step 5 Agent Frames ✅ — все 3 фрейма реализованы
+- Cleanup legacy files ✅ — заархивированы в core/kernel/archive/
+- docker-v1 branch merged → main ✅ (commit feb4d72, pushed)
+
+**Opened:**
+- Rebuild claude-bridge нужен для kernel:ping + memory handlers
+- L3 Step 6 — Agent Hierarchy (новая ветка l3-agents)
+- docker-v1 remote branch — удалить вручную: git push origin --delete docker-v1

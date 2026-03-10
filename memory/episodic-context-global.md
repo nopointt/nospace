@@ -636,3 +636,24 @@
 - ⬜ Docker Desktop autostart (ручной шаг nopoint)
 - ⬜ Rebuild claude-bridge (для seed sync)
 - ⬜ L2 Step 5: Agent Frames (следующий)
+
+---
+## Session 2026-03-10 — tLOS: L2 Kernel ALL DONE 5/5 + Agent Frames
+
+**Decisions:**
+- L2 Step 5 реализован: 3 Agent Frames (agent-status, memory-viewer, g3-session) в SolidJS canvas
+- NATS request/response паттерн для kernel health + domain memory browser
+- Archive rule: никогда не удалять файлы, архивировать в core/kernel/archive/
+- docker-v1 branch closed + merged → main
+
+**Files changed:**
+- `core/shell/frontend/src/components/frames/` — AgentStatusFrame, MemoryViewerFrame, G3SessionFrame (CREATE)
+- `core/kernel/tlos-claude-bridge/index.js` — kernel:ping, memory:get-facts, memory:search
+- `core/kernel/archive/` — zep-client.js, config.yaml.template, mem0-wrapper.py archived
+
+**Tasks completed / open:**
+- ✅ L2 Kernel 5/5 ALL DONE
+- ✅ docker-v1 merged → main
+- ✅ Legacy files archived
+- ⬜ Rebuild claude-bridge (docker compose build)
+- ⬜ L3 Step 6: Agent Hierarchy (next milestone)

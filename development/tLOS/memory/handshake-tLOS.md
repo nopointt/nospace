@@ -1,20 +1,20 @@
 # HANDSHAKE — tLOS
 > Читай этот файл в начале любой tLOS-сессии.
-> Updated: 2026-03-10 (session 14) by Assistant
+> Updated: 2026-03-10 (session 15) by Assistant
 
 ---
 
 ## Где мы сейчас
 
-L2 Kernel 4/5 DONE. **Dockerization D1–D6 ALL DONE** (session 14): Always-On Kernel полностью готов — `core/kernel/.env` (NIM_KEY), seed sync pg→Qdrant, agent-system-architecture.md актуализирован. Docker Desktop autostart — ручной шаг nopoint.
+**L2 Kernel ALL DONE (5/5)** — session 15. Все 5 шагов L2 завершены: Letta, LangGraph, Domain Memory, Associative Routing, Agent Frames. docker-v1 merged → main, legacy files archived. Следующий приоритет: L3 Agent Hierarchy (Step 6).
 
 ---
 
 ## Следующий приоритет
 
-1. **Docker Desktop autostart** — Settings → General → ☑ "Start Docker Desktop when you sign in" (ручной шаг nopoint)
-2. **Rebuild claude-bridge** — `docker compose build claude-bridge && docker compose up -d claude-bridge` (чтобы seed sync заработал)
-3. **L2 Step 5** — tLOS Agent Frames (agent-status, g3-session, memory-viewer) в SolidJS canvas
+1. **Rebuild claude-bridge** — `docker compose build claude-bridge && docker compose up -d claude-bridge` (для kernel:ping + memory handlers)
+2. **L3 Step 6** — Agent Hierarchy: Chief → Lead → Senior агенты (новая ветка `l3-agents`)
+3. **SEC branch (omnibar)** — PatchDialog Nostr sig verification + system prompt file permissions
 
 ---
 
@@ -22,7 +22,6 @@ L2 Kernel 4/5 DONE. **Dockerization D1–D6 ALL DONE** (session 14): Always-On K
 
 | Branch | Task | Status |
 |---|---|---|
-| docker-v1 | Dockerization D1–D6 — Always-On Kernel | **DONE** — можно закрыть / merge |
 | omnibar | SEC: PatchDialog Nostr sig + system prompt permissions | OPEN |
 | workspace-v1 | Организация рабочего пространства nopoint + Артём | OPEN |
 | mcb-v1 | Marketing Command Board для Артёма | BLOCKED — ждём API |
@@ -37,14 +36,12 @@ L2 Kernel 4/5 DONE. **Dockerization D1–D6 ALL DONE** (session 14): Always-On K
 |---|---|
 | Claude default model | `claude-sonnet-4-6` |
 | Unified docker-compose | `core/kernel/docker-compose.yml` — 6 сервисов |
-| Docker project name | `tlos-zep-bridge` (для сохранения named volumes) |
-| NIM_KEY | `core/kernel/.env` (gitignored) — читается Docker Compose автоматически |
-| NIM_KEY source | `~/.tlos/nim-key` |
-| NATS на хосте | `nats-server -a 0.0.0.0` (НЕ 127.0.0.1 — Docker не достучится) |
-| Inter-container env vars | QDRANT_URL=qdrant:6333, LITELLM_URL=litellm:4000, LETTA_URL=letta:8283, DB_HOST=db, DB_PORT=5432 |
-| Session persistence | `~/.tlos/sessions.json` |
-| Domain Memory | `domain-memory.js` — pg+pgvector+liteLLM; seed sync pg→Qdrant добавлен в bridge startup |
-| Rebuild required | `docker compose build claude-bridge` (для seed sync в index.js) |
+| NIM_KEY | `core/kernel/.env` (gitignored) |
+| Rebuild required | `docker compose build claude-bridge && docker compose up -d claude-bridge` |
+| Omnibar команды | `mcb`, `kernel` (agent-status+memory-viewer), `g3` (g3-session) |
+| Agent Frames | `core/shell/frontend/src/components/frames/` — AgentStatusFrame, MemoryViewerFrame, G3SessionFrame |
+| Archive rule | Никогда не удалять файлы — архивировать в `core/kernel/archive/` |
+| L2 status | **ALL DONE 5/5** — готово к L3 |
 
 ---
 
@@ -58,16 +55,14 @@ L2 Kernel 4/5 DONE. **Dockerization D1–D6 ALL DONE** (session 14): Always-On K
 | **Роадмап (главный)** | **docs/agent-system-architecture.md** |
 | Unified docker-compose | development/tLOS/core/kernel/docker-compose.yml |
 | Claude bridge | development/tLOS/core/kernel/tlos-claude-bridge/index.js |
-| Domain Memory | development/tLOS/core/kernel/tlos-claude-bridge/domain-memory.js |
-| Grid launcher | development/tLOS/core/grid.ps1 |
+| Agent Frames | development/tLOS/core/shell/frontend/src/components/frames/ |
 
 ---
 
 ## Открытые вопросы
 
-- [ ] **Docker Desktop autostart** — ручной шаг: Settings → General → ☑ Start Docker Desktop when you sign in
-- [ ] **Rebuild claude-bridge** — нужен для активации seed sync (index.js изменён)
-- [ ] **L2 Step 5** — какой Agent Frame первым? agent-status / g3-session / memory-viewer
-- [ ] **CLEANUP** — удалить `zep-client.js` (orphaned), `config.yaml.template`, `mem0-wrapper.py` (rm дважды отклонён)
-- [ ] **docker-v1 branch** — все D1-D6 done, можно закрыть и merge
+- [ ] **Rebuild claude-bridge** — нужен для активации kernel:ping + memory handlers
+- [ ] **L3 Step 6** — какой агент первым: Chief или Lead? Какой домен?
+- [ ] **docker-v1 remote** — удалить: `git push origin --delete docker-v1`; local: `git branch -D docker-v1`
 - [ ] **Icon** — monolith.ico прозрачность — проверить на светлом рабочем столе
+- [ ] **Docker Desktop autostart** — ручной шаг: Settings → General → ☑ Start Docker Desktop when you sign in
