@@ -502,3 +502,41 @@
 **Opened:**
 - Dockerization D1-D6 (следующая сессия)
 - Icon transparency: возможно работает (прозрачность A=0 подтверждена), но тёмные обои делают её неразличимой — нужно проверить на светлом фоне
+
+---
+
+## [2026-03-10 — сессия 12] CLOSE
+
+**Phase:** Dockerization D1+D2+D4 — All kernel AI services now have Dockerfiles + unified compose
+
+**Decisions:**
+- G3 methodology used for all 3 Docker tasks: Qwen as Player, Claude as Coach
+- D1+D2 ran in parallel (independent Dockerfiles), D4 depended on both
+- NATS stays native on host; Docker containers connect via `host.docker.internal:4222`
+- `bridge.py` NATS_URL hardcoded → env var (required for Docker networking)
+- claude CLI installed inside both bridge containers (both invoke `claude --print` via subprocess)
+- Build context = `core/` for both Dockerfiles (preserves `../../agents/eidolon` path resolution)
+- Unified compose at `core/kernel/docker-compose.yml` (replaces zep-only compose)
+- grid.ps1: letta/langgraph/claude-bridge removed from native services → new `docker-kernel` service
+
+**Files changed:**
+- `core/kernel/tlos-claude-bridge/Dockerfile` — CREATE (node:22-alpine + claude CLI)
+- `core/kernel/tlos-claude-bridge/.dockerignore` — CREATE
+- `core/kernel/tlos-langgraph-bridge/Dockerfile` — CREATE (python:3.12-slim + Node22 + uv + claude CLI)
+- `core/kernel/tlos-langgraph-bridge/.dockerignore` — CREATE
+- `core/kernel/tlos-langgraph-bridge/bridge.py` — PATCH: NATS_URL hardcode → env var
+- `core/kernel/docker-compose.yml` — CREATE: unified 6-service compose
+- `core/grid.ps1` — PATCH: removed native letta/langgraph/claude-bridge; added docker-kernel
+- `branches/docker-v1/spec-d1.md` — CREATE (G3 spec)
+- `branches/docker-v1/spec-d2.md` — CREATE (G3 spec)
+- `branches/docker-v1/spec-d4.md` — CREATE (G3 spec)
+
+**Completed:**
+- D1: Dockerfile tlos-claude-bridge ✅ (Coach verified: build OK, `which claude` → found)
+- D2: Dockerfile + bridge.py patch tlos-langgraph-bridge ✅ (Coach verified: build OK, imports OK)
+- D4: Unified docker-compose + grid.ps1 cleanup ✅ (`docker compose config` + build OK)
+- Git commit: `ed249b9` in core submodule, `5e5e235` in nospace docker-v1 branch
+
+**Opened:**
+- D5: Docker Desktop autostart + `core/kernel/.env` для NIM_KEY
+- D6: Shell shortcut (зависит от D5)
