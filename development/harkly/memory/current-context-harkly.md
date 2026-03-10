@@ -88,10 +88,10 @@ Waitlist API переключён на Telegram. Middleware: публичные 
 | Артефакт | Файл | Статус |
 |---|---|---|
 | Полный roadmap saas-v1 | `.claude/plans/eager-juggling-flame.md` | ✅ |
-| Opus business brief | `branches/saas-v1/opus_business_brief.md` | ✅ |
-| Architecture Spec (Floor 0-5) | `branches/saas-v1/Harkly Architecture Spec.md` | ✅ |
-| Methodology schools (5 schools) | `branches/saas-v1/methodology_schools_detailed.md` | ✅ |
-| Спеки E0-E6 | `branches/saas-v1/specs/` | ✅ DoR 100% |
+| Opus business brief | `branches/feat-saas-v1/opus_business_brief.md` | ✅ |
+| Architecture Spec (Floor 0-5) | `branches/feat-saas-v1/Harkly Architecture Spec.md` | ✅ |
+| Methodology schools (5 schools) | `branches/feat-saas-v1/methodology_schools_detailed.md` | ✅ |
+| Спеки E0-E6 | `branches/feat-saas-v1/specs/` | ✅ DoR 100% |
 | Prisma schema | `harkly-saas/prisma/schema.prisma` | ✅ все модели (E0-E6) |
 | E6 Share migration | `harkly-saas/prisma/migrations/e6_share.sql` | ⚠️ применить в Supabase |
 | E4 Artifacts migration | `harkly-saas/prisma/migrations/e4_artifacts.sql` | ⚠️ применить в Supabase |
