@@ -3,6 +3,25 @@
 > Format: `## [YYYY-MM-DD] [agent-id] — [decision title]`
 
 ---
+## Session 2026-03-10 — tLOS: OSS patterns applied to Eidolon agent architecture
+
+**Decisions:**
+- Adopted Letta memory pattern: persona + workspace injected as XML blocks (`<persona>`, `<workspace>`) via `<!-- MEMORY_BLOCKS -->` placeholder; fresh load per new session
+- Adopted OpenHands microagent pattern: `agents/eidolon/microagents/*.md` with YAML frontmatter triggers; bridge injects matching microagents per message keyword
+- Adopted assistant-ui message parts pattern: tlos_action blocks render as ⚡ action cards in Chat.tsx
+- Session structure upgraded: `{ claudeSessionId, turns }` with backward compat; nearLimit flag at 80% context
+
+**Files changed:**
+- `core/agents/eidolon/system-prompt.md`, `microagents/canvas.md`, `microagents/solidjs.md` (NEW)
+- `core/kernel/tlos-claude-bridge/index.js` — safeRead, XML injection, microagent loader, turns, nearLimit, agent:context payload fix
+- `core/shell/frontend/src/components/Chat.tsx` — AiMessageContent + parseParts
+- `core/shell/frontend/src/components/Omnibar.tsx` — markdown AI messages, fixed agent:context handler
+
+**Tasks completed / open:**
+- ✅ Letta/OpenHands/assistant-ui patterns, markdown in Omnibar, agent:context fix
+- [ ] Context summarization at overflow, MCB omnibar command, PatchDialog Nostr sig
+
+---
 ## Session 2026-03-08 — Harkly: продуктовый пивот → desk research automation SaaS
 
 **Decisions:**
