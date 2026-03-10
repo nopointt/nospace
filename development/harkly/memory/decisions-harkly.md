@@ -93,6 +93,17 @@
 
 ---
 
+## 2026-03-09 — LinkedIn Scraper: Stealth Browser Automation
+
+- **Стек:** Patchright (не Playwright) + Node.js `--experimental-strip-types` + launchPersistentContext
+- **Bun не работает** для Chrome subprocess — зависает навсегда. Только Node.js
+- **Техники маскировки:** Gaussian delays (Box-Muller), Bezier curve mouse, scroll simulation, URL shuffle, viewport randomization, timezone = proxy location
+- **Полная документация:** `harkly/memory/stealth-scraping-techniques.md`
+- **Скрипт:** `nospace/tools/linkedin-scraper/scrape.ts`
+- **Webshare proxies:** shared 1GB — блокировать image/media/font/stylesheet чтобы экономить
+
+---
+
 ## 2026-03-08 — Стадия 3.5: Canvas Workspace Redesign (session 10)
 
 - **Inter font:** заменён Geist на Inter (Google Fonts) — axiom digital design agency template за базу
@@ -103,3 +114,13 @@
 - **useAgents version: 2:** бамп для сброса старого localStorage с устаревшим default provider
 - **stream_options убран:** NVIDIA NIM не поддерживает `stream_options: { include_usage: true }` — убрано из `providers/openai.ts`
 - **Floor architecture зафиксирована:** Floor 0-5 + 5 методологических школ → `handshake-harkly.md` + `current-context-harkly.md`
+
+---
+
+## 2026-03-10 — Лендинг: деплой + инфраструктурные решения (session 17)
+
+- **Waitlist Telegram:** поле `email` → `telegram` (уникальный @handle) + `role` — Prisma schema обновлена, миграция применена через `prisma db execute --stdin` с DIRECT_URL
+- **Middleware public routes:** `PUBLIC_PATHS = ['/', '/share']` — эти маршруты пропускают Supabase auth check полностью (`return NextResponse.next()` сразу)
+- **tsconfig forceConsistentCasingInFileNames: false:** GSAP на Windows создаёт конфликт между `Draggable.d.ts` и `draggable.d.ts`. Отключено только в tsconfig (не влияет на Vercel/Linux где реальная файловая система case-sensitive)
+- **Production URL:** `harkly-saas.vercel.app` — Vercel автоматически алиасирует каждый push к main на этот URL
+- **prisma db execute workaround:** `DATABASE_URL="$DIRECT_URL" bunx prisma db execute --stdin` (не `prisma migrate dev` — зависает с Supabase pooler)

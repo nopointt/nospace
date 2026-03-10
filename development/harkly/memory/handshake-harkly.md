@@ -1,16 +1,12 @@
 # HANDSHAKE — harkly
 > Читай этот файл в начале любой harkly-сессии.
-> Updated: 2026-03-08 by Assistant (session 9)
+> Updated: 2026-03-10 by Assistant
 
 ---
 
 ## Где мы сейчас
 
-**Стадия 3.5 IN PROGRESS — Canvas workspace redesign + Floor architecture.**
-- Canvas-based workspace активен на `/app/[workspaceId]` (маршрут `/app/main`)
-- ChatPanel, FloorBadge, CanvasToolbar, Omnibar — подключены и работают
-- Дизайн: Inter font, gray-100 borders, Tailwind scale без хардкода
-- Omnibar: Cmd+K → открывается → вводишь вопрос → FramingStudio
+Лендинг задеплоен на **harkly-saas.vercel.app** и доступен без авторизации (middleware fix). Waitlist собирает Telegram @username + роль. Следующий шаг — G3 Backend Build (Стадия 5).
 
 ## Продуктовая архитектура (важно!)
 
@@ -29,15 +25,13 @@
 - MIT AI Lab: Research Notebook, Weak Signals, граф связей
 - Consumer Intelligence: агрегация OSINT-источников
 
-**Уникальная ниша:** все существующие инструменты заточены под свои панели/опросы. Harkly = первая платформа гоняющая открытые OSINT-источники через полный multi-методологический pipeline.
-
 ---
 
 ## Следующий приоритет
 
-1. **Стадия 3.5 продолжается** — floor navigation (кликабельный FloorBadge), per-floor canvas content
-2. **Стадия 5 Backend** — после завершения 3.5
-3. **SQL миграции E4 + E6** — не применены в Supabase (блокирует backend)
+1. **Стадия 5 — G3 Backend Build** — AI-провайдеры, frame/synthesis API, corpus ingestion
+2. **SQL миграции E4 + E6** — применить в Supabase (блокируют backend features)
+3. **Тестовая инфраструктура** — zero coverage, критический долг
 
 ---
 
@@ -45,20 +39,21 @@
 
 | Нужно | Файл |
 |---|---|
-| Текущее состояние | `harkly/memory/current-context-harkly.md` |
-| Roadmap + все стадии | `.claude/plans/eager-juggling-flame.md` |
-| Figma-auditor агент | `~/.claude/agents/figma-design-auditor.md` |
-| Auth helper | `harkly-saas/src/lib/api-auth.ts` |
+| Текущий контекст проекта | `harkly/memory/current-context-harkly.md` |
+| Архитектура спека (Floor 0-5) | `branches/saas-v1/Harkly Architecture Spec.md` |
+| Лендинг (весь) | `harkly-saas/src/app/page.tsx` |
+| Middleware (публичные роуты) | `harkly-saas/src/middleware.ts` |
 | Prisma schema | `harkly-saas/prisma/schema.prisma` |
+| Waitlist API | `harkly-saas/src/app/api/waitlist/route.ts` |
+| Auth helper | `harkly-saas/src/lib/api-auth.ts` |
 
 ---
 
 ## Открытые вопросы
 
-- [ ] Стадия 3.5: URL Figma файла (проект harkly, desktop 1-5)?
-- [ ] Figma write: пока невозможно через REST API — рассмотреть Figma Plugin если понадобится
-- [ ] Test infrastructure (Jest + RTL) — единственный незакрытый critical debt
-- [ ] SQL миграции E4 + E6 — не применены в Supabase
+- [ ] Проверить glass card CTA в браузере (была синей, исправлено через `background: none`)
+- [ ] Применить SQL миграции E4 + E6 в Supabase перед Backend Build
+- [ ] Нужен ли кастомный домен для лендинга (сейчас vercel.app)?
 
 ---
 
@@ -67,10 +62,9 @@
 После каждой сессии — 5 строк сюда.
 Формат: `[дата] что сделано | что следующее`
 
-`2026-03-07` semcomp ЗАВЕРШЁН. Инфраструктура outreach: LemonSqueezy + Brevo + Figma MCP. | следующее: Brevo DNS → warmup
-`2026-03-08 (s4)` ПИВОТ → desk research SaaS. Roadmap. Стадии 0-2 полностью выполнены. E0+E1 готовы. | следующее: E2
-`2026-03-08 (s5)` E2 Corpus Triage + E3 Evidence Extractor готовы. Token Counter SQLite. Параллельный паттерн (2 агента + Claude). | следующее: SQL миграция → E4 Insight Canvas
-`2026-03-08 (s6)` E4 Insight Canvas + E5 Research Notebook + E6 Share+Export — ВСЕ ЭПИКИ LAYER 1 ЗАВЕРШЕНЫ. | следующее: SQL миграции → Стадия 4 Tech Debt
-`2026-03-08 (s8)` Figma MCP исправлен (--stdio). ui-designer агент. Весь critical tech debt закрыт: security (20 routes), Prisma try/catch, UX toasts, confirmations, ExtractPage fixes, mock feature flags. | следующее: Стадия 5 Backend
-`2026-03-08 (s9)` Добавлена Стадия 3.5. Figma write = невозможно (REST read-only). Создан figma-design-auditor агент. | следующее: рестарт CC → URL Figma → запуск аудита
-`2026-03-08 (s10)` Редизайн canvas workspace: Inter, axiom template дизайн-система, ChatPanel/FloorBadge/Omnibar/AgentStatusBar переделаны. Floor architecture + 5 методологических школ зафиксированы в памяти. Omnibar подключён (Cmd+K). | следующее: floor navigation, per-floor content
+`2026-03-10 (s17)` Лендинг задеплоен: waitlist→telegram, middleware public routes, tsconfig GSAP fix, harkly-saas.vercel.app live. | следующее: Стадия 5 G3 Backend Build
+`2026-03-09 (s16)` Gallery cards rewrite (outcome-focused, distinct angles), CTA glass redesign, AccentBtn glass, hero Urbanist, stats block removed. | следующее: деплой
+`2026-03-09 (s14-15)` Landing page: dark navy theme, 3D cube hero, SocialProof GSAP Draggable, GhostScrollGallery 4-panel (300vh each). | следующее: gallery content
+`2026-03-09 (s13)` April Dunford positioning brief + landing copy (RU) написаны. | следующее: Next.js реализация
+`2026-03-09 (s11-12)` Research: LinkedIn Patchright scraper, Reddit JSON API, 100 sources → market-positioning-brief.md. | следующее: landing page
+`2026-03-08 (s10)` Canvas workspace redesign: Inter, axiom дизайн-система, Floor architecture зафиксирована. | следующее: лендинг
