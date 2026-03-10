@@ -7,8 +7,9 @@
 
 ## 1. Принцип
 
-Единственная точка входа для nopoint — **Orchestrator**.
-nopoint общается только с Orchestrator через **tLOS Omnibar**. Вся декомпозиция — внутренняя.
+**Вся агент-система работает внутри tLOS как его ядро (L2 Kernel).**
+nopoint общается только с Orchestrator через tLOS Omnibar. Вся декомпозиция — внутренняя.
+Никаких внешних облачных зависимостей — self-hosted, local-first, sovereign.
 
 ---
 
@@ -113,7 +114,41 @@ Global    → высокоуровневые схемы workspace
 
 ---
 
-## 5. Технический стек
+## 5. tLOS Layer Map
+
+Агент-система встраивается в существующую tLOS архитектуру:
+
+```
+L3 Shell  — SolidJS + Tauri (Omnibar, canvas frames, визуализация агентов)
+              ↕ WebSocket → shell-bridge
+L2 Kernel — Rust сервисы + kernel сервисы агент-системы:
+  ├── tlos-claude-bridge      (есть)  ← Eidolon / Orchestrator Phase 1
+  ├── tlos-langgraph-bridge   (новый) ← NATS ↔ LangGraph Python service
+  ├── tlos-letta-bridge       (новый) ← NATS ↔ Letta REST API
+  ├── tlos-zep-bridge         (новый) ← NATS ↔ Zep REST API
+  ├── tlos-qdrant-bridge      (новый) ← NATS ↔ Qdrant REST API
+  ├── tlos-shell-bridge       (есть)
+  ├── tlos-dispatcher         (есть)
+  ├── tlos-fs-bridge          (есть)
+  └── tlos-shell-exec         (есть)
+L1 Grid   — NATS (единый transport, Zero-Web2)
+L0 Meta   — ADR-002, конституции
+```
+
+**Self-hosted сервисы** (Docker, запускаются через grid.ps1):
+
+```
+letta-server    localhost:8283  ← Letta REST API + memory persistence
+zep-server      localhost:8000  ← Zep REST API + temporal knowledge graph
+qdrant-server   localhost:6333  ← Qdrant REST API + vector store
+langgraph-svc   NATS agent      ← Python service, LangGraph engine
+```
+
+Все коммуникации через NATS. Никакого прямого HTTP между внутренними компонентами.
+
+---
+
+## 6. Технический стек
 
 | Компонент | Роль |
 |---|---|
@@ -178,8 +213,7 @@ Lead решает что релевантно — это агентный шаг
 ## 9. Open Questions
 
 - [ ] Модель для Workers/Players — Sonnet или Haiku/дешевле?
-- [ ] Letta managed cloud vs self-hosted?
-- [ ] Zep cloud vs self-hosted (privacy, 152-ФЗ)?
+- [ ] Zep: Docker self-hosted — privacy 152-ФЗ совместимо?
 - [ ] Как разграничить Domain memory между Chiefs (чтобы Frontend Lead не читал Marketing domain)?
 - [ ] Какие canvas frame-типы для визуализации агентов и G3-сессий в tLOS?
 
@@ -187,9 +221,28 @@ Lead решает что релевантно — это агентный шаг
 
 ## 10. Следующие шаги
 
-1. **Letta self-hosted** — поднять Docker инстанс, создать memory blocks для Eidolon (решает tech debt: compaction summary in-memory)
-2. **LangGraph** — базовый граф: Orchestrator → Chief/Dev → Lead/Backend; tlos-langgraph-bridge через NATS
-3. **Zep** — поднять для Domain memory (CMA substrate)
-4. **Qdrant** — vector store для Associative Routing
-5. **Первый G3 subgraph** — Senior → Coach ↔ Player в LangGraph
-6. **tLOS Agent Frames** — canvas frame-типы для визуализации агентов, сессий, memory состояния
+```
+Шаг 1: Letta self-hosted                           (1 сессия)
+  docker run letta/letta:latest -p 8283:8283
+  Обновить tlos-claude-bridge: sessionLogs → Letta memory blocks
+  Решает tech debt: compaction summary переживает bridge restart
+  grid.ps1: добавить letta-server в $Services
+
+Шаг 2: tlos-langgraph-bridge + LangGraph            (2-3 сессии)
+  Python service: LangGraph + nats-py subscriber
+  Минимальный граф: Orchestrator → G3 subgraph
+  grid.ps1: добавить langgraph-svc в $Services
+
+Шаг 3: Zep self-hosted + Domain memory              (1-2 сессии)
+  docker run ghcr.io/getzep/zep:latest -p 8000:8000
+  Первая Domain memory: Development домен
+  grid.ps1: добавить zep-server в $Services
+
+Шаг 4: Qdrant self-hosted + Associative Routing     (1 сессия)
+  docker run qdrant/qdrant:latest -p 6333:6333
+  Связать с Zep для vector search
+  grid.ps1: добавить qdrant-server в $Services
+
+Шаг 5: tLOS Agent Frames                            (параллельно)
+  Canvas frame-типы: agent-status, g3-session, memory-viewer
+```
