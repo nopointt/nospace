@@ -581,3 +581,58 @@
 **Tasks completed / open:**
 - Done: arch doc v3, desktop shortcut, MEMORY.md nav ref
 - Open: Dockerization D1–D6 (next session), L2 Step 5 Agent Frames
+
+---
+## Session 2026-03-10 — tLOS: Dockerization D1+D2+D4 shipped
+
+**Decisions:**
+- All kernel AI services now Dockerized: tlos-claude-bridge (node:22-alpine), tlos-langgraph-bridge (python:3.12-slim+Node22), Letta (official image)
+- Unified `core/kernel/docker-compose.yml` — 6 services replace old 3-service zep compose
+- NATS stays native; Docker services connect via `host.docker.internal:4222`
+- G3 methodology used: Qwen as Player, Claude as Coach; D1+D2 ran in parallel
+
+**Files changed:**
+- `core/kernel/docker-compose.yml` — CREATE (unified 6-service)
+- `core/kernel/tlos-claude-bridge/Dockerfile` — CREATE
+- `core/kernel/tlos-langgraph-bridge/Dockerfile` — CREATE
+- `core/kernel/tlos-langgraph-bridge/bridge.py` — PATCH (NATS_URL env var)
+- `core/grid.ps1` — PATCH (removed native AI services)
+
+**Tasks completed / open:**
+- D1+D2+D4 DONE / D5 (autostart + .env) + D6 OPEN
+
+---
+## Session 2026-03-10 — tLOS: Always-On Docker Kernel полностью operational
+
+**Decisions:**
+- NATS bind `0.0.0.0` (не `127.0.0.1`) — обязательно для Docker `host.docker.internal`
+- Inter-container URLs через Docker service names, не `localhost`
+- `ZepClient` → `DomainMemory` (zep-client.js → domain-memory.js) — убрано legacy Zep брендирование
+
+**Files changed:**
+- `core/grid.ps1` — NATS fix
+- `core/kernel/docker-compose.yml` — inter-container env vars
+- `core/kernel/tlos-claude-bridge/{qdrant-client,letta-client,domain-memory,index,Dockerfile}.js` — networking + rename
+
+**Tasks completed / open:**
+- DONE: все 6 Docker сервисов online (Qdrant + Domain Memory + NATS + Claude bridge claude-sonnet-4-6)
+- OPEN: D5 (Docker Desktop autostart + NIM_KEY .env), L2 Step 5 (Agent Frames)
+
+---
+## Session 2026-03-10 — tLOS: Always-On Kernel D1-D6 ALL DONE
+
+**Decisions:**
+- D5: `core/kernel/.env` с NIM_KEY (gitignored) — Docker Compose читает автоматически
+- Seed sync: bridge startup синкает pg facts → Qdrant (idempotent, djb2 dedup)
+- Dockerization полностью завершена: 6 сервисов в Docker с `restart: unless-stopped`
+
+**Files changed:**
+- `core/kernel/.env` — NIM_KEY (gitignored)
+- `core/kernel/tlos-claude-bridge/index.js` — seed sync pg→Qdrant
+- `docs/agent-system-architecture.md` — D1-D6 все ✅, Docker stack актуализирован
+
+**Tasks completed / open:**
+- ✅ Dockerization D1-D6 complete. Always-On Kernel operational.
+- ⬜ Docker Desktop autostart (ручной шаг nopoint)
+- ⬜ Rebuild claude-bridge (для seed sync)
+- ⬜ L2 Step 5: Agent Frames (следующий)

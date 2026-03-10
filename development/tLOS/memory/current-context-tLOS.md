@@ -1,6 +1,6 @@
 ---
 # CURRENT CONTEXT — tLOS
-> Last updated: 2026-03-10 (session 11 close)
+> Last updated: 2026-03-10 (session 14 close)
 ---
 
 ## Active Epics
@@ -13,18 +13,19 @@
 | epic-website-v1 | website-v1 | THELOS Marketing Site | OPEN — brand system зафиксирована, сайт в разработке |
 | epic-eidolon-v1 | omnibar | Claude Code integration as Eidolon AI backend | **OPEN** — session persistence fix + context summarization + mcb fix shipped |
 | epic-workspace-v1 | workspace-v1 | Организация рабочего пространства nopoint + Артём | **OPEN** — sessions-map.md создан, 3 трека (A: Omnibar v2, B: BB Floors, C: Infra) |
+| epic-docker-v1 | docker-v1 | Dockerization D1–D6 — Always-On Kernel | **DONE** — D1-D6 все DONE. Docker Desktop autostart → ручной шаг nopoint |
 
 ## Project State
 
 | Key | Value | Last Updated |
 |---|---|---|
-| project_phase | L2 Kernel 4/5 DONE. Архитектурный роадмап зафиксирован в `docs/agent-system-architecture.md` v3. Следующий приоритет: Dockerization (D1–D6) + L2 Step 5. | 2026-03-10 |
+| project_phase | L2 Kernel 4/5 DONE. **Dockerization D1-D6 ALL DONE** (session 14). Always-On Kernel: все 6 сервисов online. `core/kernel/.env` с NIM_KEY создан. Seed sync pg→Qdrant добавлен в bridge startup. Следующий приоритет: L2 Step 5 (Agent Frames). | 2026-03-10 |
 | shell_status | Tauri native app (decorations:false) — запуск через `grid.ps1 run` | 2026-03-10 |
 | installer | `tLOS_0.1.0_x64-setup.exe` собран, готов к отправке Артёму | 2026-02-28 |
 | agent_bridge | NIM HTTP SSE bridge — meta/llama-3.1-8b-instruct via NVIDIA NIM API | 2026-03-02 |
 | claude_bridge | tlos-claude-bridge — FULL: XML memory, microagents, stable sessionId, context compaction + Letta + domain memory (pg+liteLLM) | 2026-03-10 |
 | langgraph_bridge | tlos-langgraph-bridge — Python service: NATS → LangGraph (orchestrator→worker) + G3 cyclic subgraph | 2026-03-10 |
-| domain_memory | **DONE** — pg+pgvector+liteLLM. zep-client.js rewritten: direct pg (tlos_facts table, vector(1536), HNSW cosine) + liteLLM embeddings (NIM Matryoshka). Docker: db:5433 + litellm:4000 + qdrant:6333. ~861MB RAM. | 2026-03-10 |
+| domain_memory | **DONE** — pg+pgvector+liteLLM. `domain-memory.js` (переименовано из zep-client.js): direct pg (tlos_facts table, vector(1536), HNSW cosine) + liteLLM embeddings (NIM Matryoshka). Docker: db:5432 (internal), litellm:4000, qdrant:6333. Session 13: connected inside Docker via service names. | 2026-03-10 |
 | associative_routing | **DONE** — qdrant-client.js (tlos-global collection, djb2 dedup, cosine search). index.js: searchAssociative per-message → `<associative_context>` block. agent:zep:add_fact syncs to Qdrant. | 2026-03-10 |
 | dispatcher | tlos-dispatcher — FIXED (graceful wasm skip, no crash on missing math_worker.wasm) | 2026-03-08 |
 | eidolon | Eidolon AI backend LIVE — context summarization, stable sessions, nearLimit compaction, domain context | 2026-03-10 |
@@ -33,6 +34,8 @@
 | nim_key_path | ~/.tlos/nim-key — ОБНОВЛЁН 2026-03-10 (новый ключ от nopoint) | 2026-03-10 |
 | agent_arch_doc | `docs/agent-system-architecture.md` v3 — единственный источник истины по роадмапу. L2(1-5)+L3(6-9)+L4(10-13)+Dockerization(D1-D6). | 2026-03-10 |
 | desktop_shortcut | `Desktop/tLOS.lnk` → `AppData/Local/tLOS/tlos-app.exe`. Icon: monolith.ico (прозрачный фон, проблема отображения не решена). | 2026-03-10 |
+| dockerization | **D1-D6 ALL DONE** — Dockerfiles: tlos-claude-bridge (node:22-alpine) + tlos-langgraph-bridge (python:3.12-slim+Node22). Unified compose: `core/kernel/docker-compose.yml` (6 services). `.env`: NIM_KEY (gitignored). grid.ps1 обновлён. NATS: `-a 0.0.0.0`. Inter-container env vars. All 6 containers online. D5: `core/kernel/.env` создан. D6: Desktop/tLOS.lnk создан. Docker Desktop autostart → ручной шаг nopoint. | 2026-03-10 |
+| docker_compose_unified | `core/kernel/docker-compose.yml` — 6 сервисов: db:5433, litellm:4000, qdrant:6333, letta:8283, langgraph-bridge, claude-bridge. NATS=host.docker.internal:4222. Env vars: QDRANT_URL=qdrant:6333, LITELLM_URL=litellm:4000, LETTA_URL=letta:8283, DB_HOST=db, DB_PORT=5432. | 2026-03-10 |
 
 ## Blockers
 
@@ -63,23 +66,24 @@
   - Microagents: `agents/eidolon/microagents/*.md` — keyword-triggered context injection per message (OpenHands pattern)
   - Context tracking: `agent:context` event → `payload: { tokensUsed, contextTotal, nearLimit, turns }`
   - **Context compaction:** bridge dual-path — Letta UP: history/summary in Letta blocks (persistent); Letta DOWN: in-memory fallback (`memoryFallback`); on `nearLimit` → `summarizeConversation()` → new Claude session with `<PREVIOUS_CONTEXT_SUMMARY>` injected
-  - **Domain memory:** `getDomainContext()` → ZepClient.getContext('development-domain') → `<domain_memory>` injected on new session
-  - **agent:zep:add_fact** NATS event → ZepClient.addFact (fire-and-forget)
+  - **Domain memory:** `getDomainContext()` → DomainMemory.getContext('development-domain') → `<domain_memory>` injected on new session
+  - **agent:zep:add_fact** NATS event → DomainMemory.addFact (fire-and-forget; NATS subject kept for compatibility)
   - Compaction UI: `agent:summarizing` event → Omnibar shows `⚙️ compacting...` indicator
-- **Domain Memory pipeline (replaces Zep CE):** zep-client.js → PostgreSQL (pgvector 0.5.1, port 5433) + liteLLM proxy (port 4000) → NIM embeddings
+- **Domain Memory pipeline (replaces Zep CE):** domain-memory.js → PostgreSQL (pgvector 0.5.1, Docker: db:5432) + liteLLM proxy (litellm:4000) → NIM embeddings
   - Table: `tlos_facts` (id, domain, content, metadata JSONB, embedding vector(1536), created_at)
   - Index: HNSW cosine (`vector_cosine_ops`) on embedding column
   - API: isAvailable, ensureDomain, addFact, getFacts, searchFacts (vector cosine), getContext
   - Embeddings: liteLLM maps `text-embedding-ada-002` → NIM `llama-3.2-nv-embedqa-1b-v2` (Matryoshka, 1536-dim)
   - Chat: liteLLM maps `meta/llama-3.1-70b-instruct` → NIM passthrough (for future Summarize Service)
-  - Docker Compose: `core/kernel/tlos-zep-bridge/docker-compose.yml`; 3 services (db + litellm + qdrant)
+  - Docker Compose: `core/kernel/docker-compose.yml`; 6 services (db + litellm + qdrant + letta + langgraph-bridge + claude-bridge)
   - 14 seed facts auto-inserted on first `ensureDomain('development-domain')`
   - Fallback: substring search if liteLLM unavailable
 - **Associative Routing (L2 Step 4):** qdrant-client.js → Qdrant v1.13.0 (port 6333) → `tlos-global` collection
   - Functions: isAvailable, ensureCollection, upsert, addGlobal, search, searchAssociative
   - djb2 hash for deterministic point IDs (dedup on upsert)
   - index.js: `searchAssociative(content, 5)` per-message → `<associative_context>` block injected into prompt
-  - agent:zep:add_fact → ZepClient.addFact (pg) + QdrantClient.addGlobal (qdrant) in parallel
+  - agent:zep:add_fact → DomainMemory.addFact (pg) + QdrantClient.addGlobal (qdrant) in parallel
+  - **Seed sync on startup:** после ensureDomain() → getFacts(50) → addGlobal each fact (idempotent, djb2 dedup)
   - Healthcheck: `bash -c ':> /dev/tcp/localhost/6333'` (qdrant image has no python3)
 - **LangGraph pipeline:** tlos.shell.events → tlos-langgraph-bridge → LangGraph (orchestrator→worker) → tlos.shell.broadcast
   - subscribe: `tlos.shell.events`, message type `agent:graph:run`
@@ -96,10 +100,11 @@
 - **MessageStatus:** `kernel.ts` экспортирует `MessageStatus = 'streaming' | 'complete' | 'error'`
 - **Core path:** C:\Users\noadmin\nospace\development\tLOS\core
 - **Agent system architecture:** `docs/agent-system-architecture.md` — L2 Kernel: LangGraph + Letta + pg+liteLLM + Qdrant внутри tLOS, self-hosted, grid.ps1. Иерархия: Orchestrator(Eidolon) → Chief → Lead → Senior → G3(Coach↔Player). CMA: Session(Letta) → Domain(pg+liteLLM) → Project(pg+liteLLM) → Global(pg+liteLLM).
-- **Letta service:** `letta server --port 8283` — optional в grid.ps1; client: `core/kernel/tlos-claude-bridge/letta-client.js`
-- **LangGraph service:** `uv run python main.py` — optional в grid.ps1; `core/kernel/tlos-langgraph-bridge/`
-- **Domain Memory service:** `docker compose up` — optional в grid.ps1; `core/kernel/tlos-zep-bridge/` (db:5433, litellm:4000). NIM_KEY env var from ~/.tlos/nim-key.
-- **Known tech debt:** tlos-identity (Ed25519) vs nostr-sdk (Secp256k1) — разные кривые. `lettaAgentIds` Map в bridge теряется при рестарте. `asyncio.get_event_loop()` deprecated в Python 3.10+ (bridge_handler.py LOW). model не прокидывается через GraphState в worker_node (LOW). grid.ps1 may still reference Zep-specific startup (needs update). config.yaml.template и mem0-wrapper.py — legacy files to clean up.
+- **Letta service:** `letta/letta:latest` Docker image — порт 8283; volume `letta_data:/root/.letta`
+- **LangGraph service:** Docker `core/kernel/tlos-langgraph-bridge/Dockerfile` (python:3.12-slim+Node22+uv+claude CLI)
+- **Domain Memory + All Kernel services:** `docker compose up` из `core/kernel/` — **unified compose** `core/kernel/docker-compose.yml` (6 services). NIM_KEY env var from ~/.tlos/nim-key. grid.ps1: `docker-kernel` service.
+- **Dockerization D1-D6 ALL DONE:** claude-bridge + langgraph-bridge + unified compose + grid.ps1 + `.env` (NIM_KEY) + Desktop/tLOS.lnk. Docker Desktop autostart → ручной шаг nopoint. Rebuild needed: `docker compose build claude-bridge && docker compose up -d claude-bridge`.
+- **Known tech debt:** tlos-identity (Ed25519) vs nostr-sdk (Secp256k1) — разные кривые. `lettaAgentIds` Map в bridge теряется при рестарте. `asyncio.get_event_loop()` deprecated в Python 3.10+ (bridge_handler.py LOW). model не прокидывается через GraphState в worker_node (LOW). `zep-client.js` — orphaned legacy file (domain-memory.js его заменил, нужно удалить). config.yaml.template и mem0-wrapper.py — legacy files to clean up.
 
 ## L2 Kernel Roadmap
 

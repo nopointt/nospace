@@ -502,3 +502,104 @@
 **Opened:**
 - Dockerization D1-D6 (следующая сессия)
 - Icon transparency: возможно работает (прозрачность A=0 подтверждена), но тёмные обои делают её неразличимой — нужно проверить на светлом фоне
+
+---
+
+## [2026-03-10 — сессия 12] CLOSE
+
+**Phase:** Dockerization D1+D2+D4 — All kernel AI services now have Dockerfiles + unified compose
+
+**Decisions:**
+- G3 methodology used for all 3 Docker tasks: Qwen as Player, Claude as Coach
+- D1+D2 ran in parallel (independent Dockerfiles), D4 depended on both
+- NATS stays native on host; Docker containers connect via `host.docker.internal:4222`
+- `bridge.py` NATS_URL hardcoded → env var (required for Docker networking)
+- claude CLI installed inside both bridge containers (both invoke `claude --print` via subprocess)
+- Build context = `core/` for both Dockerfiles (preserves `../../agents/eidolon` path resolution)
+- Unified compose at `core/kernel/docker-compose.yml` (replaces zep-only compose)
+- grid.ps1: letta/langgraph/claude-bridge removed from native services → new `docker-kernel` service
+
+**Files changed:**
+- `core/kernel/tlos-claude-bridge/Dockerfile` — CREATE (node:22-alpine + claude CLI)
+- `core/kernel/tlos-claude-bridge/.dockerignore` — CREATE
+- `core/kernel/tlos-langgraph-bridge/Dockerfile` — CREATE (python:3.12-slim + Node22 + uv + claude CLI)
+- `core/kernel/tlos-langgraph-bridge/.dockerignore` — CREATE
+- `core/kernel/tlos-langgraph-bridge/bridge.py` — PATCH: NATS_URL hardcode → env var
+- `core/kernel/docker-compose.yml` — CREATE: unified 6-service compose
+- `core/grid.ps1` — PATCH: removed native letta/langgraph/claude-bridge; added docker-kernel
+- `branches/docker-v1/spec-d1.md` — CREATE (G3 spec)
+- `branches/docker-v1/spec-d2.md` — CREATE (G3 spec)
+- `branches/docker-v1/spec-d4.md` — CREATE (G3 spec)
+
+**Completed:**
+- D1: Dockerfile tlos-claude-bridge ✅ (Coach verified: build OK, `which claude` → found)
+- D2: Dockerfile + bridge.py patch tlos-langgraph-bridge ✅ (Coach verified: build OK, imports OK)
+- D4: Unified docker-compose + grid.ps1 cleanup ✅ (`docker compose config` + build OK)
+- Git commit: `ed249b9` in core submodule, `5e5e235` in nospace docker-v1 branch
+
+**Opened:**
+- D5: Docker Desktop autostart + `core/kernel/.env` для NIM_KEY
+- D6: Shell shortcut (зависит от D5)
+
+---
+
+## [2026-03-10 — сессия 13] CLOSE
+
+**Phase:** L2 Kernel 4/5 DONE. Always-On Docker Kernel полностью operational — все 6 сервисов connected.
+
+**Decisions:**
+- NATS должен слушать на `0.0.0.0`, а не `127.0.0.1` — иначе Docker контейнеры не могут достучаться через `host.docker.internal`
+- Inter-container URLs через Docker service names (не localhost): `qdrant:6333`, `litellm:4000`, `letta:8283`, `db:5432`
+- `zep-client.js` → `domain-memory.js` — убрано legacy Zep брендирование, клиент переименован в DomainMemory
+
+**Files changed:**
+- `core/grid.ps1` — NATS: `-a 127.0.0.1` → `-a 0.0.0.0`
+- `core/kernel/tlos-langgraph-bridge/Dockerfile` — добавлен `PYTHONUNBUFFERED=1`
+- `core/kernel/tlos-claude-bridge/qdrant-client.js` — `localhost:6333` → `process.env.QDRANT_URL`
+- `core/kernel/tlos-claude-bridge/letta-client.js` — `localhost:8283` → `process.env.LETTA_URL`
+- `core/kernel/tlos-claude-bridge/zep-client.js` — `localhost` → `process.env.DB_HOST/DB_PORT`; `localhost:4000` → `process.env.LITELLM_URL`
+- `core/kernel/tlos-claude-bridge/domain-memory.js` — CREATE (копия zep-client.js — новое имя модуля)
+- `core/kernel/tlos-claude-bridge/index.js` — `ZepClient` → `DomainMemory`; log messages cleaned (убраны "Zep" упоминания)
+- `core/kernel/tlos-claude-bridge/Dockerfile` — `zep-client.js` → `domain-memory.js`
+- `core/kernel/docker-compose.yml` — добавлены env vars для claude-bridge: QDRANT_URL, LITELLM_URL, LETTA_URL, DB_HOST, DB_PORT
+
+**Completed:**
+- NATS connectivity fix для Docker стека ✅
+- Inter-container networking fix (все клиенты используют service names) ✅
+- ZepClient → DomainMemory rename ✅
+- All 6 containers verified online: Qdrant `associative routing enabled` + Domain memory `development domain ready` + NATS `connected` + `online claude-sonnet-4-6` ✅
+- Git commits: `3114745` (NATS fix + PYTHONUNBUFFERED), `c68a9de` (networking + DomainMemory rename)
+
+**Opened:**
+- D5: Docker Desktop autostart + `core/kernel/.env` для NIM_KEY
+- CLEANUP: удалить `zep-client.js` (orphaned legacy)
+
+---
+
+## [2026-03-10 — сессия 14] CLOSE
+
+**Phase:** Dockerization D1–D6 ALL DONE. Always-On Kernel complete. Seed sync pg→Qdrant.
+
+**Decisions:**
+- D5: `core/kernel/.env` с NIM_KEY — gitignored, Docker Compose читает автоматически
+- D6: Desktop/tLOS.lnk уже существовал (сессия 11) — считается done
+- Seed sync: `index.js` при старте bridge → `getFacts(50)` → `addGlobal` each fact (idempotent, djb2 dedup)
+- `agent-system-architecture.md` обновлён: Docker stack (6 сервисов), D1-D6 все ✅, domain-memory.js
+
+**Files changed:**
+- `core/kernel/.env` — CREATE (NIM_KEY, gitignored)
+- `core/kernel/tlos-claude-bridge/index.js` — seed sync pg→Qdrant на startup
+- `docs/agent-system-architecture.md` — Docker stack актуализирован (D1-D6 DONE)
+- `development/tLOS/branches/docker-v1/spec-d5.md` — CREATE (D5 documentation)
+
+**Completed:**
+- D5 ✅ — NIM_KEY .env создан, Docker Compose подхватывает
+- Seed sync ✅ — pg facts синкаются в Qdrant на startup
+- agent-system-architecture.md ✅ — актуальный статус всех компонентов
+- Dockerization D1-D6 ALL DONE ✅
+
+**Opened:**
+- Docker Desktop autostart — ручной шаг nopoint (Settings → General)
+- Rebuild claude-bridge нужен для seed sync (index.js изменён)
+- CLEANUP: zep-client.js + config.yaml.template + mem0-wrapper.py (rm отклонён дважды)
+- L2 Step 5: Agent Frames — следующий приоритет

@@ -1,20 +1,20 @@
 # HANDSHAKE — tLOS
 > Читай этот файл в начале любой tLOS-сессии.
-> Updated: 2026-03-10 (session 11) by Assistant
+> Updated: 2026-03-10 (session 14) by Assistant
 
 ---
 
 ## Где мы сейчас
 
-L2 Kernel 4/5 шагов DONE. Полный роадмап (L2→L3→L4→Dockerization) зафиксирован в `docs/agent-system-architecture.md` v3 — читать его первым. Docker stack работает (3 контейнера, ~861MB RAM). Desktop shortcut создан.
+L2 Kernel 4/5 DONE. **Dockerization D1–D6 ALL DONE** (session 14): Always-On Kernel полностью готов — `core/kernel/.env` (NIM_KEY), seed sync pg→Qdrant, agent-system-architecture.md актуализирован. Docker Desktop autostart — ручной шаг nopoint.
 
 ---
 
 ## Следующий приоритет
 
-1. **Dockerization** — D1: Dockerfile tlos-claude-bridge (Node 22 alpine) → D2: tlos-langgraph-bridge → D4: единый docker-compose
-2. **L2 Step 5** — tLOS Agent Frames (agent-status, g3-session, memory-viewer)
-3. **SEC** — PatchDialog Nostr sig + system prompt file permissions (branch: omnibar)
+1. **Docker Desktop autostart** — Settings → General → ☑ "Start Docker Desktop when you sign in" (ручной шаг nopoint)
+2. **Rebuild claude-bridge** — `docker compose build claude-bridge && docker compose up -d claude-bridge` (чтобы seed sync заработал)
+3. **L2 Step 5** — tLOS Agent Frames (agent-status, g3-session, memory-viewer) в SolidJS canvas
 
 ---
 
@@ -22,6 +22,7 @@ L2 Kernel 4/5 шагов DONE. Полный роадмап (L2→L3→L4→Docke
 
 | Branch | Task | Status |
 |---|---|---|
+| docker-v1 | Dockerization D1–D6 — Always-On Kernel | **DONE** — можно закрыть / merge |
 | omnibar | SEC: PatchDialog Nostr sig + system prompt permissions | OPEN |
 | workspace-v1 | Организация рабочего пространства nopoint + Артём | OPEN |
 | mcb-v1 | Marketing Command Board для Артёма | BLOCKED — ждём API |
@@ -35,14 +36,15 @@ L2 Kernel 4/5 шагов DONE. Полный роадмап (L2→L3→L4→Docke
 | Ключ | Значение |
 |---|---|
 | Claude default model | `claude-sonnet-4-6` |
-| Claude bridge path | `core/kernel/tlos-claude-bridge/index.js` |
-| Bridge spawn mode | `--print` + stdin |
-| Docker stack | 3 containers: db:5433 + litellm:4000 + qdrant:6333 (~861MB RAM) |
-| docker-compose | `core/kernel/tlos-zep-bridge/docker-compose.yml` |
-| NIM key | `~/.tlos/nim-key` |
+| Unified docker-compose | `core/kernel/docker-compose.yml` — 6 сервисов |
+| Docker project name | `tlos-zep-bridge` (для сохранения named volumes) |
+| NIM_KEY | `core/kernel/.env` (gitignored) — читается Docker Compose автоматически |
+| NIM_KEY source | `~/.tlos/nim-key` |
+| NATS на хосте | `nats-server -a 0.0.0.0` (НЕ 127.0.0.1 — Docker не достучится) |
+| Inter-container env vars | QDRANT_URL=qdrant:6333, LITELLM_URL=litellm:4000, LETTA_URL=letta:8283, DB_HOST=db, DB_PORT=5432 |
 | Session persistence | `~/.tlos/sessions.json` |
-| Desktop shortcut | `Desktop/tLOS.lnk` → `AppData/Local/tLOS/tlos-app.exe` |
-| monolith.ico | `AppData/Local/tLOS/monolith.ico` — прозрачный фон (визуально не проверен на светлом фоне) |
+| Domain Memory | `domain-memory.js` — pg+pgvector+liteLLM; seed sync pg→Qdrant добавлен в bridge startup |
+| Rebuild required | `docker compose build claude-bridge` (для seed sync в index.js) |
 
 ---
 
@@ -54,19 +56,18 @@ L2 Kernel 4/5 шагов DONE. Полный роадмап (L2→L3→L4→Docke
 | Текущее состояние | development/tLOS/memory/current-context-tLOS.md |
 | История сессий | development/tLOS/memory/chronicle-tLOS.md |
 | **Роадмап (главный)** | **docs/agent-system-architecture.md** |
+| Unified docker-compose | development/tLOS/core/kernel/docker-compose.yml |
 | Claude bridge | development/tLOS/core/kernel/tlos-claude-bridge/index.js |
-| Domain memory client | development/tLOS/core/kernel/tlos-claude-bridge/zep-client.js |
-| Associative routing | development/tLOS/core/kernel/tlos-claude-bridge/qdrant-client.js |
-| Docker compose | development/tLOS/core/kernel/tlos-zep-bridge/docker-compose.yml |
+| Domain Memory | development/tLOS/core/kernel/tlos-claude-bridge/domain-memory.js |
 | Grid launcher | development/tLOS/core/grid.ps1 |
 
 ---
 
 ## Открытые вопросы
 
-- [ ] **Dockerization**: D1 — Dockerfile для tlos-claude-bridge (volume mounts для ~/.tlos, ~/.claude.json)
-- [ ] **L2 Step 5**: tLOS Agent Frames (agent-status, g3-session, memory-viewer)
-- [ ] **Icon**: monolith.ico прозрачность — проверить на светлом рабочем столе
-- [ ] **SEC**: PatchDialog Nostr sig, system prompt world-readable
-- [ ] **SEED**: sync tlos_facts seed → tlos-global Qdrant on bridge startup
-- [ ] **CLEANUP**: grid.ps1 Zep-specific refs, config.yaml.template, mem0-wrapper.py
+- [ ] **Docker Desktop autostart** — ручной шаг: Settings → General → ☑ Start Docker Desktop when you sign in
+- [ ] **Rebuild claude-bridge** — нужен для активации seed sync (index.js изменён)
+- [ ] **L2 Step 5** — какой Agent Frame первым? agent-status / g3-session / memory-viewer
+- [ ] **CLEANUP** — удалить `zep-client.js` (orphaned), `config.yaml.template`, `mem0-wrapper.py` (rm дважды отклонён)
+- [ ] **docker-v1 branch** — все D1-D6 done, можно закрыть и merge
+- [ ] **Icon** — monolith.ico прозрачность — проверить на светлом рабочем столе

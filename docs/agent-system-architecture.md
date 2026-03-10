@@ -101,7 +101,7 @@ Ingest → Activation → Retrieval (с мутацией) → Consolidation
 | Уровень | Кто имеет | Реализация | Статус |
 |---|---|---|---|
 | **Session** | Workers + Coaches | Letta: core / archival / recall memory blocks | ✅ LIVE (letta-client.js) |
-| **Domain** | Chief + Leads | pg+pgvector: `tlos_facts` table + HNSW cosine | ✅ LIVE (zep-client.js) |
+| **Domain** | Chief + Leads | pg+pgvector: `tlos_facts` table + HNSW cosine | ✅ LIVE (domain-memory.js) |
 | **Project** | Только Orchestrator | pg+pgvector (planned, same infra) | ⬜ not implemented |
 | **Global** | Только Orchestrator | pg+pgvector (planned, same infra) | ⬜ not implemented |
 | **Special** | Senior | Lead дистиллирует из Domain → Senior пишет спеки | ⬜ not implemented |
@@ -121,11 +121,11 @@ Ingest → Activation → Retrieval (с мутацией) → Consolidation
 L3 Shell  — SolidJS + Tauri (Omnibar, canvas frames)
               ↕ NATS
 L2 Kernel — kernel сервисы:
-  ├── tlos-claude-bridge      (✅ LIVE)  ← Eidolon/Orchestrator + domain memory + assoc routing
+  ├── tlos-claude-bridge      (✅ LIVE, Docker)  ← Eidolon/Orchestrator + domain memory + assoc routing
   │     ├── letta-client.js             ← Letta REST (session memory, port 8283)
-  │     ├── zep-client.js               ← direct pg+liteLLM (domain memory, port 5433/4000)
+  │     ├── domain-memory.js            ← direct pg+liteLLM (domain memory, port 5432/4000 internal)
   │     └── qdrant-client.js            ← Qdrant REST (associative routing, port 6333)
-  ├── tlos-langgraph-bridge   (✅ LIVE)  ← NATS ↔ LangGraph Python service
+  ├── tlos-langgraph-bridge   (✅ LIVE, Docker)  ← NATS ↔ LangGraph Python service
   ├── tlos-shell-bridge       (✅ LIVE)
   ├── tlos-dispatcher         (✅ LIVE)
   ├── tlos-fs-bridge          (✅ LIVE)
@@ -137,14 +137,17 @@ L0 Meta   — ADR-002, конституции
 ### Docker stack (актуальный)
 
 ```
-tlos-zep-bridge/docker-compose.yml — 3 контейнера, ~861MB RAM:
-  db        port 5433  ← PostgreSQL + pgvector 0.5.1 (~21MB RAM)
-  litellm   port 4000  ← liteLLM proxy → NIM embeddings + chat (~791MB RAM)
-  qdrant    port 6333  ← Qdrant v1.13.0 (~49MB RAM)
+core/kernel/docker-compose.yml — 6 контейнеров, ~900MB RAM:
+  db             port 5433  ← PostgreSQL + pgvector 0.5.1 (~21MB RAM)
+  litellm        port 4000  ← liteLLM proxy → NIM embeddings + chat (~791MB RAM)
+  qdrant         port 6333  ← Qdrant v1.13.0 (~49MB RAM)
+  letta          port 8283  ← letta/letta:latest (session memory)
+  langgraph-bridge  —       ← python:3.12-slim + Node22 + uv + claude CLI
+  claude-bridge     —       ← node:22-alpine + claude CLI (Eidolon/Orchestrator)
 ```
 
-Запуск: `docker compose up` из `tlos-zep-bridge/`. NIM_KEY env var из `~/.tlos/nim-key`.
-Letta запускается отдельно: `letta server --port 8283` (через grid.ps1 optional).
+Запуск: `docker compose up` из `core/kernel/`. NIM_KEY читается из `core/kernel/.env` (gitignored).
+grid.ps1: `docker-kernel` сервис запускает весь стек одной командой.
 
 > **Примечание:** В архитектуре v2 планировались отдельные NATS-сервисы `tlos-zep-bridge` и `tlos-qdrant-bridge`. Принято решение встроить клиенты напрямую в `tlos-claude-bridge` — проще, меньше NATS overhead.
 
@@ -242,12 +245,12 @@ Lead получает задачу от Chief
 
 | Сервис | Где запускается | Статус |
 |---|---|---|
-| db (PostgreSQL + pgvector) | Docker | ✅ |
-| litellm (NIM proxy) | Docker | ✅ |
-| qdrant | Docker | ✅ |
-| letta-server | uv tool (native Windows) | ⬜ не докеризован |
-| tlos-langgraph-bridge | uv / Python (native) | ⬜ не докеризован |
-| tlos-claude-bridge | Node.js (native) | ⬜ не докеризован |
+| db (PostgreSQL + pgvector) | Docker | ✅ D1→D4 |
+| litellm (NIM proxy) | Docker | ✅ D1→D4 |
+| qdrant | Docker | ✅ D1→D4 |
+| letta-server | Docker letta/letta:latest | ✅ D3→D4 |
+| tlos-langgraph-bridge | Docker python:3.12-slim + Node22 | ✅ D2 |
+| tlos-claude-bridge | Docker node:22-alpine | ✅ D1 |
 | tLOS Shell (Tauri) | native .exe | 🔒 остаётся native (десктоп) |
 
 ### Цель: Always-On Kernel
@@ -282,14 +285,14 @@ grid.ps1 остаётся для dev-режима (rebuild, logs, stop).
 
 ### Роадмап докеризации
 
-| Шаг | Задача | Приоритет |
+| Шаг | Задача | Статус |
 |---|---|---|
-| D1 | Dockerfile для tlos-claude-bridge (Node 22 alpine) | MEDIUM |
-| D2 | Dockerfile для tlos-langgraph-bridge (Python 3.12 slim + uv) | MEDIUM |
-| D3 | Letta Docker image (`letta/letta:latest`, port 8283) | LOW — uv работает |
-| D4 | Единый `docker-compose.yml` для всех kernel сервисов | зависит от D1–D3 |
-| D5 | Docker Desktop autostart + Always-On режим | зависит от D4 |
-| D6 | Shell shortcut (.lnk / taskbar pin) | зависит от D5 |
+| D1 | Dockerfile для tlos-claude-bridge (Node 22 alpine) | ✅ DONE |
+| D2 | Dockerfile для tlos-langgraph-bridge (Python 3.12 slim + uv) | ✅ DONE |
+| D3 | Letta Docker image (`letta/letta:latest`, port 8283) | ✅ DONE (folded into D4) |
+| D4 | Единый `docker-compose.yml` + NATS fix + inter-container networking | ✅ DONE — 6 сервисов online |
+| D5 | `core/kernel/.env` (NIM_KEY) + Docker Desktop autostart | ✅ DONE — .env создан; autostart → ручной шаг |
+| D6 | Shell shortcut (.lnk) | ✅ DONE — `Desktop/tLOS.lnk` создан (сессия 11) |
 
 > **Примечание D1:** claude-bridge читает `~/.tlos/nim-key`, `~/.claude.json`, `~/.tlos/sessions.json` — нужен volume mount для `%USERPROFILE%/.tlos` и `%USERPROFILE%/.claude.json`.
 > **Примечание D2:** langgraph-bridge использует subprocess для `claude --print` — внутри контейнера нужен claude CLI + credentials. Нетривиально, низкий приоритет.
