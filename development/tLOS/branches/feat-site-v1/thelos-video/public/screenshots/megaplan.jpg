@@ -1,0 +1,109 @@
+<!doctype html>
+<html data-n-head-ssr lang="ru-RU" data-n-head="%7B%22lang%22:%7B%22ssr%22:%22ru-RU%22%7D%7D">
+  <head>
+    <meta data-n-head="ssr" charset="utf-8"><meta data-n-head="ssr" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta data-n-head="ssr" name="apple-mobile-web-app-title" content="Онлайн CRM-система автоматизации бизнеса | Мегаплан"><meta data-n-head="ssr" name="google-site-verification" content="4o_AR5Lj5D8gyDA7EFbnVzhcTQFPMXX-MZCnfcYa1zI"><meta data-n-head="ssr" data-hid="og:locale" name="og:locale" content="ru-RU"><meta data-n-head="ssr" data-hid="og:image" name="og:image" content="https://megaplan.ru/share.png"><meta data-n-head="ssr" data-hid="og:image:secure_url" name="og:image:secure_url" content="https://megaplan.ru/share.png"><meta data-n-head="ssr" data-hid="og:type" name="og:type" content="website"><meta data-n-head="ssr" data-hid="og:site_name" name="og:site_name" content="Megaplan"><meta data-n-head="ssr" data-hid="og:url" name="og:url" content="https://megaplan.ru/404/"><meta data-n-head="ssr" data-hid="og:title" name="og:title" content="404: Страница не найдена"><meta data-n-head="ssr" data-hid="og:description" name="og:description" content="Страница не найдена. Возможно, вы найдете информацию по приведенным на странице ссылкам."><meta data-n-head="ssr" name="yandex-verification" content="51957b5ca74431a6"><meta data-n-head="ssr" name="yandex-verification" content="0521ed1973b5e7b5"><meta data-n-head="ssr" data-hid="description" name="description" content="Страница не найдена. Возможно, вы найдете информацию по приведенным на странице ссылкам."><title>404: Страница не найдена</title><link data-n-head="ssr" rel="icon" type="image/x-icon" href="/favicon.ico"><link data-n-head="ssr" rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link data-n-head="ssr" data-hid="canonical" rel="canonical" href="https://megaplan.ru/404/"><script data-n-head="ssr" type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","url":"https://megaplan.ru/404/","image":"https://megaplan.ru/share.png","name":"404: Страница не найдена","description":"Страница не найдена. Возможно, вы найдете информацию по приведенным на странице ссылкам.","breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://megaplan.ru/"},{"@type":"ListItem","position":2,"name":"404: Страница не найдена","item":"https://megaplan.ru/404/"}]},"publisher":{"@type":"Organization","name":"Megaplan","logo":{"@type":"ImageObject","url":"https://megaplan.ru/share.png","width":"200","height":"200"}}}</script><script data-n-head="ssr" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://megaplan.ru/"},{"@type":"ListItem","position":2,"name":"404: Страница не найдена","item":"https://megaplan.ru/404/"}]}</script><link rel="stylesheet" href="/_nuxt/css/3482bdc479bf44841df0.css"><link rel="preload" href="/_nuxt/static/1772184725/404/state.js" as="script"><link rel="preload" href="/_nuxt/static/1772184725/404/payload.js" as="script"><link rel="preload" href="/_nuxt/static/1772184725/manifest.js" as="script">
+  </head>
+  <body>
+    <div data-server-rendered="true" id="__nuxt"><!----><div id="__layout"><div data-fetch-key="0"><section class="layout"><div class="layout__container"><div class="layout__menu" data-v-649092fa><div data-fetch-key="data-v-f9c8de8c:0" data-v-f9c8de8c data-v-649092fa><!----> <!----></div> <div class="header-wrapper ru" data-v-649092fa><div data-fetch-key="data-v-f9c8de8c:1" data-v-f9c8de8c data-v-649092fa><!----> <!----></div> <header class="c-elements__menu ru" data-v-649092fa><div class="menu-row" data-v-649092fa><a href="/" class="logo nuxt-link-active" data-v-649092fa><img src="/img/megaplan-logo_black.svg" alt="Мегаплан" data-v-649092fa></a> <div data-v-649092fa><div class="header-menu" data-v-7f707c0f data-v-649092fa><ul class="menu-nav" data-v-7f707c0f><li class="main-link has-submenu" data-v-7f707c0f><span class="main-link-text" data-v-7f707c0f>Продукт</span> <div class="c-icon icon-size-small icon-color-black main-link-icon" data-v-74911d19 data-v-7f707c0f>
+  
+</div> <!----></li><li class="main-link has-submenu" data-v-7f707c0f><span class="main-link-text" data-v-7f707c0f>Решения</span> <div class="c-icon icon-size-small icon-color-black main-link-icon" data-v-74911d19 data-v-7f707c0f>
+  
+</div> <!----></li><li class="main-link" data-v-7f707c0f><!----> <a href="/prices/" data-v-7f707c0f>
+          Цены
+        </a></li><li class="main-link has-submenu" data-v-7f707c0f><span class="main-link-text" data-v-7f707c0f>О компании</span> <div class="c-icon icon-size-small icon-color-black main-link-icon" data-v-74911d19 data-v-7f707c0f>
+  
+</div> <!----></li><li class="main-link" data-v-7f707c0f><!----> <a href="/blog/" data-v-7f707c0f>
+          Блог
+        </a></li><li class="main-link" data-v-7f707c0f><!----> <a href="/clients/" data-v-7f707c0f>
+          Кейсы и отзывы
+        </a></li></ul> <div class="megamenu" style="display:none" data-v-7f707c0f><!----> <!----></div></div></div> <div data-v-649092fa><div class="right-block" data-v-649092fa><div class="phone" data-v-649092fa><a href="tel:" data-v-649092fa>
+                
+              </a></div> <div class="login" data-v-649092fa><a href="/login/" class="login-link" data-v-649092fa>
+                Войти
+              </a> <!----></div> <div class="language" data-v-649092fa><div class="active-language" data-v-649092fa>
+                ru
+                <div class="c-icon icon-size-normal icon-color-black" data-v-74911d19 data-v-649092fa>
+  
+</div></div> <!----></div></div></div></div></header></div></div> <div id="layout__content" class="wrapper layout__content"><section class="p-not-found layout__scrollable" data-v-129c9999><div class="container content" data-v-129c9999><div class="content-block" data-v-129c9999><div class="h1" data-v-129c9999>Кажется, самолетик отсюда уже улетел</div> <p class="text" data-v-129c9999>Увы, такой страницы у нас нет. Зато есть другие, не менее интересные:</p> <div class="possible-links" data-v-129c9999><div class="possible-links-item margin-left-0" data-v-129c9999><div class="possible-links-icon" data-v-129c9999><img src="/img/plane_active.svg" alt="Иконка главной страницы" data-v-129c9999></div> <div class="possible-links-link" data-v-129c9999><a href="https://megaplan.ru" target="_blank" data-v-129c9999>Главная страница</a></div></div> <div class="possible-links-item" data-v-129c9999><div class="possible-links-icon" data-v-129c9999><img src="/img/capabilities-icon.svg" alt="Иконка страницы возможностей" data-v-129c9999></div> <div class="possible-links-link" data-v-129c9999><a href="https://megaplan.ru/crm-capabilities/" target="_blank" data-v-129c9999>Возможности</a></div></div> <div class="possible-links-item" data-v-129c9999><div class="possible-links-icon" data-v-129c9999><img src="/img/crm-for-business-icon.svg" alt="Иконка страницы отраслей" data-v-129c9999></div> <div class="possible-links-link" data-v-129c9999><a href="https://megaplan.ru/crm-for-business/" target="_blank" data-v-129c9999>Отрасли</a></div></div> <div class="possible-links-item margin-left-0" data-v-129c9999><div class="possible-links-icon" data-v-129c9999><img src="/img/case-icon.svg" alt="Иконка страницы кейсов клиентов" data-v-129c9999></div> <div class="possible-links-link" data-v-129c9999><a href="https://megaplan.ru/clients/" target="_blank" data-v-129c9999>Кейсы клиентов</a></div></div> <div class="possible-links-item" data-v-129c9999><div class="possible-links-icon" data-v-129c9999><img src="/img/tarifs-icon.svg" alt="Иконка страницы тарифов" data-v-129c9999></div> <div class="possible-links-link" data-v-129c9999><a href="https://megaplan.ru/prices" target="_blank" data-v-129c9999>Тарифы</a></div></div> <div class="possible-links-item" data-v-129c9999><div class="possible-links-icon" data-v-129c9999><img src="/img/blog-icon.svg" alt="Иконка страницы блога" data-v-129c9999></div> <div class="possible-links-link" data-v-129c9999><a href="https://megaplan.ru/blog/" target="_blank" data-v-129c9999>Блог</a></div></div> <div class="possible-links-item" data-v-129c9999><div class="possible-links-icon" data-v-129c9999><img src="/img/book.svg" alt="book" data-v-129c9999></div> <div class="possible-links-link" data-v-129c9999><a href="https://megaplan.ru/news/articles/chto-takoe-crm-sistema/" target="_blank" data-v-129c9999>Что такое CRM система?</a></div></div></div></div></div> <div class="footer-wrapper" data-v-de8958f2 data-v-129c9999><!----> <section class="c-elements__footer transparent" data-v-00e4e53f data-v-de8958f2><div class="container links-container" data-v-00e4e53f><section class="c-elements__footer-menu" data-v-a8bf1aec data-v-00e4e53f><div class="links" data-v-a8bf1aec><div class="links__container" data-v-a8bf1aec><div class="footer-block footer-block-main" data-v-a8bf1aec><a href="/" class="footer-block-logo nuxt-link-active" data-v-a8bf1aec><img src="/img/megaplan-logo_white.svg" alt="Мегаплан" data-v-a8bf1aec></a> <!----> <div class="footer-block-main-links" data-v-a8bf1aec><a href="https://vk.com/themegaplan" target="_blank" data-v-a8bf1aec><img src="/img/vk-white.svg" alt="VK" class="vk" data-v-a8bf1aec></a> <a href="https://vk.com/video/@themegaplan" rel="nofollow" target="_blank" data-v-a8bf1aec><img src="/img/VK-video.svg" alt="vk-video" class="vk-video" data-v-a8bf1aec></a> <a href="https://www.youtube.com/user/TheMegaplan" target="_blank" data-v-a8bf1aec><img src="/img/yout-white.svg" alt="Youtube" class="youtube" data-v-a8bf1aec></a> <a href="https://vc.ru/megaplan" rel="nofollow" target="_blank" data-v-a8bf1aec><img src="/img/vc.png" alt="Vc" class="vc" data-v-a8bf1aec></a> <a href="https://habr.com/ru/users/MegaplanCEO/posts/" rel="nofollow" target="_blank" data-v-a8bf1aec><img src="/img/habr.png" alt="Habr" class="habr" data-v-a8bf1aec></a> <a href="https://t.me/themegaplan" rel="nofollow" target="_blank" data-v-a8bf1aec><img src="/img/tg.svg" alt="Telegram" class="telegram" data-v-a8bf1aec></a></div> <div class="footer-block-main-ur_address" data-v-a8bf1aec><div class="footer-block-main-ur_address-text" data-v-a8bf1aec>юр. адрес</div> <div class="footer-block-main-ur_address-address" data-v-a8bf1aec>127473, г.Москва,<br>вн.тер.г. муниципальный<br>округ Тверской, ул.<br>Достоевского, д. 1/21, стр. 1,<br>этаж цокольный, ком. 11</div></div></div> <div class="links-block" data-v-a8bf1aec><p class="links-block-title" data-v-a8bf1aec>
+          О Мегаплане
+        </p> <ul class="links-block-links" data-v-a8bf1aec><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/facilities/" rel="nofollow" data-v-a8bf1aec>
+                Почему Мегаплан
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/mobile/" rel="nofollow" data-v-a8bf1aec>
+                Мобильное приложение
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/api-integration/" rel="nofollow" data-v-a8bf1aec>
+                Интеграции
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/security/" rel="nofollow" data-v-a8bf1aec>
+                Безопасность
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="https://dev.megaplan.ru/" target="_blank" rel="noopener nofollow" data-v-a8bf1aec>
+                Разработчикам
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/partners/" rel="nofollow" data-v-a8bf1aec>
+                Партнерские программы
+              </a></span></li></ul></div><div class="links-block" data-v-a8bf1aec><p class="links-block-title" data-v-a8bf1aec>
+          Тарифы
+        </p> <ul class="links-block-links" data-v-a8bf1aec><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/prices/" rel="nofollow" data-v-a8bf1aec>
+                Цены
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/compare/" rel="nofollow" data-v-a8bf1aec>
+                Коробка/облако
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/vnedrenie-crm-sistemy/" rel="nofollow" data-v-a8bf1aec>
+                Внедрение
+              </a></span></li></ul></div><div class="links-block" data-v-a8bf1aec><p class="links-block-title" data-v-a8bf1aec>
+          Отраслевые решения
+        </p> <ul class="links-block-links" data-v-a8bf1aec><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/crm-for-business/crm-for-manufacture/" rel="nofollow" data-v-a8bf1aec>
+                CRM для производства
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/crm-for-business/crm-uslugi-b2b/" rel="nofollow" data-v-a8bf1aec>
+                CRM для B2B-компаний
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/crm-for-business/crm-for-construction/" rel="nofollow" data-v-a8bf1aec>
+                CRM для строительства
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/crm-for-business/crm-optovye-prodazhi/" rel="" data-v-a8bf1aec>
+                CRM для оптовых продаж
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/crm-for-business/crm-system-for-sale/" rel="" data-v-a8bf1aec>
+                CRM-система для продаж
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/crm-for-business/" rel="" data-v-a8bf1aec>
+                Другие отрасли
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/clients/" rel="" data-v-a8bf1aec>
+                Кейсы
+              </a></span></li></ul></div><div class="links-block" data-v-a8bf1aec><p class="links-block-title" data-v-a8bf1aec>
+          Все о CRM
+        </p> <ul class="links-block-links" data-v-a8bf1aec><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/news/articles/chto-takoe-crm-sistema/" rel="" data-v-a8bf1aec>
+                Что такое CRM система?
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/news/articles/kak-vybrat-crm-sistemu/" rel="nofollow" data-v-a8bf1aec>
+                Как выбрать CRM?
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/news/articles/onlayn-planirovshchik-zadach/" rel="nofollow" data-v-a8bf1aec>
+                Планировщик задач
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/crm-capabilities/" rel="" data-v-a8bf1aec>
+                Возможности CRM системы
+              </a></span></li></ul></div><div class="links-block" data-v-a8bf1aec><p class="links-block-title" data-v-a8bf1aec>
+          Полезные ресурсы
+        </p> <ul class="links-block-links" data-v-a8bf1aec><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="https://support.megaplan.ru/" target="_blank" rel="noopener nofollow" data-v-a8bf1aec>
+                Справочный центр
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/help-training/#training" rel="nofollow" data-v-a8bf1aec>
+                Обучение
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/blog/" rel="nofollow" data-v-a8bf1aec>
+                Блог
+              </a></span></li><li data-v-a8bf1aec><span data-v-a8bf1aec><a href="/video-megaplan/" rel="nofollow" data-v-a8bf1aec>
+                Видео
+              </a></span></li></ul></div></div></div></section></div> <div class="footer" data-v-00e4e53f><div class="footer__docs" data-v-00e4e53f><div data-v-00e4e53f>
+        Мегаплан © 2007 - 2026
+      </div> <div data-v-00e4e53f><a href="/public/docs/user-agreement.pdf" rel="nofollow" target="_blank" data-v-00e4e53f>
+          Пользовательское соглашение
+        </a></div> <div data-v-00e4e53f><a href="/public/docs/politic-2025.pdf" rel="nofollow" target="_blank" data-v-00e4e53f>
+          Политика конфиденциальности
+        </a></div> <div data-v-00e4e53f><a href="/public/docs/local-docs.html" rel="nofollow" target="_blank" data-v-00e4e53f>
+          Договоры оферты
+        </a></div></div></div></section></div></section></div> <div class="layout__iconToTop"><div class="c-icon icon-color-black" style="width:35px;height:35px;font-size:35px" data-v-74911d19>
+  
+</div></div> <div class="cookie-agreement"><div class="cookie" data-v-1093812c><div class="cookie__text" data-v-1093812c>Продолжая пользоваться сайтом, я даю свое <a target="_blank" href="/public/docs/cookie.pdf">согласие</a> на использование файлов cookie и подтверждаю, что ознакомился и согласен с условиями <a target="_blank" href="/public/docs/politic-2025.pdf">политики конфиденциальности</a> и <a target="_blank" href="/public/docs/user-agreement.pdf">пользовательского соглашения.</a></div> <div class="cookie__btn" data-v-1093812c><button class="d-button button-size-normal button-color-green" data-v-6da95964 data-v-1093812c>
+      Согласен
+     <!----></button></div></div></div></div> <div data-fetch-key="data-v-f9c8de8c:2" data-v-f9c8de8c><!----> <!----></div></section> <!----></div></div></div><script defer src="/_nuxt/static/1772184725/404/state.js"></script><script src="/_nuxt/js/d52cda12c34a93790962.js" defer></script>
+    <!-- Google tag (gtag.js) -->
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-NTZGQ9Y7HX"></script>
+    <script defer>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-NTZGQ9Y7HX")</script>
+    <!-- Yandex.Metrika counter -->
+    <script defer type="text/javascript">!function(e,t,c,a,r,n){e.ym=e.ym||function(){(e.ym.a=e.ym.a||[]).push(arguments)},e.ym.l=+new Date;for(var m=0;m<document.scripts.length;m++)if(document.scripts[m].src===a)return;r=t.createElement(c),n=t.getElementsByTagName(c)[0],r.async=1,r.src=a,n.parentNode.insertBefore(r,n)}(window,document,"script","https://mc.yandex.ru/metrika/tag.js"),ym(20277427,"init",{clickmap:!0,trackLinks:!0,accurateTrackBounce:!0,webvisor:!0,trackHash:!0,ecommerce:"dataLayer"})</script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/20277427" style="position:absolute;left:-9999px" alt=""></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <!-- Google Tag Manager -->
+    <script defer>!function(e,t,a,n){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});e=t.getElementsByTagName(a)[0],n=t.createElement(a);n.async=!0,n.src="https://www.googletagmanager.com/gtm.js?id=GTM-W6MK9H",e.parentNode.insertBefore(n,e)}(window,document,"script","dataLayer")</script>
+    <!-- End Google Tag Manager -->
+  </body>
+</html>
