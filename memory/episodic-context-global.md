@@ -676,3 +676,18 @@
 
 **Tasks completed / open:**
 - ✅ Full Docker infra shipped / ⏳ First build Rust image needed / ⏳ L3 Step 6 next
+
+---
+## Session 2026-03-14 — tLOS: Bauhaus Design System — Dual Output Architecture
+
+**Decisions:**
+- Bauhaus guidelines pipeline produces two parallel outputs from same source (14 v3.1 merged book files): (1) DESIGN-CODE.md — static imperative rules, machine-checkable, for code review and audit; (2) personas/*.md — author persona LLM prompts for design reasoning, creativity, and edge cases.
+- Principle layer (P-01..P-07) = Bauhaus-only, frozen. Modern sources (Tufte, Gestalt, WCAG, Fitts's Law) supplement only at guidelines layer, not principles.
+- Personas grounded in DESIGN-CODE.md and cannot override principles. Auto-research feeds persona application layer, not source principles.
+
+**Files changed:**
+- `nospace/docs/tLOS/design/bauhaus-code/INDEX.md` — ADR + dual output architecture + Phase 2a/2b workflow
+
+**Tasks completed / open:**
+- Done: architecture decision documented
+- Open: Phase 0 pre-analysis for 13 remaining books; v3.1 full extraction (waiting for quota); Persona Builder Agent spec
