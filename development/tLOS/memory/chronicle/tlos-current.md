@@ -2767,3 +2767,60 @@ Next: read all Mondrian + van Doesburg batches → extract color principles → 
 - Контекстное окно было 200K по умолчанию, не 1M — Claude Code требует явного суффикса [1m]. Tool definitions занимают ~190K токенов в стандартной конфигурации.
 - Auto-compact buffer = 33K (зарезервировано). Messages = 73% использованного контекста — главный drain.
 - De Stijl правило подтверждено на практике: Farbe (насыщенный цвет) только как семантический акцент минимальной площади, всё остальное — Nicht-Farbe.
+
+---
+
+<!-- ENTRY:2026-03-15:CLOSE:85:tlos:meta-research -->
+## [2026-03-15] — сессия 85 CLOSE
+
+**Phase:** Meta-research — Claude Code internals (context, caching, usage caps, model selection)
+
+**Decisions:**
+- Model alias `"sonnet"` (not full name) in settings.json to override Max plan Opus default
+- Documented: cache_read likely counts at 1.0× (not 0.1×) against Max plan usage caps
+- Token counter quota formula may need update
+
+**Files changed:**
+- `~/.claude/settings.json` — model: `claude-sonnet-4-6[1m]` → `sonnet` (alias override for Max plan)
+- `~/.claude/projects/c--Users-noadmin/memory/reference_claude_code_internals.md` — NEW: comprehensive reference on Claude Code internals (context, caching, limits, agents, model selection, optimization)
+- `~/.claude/projects/c--Users-noadmin/memory/MEMORY.md` — added pointer to internals reference + updated token counter note
+
+**Completed:**
+- Full research: context window mechanics, prompt caching, Max plan usage caps, subagent isolation, model selection priority
+- Discovered Max plan "Default" = Opus (not Sonnet) — GitHub issue #6831
+- Discovered cache_read counts fully in usage caps — GitHub issue #24147
+- Created reference_claude_code_internals.md with all findings
+- Fixed settings.json model alias
+
+**Opened:**
+- [ ] Verify Sonnet is active in next session (token counter should show Sonnet)
+- [ ] Consider updating token counter formula (cache_read weight 0.1 → 1.0 for quota)
+- [ ] Phase 10 Design domain analysis — still pending (not touched this session)
+
+**Notes:**
+- Session ran on Opus despite settings.json saying Sonnet — full name `claude-sonnet-4-6[1m]` was not recognized as override
+- Today's usage: 5 sessions, 512 turns, 287K Real (I+O), 40.36M cache_read
+- Weekly limits at 96% (All models) and 92% (Sonnet only) — resets in ~5h
+- No tLOS code changes this session — purely research/documentation
+
+<!-- ENTRY:2026-03-15:CLOSE:86:tlos:infra-model-fix -->
+## 2026-03-15 — сессия 86 CLOSE
+
+**Phase:** Phase 10 — 12-Domain Expert Audit (analysis in progress)
+
+**Decisions:**
+- Max plan "Default (recommended)" = Opus despite UI label "Sonnet 4.6" (GitHub #6831) — explicit `"sonnet"` required in VSCode settings
+
+**Files changed:**
+- `C:/Users/noadmin/AppData/Roaming/Code/User/settings.json` — `claudeCode.selectedModel`: `"default"` → `"sonnet"`
+
+**Completed:**
+- Token counter model detection verified — `shortModel()` works with new model IDs (claude-opus-4-6, claude-sonnet-4-6)
+- Root cause of Opus-instead-of-Sonnet issue identified and fixed
+
+**Opened:**
+- Verify next session starts on Sonnet (not Opus)
+
+**Notes:**
+- Short session — diagnostics only, no Phase 10 analysis work done
+- Opus warning in token counter section 3b (lines 544-547) is now informational, not alarming — user may intentionally use Opus

@@ -84,3 +84,5 @@
 | 2026-03-14 | tlos | CHECKPOINT | 82 | phase-10-analysis:design-bauhaus | tlos-current.md |
 | 2026-03-15 | tlos | CHECKPOINT | 83 | phase-10-analysis:design-bauhaus-color | tlos-current.md |
 | 2026-03-15 | tlos | CLOSE | 84 | phase-10-analysis:design-bauhaus-color | tlos-current.md |
+| 2026-03-15 | tlos | CLOSE | 85 | meta-research:claude-code-internals | tlos-current.md |
+| 2026-03-15 | tlos | CLOSE | 86 | infra-model-fix | tlos-current.md |
