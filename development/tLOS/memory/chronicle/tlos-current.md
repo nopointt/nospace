@@ -4,6 +4,17 @@
 
 ---
 
+<!-- CHECKPOINT:78:2026-03-14:phase-10-analysis:design-bauhaus -->
+## Checkpoint 78 — 2026-03-14 — Bauhaus Phase 0 COMPLETE
+
+Phase 0 завершён для ВСЕХ 14 книг Bauhaus (semantic batch maps verified via fitz).
+3 новых specialist файла: Mondrian (#05, 35pp, 2b), van Doesburg (#06, 72pp, 3b), Malevich (#11, 108pp, 4b).
+Zeitschrift: 14 выпусков журнала (1926–1931) добавлены — единый аналитик-историк specialist, 20 батчей.
+Критические исправления: #03 Meyer (~44→93pp, 3→4b), #08 Moholy MPF (~200→144pp, 10→7b), #14 Gleizes (~60→140pp, 3→7b).
+INDEX.md обновлён. Phase 1 готова к запуску.
+
+---
+
 > **Формат записи:**
 > `## [YYYY-MM-DD — сессия N] CLOSE | CHECKPOINT`
 > Каждая запись содержит: фазу, решения, изменённые файлы, выполненные/открытые задачи.
@@ -2656,3 +2667,103 @@
 **Notes:**
 - No extraction launched — quota still limited
 - Next session: Phase 0 pre-analysis for 13 remaining books (lightweight, ToC only)
+
+---
+
+<!-- CHECKPOINT:79:2026-03-14:phase-10-analysis:design-bauhaus -->
+## Checkpoint 79 — 2026-03-14 — Bauhaus Pipeline v3.1→v3.2 Upgrade
+
+Upgraded all Bauhaus extraction specialist prompts from v3.1 → v3.2 based on deep research (Opus agent, 14 web searches).
+New research report: `nospace/docs/research/bauhaus-extraction-methodology-research.md` (570 lines).
+
+**v3.2 key additions:**
+- GROUNDING RULES block (no hallucination, no gap-filling from persona knowledge)
+- VOCABULARY PRESERVATION table (German terms, bilingual quotes format)
+- Step 2.5 Completeness Checklist (7-item pre-write verification pass)
+- Semi-structured output markers: PRINCIPLE / EXERCISE / FIGURE / VOCABULARY
+- Uncertainty markers: [CERTAIN] / [INFERRED] / [UNCLEAR]
+- Merge agent persona: author-voice → neutral scholar/historian
+- DPI 200 for visual-heavy books: #02 Klee, #09 Kandinsky (was 150)
+
+**Waves completed:**
+- Wave 1: #01 Gropius Int.Arch, #02 Klee, #03 Meyer, #04 Schlemmer → v3.2 ✅
+- Wave 2: #05 Mondrian, #06 van Doesburg, #07 Gropius Neue Arb., #08 Moholy MPF → v3.2 ✅
+- Wave 3: #09 Kandinsky, #10 Oud, #11 Malevich, #12 Gropius Dessau → v3.2 ✅
+- Wave 4: #13 Moholy VMA, #14 Gleizes, Zeitschrift → PENDING (compact interrupted)
+
+Next: complete Wave 4, then start v3.2 extractions (smallest books first).
+
+---
+
+<!-- CHECKPOINT:80:2026-03-14:phase-10-analysis:design-bauhaus -->
+## Checkpoint 80 — 2026-03-14 — Wave 4 COMPLETE + Mondrian v3.2 DONE
+
+Wave 4 завершён: ALL 15 specialists (14 books + Zeitschrift) upgraded to v3.2.
+v3.2 extraction pipeline tested on Mondrian (#05, 35pp, 2 batches): ✅ PASS — 819 lines, 98 vocab terms, 10 synthesis principles.
+Output convention established: batch files → `archive/` after merge; only merged `*-v3.2.md` stays in main dir.
+Старые версии Mondrian (v1, v2, v3.1) перемещены в archive/. INDEX.md и tlos-phase10.md обновлены.
+Next: #02 Klee (3 batches, 200 DPI).
+
+<!-- CHECKPOINT:81:2026-03-14:phase-10-analysis:design-bauhaus -->
+## Checkpoint 81 — 2026-03-14 — Klee ✅ + Meyer ✅ + Merge step REMOVED
+
+#02 Klee (3 batches, 200 DPI) and #03 Meyer (4 batches, 150 DPI) fully extracted.
+Pipeline change: merge step removed permanently — 32K output token API limit makes full-book merges impossible. Batch files are now canonical output and stay in main bauhaus-code/ dir (not archived).
+Merge agents attempted: Klee → API error (32K limit), Meyer → incomplete file (483 lines, deleted by nopoint).
+7 parallel agents (3 Klee + 4 Meyer) ran without issues.
+Next: #04 Schlemmer (5 batches, 95 pages, 150 DPI).
+
+---
+
+<!-- CHECKPOINT:82 | 2026-03-14 | phase-10-analysis:design-bauhaus -->
+**Bauhaus extraction — #04 Schlemmer + #06 van Doesburg completed.**
+#04 Schlemmer: 5 batches (b01–b05, 150 DPI, 95 pages). b03 contains Moholy-Nagy "Theater, Zirkus, Varieté" section.
+#06 van Doesburg: 3 batches (b01–b03, 150 DPI, 72 pages). b03 is plates-only (Raumzeitliche Rekonstruktion in Abb.15).
+#03 Meyer merge (03-meyer-experimental-house-v3.2.md, 1152 lines) completed by old agent.
+Decision: skip checkpoints between books when pipeline runs cleanly.
+Remaining queue: 10(6b), 11(4b), 01(6b), 07(7b), 08(7b), 09(11b,200DPI), 12(12b), 13(11b), 14(7b) + Zeitschrift(20b) = 81 batches.
+Next: #10 Oud (6 batches, 150 DPI).
+
+---
+
+<!-- CHECKPOINT:83 | 2026-03-15 | phase-10-analysis:design-bauhaus-color -->
+**Pencil MCP verified, Harkly light theme drawn, color audit initiated.**
+Pencil MCP confirmed end-to-end: insert/screenshot cycle working. Three financial table variants drawn (tLOS dark / Harkly dark / Harkly light).
+Decision: redefine Harkly UI colors from Bauhaus first-sources — Mondrian (#05) + van Doesburg (#06) as color authorities.
+Problem identified: #c49a6c (sand) on #fff8e7 (cream) insufficient contrast for status labels in light theme.
+4 ideas recorded in ideas_inbox: персональный менеджер, без AI-приставки, точечная популярность, Bauhaus 2026 тема.
+2 Bauhaus 2026 essays moved from Downloads to nospace/docs/research/bauhaus-2026/.
+Preference saved: светлая тема везде по умолчанию.
+Next: read all Mondrian + van Doesburg batches → extract color principles → redefine Harkly light palette.
+
+---
+
+<!-- ENTRY:2026-03-15:CLOSE:84:tlos:phase-10-analysis:design-bauhaus-color -->
+## 2026-03-15 — сессия 84 CLOSE
+
+**Phase:** Phase 10 — Domain-by-domain analysis, Design domain in progress
+
+**Decisions:**
+- 1M context window enabled: `"model": "claude-sonnet-4-6[1m]"` в `~/.claude/settings.json`. Без доплаты, autocompact при 83.5% (~830K). Инструмент `/context` показывает точный breakdown.
+- De Stijl color grammar применена к Harkly dashboard: dark sidebar = Nicht-Farbe structural field, cream = neutral ground, статус-бейджи = единственные Farbe-акценты.
+- Таблица строк 5-7 в дашборде: HOLD (#8b5e3c), REDUCE (#001f3f), NULL (#4a5568) — все проходят WCAG AA на cream.
+
+**Files changed:**
+- `~/.claude/settings.json` — добавлен `"model": "claude-sonnet-4-6[1m]"`
+- `AppData/Local/Programs/Pencil/untitled.pen` — Harkly Analytics Dashboard завершён (7 строк, статус-бейджи De Stijl палитра)
+- `memory/tlos-phase10.md` — parallel track обновлён, дата обновлена
+
+**Completed:**
+- Harkly Analytics Dashboard полностью нарисован в Pencil (1440×900, 7 клиентов, De Stijl цветовая грамматика)
+- Все 4 color-книги прочитаны в контекст: 05-Mondrian v3.2 + 06-van Doesburg b01/b02/b03 (~54K токенов)
+- Context window management research: 1M окно, autocompact, `/context` команда, `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`
+- 1M context window включён глобально
+
+**Opened:**
+- Rows 5-7 dashboard имеют cramped layout — нужен фикс (badge прижимается к тексту без spacer)
+- Design domain analysis (12-designer-report.md) ещё не начата — следующий приоритет
+
+**Notes:**
+- Контекстное окно было 200K по умолчанию, не 1M — Claude Code требует явного суффикса [1m]. Tool definitions занимают ~190K токенов в стандартной конфигурации.
+- Auto-compact buffer = 33K (зарезервировано). Messages = 73% использованного контекста — главный drain.
+- De Stijl правило подтверждено на практике: Farbe (насыщенный цвет) только как семантический акцент минимальной площади, всё остальное — Nicht-Farbe.

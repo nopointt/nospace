@@ -77,3 +77,10 @@
 | 2026-03-14 | tlos | CHECKPOINT | 74 | phase-10-analysis:design-bauhaus | tlos-current.md |
 | 2026-03-14 | tlos | CHECKPOINT | 75 | phase-10-analysis:design-bauhaus | tlos-current.md |
 | 2026-03-14 | tlos | CLOSE | 77 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-14 | tlos | CHECKPOINT | 78 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-14 | tlos | CHECKPOINT | 79 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-14 | tlos | CHECKPOINT | 80 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-14 | tlos | CHECKPOINT | 81 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-14 | tlos | CHECKPOINT | 82 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 83 | phase-10-analysis:design-bauhaus-color | tlos-current.md |
+| 2026-03-15 | tlos | CLOSE | 84 | phase-10-analysis:design-bauhaus-color | tlos-current.md |
