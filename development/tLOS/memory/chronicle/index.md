@@ -86,3 +86,11 @@
 | 2026-03-15 | tlos | CLOSE | 84 | phase-10-analysis:design-bauhaus-color | tlos-current.md |
 | 2026-03-15 | tlos | CLOSE | 85 | meta-research:claude-code-internals | tlos-current.md |
 | 2026-03-15 | tlos | CLOSE | 86 | infra-model-fix | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 87 | infra-model-fix | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 88 | aia-build | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 89 | aia-persistent-agent | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 90 | skill-output-redesign | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 91 | skill-output-redesign | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 92 | skill-output-redesign | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 93 | scratch-architecture | tlos-current.md |
+| 2026-03-15 | tlos | CLOSE | 94 | workspace-consciousness | tlos-current.md |

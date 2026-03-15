@@ -2824,3 +2824,210 @@ Next: read all Mondrian + van Doesburg batches → extract color principles → 
 **Notes:**
 - Short session — diagnostics only, no Phase 10 analysis work done
 - Opus warning in token counter section 3b (lines 544-547) is now informational, not alarming — user may intentionally use Opus
+
+---
+
+## CHECKPOINT 87 — 2026-03-15 — infra-model-fix (session-start archive)
+
+**Epic:** infra-model-fix
+**Summary:** ANTHROPIC_MODEL=sonnet set as Windows User env var to fix Opus override on Max plan.
+
+**Key facts:**
+- Max plan "Default" model = Opus (confirmed via GitHub issue #6831)
+- settings.json + VSCode settings both already had "sonnet", but Max plan overrides at API call level
+- Fix: `ANTHROPIC_MODEL=sonnet` set as persistent Windows User environment variable
+- Docker containers (langgraph-bridge, claude-bridge) have no model override — unaffected
+- VSCode restart required for env var to take effect
+
+**Design domain analysis:** Not started in that session. Next session to begin.
+
+---
+
+## 2026-03-15 — Checkpoint 88 — aia-build
+
+**Summary:** AIA (Anthropic Intelligence Agent) полностью собран и протестирован. Постоянный агент-эксперт по Anthropic экосистеме с RAG-базой в markdown, live feed, cron monitor.
+
+**Key facts:**
+- KB: 5 файлов (models-4x, claude-code, api-sdk, how-it-works, company) + persona — общий объём ~7.3K lines
+- Live feed: feed.md (append-only, 9 entries), alerts.md (3 HIGH items), index.md
+- /aia skill: FEED UPDATE через 9 конкретных API endpoints (GitHub, HN Algolia, Reddit .json, ArXiv, Simon Willison, Anthropic Status)
+- Cron: каждые 6h в :23, job ID сохраняется в ~/.tlos/aia-cron-id
+- /startTsession: STEP 7 (alerts panel) + STEP 8 (AIA feed update) + STEP 9 (CronCreate)
+- /closeTsession: STEP 8b (CronDelete)
+- ANTHROPIC_MODEL обновлён до claude-sonnet-4-6[1m] (добавлен флаг 1M context)
+
+**Open tasks:**
+- GitHub PAT (ghp_*) — gho_* токен невалиден для API, нужен новый
+- Протестировать /aia с конкретным вопросом
+
+---
+
+## 2026-03-15 — Checkpoint 89 — aia-persistent-agent
+
+**Summary:** AIA переведён с /aia skill на постоянный Agent tool subagent. Архитектура постоянных агентов зафиксирована. Agent Teams принят как новый транспорт для G3. [1m] флаг удалён из ANTHROPIC_MODEL (бесполезен на Max). Исследованы AI design tools.
+
+**Key facts:**
+- AIA = `~/.claude/agents/aia.md` (system prompt) + KB (5 md файлов) + Letta memory (agent-7874eb66)
+- Letta blocks: nopoint_profile / research_history / open_questions
+- Постоянные агенты: Chiefs(5) + Leads(11) + Specials(6) + AIA. Временные: Players + Coaches
+- Agent Teams: CLI-процессы вместо SDK subagents, CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+- ANTHROPIC_MODEL: claude-sonnet-4-6 (убран [1m] — на Max Sonnet 1M = Extra Usage)
+- Opus 4.6 1M включён в Max; Sonnet 4.6 1M = Extra Usage — разная политика
+- Tokens 7-day: 4.3B cache_read; quota x0.1=451M, x1.0=4.3B (точный тариф не выяснен)
+- AI design: pencil.dev = текущий выбор (VS Code MCP установлен), open-pencil = следить
+- open-pencil автор: Danila Poyarkov. Figma 126 заблокировал CDP → построил .fig-native editor
+- Claude Code обновлён до 2.1.76 (MCP elicitation support)
+
+**Open tasks:**
+- Протестировать open-pencil после установки
+- AI design workflow: описать страницу → нарисовать → верстать
+- Выяснить точный quota тариф Max плана (cache_read x0.1 или x1.0)
+- Постоянные агенты Chiefs/Leads/Specials — после Bauhaus
+- Update settings.json (remove [1m] from ANTHROPIC_MODEL if present)
+
+<!-- ENTRY:2026-03-15:CHECKPOINT:90:tlos:skill-output-redesign -->
+## 2026-03-15 — checkpoint 90
+
+**Decisions:**
+- Изменять только вывод скиллов, не алгоритм (ошибка: первая версия меняла алгоритм)
+- Новые выводы: Tcheckpoint=1 строка, TafterCompact=CONTINUING/NEXT/EPIC, startTsession=компактная таблица, closeTsession=компактная таблица
+
+**Files changed:**
+- `~/.claude/commands/Tcheckpoint.md` — STEP 3: вывод → `✓ #N — date — epic`
+- `~/.claude/commands/TafterCompact.md` — STEP 3: новый формат CONTINUING/NEXT/EPIC
+- `~/.claude/commands/startTsession.md` — STEP 7: новый формат PHASE/EPIC/SINCE/NEXT/BLOCKERS/AIA
+- `~/.claude/commands/closeTsession.md` — STEP 10: компактная таблица L3/L2/L1/CHR/L4/GIT/AIA
+
+**Completed:**
+- TafterCompact выполнен (checkpoint 89 архивирован, распределён, хроника обновлена)
+- JTBD анализ 4 скиллов (через Plan agent)
+- Redesign выводов всех 4 скиллов (со второй попытки — первая меняла алгоритмы)
+
+**In progress:**
+- —
+
+**Opened:**
+- —
+
+**Notes:**
+- Первая попытка (ошибочная): убрал L4 processing из TafterCompact, параллелизовал reads в startTsession — всё отменено
+- Корректная версия: алгоритмы оригинальные, только output blocks изменены
+
+<!-- ENTRY:2026-03-15:CHECKPOINT:91:tlos:skill-output-redesign -->
+## 2026-03-15 — checkpoint 91
+
+**Decisions:**
+- Все выводы скиллов переведены на plain markdown: жирный, буллеты, таблицы — без code blocks
+
+**Files changed:**
+- `~/.claude/commands/Tcheckpoint.md` — STEP 3: жирный заголовок + буллеты по секциям
+- `~/.claude/commands/TafterCompact.md` — STEP 3: Продолжаем / Следующие задачи / Активный эпик
+- `~/.claude/commands/startTsession.md` — STEP 7: h2 + таблица (Фаза/Эпик/Чекпоинт) + буллеты + AIA
+- `~/.claude/commands/closeTsession.md` — STEP 10: h2 + таблица слоёв (L3/L2/L1/Летопись/L4/Git/AIA)
+
+**Completed:**
+- Redesign outputs всех 4 скиллов — финальная версия с читаемым форматом
+
+**In progress:**
+- —
+
+**Opened:**
+- —
+
+**Notes:**
+- Три итерации: (1) менял алгоритмы — откат; (2) code-block выводы — не читаемо; (3) plain markdown = финал
+
+<!-- ENTRY:2026-03-15:CHECKPOINT:92:tlos:skill-output-redesign -->
+## 2026-03-15 — checkpoint 92
+
+**Decisions:**
+- В вывод Tcheckpoint добавлена секция "Не сохранено" — явное отражение того что осознанно исключено из checkpoint
+
+**Files changed:**
+- `~/.claude/commands/Tcheckpoint.md` — STEP 3: добавлена секция "Не сохранено"
+
+**Completed:**
+- Финальный формат Tcheckpoint готов (4 итерации: алгоритм → code block → plain md → + не сохранено)
+
+**In progress:**
+- —
+
+**Opened:**
+- —
+
+**Notes:**
+- —
+
+<!-- ENTRY:2026-03-15:CHECKPOINT:93:tlos:scratch-architecture -->
+## 2026-03-15 — checkpoint 93
+
+**Decisions:**
+- Scratch файлы переименованы: `{session_id}+{N}-scratch.md` (N = номер чекпоинта)
+- Tcheckpoint логика: файл пустой → писать + переименовать в N+1; не пустой → создать новый N+1
+- startTsession/TafterCompact: читают ВСЕ файлы в `scratches/`, распределяют по L1/L2/L3, архивируют в `chronicle/scratches/`, создают пустой плейсхолдер с max N
+- active-scratch (`~/.tlos/active-scratch`) = указатель на текущий файл (1 строка)
+- Session ID = первые 8 символов UUID из .jsonl транскрипта
+- N в имени файла = номер чекпоинта внутри (не стартовый номер сессии)
+
+**Files changed:**
+- `~/.claude/commands/Tcheckpoint.md` — новая логика STEP 2 (определение целевого файла)
+- `~/.claude/commands/TafterCompact.md` — STEP 2: читать все scratches/, архивировать, плейсхолдер
+- `~/.claude/commands/startTsession.md` — STEP 5: та же логика что TafterCompact
+- `~/.claude/commands/closeTsession.md` — STEP 6: архивировать через active-scratch
+- `~/.claude/commands/compress-scratch.md` — STEP 1: читать через active-scratch
+- `~/.claude/projects/c--Users-noadmin/memory/MEMORY.md` — обновлён L4 pointer
+- `memory/scratches/` — NEW directory
+- `memory/chronicle/scratches/` — NEW archive directory
+- `memory/scratches/87ee7870+89-scratch.md` — мигрирован из session-scratch.md
+- `~/.tlos/active-scratch` — NEW: содержит `87ee7870+89-scratch.md`
+
+**Completed:**
+- Полный redesign scratch архитектуры
+
+**In progress:**
+- —
+
+**Opened:**
+- —
+
+**Notes:**
+- Текущая сессия: 87ee7870+89-scratch.md содержит cp 90-92 (старая схема, 3 записи)
+- С этого checkpoint: каждый checkpoint = отдельный файл
+
+<!-- ENTRY:2026-03-15:CLOSE:94:tlos:workspace-consciousness -->
+## 2026-03-15 — сессия 94 CLOSE
+
+**Phase:** Phase 10 — 12-domain analysis (Design domain next)
+
+**Decisions:**
+- Scratch-файлы переименованы: `{session_id}+{N}-scratch.md` (N = номер чекпоинта внутри)
+- Tcheckpoint logic: пустой файл → пишем + rename N+1; не пустой → создаём новый N+1
+- startTsession/TafterCompact: читают ВСЕ файлы scratches/, архивируют в chronicle/scratches/, создают placeholder
+- active-scratch pointer: `~/.tlos/active-scratch` (1 строка)
+- Все 4 output-секции скиллов переведены на plain markdown (жирный, буллеты, таблицы)
+- Секция "Не сохранено" добавлена в Tcheckpoint вывод
+- closeTsession STEP 11: auto-exit через `kill -SIGTERM $PPID` с задержкой 1с
+
+**Files changed:**
+- `~/.claude/commands/Tcheckpoint.md` — новая логика STEP 2 + plain-md output + "Не сохранено"
+- `~/.claude/commands/TafterCompact.md` — STEP 2: читать все scratches/ + plain-md output
+- `~/.claude/commands/startTsession.md` — STEP 5: та же логика + plain-md output (STEP 7)
+- `~/.claude/commands/closeTsession.md` — STEP 6: через active-scratch + plain-md output + STEP 11 auto-exit
+- `~/.claude/commands/compress-scratch.md` — STEP 1: читать через active-scratch
+- `~/.claude/projects/c--Users-noadmin/memory/MEMORY.md` — L4 pointer обновлён
+- `memory/scratches/87ee7870+89-scratch.md` — мигрирован + заархивирован
+- `memory/scratches/87ee7870+93-scratch.md` — placeholder
+- `memory/chronicle/scratches/` — NEW archive directory
+
+**Completed:**
+- JTBD redesign outputs всех 4 скиллов (4 итерации до финала)
+- Полный redesign scratch-архитектуры
+- closeTsession auto-exit (STEP 11)
+- TafterCompact выполнен (cp90-93 → chronicle)
+
+**Opened:**
+- Design domain analysis (Phase 10, первый в очереди)
+
+**Notes:**
+- ~/.claude/commands/ — вне nospace git repo, не коммитятся
+- session_id = первые 8 символов .jsonl UUID = 87ee7870 (не меняется при /compact)

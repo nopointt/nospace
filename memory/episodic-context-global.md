@@ -691,3 +691,25 @@
 **Tasks completed / open:**
 - Done: architecture decision documented
 - Open: Phase 0 pre-analysis for 13 remaining books; v3.1 full extraction (waiting for quota); Persona Builder Agent spec
+
+---
+## Session 2026-03-15 — tLOS: Workspace Consciousness scratch architecture redesign
+
+**Decisions:**
+- Scratch-файлы теперь именуются `{session_id}+{N}-scratch.md` (session_id = 8 chars UUID, N = номер чекпоинта)
+- active-scratch pointer: `~/.tlos/active-scratch` — 1 строка, текущий файл
+- startTsession/TafterCompact читают ВСЕ scratches/, архивируют в chronicle/scratches/, создают placeholder
+- Tcheckpoint: пустой файл → пишем + rename N+1; не пустой → новый файл N+1
+- Все skill-outputs переведены на plain markdown (жирный, буллеты, таблицы — без code blocks)
+- closeTsession STEP 11: auto-exit (`kill -SIGTERM $PPID` с задержкой 1с)
+
+**Files changed:**
+- `~/.claude/commands/Tcheckpoint.md`, `TafterCompact.md`, `startTsession.md`, `closeTsession.md`, `compress-scratch.md`
+- `~/.claude/projects/c--Users-noadmin/memory/MEMORY.md`
+- `nospace/development/tLOS/memory/scratches/` — новая директория
+- `nospace/development/tLOS/memory/chronicle/scratches/` — новая архивная директория
+
+**Tasks completed / open:**
+- ✅ Redesign scratch-архитектуры + skill outputs
+- ✅ closeTsession auto-exit
+- ⏳ Design domain analysis (Phase 10, первый в очереди)
