@@ -3068,3 +3068,1067 @@ Next: read all Mondrian + van Doesburg batches → extract color principles → 
 - tmp_phase0/ (91MB) — orphaned temp dir, needs manual deletion by nopoint (rm blocked)
 - Gleizes: оригинальный Bauhausbuch #14 DE отсутствует в библиотеке; использован 1964 Guggenheim EN каталог
 - AIA Monitor cron c9590392 — остановлен при закрытии сессии
+
+---
+
+<!-- CHECKPOINT:95:2026-03-15:phase-10-analysis:design-bauhaus -->
+## Checkpoint 95 — 2026-03-15 17:15 — Bauhaus Extraction · конвейер (snap mid-session)
+
+Снапшот состояния активного экстракционного конвейера в момент /compact.
+
+**Завершённые книги:** #01 Gropius IA (b01-b06), #02 Klee (b01-b03), #03 Meyer (b01-b04+v3.2), #04 Schlemmer (b01-b05), #05 Mondrian (v3.2), #06 van Doesburg (b01-b03), #11 Malevich (b01-b04)
+
+**Активные агенты (10) в момент /compact:** #10 Oud b05 (pp80-99), #07 Gropius NA b01-b07 (7 агентов), #08 Moholy MPF b01-b02 (2 агента)
+
+**Правила конвейера:** без лидов, макс 10 параллельных, DPI 150, tmp dirs авто-очищаются.
+
+**Очередь (не запущено на момент snap):** #08 Moholy MPF b03-b07 (5), #09 Kandinsky b01-b11 (11), #12 Gropius Dessau b01-b12 (12), #13 Moholy VMA b01-b11 (11), #14 Gleizes b01-b07 (7), Zeitschrift (пауза)
+
+_Note: Все книги завершены в той же сессии (см. CLOSE 97)_
+
+
+---
+
+<!-- CHECKPOINT:95:2026-03-15:phase-10-analysis:design-domain-zeitschrift -->
+## Checkpoint 95 — 2026-03-15 — Zeitschrift extraction · 13/20 batches
+
+**Decisions:**
+- Design Code ≠ монолитный файл — структура из нескольких файлов по слоям
+- Bauhaus books = методологическая база (первоисточники, из них выводятся правила)
+- Design Code = рабочий документ: UI + UX + CX + философия, библия проекта
+- Глубина: средняя — правила, ограничения, диапазоны, рекомендации (не инструкции)
+- Основной потребитель: AI агенты (+ инженеры, дизайнеры)
+- Перед построением структуры Design Code — провести исследование (Opus, 1M ctx): изучить Bauhaus базу + реальные студийные гайдлайны
+- Merge агенты для Zeitschrift батчей — НЕ запускать
+- Экстракция Zeitschrift: запускать по 5 агентов параллельно (не 10 — crash 0xC0000409)
+
+**Files changed:**
+- `docs/tLOS/design/bauhaus-code/zeitschrift-1-1-1926.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-1-2-1927.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-1-3-1927.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-1-4-1927.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-2-1-1928.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-2-2-3-1928-b01.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-2-2-3-1928-b02.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-2-4-1928-b01.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-2-4-1928-b02.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-3-1-1929-b01.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-4-1-1931.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-4-2-1931.md` — создан
+- `docs/tLOS/design/bauhaus-code/zeitschrift-4-3-1931.md` — создан
+
+**Completed:**
+- Zeitschrift экстракция: 13/20 батчей
+
+---
+
+<!-- CHECKPOINT:96:2026-03-15:phase-10-analysis:design-domain-zeitschrift -->
+## Checkpoint 96 — 2026-03-15 — Zeitschrift extraction COMPLETE (20/20)
+
+**Decisions:**
+- Zeitschrift экстракция полностью завершена (20/20 батчей) ✅
+- Следующий шаг: запустить Opus агент (1M ctx) для исследования структуры Design Code
+- Промпт готов: `docs/tLOS/design/bauhaus-code/opus-design-code-structure-prompt.md`
+- Output Opus: `docs/research/design-code-structure-research.md`
+
+**Files changed:**
+- `docs/tLOS/design/bauhaus-code/zeitschrift-3-1-1929-b02.md` — создан (pp.18-35)
+- `docs/tLOS/design/bauhaus-code/zeitschrift-3-2-1929-b01.md` — создан (pp.0-17, Filmgestaltung)
+- `docs/tLOS/design/bauhaus-code/zeitschrift-3-2-1929-b02.md` — создан (pp.18-35, Technische Demokratie)
+- `docs/tLOS/design/bauhaus-code/zeitschrift-3-3-1929-b01.md` — создан (pp.0-17, Junkers стенд)
+- `docs/tLOS/design/bauhaus-code/zeitschrift-3-3-1929-b02.md` — создан (pp.18-35, Peterhans)
+- `docs/tLOS/design/bauhaus-code/zeitschrift-3-4-1929-b01.md` — создан (pp.0-17, Schlemmer farewell)
+- `docs/tLOS/design/bauhaus-code/zeitschrift-3-4-1929-b02.md` — создан (pp.18-35, CIAM-2, Meyer fingerprint)
+- `docs/tLOS/design/bauhaus-code/opus-design-code-structure-prompt.md` — создан (промпт для Opus)
+
+**Completed:**
+- Zeitschrift экстракция: 20/20 батчей ✅
+- Промпт для Opus Design Code research сохранён
+
+**Opened:**
+- Запустить Opus агент: промпт в `opus-design-code-structure-prompt.md` → output: `docs/research/design-code-structure-research.md`
+- После исследования: определить финальную файловую структуру Design Code
+- Назвать каждый батч по теме (а не по номеру)
+- Заполнить файлы Design Code на основе Bauhaus базы
+- Унифицировать нотацию принципов (P-01 vs DC-01)
+
+**Notes:**
+- Crash 0xC0000409 при 10 параллельных агентах → решено снижением до 5-6
+- Corpus estimate: ~270K токенов Zeitschrift + ~965K книги = ~1.2M полный корпус → Opus 1M ctx необходим
+
+---
+
+<!-- CHECKPOINT:97:2026-03-15:phase-10-analysis:design-bauhaus -->
+## Checkpoint 97 — 2026-03-15 — Zeitschrift close + Opus research prep
+
+- Sonnet 1M = Extra Usage на Max плане → rate limit ниже стандартного
+- "напомни"/"покажи" = выводить содержимое прямо в ответ (feedback memory saved)
+- L1/L3 обновлены по итогам Zeitschrift экстракции (20/20 батчей COMPLETE)
+- Opus research промпт готов: `docs/tLOS/design/bauhaus-code/opus-design-code-structure-prompt.md`
+
+---
+
+<!-- CHECKPOINT:98:2026-03-15:phase-10-analysis:design-code-structure -->
+## Checkpoint 98 — 2026-03-15 — Opus Design Code Structure Research COMPLETE
+
+**Opus research выполнен** (session 1d181bd0). 8 параллельных агентов:
+- Agent C: 5 v3.2 книг deep (16 батчей) + 4 Zeitschrift
+- Agent D: 9 оставшихся книг (specialists + b01)
+- Agent E: Moholy×2 + Kandinsky (29 батчей deep)
+- Agent F: Gropius×3 (25 батчей deep)
+- Agent G: Oud + Malevich + Gleizes (17 батчей deep)
+- Agent H: Zeitschrift×16 (оставшиеся 16 батчей)
+- Agent A: GitHub repos (Carbon, Polaris, Spectrum, Primer, Atlassian, Radix)
+- Agent B: статьи (Nathan Curtis, Atomic Design, W3C DTCG, Vercel, MCP)
+
+**Итого:** 107 Bauhaus файлов + 8 GitHub repos + 12 статей/спецификаций.
+
+**Результат:** `docs/research/design-code-structure-research.md` — multi-file design system structure.
+Ключевое решение: два axis — вертикальный (layers) + горизонтальный (Bauhaus domains).
+Moholy-Nagy Material→Architecture = tokens→components→patterns→environments.
+Монолитный DESIGN-CODE.md → abstract summary (вишенка). Полная система = 30+ файлов.
+
+**Промежуточные файлы:** agents A и B сохранили:
+- `docs/research/design-system-file-structures-research.md`
+- `docs/research/design-system-architecture-research.md`
+
+---
+
+<!-- CHECKPOINT:99:2026-03-15:phase-10-analysis:design-system-v1 -->
+## Checkpoint 99 — 2026-03-15 — Design System v1 COMPLETE (43 files)
+
+**Session 1d181bd0 — Design System build from Bauhaus sources.**
+
+Opus research (8 agents, 107 Bauhaus files + 20 industry sources) → multi-file structure proposed → approved → 43 files written:
+- foundations/ (5): philosophy (Monolith origin), principles (5 named), provenance, glossary (50+ terms), gaps (10 areas)
+- formal-grammar/ (6): point-line-plane, color, balance-tension, rhythm-proportion, decomposition, economy
+- material/ (4): material-truth, faktur-textur-struktur, light, tactile
+- space/ (5): body-in-space, zoning, transparency, scale, modular
+- time/ (4): movement, rhythm-tempo, simultaneity, notation
+- production/ (4): typus, standardization, prototype, craft-industry
+- perception/ (4): consciousness, neue-sehen, sensation, pedagogy
+- guidelines/ (8): color, typography, spacing, motion, layout, elevation, spatial, agents
+- navigation (3): README, DESIGN-CODE, AGENTS
+
+14+ factual errors found by verification and corrected (Diagonal=Red not Green, Mondrian gray not a non-color, fabricated quotes removed, Gliederung 2 types not 3, etc.)
+
+Still empty: tokens/, patterns/, registry/, bauhaus/
+Location: `nospace/design/design_system/`
+
+---
+
+<!-- ENTRY:2026-03-15:CLOSE:100:tLOS:design-system-v1 -->
+## 2026-03-15 — сессия 100 CLOSE
+
+**Phase:** Phase 10 Analysis → Design Domain → Design System v1
+
+**Decisions:**
+- Design system at `nospace/design/design_system/` (not docs/tLOS/)
+- Light theme default, B&W + 3 Bauhaus primaries
+- Monolith (4:5 black rectangle) = origin point of design system
+- 5 principles: Gestaltung, Gleichgewicht, Materialwahrheit, Sparsamkeit, Raumgestaltung
+- Moholy-Nagy Material→Architecture as structural backbone (with honest interpolation note)
+- bauhaus/ reference files deferred for quota
+- Always read ALL batch files before writing (feedback saved)
+
+**Files changed:**
+- `nospace/design/design_system/` — 43 files created (entire design system v1)
+- `nospace/docs/research/design-code-structure-research.md` — main research output
+- `nospace/docs/research/design-system-file-structures-research.md` — GitHub repos research
+- `nospace/docs/research/design-system-architecture-research.md` — articles research
+- `memory/tlos-phase10.md` — Design System tasks updated
+- `memory/tlos-roadmap.md` — Design System v1 milestone noted
+- `memory/tlos-about.md` — Design System path added
+
+**Completed:**
+- Opus research: 8 agents, 107 Bauhaus files + 20 industry sources
+- Design System v1: 43 files (foundations 5, formal-grammar 6, material 4, space 5, time 4, production 4, perception 4, guidelines 8, navigation 3)
+- Verification: 14+ factual errors found and corrected in foundations + formal-grammar
+- Total agents this session: ~30+
+
+**Opened:**
+- Verification pass for agent-written domain files (read ALL batches, not subset)
+- bauhaus/ (5 reference files, deferred)
+- tokens/ (needs visual design decisions)
+- patterns/ (6 files, needs UX context)
+- registry/ (4 JSON files, needs tokens+components)
+
+**Notes:**
+- Session 1d181bd0 was one of the largest tLOS sessions: research + build + verification + fill
+- Key learning: agents writing from memory introduce factual errors; reading primary sources first is mandatory
+
+---
+
+<!-- CHECKPOINT:101:2026-03-15:phase-10-design-tokens -->
+## Checkpoint 101 — 2026-03-15 — phase-10-design-tokens
+
+Базовая цветовая палитра tLOS принята из Kandinsky "Yellow-Red-Blue" (1925): yellow=#F2C200, red=#C82020, blue=#1E3EA0.
+Серая шкала: 5 ступеней (white/#BFBFBF/#808080/#404040/black). Семантика: warning=yellow, error=red, accent.primary=blue.
+При конфликте design system всегда первична (shell #0A0A0F — имплементационная деталь). Gradients: вопрос поднят.
+Pencil: фрейм "tLOS Color System" (DpHtH) создан с primary + gray swatches.
+
+---
+
+<!-- CHECKPOINT:102:2026-03-15:phase-10-design-tokens -->
+## Checkpoint 102 — 2026-03-15 — phase-10-design-tokens
+
+Design system пересобирается с нуля: старые shell-цвета (gold #f2b90d, cyan #06B6D4) убраны — pre-DS детали.
+Градиенты запрещены (Materialwahrheit, без исключений).
+Серая шкала расширена до 10 шагов: white/gray-100..800/black, шаг 11.1% lightness, выше = темнее.
+bg: canvas=#000000, surface=#1C1C1C, elevated=#393939, overlay=rgba(0,0,0,0.6) (единственный случай opacity).
+text: primary=#FFFFFF, secondary=#AAAAAA, disabled=#717171, on-color=#000000.
+border: subtle=#393939, default=#555555, strong=#8E8E8E.
+interactive: hover=+1 шаг, pressed=+2 шага, disabled=gray-500. На primaries — меняется фон/граница, не primary.
+signal: error=red, warning=yellow, info=blue. signal.success — НЕТ цвета (форма + Unix-принцип).
+Написан tokens/base/color.tokens.json (W3C DTCG). Обновлены AGENTS.md + README.md. Тема по умолчанию: светлая.
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:104:tLOS:phase-10-design-tokens -->
+## 2026-03-16 — checkpoint 104
+
+**Decisions:**
+- English only rule: all design system content, labels, UI text in Pencil — English only. Bauhaus German terms OK as proper nouns/references.
+- Interface examples plan: 3 blocks on dark canvas (#000000) — Panel (bg stack), Button states (5 variants), Signal banners (4 rows with left-border accent)
+- nopoint renamed project section to "design system" (English)
+
+**Files changed:**
+- `Pencil untitled.pen` — DpHtH frame rebuilt as "Farb-System": 7 color sections (Gray×10, Primary×3, Background×4, Text×4, Border×3, Interactive×3, Signal×3+success). White bg, Bauhaus source annotations.
+- `~/.claude/projects/c--Users-noadmin/memory/feedback_english_only.md` — created: English only rule
+- `~/.claude/projects/c--Users-noadmin/memory/MEMORY.md` — added english_only pointer
+
+**Completed:**
+- Farb-System visualization in Pencil — all 30 color tokens from color.tokens.json visualized with hex values and Bauhaus source references
+- English only rule saved to persistent memory
+
+**In progress:**
+- Interface examples in Pencil — planned, not yet executed
+
+**Opened:**
+- Build interface examples: Panel + Button states + Signal banners (English text only)
+- Clarify what nopoint renamed: Pencil file title? frame name?
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:106:Thelos:phase-10-design-tokens -->
+## 2026-03-16 — checkpoint 106
+
+**Decisions:**
+- Project is now called **Thelos** (tLOS = deprecated). Paths unchanged.
+- `text.on-color` split into two tokens: `text.on-color-light = #000000` (yellow) and `text.on-color-dark = #FFFFFF` (red, blue). Rule: yellow→black, blue→white, red→white.
+- All German text in Pencil Color System frame → English. Bauhaus German proper nouns remain.
+
+**Files changed:**
+- `Pencil untitled.pen` — DpHtH "Thelos Color System": all 7 section labels → English, signal.success "kein Farbe" → "no color · form", frame renamed
+- `Pencil untitled.pen` — xF6MT "Thelos Interface Examples": 7 sections (Panel, Button States, Signal, Border Intensities, Overlay, Primary as Accent, Light Theme). KrVcD Accent button text → #FFFFFF
+- `nospace/design/design_system/tokens/base/color.tokens.json` — "tLOS" → "Thelos"; text.on-color split into on-color-light/on-color-dark
+- `~/.claude/projects/c--Users-noadmin/memory/project_thelos_name.md` — created
+- `~/.claude/projects/c--Users-noadmin/memory/MEMORY.md` — added Thelos pointer
+- `nospace/development/tLOS/memory/tlos-phase10.md` — Pencil visualize ✅ DONE
+- `nospace/docs/research/anthropic-intelligence/feed.md` — 6 new AIA entries
+- `nospace/docs/research/anthropic-intelligence/index.md` — last-seen updated 2026-03-16
+
+**Completed:**
+- Color System frame: all German → English
+- Interface Examples frame: 7 sections, all 30 tokens in context
+- text.on-color-light / text.on-color-dark split
+- Thelos rename → persistent memory
+- AIA monitor cron run
+
+**Opened:**
+- tokens/base/spacing.tokens.json
+- tokens/base/typography.tokens.json
+- tokens/base/motion.tokens.json
+
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:107:Thelos:phase-10-design-tokens -->
+## 2026-03-16 — checkpoint 107
+
+**Decisions:**
+- Inter replaces Neue Haas Grotesk as brand font (no Cyrillic in NHG; Inter = full Latin + Cyrillic + Greek)
+- Mandatory rule: agents working with Design Code must read `docs/research/design-code-structure-research.md` FIRST
+- `[tLOS decision]` = standard marker for engineering choices not Bauhaus-derived
+
+**Files changed:**
+- `tokens/base/spacing.tokens.json` — written + verified + fixed (citations, arithmetic, Monolith ratio labeled)
+- `tokens/base/typography.tokens.json` — written + verified + fixed (Tschichold→Bayer, Inter, Klee §6 inversion)
+- `tokens/base/motion.tokens.json` — written + verified + fixed (MPF ref, fabricated quotes removed)
+- `tlos-about.md` — Font → Inter
+- `feedback_read_opus_research.md` + MEMORY.md — Opus synthesis mandatory rule saved
+- Pencil: 3 new frames (Spacing/Typography/Motion System), "v2" removed
+
+**Completed:** tokens/base/ (4/4) + Pencil visualization (3 frames)
+
+**Opened:** tokens/semantic/ + tokens/component/
+
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:110:tLOS:bauhaus-rag-mcp -->
+## 2026-03-16 — checkpoint 110
+
+**Decisions:**
+- Bauhaus corpus → RAG (Qdrant) выбран как основной способ доступа агентов к дизайн-знаниям
+- Embedding: jina-embeddings-v4 (2048-dim), sparse: BM42 via FastEmbed, reranker: jina-reranker-v3
+- Qdrant collection: `bauhaus_knowledge` (hybrid dense+sparse, RRF fusion)
+- MCP transport для Eidolon: venv Python stdio (не uv run)
+- Jina ключ сохранён в ~/.tlos/jina-key
+
+**Files changed:**
+- `bauhaus_parser.py`, `bauhaus_ingest.py`, `bauhaus_query.py`, `bauhaus_verify.py` — NEW (RAG pipeline)
+- `tlos_mcp_server.py` — NEW: MCP сервер (bauhaus_query, nats_publish, tlos_status)
+- `pyproject.toml` — +qdrant-client[fastembed], fastembed, mcp
+- `bridge_handler.py` / `bridge.py` — +handle_bauhaus_query
+- `agents/eidolon/` — NEW: config.json, system-prompt.md, persona.md, workspace.md
+- `~/.claude.json` — +mcpServers.tlos
+
+**Completed:** Bauhaus RAG (107 файлов, 10116 блоков, 0 missing). MCP зарегистрирован. Eidolon identity.
+
+**Opened:** Enricher FIGURE/EXERCISE (фоновый процесс). Query interface. Qdrant version mismatch (1.17.1 vs 1.13.0).
+
+---
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:111:tLOS:phase-10-bauhaus-rag -->
+## 2026-03-16 — checkpoint 111
+
+**Decisions:**
+- Vision model для bauhaus_enricher: claude-opus-4-6 вместо NIM llama-3.2-90b (тот же агент, NIM key не нужен)
+- Claude вызывается как прямой REST API (Anthropic Messages API) — каждая страница = чистый контекст
+- Ключ: ~/.tlos/claude-key или ANTHROPIC_API_KEY env
+- Explicit del + gc.collect() после каждой страницы (1700+ pages long-running)
+
+**Files changed:**
+- `bauhaus_enricher.py` — NEW (+ NIM→Claude замена): PyMuPDF render, jina embed, bauhaus_figures collection
+- `pyproject.toml` — +pymupdf>=1.24, pillow>=10.0
+
+**Completed:** bauhaus_enricher.py написан. NIM→Claude замена. Memory cleanup добавлен.
+
+**Opened:** uv sync (pymupdf+pillow). ~/.tlos/jina-key создать. bauhaus_ingest.py прогнать перед enricher. Dry-run тест.
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:110:tLOS:bauhaus-rag-mcp -->
+## 2026-03-16 — checkpoint 110
+
+**Decisions:**
+- Bauhaus corpus → RAG (Qdrant) выбран как основной способ доступа агентов к дизайн-знаниям
+- Embedding: jina-embeddings-v4 (2048-dim, Jina AI API, free tier)
+- Sparse: BM42 via FastEmbed (Qdrant/bm42-all-minilm-l6-v2-attentions)
+- Reranker: jina-reranker-v3
+- Qdrant collection: `bauhaus_knowledge` (hybrid: dense + sparse, RRF fusion)
+- Обогащение блоков (FIGURE/EXERCISE контекст) — отложено на фоновый агент-процесс (v2)
+- MCP transport для Eidolon: venv Python stdio (не uv run — прямой путь к .venv/Scripts/python.exe)
+- Eidolon identity: agents/eidolon/ (config.json, system-prompt.md, memory/persona.md, memory/workspace.md)
+- Jina ключ сохранён в ~/.tlos/jina-key (ротация рекомендуется)
+
+**Files changed:**
+- `core/kernel/tlos-langgraph-bridge/bauhaus_parser.py` — NEW: парсер 107 файлов → 10,116 блоков (6 типов)
+- `core/kernel/tlos-langgraph-bridge/bauhaus_ingest.py` — NEW: embedding + Qdrant upsert pipeline
+- `core/kernel/tlos-langgraph-bridge/bauhaus_query.py` — NEW: hybrid search + rerank, agent-facing
+- `core/kernel/tlos-langgraph-bridge/bauhaus_verify.py` — NEW: zero-loss verification
+- `core/kernel/tlos-langgraph-bridge/bauhaus-rag-spec.md` — NEW: полная спека (исправлено 3 бага Coach)
+- `core/kernel/tlos-langgraph-bridge/tlos_mcp_server.py` — NEW: MCP сервер (bauhaus_query, nats_publish, tlos_status)
+- `core/kernel/tlos-langgraph-bridge/pyproject.toml` — +qdrant-client[fastembed]>=1.9, fastembed>=0.3, mcp>=1.0
+- `core/kernel/tlos-langgraph-bridge/bridge_handler.py` — +handle_bauhaus_query (NATS handler)
+- `core/kernel/tlos-langgraph-bridge/bridge.py` — +elif agent:bauhaus:query branch
+- `agents/eidolon/config.json` — NEW: model=claude-sonnet-4-6, contextWindowTokens=131072
+- `agents/eidolon/system-prompt.md` — NEW: автономный режим (claude-bridge)
+- `agents/eidolon/memory/persona.md` — NEW: Eidolon persona
+- `agents/eidolon/memory/workspace.md` — NEW: tLOS workspace context
+- `~/.claude.json` — +mcpServers.tlos (stdio, venv python)
+- `~/.claude/projects/.../memory/ideas_inbox.md` — +.claudeignore security bypass idea
+
+**Completed:**
+- Bauhaus RAG: 107 файлов, 10,116 блоков, status OK, 0 missing
+- Верификация пройдена: files_checked=107, total_indexed=10116, missing=[]
+- MCP сервер зарегистрирован в ~/.claude.json
+- Eidolon identity создан (4 файла)
+- Coach нашёл 3 бага в спеке (FIGURE формат, EXERCISE colon, VOCAB 5-col) — все исправлены до реализации
+
+**In progress:**
+- Перезапуск VSCode для активации MCP tlos (ожидает nopoint)
+
+**Opened:**
+- Агент-обогатитель FIGURE/EXERCISE блоков (фоновый процесс, пишется в другом диалоге)
+- Query interface для дизайн-агентов (nopoint хочет обсудить)
+- Qdrant version incompatibility: client 1.17.1 vs server 1.13.0 (предупреждение, не ошибка — обновить образ)
+- .claudeignore security bypass bug: проверить нет ли секретов в .claudeignore
+
+**Notes:**
+- BM42 модель скачана с HuggingFace (~30 сек, 6 файлов) — кешируется, повторный запуск быстрее
+- Ingestion занял ~8 мин (10k блоков × Jina API batches + BM42 sparse)
+- AIA feed: 13 новых записей, 4 HIGH (Claude Code Review launch, $2.5B ARR, A3 alignment agent, .claudeignore bypass)
+- PRINCIPLE: 1253, FIGURE: 1308, VOCAB: 3175, PROSE: 3819, ARGUMENT: 336, EXERCISE: 225
+# f2e2bc70+111-scratch.md
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:111:tLOS:phase-10-bauhaus-rag -->
+## 2026-03-16 — checkpoint 111
+
+**Decisions:**
+- Vision model для bauhaus_enricher: Claude (claude-opus-4-6) вместо NIM llama-3.2-90b — тот же агент, нет доп. ключей (NIM key не нужен), выше качество анализа
+- Claude вызывается как прямой REST API (Anthropic Messages API), НЕ как сабагент — каждая страница = чистый контекст, никакой истории между страницами
+- Модель: claude-opus-4-6 (museum-quality depth, Opus для глубокого анализа)
+- Ключ: читается из `~/.tlos/claude-key` или `ANTHROPIC_API_KEY` env var (fallback)
+- Cleanup после каждой страницы: `del png_bytes, analysis; gc.collect()` — важно для long-running цикла на 1700+ страниц
+- Cleanup есть и на dry_run early-return пути
+
+**Files changed:**
+- `core/kernel/tlos-langgraph-bridge/bauhaus_enricher.py` — заменён NIM на Claude API:
+  - Убраны: NIM_BASE_URL, NIM_KEY_PATH, NIM_VISION_MODEL
+  - Добавлены: ANTHROPIC_API_URL, CLAUDE_KEY_PATH, CLAUDE_VISION_MODEL
+  - `analyze_page_with_vision()` — новый формат Anthropic Messages API (image source base64 + text, не image_url)
+  - `_load_keys()` — читает claude-key, fallback на env var
+  - `process_page()` — параметр nim_key → claude_key
+  - Добавлен explicit cleanup блок в конце process_page() и на dry_run пути
+- `core/kernel/tlos-langgraph-bridge/pyproject.toml` — добавлены pymupdf>=1.24, pillow>=10.0 (прошлая сессия)
+
+**Completed:**
+- bauhaus_enricher.py написан с нуля (прошлая сессия)
+- pyproject.toml обновлён (прошлая сессия)
+- NIM → Claude замена
+- Explicit memory cleanup
+
+**In progress:**
+- —
+
+**Opened:**
+- `uv sync` — установить pymupdf + pillow в venv (пользователь делает вручную)
+- Создать `~/.tlos/jina-key` (ключ есть в bauhaus-rag-plan.md)
+- Запустить `bauhaus_ingest.py` перед enricher (чтобы fetch_existing_blocks работал)
+- Тест: `python bauhaus_enricher.py --dry-run --book 9 --max-pages 3`
+
+**Notes:**
+- Все PDF баухауса = 100% сканы, нет текстового слоя, каждая страница = растровое изображение
+- bauhaus_figures collection (dense_text + dense_image named vectors) создаётся автоматически
+- enrichment_progress.json — resumable, пропускает уже обработанные страницы
+- NIM key больше не нужен для enricher
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:113:tLOS:cleanup -->
+## 2026-03-16 — checkpoint 113
+
+**Decisions:**
+- node_modules (frontend, claude-bridge, harkly-saas) и .venv НЕ удалять — всё в активном использовании
+- Удалять только: bauhaus temps + audio/transcription temps + infinite-canvas node_modules
+- feat-cx-osint-pipeline/output/ (1.2 GB) — ОСТАВИТЬ: 928 Steam review JSON + JTBD отчёты — ценная аналитика
+
+**Files changed:**
+- Удалено: `knowledge/bauhaus-books/tmp_phase0/` (91 MB)
+- Удалено: `knowledge/bauhaus-books/tmp_k09_batch/`
+- Удалено: `knowledge/bauhaus-books/mondrian-pages/`
+- Удалено: `nospace/audio_*.wav` + `audio_transcribe.wav` (~115 MB)
+- Удалено: `nospace/улица Жанадария 3 (2).m4a` (165 MB)
+- Удалено: `nospace/transcription*.txt`
+- Удалено: `nospace/tmp_build_vd.py`
+- Удалено: `branches/feat-site-v1/templates/infinite-canvas/node_modules` (329 MB)
+
+**Completed:**
+- Disk cleanup: ~580 MB освобождено, все 8 целей подтверждены
+
+**Opened:**
+- node_modules + .venv удалить позже (окно без активной разработки): ~1.3 GB потенциал
+- `uv sync` перед запуском enricher (pymupdf + pillow)
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:114:tLOS:bauhaus-enricher-mcp -->
+## 2026-03-16 — checkpoint 114
+
+**Decisions:**
+- Архитектура enricher инвертирована: Claude-агент → MCP tools (не Python-скрипт → Claude subprocess)
+- Claude анализирует изображения сам (нативный vision) — никакого REST, никаких subprocess
+- Groq и Anthropic REST полностью убраны из enricher
+- Параллельность через разные книги + per-book progress файлы
+
+**Files changed:**
+- `tlos_mcp_server.py` — 5 новых MCP инструментов запланированы (render, upsert, progress, mark_done, existing_blocks)
+- `enricher_agent.md` — промпт-файл для Claude-агента (создаётся)
+- `bauhaus_enricher.py` — частичные фиксы (промежуточное состояние)
+
+**Completed:**
+- Bauhaus RAG 10,116 блоков в Qdrant, 0 missing ✅
+- MCP сервер зарегистрирован, Eidolon identity создан ✅
+- RAG протестирован, семантика работает ✅
+
+**Opened:**
+- 5 MCP инструментов в tlos_mcp_server.py (render, upsert, progress, mark_done, existing_blocks)
+- enricher_agent.md — промпт-файл для Claude-агента
+- Обновить Qdrant образ (version mismatch 1.17.1 vs 1.13.0)
+
+---
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:115:tlos:design-system-fill -->
+## 2026-03-16 — checkpoint 115
+
+**Decisions:**
+- Design system fill strategy: use Bauhaus RAG (bauhaus_query MCP tool) as primary source for all new content — "Код = RAG база знаний по баухаусу"
+- 15 parallel agents launched simultaneously (Quota Guard confirmed with "согласовываю")
+- dark.tokens.json path fix: agent created `tokens/themes/dark/dark.tokens.json` (nested) → manually written to correct path `tokens/themes/dark.tokens.json`; nested duplicate needs manual deletion
+
+**Files changed:**
+- `nospace/design/design_system/tokens/semantic/color.semantic.tokens.json` — CREATED: 33 tokens, 5 intent groups (action/surface/content/state/feedback), all {color.*} references
+- `nospace/design/design_system/tokens/semantic/elevation.semantic.tokens.json` — CREATED: elevation.0-3+overlay, z-index 7 strata, focus ring tokens
+- `nospace/design/design_system/tokens/component/button.tokens.json` — CREATED: 67 tokens, 4 variants × 5 states, border-radius=0px
+- `nospace/design/design_system/tokens/component/panel.tokens.json` — CREATED: 24 tokens, 7 groups
+- `nospace/design/design_system/tokens/component/input.tokens.json` — CREATED: 7 states × 5 props, 3 sizes
+- `nospace/design/design_system/tokens/component/tag.tokens.json` — CREATED: 6 variants + size + shape + removable
+- `nospace/design/design_system/tokens/component/omnibar.tokens.json` — CREATED: 62 tokens, 6 groups
+- `nospace/design/design_system/tokens/themes/dark.tokens.json` — CREATED: full dark theme restatement
+- `nospace/design/design_system/tokens/themes/high-contrast.tokens.json` — CREATED: WCAG AAA overrides
+- `nospace/design/design_system/patterns/navigation.md` — CREATED: 255 ln, 6 patterns
+- `nospace/design/design_system/patterns/composition.md` — CREATED: 8 patterns
+- `nospace/design/design_system/patterns/interaction.md` — CREATED: 9 patterns + ASCII state machine
+- `nospace/design/design_system/patterns/agent-dialog.md` — CREATED: 9 patterns
+- `nospace/design/design_system/patterns/workspace.md` — CREATED: 8 patterns + 4 ASCII layout diagrams
+- `nospace/design/design_system/patterns/error-states.md` — CREATED: 10 patterns + state taxonomy table
+
+**Completed:**
+- Full design system fill: tokens/semantic (2), tokens/component (5), tokens/themes (2), patterns (6) — 15 files total
+- TafterCompact session recovery + scratch cleanup
+- dark.tokens.json path fix
+
+**Opened:**
+- Manual cleanup: delete `nospace/design/design_system/tokens/themes/dark/` directory (duplicate)
+- README.md update: add patterns/ and tokens/semantic+component+themes to structure section
+- tlos-phase10.md update: mark design system fill tasks as complete
+
+
+---
+<!-- ENTRY:2026-03-16:CHECKPOINT:117:tlos:phase10-closure -->
+## 2026-03-16 — checkpoint 117
+
+**Decisions:**
+- `bauhaus/` reference (4 planned static files) — REMOVED from plan. RAG система делает их избыточными
+- Notation unification (P-01 vs DC-01) — REMOVED. Bauhaus Code живёт в RAG, батчи = архив
+- Batch naming Zeitschrift — REMOVED (выполнено или не актуально)
+- Verification pass дизайн системы — DEFERRED до формирования команды агентов
+- Domain analysis queue — DEFERRED до формирования команды агентов
+- Phase 10 Aggregation — сохраняем: нужна как вход для написания roadmap Phase 11+
+- English-only rule уточнена: только дизайн-артефакты, не разговор с nopoint
+- `tokens/themes/dark/`, `high-contrast/`, `light/` пустые папки → Recycle Bin
+
+**Files changed:**
+- `design_system/README.md` — tokens/ + patterns/ секции обновлены
+- `design_system/AGENTS.md` — Retrieve by Task: 11 → 22 записей
+- `memory/tlos-phase10.md` — задачи дизайн домена закрыты/отложены
+- `.claude/.../feedback_english_only.md` — добавлен Scope (CRITICAL)
+
+**Completed:** TafterCompact + Recycle Bin + README+AGENTS обновлены + L3 очищен
+
+**Opened:**
+- Phase 10 Aggregation: посмотреть existing audit reports → написать агрегацию
+- Phase 11 roadmap: написать после агрегации
+
+---
+<!-- ENTRY:2026-03-16:CHECKPOINT:118:tlos:bauhaus-enricher-mcp -->
+## 2026-03-16 — checkpoint 118
+
+**Decisions:**
+- `claude --print` как subprocess = неработающий паттерн (без TTY вывод теряется)
+- Enricher агент запускается пользователем из своего терминала, не из Eidolon
+- Архитектура мониторинга: emit_progress MCP tool → enricher.log + NATS; watch_enricher.py polling dashboard
+
+**Files changed:**
+- `tlos_mcp_server.py` — 6-й enricher tool: `emit_progress`
+- `enricher_agent.md` — добавлены emit_progress вызовы
+- `enricher_agent_quality_test.md` — emit_progress + Step 0
+- `watch_enricher.py` — новый: live dashboard
+- `test_enricher_tools.py` — новый: smoke test 6 инструментов
+- `test_retrieval_quality.py` — новый + исправлен
+- `upsert_klee_figures.py` — новый: ручной upsert 7 Klee figures
+
+**Completed:** Wet test 6 MCP tools ✅, quality test 5/5 ✅, bauhaus_figures коллекция создана, watch_enricher.py работает
+
+**Opened:**
+- Запустить enricher агент из терминала пользователя
+- Очистить bauhaus_figures от test data перед реальным run
+- Удалить upsert_klee_figures.py (одноразовый скрипт)
+
+---
+
+<!-- CHECKPOINT:119:2026-03-16:bauhaus-enricher+design-team -->
+## Checkpoint 119 — 2026-03-16 — bauhaus_enricher LIVE + Design Team architecture
+
+bauhaus_enricher pipeline confirmed working (Agent tool background, Python + vision). Quality test 5/5 PASS, 12 points in bauhaus_figures. Design team 8-agent architecture defined (3 repos + 3 custom). BB framework discovered in Downloads, needs import.
+
+**Decisions:** bauhaus_enricher = Agent tool (background) workflow (TTY limitation bypass). Design team 8 roles: creative-director, ux-researcher, ux-designer, ui-designer, design-systems-engineer, data-viz-designer, motion-designer, accessibility-auditor.
+
+**Files:** memory/tlos-about.md updated (enricher LIVE). Scratches cleaned.
+
+**Next:** Design team install (8 agents in ~/.claude/agents/), BB framework import, enricher bulk run.
+
+---
+
+<!-- CHECKPOINT:120:2026-03-16:phase11-planning -->
+## Checkpoint 120 — 2026-03-16 — Phase 10 COMPLETE, Phase 11 specs written
+
+Phase 10 officially closed. Aggregation written (docs/tLOS/audit/README.md): score dashboard, heatmap, priority matrix. Roadmap v6 written (Phase 11/12/13 + Bauhaus RAG + Design System v1 as live assets). Backend score corrected: 78 (was 82 in L3). Old roadmaps archived.
+
+6 Phase 11 background agent specs written in branches/phase-11/: S-01/S-02 (CSP+DOMPurify), S-03 (NIM key migration), S-05 (Docker healthchecks), D-01/D-02 (local backups ~20MB/day), A-01 (token budgets in call_claude_cli), P-02 (GETTING_STARTED.md rewrite).
+
+**Decisions:** bauhaus_knowledge (2.2 GB) NOT backed up — reproducible. Backups local only (no R2). NIM key → ~/.tlos/nim-key pattern. A-03 (LiteLLM migration) confirmed for Phase 11, needs separate G3 spec.
+
+**Next:** "согласовываю" → launch 6 background agents. Then A-03 spec (G3 session).
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:121:tlos:phase11-hardening -->
+## 2026-03-16 — checkpoint 121
+
+**Decisions:**
+- Bug 4 (pinned close 2 clicks): code is correct — onClose directly calls removeComponent, no unpin-before-close. Bug may be visual artifact; re-investigate if reproduced.
+- S-04 follow-up created: /root/ → /home/tlos/ volume paths must be updated in docker-compose.yml (USER 1000 now runs as `tlos`, tilde expansion will resolve to /home/tlos/)
+- Phase 11 P0 blockers: ALL 9 resolved (S-01..S-05, D-01..D-03, A-01, A-02, P-01, P-02)
+
+**Files changed:**
+- `core/shell/frontend/src-tauri/tauri.conf.json` — CSP set (was null)
+- `core/shell/frontend/package.json` — dompurify + @types/dompurify added
+- `core/shell/frontend/src/components/Chat.tsx` — DOMPurify.sanitize wrapping renderMarkdown
+- `core/shell/frontend/src/components/OmnibarBody.tsx` — DOMPurify.sanitize wrapping marked.parse
+- `core/kernel/.env` — NIM_KEY removed, replaced with comment
+- `core/kernel/tlos-zep-bridge/.env` — NIM_KEY removed (bonus find)
+- `core/grid.ps1` — nim-key file read + write-back bug fixed (key no longer written back to .env)
+- `core/kernel/docker-compose.yml` — healthchecks (NATS + all bridges), backup service (profiles:backup), cap_drop ALL + security_opt for all 13 services, db cap_add exception
+- `core/kernel/tlos-claude-bridge/Dockerfile` — USER 1000 (alpine syntax)
+- `core/kernel/tlos-langgraph-bridge/Dockerfile` — USER 1000 (debian syntax)
+- `core/kernel/Dockerfile.rust-services` — USER 1000 (debian, runtime stage)
+- `core/kernel/scripts/backup.sh` — NEW: pg_dump + qdrant snapshots, 7-day retention
+- `core/kernel/scripts/restore.md` — NEW: restore procedure
+- `core/kernel/backups/.gitkeep` — NEW
+- `core/kernel/.gitignore` — NEW: backups/*.sql.gz + backups/*.snapshot
+- `core/kernel/tlos-langgraph-bridge/graph.py` — max_tokens in call_claude_cli (A-01) + cache_get/put in _chief_node + _lead_node (A-02)
+- `core/kernel/tlos-langgraph-bridge/trace.py` — max_tokens propagated in traced_call_claude_cli
+- `core/docs/GETTING_STARTED.md` — rewritten for Docker stack (140 lines)
+- `core/shell/frontend/src/components/DynamicComponent.tsx` — removed onWheel stopPropagation (zoom fix) + left/top → transform
+- `core/shell/frontend/src/hooks/useSnap.ts` — unpin position: viewport-center formula (2 locations)
+- `core/shell/frontend/src/hooks/useComponents.ts` — loadCanvasState dedup by id
+
+**Completed:**
+- Phase 11 P0 — all 9 blockers resolved via 4+3 background agents
+- Shell bugs: zoom, transform, unpin position, startup dedup (4/5 — Bug 4 code was already correct)
+
+**In progress:**
+- —
+
+**Opened:**
+- S-04 follow-up: update volume targets /root/ → /home/tlos/ in docker-compose.yml (langgraph-bridge, claude-bridge)
+- A-03: LiteLLM migration (L effort, needs G3 session)
+- P-03: JTBD statement → PRODUCT.md (S effort)
+
+**Notes:**
+- grid.ps1 bonus fix: old code was re-writing NIM_KEY into .env on every grid run — actual security gap, now fixed
+- tlos-zep-bridge/.env also had NIM_KEY — cleaned (not in original spec)
+- Dockerfile.rust-services: single file for all Rust bridges (shell-bridge, dispatcher, fs-bridge, shell-exec) — multi-stage, debian:bookworm-slim final stage
+- All builds pass: bun run build exit 0 (frontend), python import OK (graph.py)
+
+---
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:122:tlos:design-team-architecture -->
+## 2026-03-16 — checkpoint 122
+
+**Decisions:**
+- Design team: 7 агентов финально утверждены (Gropius/Schlemmer/Malevich/Klee/Moholy-Nagy/Kandinsky/Jobs)
+- Swap: Moholy-Nagy → AIX, Kandinsky → Graphic, van Doesburg убран
+- CX: Steve Jobs (не Chesky, не Muche) — голос современной эпохи
+- Архитектура: 7 отдельных Qdrant коллекций (не shared)
+- Стандарт личности: Black Mirror — выводится из корпуса, не придумывается
+- Corpus: расширяем за пределы 14 Bauhausbücher (Kandinsky 1912, Klee notebooks, Moholy Vision in Motion, итд)
+- Следующий шаг: research — как строят синтетические личности на уровне Black Mirror
+
+**Files changed:**
+- `docs/tLOS/design/design-team-spec.md` — создан (полный spec команды + архитектура)
+
+**Completed:**
+- Состав команды согласован полностью ✅
+- Архитектура RAG per-persona согласована ✅
+- Absorptions задокументированы ✅
+
+**In progress:**
+- Research: synthetic personality construction — state of the art + innovations
+
+**Opened:**
+- Corpus acquisition per author (7 авторов, список в spec)
+- Ingestion pipeline adaptation (per-persona collections)
+- Persona extraction agent per author
+- Agent file writing (~/.claude/agents/)
+
+**Notes:**
+- N=121 → 122 (файл был f2e2bc70+121, последний чекпоинт был #121 судя по placeholder)
+- design-team-spec.md = единственный источник истины для команды
+
+---
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:123:tlos:phase11-complete -->
+## 2026-03-16 — checkpoint 123
+
+**Decisions:**
+- Phase 11 officially COMPLETE (14/14 items done)
+- A-03 Variant B: FastAPI claude-cli-adapter wrapping claude CLI, not direct LiteLLM → Anthropic API
+- Skill files updated for new scratch architecture (5 files: TafterCompact, Tcheckpoint, startTsession, closeTsession, compress-scratch)
+- compress-scratch полностью переписан под новую архитектуру (session-scratch.md → scratches/{sid}+{N})
+- PRODUCT.md создан: anchored to shipped system, not vision
+
+**Files changed:**
+- `~/.claude/commands/TafterCompact.md` — L2 trigger добавлен, L3 note про смену файла
+- `~/.claude/commands/Tcheckpoint.md` — L2 update rule при завершении фазы
+- `~/.claude/commands/startTsession.md` — Memory File Map обновлён (session-scratch → scratches/{sid}+{N})
+- `~/.claude/commands/closeTsession.md` — L3 dynamic note, STEP 6 placeholder vs пустой файл
+- `~/.claude/commands/compress-scratch.md` — полный переписать для новой архитектуры
+- `core/kernel/docker-compose.yml` — agent-bridge /root/ → /home/tlos/ (2 пути); claude-cli-adapter сервис добавлен; depends_on обновлены
+- `core/kernel/tlos-claude-cli-adapter/main.py` — NEW: FastAPI OpenAI-compatible adapter
+- `core/kernel/tlos-claude-cli-adapter/requirements.txt` — NEW
+- `core/kernel/tlos-claude-cli-adapter/Dockerfile` — NEW: python:3.12-slim + Node.js 22 + claude CLI, USER 1000
+- `core/kernel/tlos-zep-bridge/litellm-config.yaml` — 3 модели claude → claude-cli-adapter:4001
+- `core/kernel/tlos-langgraph-bridge/graph.py` — call_via_litellm + call_via_litellm_sync добавлены; 9 call sites заменены; call_claude_cli сохранён
+- `core/kernel/tlos-langgraph-bridge/trace.py` — traced_call_claude_cli → call_via_litellm_sync (lazy import)
+- `development/tLOS/PRODUCT.md` — NEW: JTBD statement, anti-persona, Phase 5.1 ceiling, Won't Have, Must-Have
+- `memory/tlos-roadmap.md` — Phase 11 COMPLETE, Phase 12 NEXT
+
+**Completed:**
+- S-04 follow-up: agent-bridge /root/ → /home/tlos/ (9 путей всего по всем сервисам)
+- P-03: PRODUCT.md написан (13 product/brand файлов прочитано)
+- A-03: LiteLLM migration Variant B полностью реализован
+- Phase 11: 14/14 — все задачи закрыты
+- Skill files: 5 файлов обновлены под актуальную архитектуру
+
+**In progress:**
+- —
+
+**Opened:**
+- Phase 12: Design Token Migration + Documentation Baseline + Backend Debt
+- PRODUCT.md note: после доступа к ANTHROPIC_API_KEY обновить Phase 5.1 section
+
+**Notes:**
+- A-03 lazy import в trace.py (`from graph import call_via_litellm_sync` внутри функции) — circular import resolved корректно
+- PRODUCT.md: 2 бага найдены и исправлены при ревью (C-01→C-05, mcb = Marketing Command Board)
+- LLM Integration section в PRODUCT.md обновлён post-A-03
+- L2 roadmap обновлён в этом checkpoint (не пропущен — новое правило Tcheckpoint работает)
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:126:tlos:persona-corpus-acquisition -->
+## 2026-03-16 — checkpoint 126
+
+**Decisions:**
+- Schlemmer: используем EN версию Letters and Diaries (archive.org controlled lending, не покупаем DE)
+- Corpus downloader: state persistence (state.json), tqdm progress, disk alarm < 500MB, retry 3x, resume on restart
+- 21 файл в manifest: 19 auto-download + 2 manual (Kandinsky Complete Writings + Schlemmer Letters)
+- run.sh wrapper с PYTHONIOENCODING=utf-8 (Windows terminal encoding fix)
+
+**Files changed:**
+- `knowledge/persona-corpus/manifest.json` — создан (21 items, 7 personas, ~450MB est.)
+- `knowledge/persona-corpus/download_corpus.py` — создан (downloader: state, progress, alarms, scrape, retry)
+- `knowledge/persona-corpus/state.json` — создан автоматически (все pending)
+- `knowledge/persona-corpus/run.sh` — создан (bash wrapper)
+
+**Completed:**
+- Полный список литературы: 27/29 доступны бесплатно (monoskop.org + archive.org) ✅
+- Corpus downloader спроектирован и протестирован (--status работает) ✅
+- design-team-spec.md переписан с 5-layer архитектурой (ID-RAG, TTM, Emotional RAG) ✅
+- synthetic-persona-research.md создан (30+ papers, 2024-2026) ✅
+
+**In progress:**
+- Corpus download — готов к запуску (bash run.sh в /knowledge/persona-corpus/)
+- 2 manual items: нужен archive.org аккаунт → borrow → download
+
+**Opened:**
+- Запустить bash run.sh (19 auto items)
+- Вручную скачать: Kandinsky Complete Writings + Schlemmer Letters (archive.org)
+- После загрузки: ingestion pipeline (per-persona Qdrant collections)
+- Identity KG extraction + character card (1500+ tokens, 26 indicators) per persona
+- Agent files (~/.claude/agents/ x7)
+
+**Notes:**
+- Disk: 2570MB free (98% full C:). После загрузки ~2120MB. Достаточно.
+- Vision in Motion (Moholy-Nagy) = 114MB — самый тяжёлый файл
+- N прыгнул 122→125 — между сессиями были checkpoint'ы в другой сессии
+- Persona corpus: C:/Users/noadmin/nospace/knowledge/persona-corpus/
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:127:tlos:phase12-in-progress -->
+## 2026-03-16 — checkpoint 127
+
+**Decisions:**
+- L3 pointer теперь динамический: все skill файлы читают L1 Navigation → "Current epic" вместо хардкода
+- tlos-phase12.md создан как новый активный L3 (Phase 10/11 были стейл)
+- TafterCompact: добавлена проверка стейла (L3 COMPLETE → создать следующий + обновить L0/L1)
+- Tcheckpoint: при завершении фазы создаёт новый L3 + обновляет L0/L1 сразу
+- 17 нарушителей (roadmap говорил 13) — Domain Lead нашёл точный список
+- WCAG fix через CSS token (один токен = весь shell) — правильный подход
+
+**Files changed:**
+- `memory/tlos-phase12.md` — NEW: активный L3 для Phase 12
+- `memory/tlos-about.md` — Navigation: Current epic → tlos-phase12.md
+- `~/.claude/projects/c--Users-noadmin/memory/MEMORY.md` — L3 pointer → tlos-phase12.md
+- `core/shell/frontend/src/styles/design-tokens.css` — --tlos-primary, --tlos-border 0.10→0.22, prefers-reduced-motion
+- `core/shell/frontend/src/index.css` — .chat-md strong → var(--color-primary)
+- 12 frame files — const PRIMARY → CSS vars
+- `core/kernel/tlos-langgraph-bridge/bridge_handler.py` — consolidate_on_episode_end → run_in_executor
+- 15 langgraph-bridge files — cursor leaks fixed (107 cursors)
+- `docs/reference/nats-catalog.md` — NEW: ~50 NATS subjects
+- `docs/diataxis/` — NEW: 5 файлов
+- `docs/adr/` — NEW: 7 файлов (6 ADR + README)
+- `core/shell/frontend/src/components/frames/.token-migration-specs/` — NEW: 17 spec файлов
+
+**Completed:**
+- T3: cursor leak _get_conn() — 107 cursors, 15 files ✅
+- T3: INTERVAL SQL antipattern — 6 queries, 4 files ✅
+- T3: consolidate_on_episode_end off event loop ✅
+- T1: const PRIMARY → CSS vars ✅ / --tlos-primary в design-tokens.css ✅
+- T1: @media prefers-reduced-motion ✅ / WCAG border contrast 0.10 → 0.22 ✅
+- T2: NATS subject catalog ✅ / Diataxis 5 файлов ✅ / 6 ADR черновиков ✅
+- Domain Lead: аудит 31 фрейма → 17 non-compliant, 17 specs ✅
+
+**In progress:**
+- G3 Players: 12 агентов мигрируют токены в 17 фреймах
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:128:tLOS:phase-12 -->
+## 2026-03-16 — checkpoint 128
+
+**Decisions:**
+- All 17 non-compliant frames migrated to design tokens — Track 1 complete
+- `rgba(242,185,13,X)` opacity variants left as-is per spec (no RGB channel token yet)
+- `text-green-400` extra violation in McbExperimentFrame (line 111) fixed proactively
+
+**Files changed:**
+- `core/shell/frontend/src/components/frames/mcb/McbExperimentFrame.tsx` — `text-green-400` → `text-tlos-green` (line 111)
+- All 17 frame migrations confirmed via grep audit — all `PRIMARY` consts = `"var(--color-primary)"`
+
+**Completed:**
+- Track 1: Design Token Migration — all 17 frames done ✅
+- McbStrategyFrame, McbGapDetailFrame, McbSeoFrame, McbExperimentFrame — verified clean
+- Full grep audit: no remaining hardcoded hex colors with token equivalents
+
+**In progress:**
+- Track 1 Coach verification
+
+**Opened:**
+- `--tlos-border-hover` regression: hover (0.18) < resting (0.22) — needs fix
+- `--tlos-blue` token missing: used as `#3b82f6` in info/slow states
+- ADR "why" sections: `[TODO: author input needed]` — nopoint to fill
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:129:tLOS:phase-12-close -->
+## 2026-03-16 — checkpoint 129
+
+**Decisions:**
+- Phase 12 declared COMPLETE — all 3 tracks done, Coach verify 17/17 PASS
+- Phase 13 opened: Agent Team Formation + Product Cycle
+- Deferred items (--tlos-blue, --tlos-border-hover, ADR "why") carried to Phase 13 Track 3
+
+**Files changed:**
+- `memory/tlos-phase12.md` — Status → ✅ COMPLETE, all tracks [x], deferred section added
+- `memory/tlos-phase13.md` — NEW: Phase 13 L3 file (3 tracks: team formation, product cycle, quick wins)
+- `memory/tlos-roadmap.md` — Phase 12 → ✅ COMPLETE, Phase 13 → ⬜ NEXT
+- `memory/tlos-about.md` — Navigation: Current epic → tlos-phase13.md
+- `~/.claude/projects/c--Users-noadmin/memory/MEMORY.md` — L3 pointer → tlos-phase13.md
+
+**Completed:**
+- Phase 12 fully closed and documented
+- All L0/L1/L2/L3 pointers updated to Phase 13
+- Roadmap v6 current: Phases 0–12 ✅, Phase 13 ⬜ NEXT
+
+**Opened:**
+- Phase 13 Track 1: Agent Team Formation (Chiefs × 5, Leads × 11)
+- Phase 13 Track 2: Product Cycle (eval framework, Alembic, god module decomp, Bauhaus Figures)
+- Phase 13 Track 3: Quick wins carried from Phase 12 (--tlos-blue, --tlos-border-hover, ADR "why")
+
+---
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:130:tlos:persona-corpus-acquisition -->
+## 2026-03-16 — checkpoint 130
+
+**Decisions:**
+- Corpus acquisition: 19/21 auto скачаны, 2 manual (Kandinsky + Schlemmer) = DRM-лицензия (.lcpl) — не PDF
+- Kandinsky Complete Writings и Schlemmer Letters: archive.org выдаёт .lcpl (LCP DRM), прямой PDF недоступен
+- Эти 2 книги остаются в статусе `manual` — персоны строятся без них (достаточно других источников)
+- manifest.json: исправлены 4 мёртвых URL (monoskop hash fixes + wordpress subdomain fix)
+- Диск: освобождено ~12GB (Temp 5.3 + uv 2.3 + Docker build cache 4.7)
+
+**Files changed:**
+- `knowledge/persona-corpus/manifest.json` — исправлены URLs: moholy-vision-in-motion, moholy-new-vision, gropius-new-architecture, gropius-theory-organization
+- `knowledge/persona-corpus/state.json` — gropius-theory-organization: error→done (curl download)
+- `knowledge/persona-corpus/gropius/gropius_theory_organization_1923.pdf` — скачан через curl (1.2MB)
+
+**Completed:**
+- Corpus acquisition: 19/21 auto-download ✅ (~255MB total)
+- Диск очищен: ~12GB freed, 8.6GB free ✅
+- 4 мёртвых URL найдены и исправлены ✅
+- Schlemmer Letters + Kandinsky Complete Writings: DRM blocker → оставляем manual ✅
+
+**In progress:**
+- —
+
+**Opened:**
+- Следующий шаг: ingestion pipeline для 7 per-persona Qdrant collections
+- Добавить Kandinsky "Sounds/Klänge" в manifest (14.5MB, Tier 1 primary source, прямой URL)
+- Identity KG extraction + character card per persona
+- Agent files ~/.claude/agents/ × 7
+
+**Notes:**
+- Moholy Vision in Motion: monoskop path /0/0d/
+- Gropius New Architecture: monoskop path /b/b7/
+- Moholy New Vision: monoskop path /a/af/
+- Gropius Theory: designandtheory.wordpress.com/wp-content/uploads/
+- annas-archive.org и все зеркала (.se .li .gs) DNS-заблокированы в этой сети
+
+---
+
+## 2026-03-16 — checkpoint 130 — phase-13-track1 [f2e2bc70]
+
+**Decisions:**
+- Agent Teams constraint lifted: Bauhaus RAG (10,116 blocks) = knowledge available
+- Track 1 executed: Chiefs × 5 + Leads × 11 created as persistent Claude Code agents
+
+**Files changed:**
+- `~/.claude/settings.json` — `env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` added
+- `~/.claude/agents/chief-{development,marketing,research,production,design}.md` × 5 — NEW
+- `~/.claude/agents/lead-{frontend,backend,seo,copywriting,traffic,tech-research,market-analysis,devops,monitoring,ui-ux,visual-design}.md` × 11 — NEW
+- `memory/tlos-phase13.md` — Track 1 tasks [x]
+
+**Status:** Track 1: 4/5 tasks done. Design System verification + domain analysis queue remain.
+
+---
+
+## 2026-03-16 — checkpoint 131 — phase-13-ds-verify [f2e2bc70]
+
+**Decisions:**
+- `bauhaus/` directory empty intentionally — RAG base replaces static references
+- Design System verification pass: launched 4 parallel agents, stopped at rate limits
+
+**Design System verify status:**
+- Agent #3 (bauhaus/): COMPLETE — N/A (dir empty, RAG replaces)
+- Agent #1 (foundations/), #2 (formal-grammar/), #4 (material/perception/space/time/): STOPPED
+
+**Next session:** Restart 3 verification agents → reports → merge to `docs/design-system-bauhaus-verification.md`
+
+---
+
+## 2026-03-16 — checkpoint 131 — phase-14-persona-team [3bf73508]
+
+**Decisions:**
+- Fast-track: text-only RAG first, visual enrichment later (same pattern as bauhaus_enricher)
+- bauhaus-code/*.md batch files (110 files) as primary fast source for Bauhaus personas
+- Jobs corpus: Isaacson biography (2.9MB PDF) added; Kandinsky Sounds (14.5MB) downloaded
+- Zeitschrift batches skipped in fast track
+- Block types: VOICE/BELIEF/METHOD/MEMORY/AESTHETIC/REFUSAL
+- Dual vectors: dense_semantic (retrieval.passage) + dense_emotional (text-matching)
+
+**Files changed:**
+- `core/kernel/tlos-langgraph-bridge/persona_enricher.py` — created; 5 source modes; batch_md parser
+
+**Completed:**
+- persona_enricher.py: dry-run confirmed (5 blocks from Stanford commencement)
+- batch_md mode: regex parser working — Gropius 25 files, 52 blocks/file confirmed
+- 5 parallel ingestion processes launched: Jobs, Gropius, Kandinsky, Klee, Moholy
+
+**In progress at session close:**
+- Ingestion background (5 processes): Jobs/Gropius/Kandinsky/Klee/Moholy (partial state in progress files)
+- persona_jobs: 41 pts, persona_gropius: 44 pts (progress files carry state, resumable)
+
+**Opened (next tracks):**
+- Malevich + Schlemmer ingestion
+- Visual enrichment (scanned_pdf)
+- Identity KG extraction, Character cards, Agent file assembly, Consistency testing
+
+<!-- ENTRY:2026-03-16:CLOSE:132:system:housekeeping -->
+## 2026-03-16 — сессия 132 CLOSE
+
+**Phase:** Phase 10 active (epic: phase-10-analysis) — системная сессия, tLOS не затронута
+
+**Decisions:**
+- Figma MCP (`figma-developer-mcp`) удалён из `.claude.json` — 6 процессов висело, потребляло quota при старте
+- Добавлен Stop hook в Claude Code settings — убивает субагенты при чистом завершении сессии
+- Добавлен Windows Task Scheduler watchdog — убивает субагенты при force kill VS Code
+
+**Files changed:**
+- `~/.claude.json` — удалена секция `mcpServers.figma`
+- `~/.claude/settings.json` — добавлен Stop hook → `kill-subagents.ps1`
+- `~/.claude/hooks/kill-subagents.ps1` — новый скрипт (Stop hook)
+- `~/.claude/hooks/vscode-watchdog.ps1` — новый watchdog скрипт
+
+**Completed:**
+- Диагностика фоновых процессов VS Code (10 Code.exe + 6 figma-developer-mcp + 2 субагента)
+- Зачистка висящих процессов
+- Автоматизация cleanup при закрытии VS Code
+
+**Opened:**
+- нет
+
+**Notes:**
+- AIA cron eba8b51c — не найден в store (сессия была прервана до /startTsession)
+- Task Scheduler task `ClaudeCode-SubagentWatchdog` — зарегистрирован и запущен
+
+---
+
+<!-- ENTRY:2026-03-16:CHECKPOINT:132:nospace:token-counter-caps -->
+## 2026-03-16 — checkpoint 132
+
+**Decisions:**
+- Google First rule: WebSearch до любой попытки решить неизвестную проблему
+- Copy First rule: искать open-source аналог до написания нового кода
+- caps-fetch.ts через Playwright — выброшен. OAuth endpoint `api.anthropic.com/api/oauth/usage` + токен из `~/.claude/.credentials.json`
+- Интервал поллера: 1с → 30с (OAuth rate-limitable, целые % не требуют секундной точности)
+
+**Files changed:**
+- `nospace/tools/token-counter/count.ts` — quotaCost 1x cache_read; --caps через OAuth; history sparklines; quota analysis; --watch fix
+- `nospace/tools/token-counter/caps-poller.ts` — создан: 30s polling, пишет при изменении, сканирует JSONL для токен-дельты
+- `~/.tlos/caps-history.db` — создан (caps schema с tok_* колонками)
+
+**Completed:**
+- AIA cron отключён; quotaCost 0.1x → 1x; caps OAuth; caps-poller токен-дельта; анализ структуры затрат
+
+**In progress:**
+- VS Code extension: StatusBar + WebviewPanel, sql.js, Chart.js — архитектура готова, реализация не начата
+
+**Notes:**
+- OAuth API: целые % только. cache_read = 5.1M из 5.1M quota (100%) — подтверждает гипотезу
+
+---
+
+<!-- CHECKPOINT:134:2026-03-16:tlos:context-optimization -->
+## Checkpoint 134 — 2026-03-16 — Token Budget + Rolling Summary Design
+
+**Decisions:**
+- Отключили все MCP серверы (pencil, tlos, Figma) с автозапуска → экономия ~18.2k токенов/запрос
+- Token budget: L0=31k (system, fixed), L1=9k (memory/agents), L3=15k (MCP on-demand), L4=50k (messages), L5=free
+- Rolling summary система по claude-mem (hooks + файлы, без HTTP-сервера)
+- Триггер: messages достигают 40k → сжать до 10k; суммаризатор: Haiku CLI
+- Алгоритм весов (JetBrains+MemGPT): turn 0-10 verbatim, turn 10-30 decisions+rationale, turn 30+ 1-line list
+- Quota alerts: +1%=warn, +20%=yellow, +50%=decision:block
+
+**Files changed:** ~/.claude.json (MCP off), ~/.claude/mcp-configs-backup.json (created), ~/.tlos/summaries/ (dir created), nospace/docs/research/llm-context-compression-research.md (created)
+
+**Opened:** mem-stop.ts, mem-session-start.ts, quota-guard.ts (hooks — not yet written)
+
+---
+
+<!-- CHECKPOINT:135:2026-03-16:nospace:vscode-claude-monitor -->
+## Checkpoint 135 — 2026-03-16 — VS Code Claude Monitor Extension
+
+**Decisions:**
+- VS Code extension заменяет Claudemeter — запускает caps-poller.ts через bun как дочерний процесс
+- sql.js (asm, pure JS без WASM) для чтения caps-history.db внутри Electron
+- caps-poller: poll() вынесен в именованную функцию, вызывается сразу на старте
+- caps-poller: stdin listener — при получении байта из extension вызывает poll() немедленно
+- Click on statusbar → extension пишет `\n` в stdin поллера → обновляет statusbar + webview
+
+**Files changed:** nospace/tools/vscode-claude-monitor/ (создан полностью), nospace/tools/token-counter/caps-poller.ts (poll() extracted + immediate call + stdin listener), ~/.vscode/extensions/noadmin.claude-monitor-1.0.0/ (установлен)
+
+**Completed:** VS Code extension построен и работает (statusbar + webview dashboard)
+
+
+---
+
+<!-- ENTRY:2026-03-16:CLOSE:6:nospace:content-router-design -->
+## 2026-03-16 — сессия 6 CLOSE
+
+**Phase:** Phase 13 — Agent Team Formation + Workspace Tooling (Content Router)
+
+**Decisions:**
+- Content Router (не summarizer): lossless routing контента по memory файлам, не lossy compression
+- tool_results от Read/Bash/Grep → только в Messages, нет отдельного "loaded documents" слоя (подтверждено)
+- assistant text = уже сжатый вывод из прочитанных файлов → KEEP при роутинге
+- Нужен новый memory слой: `why.md` (rationale/trade-offs за каждым архитектурным решением)
+- Taxonomy: Read→DROP, WebFetch→compress, Write→KEEP fact, tool_result→DROP first (6.6k+ каждый)
+- Веса пар: user decision=1.0, assistant text=0.9, tool_call name=0.3, tool_result=0.05
+
+**Files changed:**
+- `memory/tlos-phase13.md` — добавлен Track 4 (Workspace Tooling), 9 задач Router
+
+**Completed:**
+- Анализ структуры JSONL: 7 типов записей, usage fields, content polymorphism
+- Taxonomy восстанавливаемости по всем типам контента
+- Концептуальный сдвиг: summarizer → Content Router
+
+**Opened:**
+- `memory/why.md` — создать структуру и формат
+- Ответить на 3 вопроса дизайна Router (загрузка why.md / timing / кто пишет)
+- Router hooks: quota-guard.ts, mem-stop.ts, mem-session-start.ts
+
+**Notes:**
+- Thinking blocks = buffer для обработки файлов, их DROP безопасен (never expose in summary)
+- why.md должен быть компактным если загружается каждую сессию

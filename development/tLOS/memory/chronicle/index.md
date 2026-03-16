@@ -5,9 +5,12 @@
 
 | Date | Project | Type | ID | Epic | File |
 |---|---|---|---|---|---|
+| 2026-03-16 | nospace | CHECKPOINT | 132 | token-counter-caps | tlos-current.md |
 | 2026-03-10 | tlos | CLOSE | 1 | eidolon-v1 | tlos-current.md |
 | 2026-03-10 | tlos | CLOSE | 2 | eidolon-v1 | tlos-current.md |
 | 2026-03-10 | tlos | CLOSE | 3 | eidolon-v1 | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 119 | bauhaus-enricher+design-team | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 120 | phase11-planning | tlos-current.md |
 | 2026-03-10 | tlos | CHECKPOINT | 1 | omnibar | tlos-current.md |
 | 2026-03-10 | tlos | CHECKPOINT | 2 | omnibar | tlos-current.md |
 | 2026-03-10 | tlos | CHECKPOINT | 3 | omnibar | tlos-current.md |
@@ -95,4 +98,40 @@
 | 2026-03-15 | tlos | CHECKPOINT | 93 | scratch-architecture | tlos-current.md |
 | 2026-03-15 | tlos | CLOSE | 94 | workspace-consciousness | tlos-current.md |
 | 2026-03-15 | tlos | CHECKPOINT | 95-96 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 95 | phase-10-analysis:design-bauhaus | tlos-current.md |
 | 2026-03-15 | tlos | CLOSE | 97 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 95-96 (Zeitschrift) | design-domain-zeitschrift | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 97 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 98 | phase-10-analysis:design-code-structure | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 99 | phase-10-analysis:design-system-v1 | tlos-current.md |
+| 2026-03-15 | tlos | CLOSE | 100 | design-system-v1 | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 101 | phase-10-design-tokens | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 102 | phase-10-design-tokens | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 104 | phase-10-design-tokens | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 106 | phase-10-design-tokens | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 107 | phase-10-design-tokens | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 110 | phase-10-bauhaus-rag-mcp | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 111 | phase-10-bauhaus-enricher | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 110 | bauhaus-rag-mcp | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 111 | phase-10-bauhaus-rag | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 113 | cleanup | 3bf73508+113-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 114 | bauhaus-enricher-mcp | 3bf73508+114-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 115 | design-system-fill | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 117 | phase10-closure | f2e2bc70+117-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 118 | bauhaus-enricher-mcp | 3bf73508+118-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 121 | phase11-hardening | f2e2bc70+121-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 122 | design-team-architecture | f2e2bc70+122-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 123 | phase11-complete | f2e2bc70+123-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 126 | persona-corpus-acquisition | 93e6af53+126-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 127 | phase12-in-progress | 3bf73508+127-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 128 | phase12-track1-complete | f2e2bc70+128-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 129 | phase12-close | f2e2bc70+129-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 130 | persona-corpus-acquisition | 3bf73508+131-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 130 | phase-13-track1 | f2e2bc70+130-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 131 | phase-13-ds-verify | f2e2bc70+131-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 131 | phase-14-persona-team | 3bf73508+131-scratch.md |
+| 2026-03-16 | tlos | CLOSE | 132 | system:housekeeping | tlos-current.md |
+| 2026-03-16 | tlos | CHECKPOINT | 134 | context-optimization | a6c33114+134-scratch.md |
+| 2026-03-16 | tlos | CHECKPOINT | 134 | context-optimization | tlos-current.md |
+| 2026-03-16 | nospace | CHECKPOINT | 135 | vscode-claude-monitor | tlos-current.md |
+| 2026-03-16 | nospace | CLOSE | 6 | content-router-design | tlos-current.md |

@@ -713,3 +713,20 @@
 - ✅ Redesign scratch-архитектуры + skill outputs
 - ✅ closeTsession auto-exit
 - ⏳ Design domain analysis (Phase 10, первый в очереди)
+
+---
+## Session 2026-03-16 — nospace: Content Router architecture
+
+**Decisions:**
+- Context управление = Content Router (lossless routing), не summarizer (lossy compression)
+- tool_results от Read/Bash = в Messages (подтверждено), recoverable → DROP first
+- Новый memory слой: why.md — rationale за архитектурными решениями (missing link в L0-L4)
+- Content taxonomy с весами: user decision=1.0, assistant text=0.9, tool_result=0.05
+
+**Files changed:**
+- `development/tLOS/memory/tlos-phase13.md` — Track 4 добавлен (9 Router задач)
+
+**Tasks completed / open:**
+- [done] JSONL structure analysis (7 types, usage fields, content taxonomy)
+- [done] Conceptual shift: summarizer → Content Router
+- [open] why.md format design, Router trigger design, 3 hook files
