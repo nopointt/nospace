@@ -3031,3 +3031,40 @@ Next: read all Mondrian + van Doesburg batches → extract color principles → 
 **Notes:**
 - ~/.claude/commands/ — вне nospace git repo, не коммитятся
 - session_id = первые 8 символов .jsonl UUID = 87ee7870 (не меняется при /compact)
+
+<!-- ENTRY:2026-03-15:CLOSE:97:tlos:phase-10-analysis:design-bauhaus -->
+## 2026-03-15 — сессия 97 CLOSE
+
+**Phase:** Phase 10 — Design domain analysis (12-Domain Expert Audit)
+
+**Decisions:**
+- Параллельный лимит экстракторов: 10 → 15 → 20 агентов (согласовано nopoint)
+- Zeitschrift на паузе — пропускаем по решению nopoint
+- Gleizes PDF (#14) = 1964 Guggenheim каталог (EN), не оригинальный Bauhausbuch DE — nopoint в курсе, принято
+- Прямые экстракторы (без Lead) — финальный паттерн (Lead вызвал rate-limit в предыдущей сессии)
+
+**Files changed:**
+- `nospace/docs/tLOS/design/bauhaus-code/07-gropius-na-b01..b07.md` — 7 batch файлов создано
+- `nospace/docs/tLOS/design/bauhaus-code/08-moholy-mpf-b01..b07.md` — 7 batch файлов создано
+- `nospace/docs/tLOS/design/bauhaus-code/09-kandinsky-b01..b11.md` — 11 batch файлов создано
+- `nospace/docs/tLOS/design/bauhaus-code/10-oud-b01..b06.md` — 6 batch файлов создано (b05 перезапущен)
+- `nospace/docs/tLOS/design/bauhaus-code/12-gropius-dessau-b01..b12.md` — 12 batch файлов создано
+- `nospace/docs/tLOS/design/bauhaus-code/13-moholy-nagy-vma-b01..b11.md` — 11 batch файлов создано
+- `nospace/docs/tLOS/design/bauhaus-code/14-gleizes-b01..b07.md` — 7 batch файлов создано
+- `nospace/development/tLOS/memory/tlos-phase10.md` — Bauhaus extraction status обновлён (14/14 DONE)
+
+**Completed:**
+- Bauhaus extraction Phase 1: ✅ COMPLETE — 14 книг, ~90 batch файлов в bauhaus-code/
+- Все 7 незавершённых книг (07-14, без Zeitschrift) экстрактированы за эту сессию
+- Pipeline v3.2: PNG 150 DPI → Read → Extract → Write → Cleanup
+- Параллельная очередь на 20 агентов отработана до полного завершения
+
+**Opened:**
+- Design domain analysis (Phase 10 основная задача) — первый в очереди, не начато
+- Zeitschrift extraction (20 батчей) — on pause, ждёт nopoint
+
+**Notes:**
+- Oud b05 завис >1.5ч → перезапущен как tmp_oud_b05_retry, завершился успешно (216 lines)
+- tmp_phase0/ (91MB) — orphaned temp dir, needs manual deletion by nopoint (rm blocked)
+- Gleizes: оригинальный Bauhausbuch #14 DE отсутствует в библиотеке; использован 1964 Guggenheim EN каталог
+- AIA Monitor cron c9590392 — остановлен при закрытии сессии

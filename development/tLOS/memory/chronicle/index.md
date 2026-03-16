@@ -94,3 +94,5 @@
 | 2026-03-15 | tlos | CHECKPOINT | 92 | skill-output-redesign | tlos-current.md |
 | 2026-03-15 | tlos | CHECKPOINT | 93 | scratch-architecture | tlos-current.md |
 | 2026-03-15 | tlos | CLOSE | 94 | workspace-consciousness | tlos-current.md |
+| 2026-03-15 | tlos | CHECKPOINT | 95-96 | phase-10-analysis:design-bauhaus | tlos-current.md |
+| 2026-03-15 | tlos | CLOSE | 97 | phase-10-analysis:design-bauhaus | tlos-current.md |

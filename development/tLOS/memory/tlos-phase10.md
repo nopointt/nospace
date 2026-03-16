@@ -1,7 +1,7 @@
 ---
 # tlos-phase10.md — Phase 10: 12-Domain Expert Audit → Analysis
 > Layer: L3 | Frequency: fast | Epic: phase-10
-> Last updated: 2026-03-15 (session close 84 — Design color analysis, 1M context enabled)
+> Last updated: 2026-03-15 (session close 97 — Bauhaus Phase 1 extraction COMPLETE)
 ---
 
 ## ⚡ Active Branch: phase-10-analysis
@@ -66,7 +66,7 @@
 ### Parallel track (not blocking analysis)
 - [ ] Security remediation epic (22/100 — separate epic, timeline TBD)
 - [ ] AI/ML: C-10 fix (litellm.acompletion() for main agent) — blocked by Phase 5.1 (no API key)
-- ✅ Context window management research — done (2026-03-15): 1M context enabled via `claude-sonnet-4-6[1m]` in `~/.claude/settings.json`. Auto-compact fires at 83.5%, configurable via `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`. /context command shows exact breakdown. Tool definitions alone ~190K tokens.
+- ✅ Context window management research — done (2026-03-15): [1m] флаг УДАЛЁН (2026-03-15): на Max плане Sonnet 1M = Extra Usage, флаг молча деградирует до 200K. ANTHROPIC_MODEL = `claude-sonnet-4-6` (без флага). Auto-compact fires at 83.5%, configurable via `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`. /context command shows exact breakdown. Tool definitions alone ~190K tokens.
 
 ## Bauhaus Extraction Status (parallel track — D-7 foundation)
 
@@ -100,19 +100,29 @@ Specialist: `nospace/docs/tLOS/design/bauhaus-code/specialists/zeitschrift-speci
 
 **Specialist upgrade status (v3.2):** ✅ ALL 15 done (14 books + Zeitschrift)
 
-**Extraction status (Phase 1):**
+**Extraction status (Phase 1): ✅ COMPLETE (14/14 books, Zeitschrift on pause)**
+
 | # | Book | Status | Output |
 |---|---|---|---|
-| 05 | Mondrian — Neue Gestaltung | ✅ DONE | 05-mondrian-neue-gestaltung-v3.2.md (819 lines, 98 vocab, 10 synthesis) |
-| 02 | Klee — Päd. Skizzenbuch | ✅ DONE | 02-klee-b01.md + b02.md + b03.md (3 batches, 200 DPI) |
-| 03 | Meyer — Versuchshaus | ✅ DONE | 03-meyer-b01.md + b02.md + b03.md + b04.md (4 batches, 150 DPI) |
+| 01 | Gropius — Internationale Architektur | ✅ DONE | 01-gropius-ia-b01..b06.md (6 batches) |
+| 02 | Klee — Päd. Skizzenbuch | ✅ DONE | 02-klee-b01..b03.md (3 batches, 200 DPI) |
+| 03 | Meyer — Versuchshaus | ✅ DONE | 03-meyer-b01..b04.md (4 batches, 150 DPI) |
 | 04 | Schlemmer — Bühne | ✅ DONE | 04-schlemmer-b01..b05.md (5 batches, 150 DPI) |
+| 05 | Mondrian — Neue Gestaltung | ✅ DONE | 05-mondrian-neue-gestaltung-v3.2.md (819 lines) |
 | 06 | van Doesburg — Neue Gestaltung | ✅ DONE | 06-van-doesburg-b01..b03.md (3 batches, 150 DPI) |
-| 07–14 | ... | ⏳ | — |
+| 07 | Gropius — Neue Arbeiten (NA) | ✅ DONE | 07-gropius-na-b01..b07.md (7 batches) |
+| 08 | Moholy-Nagy — Malerei Fotografie Film | ✅ DONE | 08-moholy-mpf-b01..b07.md (7 batches) |
+| 09 | Kandinsky — Punkt und Linie | ✅ DONE | 09-kandinsky-b01..b11.md (11 batches) |
+| 10 | Oud — Holländische Architektur | ✅ DONE | 10-oud-b01..b06.md (6 batches; b05 restarted 1×) |
+| 11 | Malevich | ✅ DONE | 11-malevich-b01..b04.md (4 batches) |
+| 12 | Gropius — Bauhausbauten Dessau | ✅ DONE | 12-gropius-dessau-b01..b12.md (12 batches) |
+| 13 | Moholy-Nagy — Von Material zu Architektur | ✅ DONE | 13-moholy-nagy-vma-b01..b11.md (11 batches) |
+| 14 | Gleizes — Kubismus ⚠️ | ✅ DONE (wrong PDF) | 14-gleizes-b01..b07.md (7 batches); PDF = 1964 Guggenheim EN catalogue, not original Bauhausbuch #14 DE |
+| Zeitschrift | 14 issues (1926–1931) | ⏸ PAUSED | 20 batches pending; nopoint decision to skip for now |
 
 **Output convention (v3.2 updated 2026-03-14):** NO merge step. Batch files stay in main bauhaus-code/ dir. Batches = canonical output.
 
-**Next:** #10 Oud (6 batches, 150 DPI). Specialist: `specialists/10-oud-specialist.md`.
+**Next after extraction:** Design domain analysis — use bauhaus-code/ batch files as primary source.
 Full map: `nospace/docs/tLOS/design/bauhaus-code/INDEX.md`
 
 **Blocker:** `nospace/knowledge/bauhaus-books/tmp_phase0/` — needs manual deletion (rm blocked).
