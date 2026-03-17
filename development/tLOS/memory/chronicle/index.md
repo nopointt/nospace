@@ -5,6 +5,7 @@
 
 | Date | Project | Type | ID | Epic | File |
 |---|---|---|---|---|---|
+| 2026-03-17 | tlos/nospace | CHECKPOINT | 137 | phase15-content-router+identity-migration | tlos-current.md |
 | 2026-03-16 | nospace | CHECKPOINT | 132 | token-counter-caps | tlos-current.md |
 | 2026-03-10 | tlos | CLOSE | 1 | eidolon-v1 | tlos-current.md |
 | 2026-03-10 | tlos | CLOSE | 2 | eidolon-v1 | tlos-current.md |
@@ -135,3 +136,7 @@
 | 2026-03-16 | tlos | CHECKPOINT | 134 | context-optimization | tlos-current.md |
 | 2026-03-16 | nospace | CHECKPOINT | 135 | vscode-claude-monitor | tlos-current.md |
 | 2026-03-16 | nospace | CLOSE | 6 | content-router-design | tlos-current.md |
+| 2026-03-17 | tlos | CHECKPOINT | 138 | session-scaffolding | 56364500+138-scratch.md |
+| 2026-03-17 | tlos | CHECKPOINT | 139-140 | bauhaus-enricher+content-router | 56364500+139-scratch.md |
+| 2026-03-17 | tlos | CHECKPOINT | 138 | phase14-jobs-persona | e48c75ce+138-scratch.md |
+| 2026-03-17 | tlos | CLOSE | 141 | compact-internals+auto-scratch-fix | tlos-current.md |
