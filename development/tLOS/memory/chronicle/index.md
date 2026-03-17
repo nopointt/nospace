@@ -5,6 +5,10 @@
 
 | Date | Project | Type | ID | Epic | File |
 |---|---|---|---|---|---|
+| 2026-03-17 | harkly | CHECKPOINT | 149 | harkly-marketing-content (TelegramPerson v2 + 4 brand docs done + lab angle) | tlos-current.md |
+| 2026-03-17 | harkly | CHECKPOINT | 148 | harkly-marketing-content (audience analysis 13/15 + aggregation next) | tlos-current.md |
+| 2026-03-17 | tlos | CHECKPOINT | 147 | phase15 (protocols cleanup + phase16 added + skills fixed) | tlos-current.md |
+| 2026-03-17 | harkly | CHECKPOINT | 144 | harkly-marketing-content (TOV v2 + file migration + TelegramPerson plan) | tlos-current.md |
 | 2026-03-17 | tlos/nospace | CHECKPOINT | 137 | phase15-content-router+identity-migration | tlos-current.md |
 | 2026-03-16 | nospace | CHECKPOINT | 132 | token-counter-caps | tlos-current.md |
 | 2026-03-10 | tlos | CLOSE | 1 | eidolon-v1 | tlos-current.md |
@@ -140,3 +144,8 @@
 | 2026-03-17 | tlos | CHECKPOINT | 139-140 | bauhaus-enricher+content-router | 56364500+139-scratch.md |
 | 2026-03-17 | tlos | CHECKPOINT | 138 | phase14-jobs-persona | e48c75ce+138-scratch.md |
 | 2026-03-17 | tlos | CLOSE | 141 | compact-internals+auto-scratch-fix | tlos-current.md |
+| 2026-03-17 | harkly | CHECKPOINT | 141 | harkly-marketing-content | 1fdcf9a0+141-scratch.md |
+| 2026-03-17 | harkly | CHECKPOINT | 142 | harkly-marketing-content | tlos-current.md |
+| 2026-03-17 | tlos | CLOSE | 139 | phase14-jobs-persona [Logos] | tlos-current.md |
+| 2026-03-17 | harkly | CHECKPOINT | 143 | harkly-marketing-content [Axis] | 1fdcf9a0+143-scratch.md |
+| 2026-03-17 | harkly | CHECKPOINT | 145 | harkly-marketing-content (hierarchical pipeline design + channel_collector 105 posts) [Axis] | cb957d49+145-scratch.md |

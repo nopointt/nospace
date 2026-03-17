@@ -143,6 +143,53 @@ L3 файлы организованы по протоколам агентов,
 
 ---
 
+## Track 0 — Orch Project Binding Fix
+
+| Task | Status | Notes |
+|---|---|---|
+| Переработать `/startaxis` — убрать хардкод tLOS, читать `axis-active` → роутить L1/L3 по `{project}` | [x] | Сделано 2026-03-17 · `[Axis]` |
+| Переработать `/continueaxis` — то же что startaxis | [x] | Сделано 2026-03-17 · `[Axis]` |
+| Переработать `/startlogos` — убрать хардкод tLOS, читать `logos-active` → роутить по `{project}` | [x] | L2 + L3 из L1 Navigation · `[Axis · 2026-03-17]` |
+| Переработать `/continuelogos` — то же | [x] | L2 + L3 из L1 Navigation · `[Axis · 2026-03-17]` |
+| Переработать `/closelogos` — писать `{project}` в logos-active при закрытии | [x] | L3 из L1 Navigation · `[Axis · 2026-03-17]` |
+| Переработать `/startpraxis` — убрать хардкод tLOS, читать `praxis-active` → роутить по `{project}` | [x] | L2 + L3 из L1 Navigation · `[Axis · 2026-03-17]` |
+| Переработать `/continuepraxis` — то же | [x] | L2 + L3 из L1 Navigation · `[Axis · 2026-03-17]` |
+| Переработать `/closepraxis` — писать `{project}` в praxis-active при закрытии | [x] | `rm` заменён на `echo {project}|...`, git commit `{project}/praxis` · `[Axis · 2026-03-17]` |
+| Переработать `/closeaxis` — писать `{project}` в axis-active при закрытии | [x] | Сделано 2026-03-17 · [Axis] |
+
+### Audit 2026-03-17 — полный скан хардкодов `tlos`/`harkly` в логике скиллов
+
+| Скилл | Статус | Баги найдены и исправлены |
+|---|---|---|
+| `startaxis.md` | ЧИСТ | — |
+| `continueaxis.md` | ЧИСТ | — |
+| `closeaxis.md` | ЭТАЛОН | — |
+| `startlogos.md` | ИСПРАВЛЕН | `echo "tlos|..."` → `echo "{project}|..."` в STEP 5 |
+| `continuelogos.md` | ИСПРАВЛЕН | `echo "tlos|..."` → `echo "{project}|..."` в STEP 4 |
+| `closelogos.md` | ИСПРАВЛЕН | `rm logos-active` → `echo "{project}|..."` (STEP 6); `chore(tlos/logos):` → `chore({project}/logos):` (STEP 7) |
+| `startpraxis.md` | ИСПРАВЛЕН | `echo "tlos|..."` → `echo "{project}|..."` в STEP 6 |
+| `continuepraxis.md` | ИСПРАВЛЕН | `echo "tlos|..."` → `echo "{project}|..."` в STEP 5 |
+| `closepraxis.md` | ИСПРАВЛЕН | `rm praxis-active` → `echo "{project}|..."` (STEP 7); `chore(tlos/praxis):` → `chore({project}/praxis):` (STEP 8) |
+
+Итого: 6 файлов исправлено, 2 чисты, 1 эталон. Все правки — только в командах bash и echo, текст описаний не тронут. `[Axis · 2026-03-17]`
+
+### Дополнение — L1/L2 routing fix (logos/praxis skills)
+
+Все 6 файлов logos/praxis также исправлены на полный project-routing по L1/L2 (не только echo команды). `[Axis · 2026-03-17]`
+
+| Скилл | Что исправлено |
+|---|---|
+| `startlogos.md` | STEP 2: хардкодные пути tLOS заменены на routing table + `{project}` lookup; STEP 3: L3 routing по проекту; STEP 5: `echo "tlos|..."` → `echo "{project}|..."` |
+| `continuelogos.md` | STEP 1: добавлена routing table; STEP 2: L1/L2 пути заменены на `{project}`-routing; L3 routing по проекту; STEP 4: `echo "tlos|..."` → `echo "{project}|..."` |
+| `closelogos.md` | STEP 3: chronicle queue path — routing table tlos/harkly; STEP 4: L3 lookup через L1 Navigation по проекту; заголовок "tLOS · Logos" → "[Project] · Logos" |
+| `startpraxis.md` | STEP 3: хардкодные пути tLOS заменены на routing table + `{project}` lookup; STEP 4: L3 routing по проекту; STEP 6: `echo "tlos|..."` → `echo "{project}|..."` |
+| `continuepraxis.md` | STEP 1: добавлена routing table; STEP 3: L1/L2 пути заменены на `{project}`-routing; L3 routing по проекту; STEP 5: `echo "tlos|..."` → `echo "{project}|..."` |
+| `closepraxis.md` | STEP 4: chronicle queue path — routing table tlos/harkly; STEP 5: L3 lookup через L1 Navigation по проекту; заголовок "tLOS · Praxis" → "[Project] · Praxis" |
+
+FRESH behavior изменён: был `tlos` по умолчанию → теперь спрашивает nopoint (Logos и Praxis — multi-project агенты, как Axis).
+
+---
+
 ## Track 1 — Layer Model Migration
 
 | Task | Status | Notes |

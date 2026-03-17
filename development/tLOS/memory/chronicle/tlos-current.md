@@ -208,3 +208,254 @@
 - vmmemWSL = Hyper-V VM для WSL2, объяснено nopoint
 - [1m] флаг Sonnet на Max плане = Extra Usage → Rate limit immediately, подтверждено
 - enricher_orchestrate.sh не запускался в эту сессию, остаётся паузирован
+# 1fdcf9a0+140-scratch.md
+> Placeholder · last processed checkpoint: #140
+
+<!-- ENTRY:2026-03-17:CHECKPOINT:141:harkly:harkly-marketing-content [AXIS] -->
+## 2026-03-17 — checkpoint 141 [Axis]
+
+**Decisions:**
+- Harkly сессия открыта в рамках Axis (не отдельный агент) — Axis ведёт оба проекта
+- Bauhaus RAG = основа для Brand TOV всех проектов nopoint, не только tLOS
+- Harkly TOV: soft Bauhaus — теплее, округлее, чем tLOS; символ бренда = Ребёнок (лучший исследователь)
+- Каналы Phase 1: Telegram (Bot API) + Ghost/сайт; Habr = только анализ (API закрыт); LinkedIn = пропуск
+- Система живёт в Modal.com cron (рядом с tLOS, возможная интеграция позже)
+- Idea Hub v1 = file-based (markdown + JSON), не Supabase
+
+**Files changed:**
+- `~/.claude/protocols/harkly.md` — создан (протокол Harkly сессий, аналог axis.md)
+- `~/.claude/projects/.../memory/MEMORY.md` — добавлен pointer на protocols/harkly.md
+- `development/harkly/memory/harkly-canvas-redesign.md` — создан (L3 HARKLY-12, on-hold)
+- `development/harkly/memory/harkly-cold-outreach.md` — создан (L3 HARKLY-06, on-hold)
+- `development/harkly/memory/harkly-marketing-content.md` — создан (L3 HARKLY-14, active)
+- `development/harkly/memory/harkly-roadmap.md` — обновлён (HARKLY-14 добавлен, L3 ссылки)
+- `development/harkly/brand/tov.md` — создан (Brand TOV v1: Bauhaus + Ребёнок + voice rules)
+- `development/harkly/brand/` — создана структура директорий (channels/, agents/, ideas/)
+- `nospace/docs/research/content-autopublishing-channels-research.md` — создан research агентом
+
+**Completed:**
+- Harkly memory infrastructure: все активные эпики имеют L3 файлы
+- protocols/harkly.md создан и зарегистрирован в MEMORY.md
+- Channel research: Telegram + Ghost = P0, Habr = analysis only, LinkedIn = skip
+- Brand TOV v1 написан (draft, ждёт уточнений от nopoint)
+- HARKLY-14 epic file создан с полным task queue Phase 1–4
+
+**In progress:**
+- Brand TOV — draft v1 готов, следующий шаг: channel personas или Research Agent
+
+**Opened:**
+- Ghost: self-hosted на harkly.ru или Ghost.org managed?
+- Article frequency target: сколько постов/неделю на канал?
+- TelegramPerson: отдельный бот для Harkly channel или существующий?
+- Research Agent data sources: нужны API keys? (Twitter/X Bearer, Google Trends unofficial)
+
+**Notes:**
+- harkly.ru = Lovable-билд Артёма, JS-рендер, WebFetch не видит контент — заменить в последнюю очередь
+- public-apis repo клонирован: nospace/docs/research/public-apis/
+- Harkly constitution.md устарела (описывает Electron стек) — обновить при случае
+- harkly-saas-v1 Stack: Next.js 16 + Supabase + Bun + Vercel; Stage 5 Backend = следующий приоритет после маркетинга
+
+<!-- ENTRY:2026-03-17:CHECKPOINT:142:harkly:harkly-marketing-content [AXIS] -->
+## 2026-03-17 — checkpoint 142 [Axis — Harkly brand work]
+
+**Scope:** Harkly HARKLY-14 Content Auto-Writing System — Brand phase
+
+**Decisions:**
+- "Вы" for all Russian B2B Harkly content (confirmed)
+- Category: "Customer Signals Research" — Harkly-owned term
+- TOV v2: 8 components + AI editor persona (8 layers)
+- Voice pillars: Attentive · Precise · Humanist · Calm
+
+**Files created (Harkly):**
+- `brand/values.md`, `brand/tov.md` (stub), `brand/agents/audience_analysis.py`
+- `brand/channels/audience-portrait.md` (draft, low quality)
+- `brand/channels/telegram-persona.md` (draft, low quality)
+- `docs/research/tov-best-practices-research.md` (587 lines)
+<!-- ENTRY:[2026-03-17]:CLOSE:[139]:[tlos]:[phase14-jobs-persona] [LOGOS] -->
+## 2026-03-17 — сессия 139 CLOSE [Logos]
+
+**Decisions:**
+- Docker containers: `restart: unless-stopped` → `restart: no` во всех сервисах (docker-compose.yml + live update)
+- persona_enricher subprocess fix: `-p "prompt"` как positional arg вместо stdin pipe; `CLAUDECODE=""` + `ANTHROPIC_MODEL=""` в env; `stdin=DEVNULL`
+- Playboy + WWDC entries сброшены в progress file для re-run (138 записей)
+
+**Files changed:**
+- `core/kernel/tlos-langgraph-bridge/persona_enricher.py` — import os добавлен; `_call_claude_text` полностью переписан: `-p prompt` positional arg, `CLAUDECODE=""`, `ANTHROPIC_MODEL=""`, `stdin=DEVNULL`
+- `core/kernel/docker-compose.yml` — `restart: unless-stopped` → `restart: no` (все сервисы)
+- `core/kernel/tlos-langgraph-bridge/run_enricher_jobs.bat` — NEW helper script
+- `core/kernel/tlos-langgraph-bridge/test_claude.bat` — NEW debug script (можно удалить)
+- `core/kernel/tlos-langgraph-bridge/test_claude2.bat` — NEW debug script (можно удалить)
+- `core/kernel/tlos-langgraph-bridge/persona_progress_jobs.json` — Playboy (87) + WWDC (51) entries очищены для re-run
+
+**Completed:**
+- Docker cleanup: 10/11 контейнеров остановлены, оставлен только qdrant
+- Авторан отключён: restart: no во всех сервисах
+- Root cause найден: claude.cmd subprocess на Windows требует `-p "prompt"` positional arg, не stdin pipe
+- `_call_claude_text` починен и верифицирован (тест прошёл)
+
+**Opened:**
+- Re-run `persona_enricher.py --persona jobs` — enricher остановлен по запросу nopoint; Playboy+WWDC сброшены, готовы к повторному запуску
+- Очистить debug .bat файлы (test_claude.bat, test_claude2.bat) после подтверждения фикса
+
+**Notes:**
+- persona_enricher: Isaacson biography (613 chunks) в основном EMPTY — нормально (биографический нарратив, не прямые цитаты Jobs). Ценные блоки ожидаются из Playboy+WWDC при повторном запуске.
+- Квота: каждый вызов `claude -p` в enricher = отдельный CLI-процесс, расходует квоту. Jobs corpus ≈ 138 text chunks × ~2K токен ≈ ~300K токен дополнительно.
+- bauhaus_enricher.py использует ту же механику — вероятно требует того же фикса
+# 1fdcf9a0+142-scratch.md
+> Placeholder · last processed checkpoint: #142
+
+<!-- ENTRY:2026-03-17:CHECKPOINT:143:harkly:harkly-marketing-content [AXIS] -->
+## 2026-03-17 — checkpoint 143 [Axis]
+
+**Decisions:**
+- Enemy narrative и Hero archetype убраны из планов — Qwen-нейрослоп, не использовать
+- 3-layer methodology — оставлена, добавлена в values.md
+- Methodological leader + Customer Signals Research — добавлены в values.md как позиционирование
+- Общение с nopoint на русском (контент файлов на английском)
+- /compact рекомендован: Messages 55.8k из 80.5k — квота дорогая
+
+**Files changed:**
+- `development/harkly/brand/values.md` — добавлены: Positioning (methodological leader, Customer Signals Research), 3-Layer Methodology (OSINT → Silicon Sampling → Human Depth)
+
+**Completed:**
+- values.md финализирован (без Enemy/Hero, с методологией)
+- Перевод values.md для nopoint в чат
+
+**In progress:**
+- TOV v2 — следующий шаг
+
+**Opened:**
+- —
+
+**Notes:**
+- values.md теперь canonical и полный. Готов служить основой для TOV v2.
+- Квота: каждый промпт сжигает ~80k cache_read. /compact снизит до ~30k/промпт.
+
+<!-- ENTRY:2026-03-17:CHECKPOINT:144:harkly:harkly-marketing-content [AXIS] -->
+## 2026-03-17 — checkpoint 144 [Axis]
+
+**Decisions:**
+- Оркестраторы (Axis/Logos/Praxis) не привязаны к проекту — грузят контекст последнего проекта из `*-active` файла
+- `/startaxis` и `/continueaxis` переработаны: роутинг L1/L3 по `{project}` из axis-active
+- Маркетинговые файлы Harkly принадлежат `nospace/marketing/` (domain-based monorepo), не `development/harkly/brand/`
+- TOV v2 написан как финальный canonical документ (9 секций, AI editor persona, Do/Don't примеры)
+- TelegramPerson v1 = нейрослоп, требует полного переписывания
+- Для калибровки TelegramPerson нужны два источника: (1) audience chat data — уже есть 15 релевантных файлов из 113; (2) топ-посты реальных каналов — ещё не собраны
+- Telethon сессия существует (`~/.tgidparser/session.txt`), можно собирать посты каналов через MTProto API
+
+**Files changed:**
+- `~/.claude/commands/startaxis.md` — полная переработка: убран хардкод tLOS, project-routing по axis-active
+- `~/.claude/commands/continueaxis.md` — то же
+- `nospace/marketing/INDEX.md` — создан новый индекс маркетингового домена
+- `nospace/marketing/branding/tov.md` — TOV v2, 9 секций
+- `nospace/marketing/branding/values.md` — перемещён из development/harkly/brand/
+- `nospace/marketing/copywriting/channels/` — audience-portrait.md + telegram-persona.md перемещены
+- `nospace/marketing/copywriting/agents/audience_analysis.py` — перемещён
+- `development/harkly/brand/MOVED.md` — создан редирект
+- `development/harkly/memory/harkly-about.md` — добавлены пути marketing домена
+- `development/harkly/memory/harkly-marketing-content.md` — обновлены все пути + TOV v2 статус
+- `nospace/development/tLOS/memory/tlos-phase15.md` — добавлен Track 0
+
+**Completed:** TOV v2 · миграция brand файлов · fix /startaxis + /continueaxis · Track 0 задачи добавлены
+**In progress:** TelegramPerson v2 — нужны chat data + channel posts via Telethon
+**Opened:** channel_collector.py · audience_analysis.py fixes (OUTPUT_DIR + TARGET_GROUPS + "Вы")
+<!-- ENTRY:2026-03-17:CHECKPOINT:145:harkly:harkly-marketing-content [AXIS] -->
+## 2026-03-17 — checkpoint 145 [Axis]
+
+**Decisions:**
+- audience_analysis.py не нужен для TelegramPerson — заменяется иерархическим пайплайном
+- Для Audience Portrait: 15 параллельных Sonnet субагентов (не Haiku — задача важная, много мусора в чатах)
+- Формат вывода каждого субагента зафиксирован: 6 секций (Кто здесь / Боли / Вопросы / Словарь / Стиль / Темы)
+- TelegramPerson v2 пишется из TOV v2 + channel_collector.py samples (audience_analysis НЕ блокирует)
+- API credentials tgscraper: api_id=39293650, api_hash из chatviewer app (my.telegram.org)
+- session.txt = gramjs StringSession, совместима с Telethon
+
+**Files changed:**
+- `nospace/marketing/copywriting/agents/channel_collector.py` — создан, credentials вшиты, TARGET_CHANNELS = 7 релевантных каналов
+- `nospace/marketing/copywriting/research/telegram-channel-samples.json` — создан, 105 постов из 7 каналов
+- `nospace/marketing/copywriting/agents/audience_analysis.py` — 3 фикса: OUTPUT_DIR + TARGET_GROUPS (15 filtered) + "Вы"
+- `nospace/marketing/INDEX.md` — добавлены channel_collector.py + research/telegram-channel-samples.json
+- `nospace/development/harkly/memory/harkly-marketing-content.md` — Persona Framework секция + hierarchical pipeline design + задачи обновлены
+
+**Completed:**
+- channel_collector.py написан и запущен — 105 постов собрано (7 каналов: betternotworse 28k, ilya_krasinsky 25k, firstanalyticsguide 14k, productdo 21k, sergeyproduct 4.7k, lElena_Custdev 514, market_qual_research 923)
+- audience_analysis.py пофикшен (3 баги)
+- Persona framework зафиксирован в harkly-marketing-content.md
+
+**In progress:**
+- Audience Portrait иерархический пайплайн — дизайн готов, запуск ждёт команды nopoint
+
+**Opened:**
+- Написать иерархический пайплайн: 15 Sonnet субагентов → summaries → Audience Portrait
+- После портрета — TelegramPerson v2 (Tavern Card 1500+ токенов + mes_example из channel_collector)
+
+**Notes:**
+- 113 чатов итого, 15 релевантных, ~1.4M токенов в 15 чатах, avg ~93K/чат
+- OLcustdevru = 343K — нужен сэмплинг перед подачей в субагент
+- Sonnet subagents: 15 параллельных — перед запуском проверить context quota (правило 5+ агентов)
+- tgscraper = Electron app (TypeScript + gramjs), не Python — session совместима с Telethon
+
+<!-- CHRONICLE:2026-03-17:CHECKPOINT:147:tlos:phase15 [AXIS] -->
+## 2026-03-17 — checkpoint 147 [Axis]
+
+**Decisions:**
+- `protocols/harkly.md` удалён — всё содержимое перенесено в `harkly-about.md` (Active L3, G3 Rule, Write Authority)
+- Active L3 = единственный источник правды — живёт в L1 (`tlos-about.md` и `harkly-about.md`), не в protocols/
+- `startHsession` / `closeHsession` архивированы (nopoint не использует)
+- `commands/archive/` + archive/*.md скиллы перемещены в `tLOS/core/kernel/archive/commands-archive-20260317/`
+- Phase 16 "Monorepo Restructuring" добавлена в roadmap — SQLite вместо MD файлов памяти (Track 1) + TOON/telegraph format (Track 2)
+- "human-readable" не аргумент при выборе формата хранения — nopoint не редактирует файлы руками
+
+**Track 0 Phase 15:** startlogos/continuelogos/closelogos/startpraxis/continuepraxis переработаны — L2 + L3 из L1 Navigation. closeaxis/closepraxis — ещё не готово.
+
+**Next:** Harkly HARKLY-14 (marketing content epic)
+
+
+<!-- ENTRY:[2026-03-17]:CHECKPOINT:[148]:[harkly]:[harkly-marketing-content-audience-analysis] -->
+## 2026-03-17 — checkpoint 148
+
+**Decisions:**
+- Audience analysis архитектура: 15 Haiku subagents параллельно (не скрипт, не Groq) — каждый читает полный JSON файл группы
+- TTY не блокер для Python HTTP скриптов — зафиксировано в feedback памяти
+- Новый диалог + /continueaxis вместо /compact — зафиксировано в feedback памяти
+- no_mercy_pm_chat агент галлюцинировал (написал из головы, не из файла) — результат выброшен
+- it_grants_productbee — нерелевантно (школа грантов Казахстан)
+
+**Files changed:**
+- `nospace/marketing/copywriting/research/audience-analysis/` — создана директория, 13 файлов + _index.md
+- `~/.claude/projects/.../memory/feedback_tty_not_blocker.md` — новый feedback
+- `~/.claude/projects/.../memory/feedback_no_compact_workflow.md` — новый feedback
+
+**Status:**
+- HARKLY-14: audience analysis 13/15 чатов → следующий шаг агрегация → Audience Portrait v2 + TelegramPerson v2
+- Telegram OSINT исследование: паузировано
+
+
+<!-- ENTRY:[2026-03-17]:CHECKPOINT:[149]:[harkly]:[harkly-marketing-content-brand-docs] -->
+## 2026-03-17 — checkpoint 149
+
+**Decisions:**
+- TelegramPerson v2 собран: Tavern Card + TTM 3-слоя + humanizer (24 паттерна) + инфостиль + post-writing research rules
+- Инфостиль = Баухаус в копирайтинге — основа письма Harkly (скелет: инфостиль, плоть: тепло бренда)
+- Символ бренда: внутренний ребёнок (исцелённый, не наивный) + лопоухий логотип = слышать больше
+- Контент-стратегия: "лаборатория публикует находки" — Harkly has proprietary data (13 чатов, 1.4M токенов)
+- 3 Telegram-пиллара: Signals in the Wild / Category Claims / Methodology Lab (40/30/30 микс)
+- Все 4 brand docs завершены: Category Manifesto ✅, Positioning ✅, Content Strategy ✅, Brand Bible ✅
+- Все оркх скиллы (logos/praxis) — мультипроектность исправлена, L1/L2 routing tables добавлены
+
+**Files changed:**
+- `nospace/marketing/copywriting/channels/telegram-persona.md` — v2 (Tavern Card + humanizer + infostyle)
+- `nospace/marketing/copywriting/channels/audience-portrait.md` — v2
+- `nospace/marketing/copywriting/channels/audience-speaking-style.md` — новый файл
+- `nospace/development/harkly/brand/tov.md` — v3 (inner child + lop-eared logo + infostyle)
+- `nospace/docs/research/post-writing-research.md` — 415 строк
+- `nospace/development/harkly/brand/category-manifesto.md` — DONE
+- `nospace/development/harkly/brand/positioning.md` — DONE
+- `nospace/marketing/copywriting/channels/telegram-content-strategy.md` — DONE
+- `nospace/development/harkly/brand/brand-bible.md` — DONE
+- `~/.claude/commands/` — все 6 logos/praxis skills исправлены
+
+**Next (Harkly HARKLY-14):**
+- Update TelegramPerson v2 с контент-углом "лаборатория публикует находки"
+- Переписать рекрутмент-пост с углом "наши данные"
+- Ideamaker (Research Agent) — design + implementation
