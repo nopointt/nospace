@@ -1,0 +1,158 @@
+{
+  "version": "1",
+  "ideas": [
+    {
+      "id": "5da42500-d7e4-43e0-a752-d8ae3acf028e",
+      "topic": "Emerging Trends in Code Intelligence",
+      "angle": "How tools like GitNexus are changing the way we explore code",
+      "pillar": "signals",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/abhigyanpatwari/GitNexus"
+      ],
+      "priority": 4,
+      "status": "new",
+      "created_at": "2026-03-17T20:23:18.004458+00:00",
+      "updated_at": "2026-03-17T20:23:18.004458+00:00",
+      "research_brief_path": null
+    },
+    {
+      "id": "348668d1-302c-4bbb-afe3-f16309024c8a",
+      "topic": "The Rise of Agent-Based Development Methodologies",
+      "angle": "What the popularity of projects like Obra's Superpowers means for PMs and UX researchers",
+      "pillar": "signals",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/obra/superpowers"
+      ],
+      "priority": 5,
+      "status": "assigned",
+      "created_at": "2026-03-17T20:23:18.007278+00:00",
+      "updated_at": "2026-03-17T20:24:46.212605+00:00",
+      "research_brief_path": "C:\\Users\\noadmin\\nospace\\development\\harkly\\brand\\ideas\\briefs\\348668d1-302c-4bbb-afe3-f16309024c8a-brief.md"
+    },
+    {
+      "id": "fadb8c94-22fd-4f27-b4e0-b8b612ef08fb",
+      "topic": "Reimagining User Research with Agent-Based Tools",
+      "angle": "How LangChain's DeepAgents can be applied to user research methodologies",
+      "pillar": "category",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/langchain-ai/deepagents"
+      ],
+      "priority": 3,
+      "status": "new",
+      "created_at": "2026-03-17T20:23:18.009905+00:00",
+      "updated_at": "2026-03-17T20:23:18.009905+00:00",
+      "research_brief_path": null
+    },
+    {
+      "id": "c6b0c39f-e0fc-4050-8d51-ba1aac26fa52",
+      "topic": "Streamlining Code Exploration with Interactive Knowledge Graphs",
+      "angle": "Practical techniques for using GitNexus in user research",
+      "pillar": "methodology",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/abhigyanpatwari/GitNexus"
+      ],
+      "priority": 2,
+      "status": "new",
+      "created_at": "2026-03-17T20:23:18.012312+00:00",
+      "updated_at": "2026-03-17T20:23:18.012312+00:00",
+      "research_brief_path": null
+    },
+    {
+      "id": "82fa8699-582a-4fce-a9c2-5cc29d77d9d4",
+      "topic": "The Future of Code Collaboration: Insights from Emerging Projects",
+      "angle": "What projects like Claude-HUD reveal about the future of developer tools",
+      "pillar": "signals",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/jarrodwatts/claude-hud"
+      ],
+      "priority": 1,
+      "status": "new",
+      "created_at": "2026-03-17T20:23:18.015314+00:00",
+      "updated_at": "2026-03-17T20:23:18.015314+00:00",
+      "research_brief_path": null
+    },
+    {
+      "id": "efb5fed2-8248-4dc1-a2fc-f850da9df2a7",
+      "topic": "Applying Agent-Based Methodologies to User Research",
+      "angle": "A step-by-step guide to using agent-based tools in user research",
+      "pillar": "methodology",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/langchain-ai/deepagents"
+      ],
+      "priority": 4,
+      "status": "new",
+      "created_at": "2026-03-17T20:23:18.018152+00:00",
+      "updated_at": "2026-03-17T20:23:18.018152+00:00",
+      "research_brief_path": null
+    },
+    {
+      "id": "80e9bcf9-57ab-474c-b187-cd49da4ba0f7",
+      "topic": "What GitHub Trending Reveals about the Future of User Research",
+      "angle": "Analyzing the trends and insights from GitHub trending repositories",
+      "pillar": "signals",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/obra/superpowers",
+        "https://github.com/abhigyanpatwari/GitNexus",
+        "https://github.com/langchain-ai/deepagents"
+      ],
+      "priority": 5,
+      "status": "new",
+      "created_at": "2026-03-17T20:23:18.020185+00:00",
+      "updated_at": "2026-03-17T20:23:18.020185+00:00",
+      "research_brief_path": null
+    },
+    {
+      "id": "2d4f1e95-edc2-4bbe-af6a-9756b1a0be8d",
+      "topic": "Revolutionizing User Research with AI-Powered Tools",
+      "angle": "How AI-powered tools like LangChain's DeepAgents are transforming user research",
+      "pillar": "category",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/langchain-ai/deepagents"
+      ],
+      "priority": 4,
+      "status": "new",
+      "created_at": "2026-03-17T20:23:18.021770+00:00",
+      "updated_at": "2026-03-17T20:23:18.021770+00:00",
+      "research_brief_path": null
+    },
+    {
+      "id": "f36496c7-8fb8-4362-95e6-8c7ac1c18c86",
+      "topic": "Practical Applications of Code Intelligence in User Research",
+      "angle": "Real-world examples of using code intelligence tools in user research",
+      "pillar": "methodology",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/abhigyanpatwari/GitNexus"
+      ],
+      "priority": 3,
+      "status": "new",
+      "created_at": "2026-03-17T20:23:18.023417+00:00",
+      "updated_at": "2026-03-17T20:23:18.023417+00:00",
+      "research_brief_path": null
+    },
+    {
+      "id": "8afeafba-4599-42b9-9384-96034640c185",
+      "topic": "The Intersection of Agent-Based Development and User Research",
+      "angle": "Exploring the opportunities and challenges of combining agent-based development with user research",
+      "pillar": "category",
+      "channel": "telegram",
+      "sources": [
+        "https://github.com/obra/superpowers",
+        "https://github.com/langchain-ai/deepagents"
+      ],
+      "priority": 5,
+      "status": "new",
+      "created_at": "2026-03-17T20:23:18.025389+00:00",
+      "updated_at": "2026-03-17T20:23:18.025389+00:00",
+      "research_brief_path": null
+    }
+  ]
+}

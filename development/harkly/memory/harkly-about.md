@@ -42,6 +42,9 @@ Team: nopoint (founder) + Артём (co-founder, roles TBD).
 | Brand Bible | `nospace/development/harkly/brand/brand-bible.md` |
 | LinkedIn scraper | `nospace/tools/linkedin-scraper/scrape.ts` |
 | Stealth scraping docs | `development/harkly/memory/stealth-scraping-techniques.md` |
+| Content pipeline agents | `nospace/development/harkly/brand/agents/` (idea_hub.py ✅, antenna/deep_researcher ⚠️ rework) |
+| Idea Hub | `nospace/development/harkly/brand/ideas/hub.json` |
+| Research Briefs | `nospace/development/harkly/brand/ideas/briefs/` |
 
 ## Live URLs
 

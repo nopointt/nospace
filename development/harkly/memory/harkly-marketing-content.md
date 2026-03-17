@@ -166,13 +166,12 @@ Before every post: (1) What are my core values on this topic? (2) What would Har
 > OSINT методология: `nospace/docs/research/osint-content-research-methodology.md` (512 строк)
 > API источники: HN + GitHub Trending + NewsData.io + Reddit (reddapi.dev) + Telethon + Semantic Scholar + Serper
 
-- [ ] Написать промпт Antenna агента (cron 12h, широкий скан → 5-10 идей → Idea Hub)
-- [ ] Написать промпт DeepResearcher агента (OSINT триангуляция, Admiralty Code, Research Brief 7 секций)
-- [ ] Спроектировать Research Brief JSON schema
-- [ ] Обновить harkly-marketing-content.md — добавить новые pipeline задачи из Phase 2
-- [ ] Design Idea Hub schema (JSON: id, topic, angle, pillar, sources[], priority, status, created_at)
-- [ ] Implement Antenna cron on Modal.com (12h interval)
-- [ ] Build Idea Hub (file-based v1: `ideas/hub.json` + `ideas/{date}-session.md`)
+> ⚠️ NEEDS REWORK (2026-03-17): v0 pipeline написан (`brand/agents/`: idea_hub.py ✅, antenna.py ⚠️, deep_researcher.py ⚠️) но качество неприемлемо без Telethon. HN/GitHub дают нерелевантные идеи. Единственный рабочий источник — Telethon. Переписывать с нуля: Telethon как primary source, HN/GitHub — secondary. Нужны TG_API_ID + TG_API_HASH для запуска.
+
+- [ ] ⚠️ REWORK: Antenna — Telethon как primary source, HN/GitHub как secondary, on-demand
+- [ ] ⚠️ REWORK: DeepResearcher — OSINT триангуляция (Jina + HN Algolia + Groq), Research Brief 7 секций
+- [ ] ⚠️ REWORK: Idea Hub — схема ок (idea_hub.py переиспользовать), добавить `{date}-session.md` лог
+- [ ] Implement Antenna cron on Modal.com (12h interval) — после rework
 
 ### Phase 3 — Copywriter Agents
 - [ ] Write copywriter prompt template (brand TOV + channel persona + idea → article)
