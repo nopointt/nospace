@@ -224,3 +224,15 @@
 - Pencil flexbox rule: в flexbox-row frames нельзя задать x/y дочерним нодам — только gap/padding на parent
 - Token count: 21 в Pencil (19 base + 2 signal-success)
 - Все 5 V1 фреймворков (JTBD/SPICE/PEO/Issue Tree/FINER) готовы → следующий этап: F1–F5 screens
+<!-- ENTRY:2026-03-18:CLOSE:165:harkly:harkly-design-ui [AXIS] -->
+## 2026-03-18 — сессия 165 CLOSE [Axis]
+
+**Decisions:**
+- Harkly design system created: 19 docs in `design/harkly/`, Bauhaus RAG validated
+- Spatial paradigm: frames on canvas, not dashboard. Omnibar = primary not only.
+- Green for success = Klee over Mondrian. Warm grays = Kandinsky temperature.
+- F1 Источники: 6 artboards (default + 5 interaction states)
+- Architecture restructured: branches/ → architecture/. Brand consolidated in brand/.
+- Pencil Card → Frame. Naming convention doc created.
+
+**Files:** 22 created, 8 updated. Design system complete. F1 complete. F2-F5 pending.

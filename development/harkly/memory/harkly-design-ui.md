@@ -1,17 +1,36 @@
 ---
 # harkly-design-ui.md — Harkly UI Design Epic
 > Layer: L3 | Epic: harkly-design-ui | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-18 (session 162 CLOSE — FINER tokens, value text alignment, PEO badge fix, all V1 frameworks finalized)
+> Last updated: 2026-03-18 (session 165 CLOSE — design system 19 docs, F1 Sources 6 artboards, Bauhaus RAG validated, architecture restructured)
 ---
 
 ## Goal
 
-Design the full Harkly UI in Pencil MCP: infinite canvas shell + UC-2/UC-3 screens.
-Light theme. Baukasten 8px grid. Schlemmer spatial zones. Thelos design system tokens.
+Design the full Harkly UI in Pencil MCP: spatial canvas shell + floor screens.
+Light warm theme. Baukasten 8px grid. Harkly design system (`nospace/design/harkly/`).
 
 ## Pencil File
 
-`C:\Users\noadmin\AppData\Local\Programs\Pencil\untitled.pen`
+`nospace/design/harkly/harkly-ui.pen`
+
+## Required Reading Before Any Design Work
+
+Read these files IN THIS ORDER before touching Pencil:
+
+| # | File | Why |
+|---|---|---|
+| 1 | `design/harkly/harkly-spatial-interface-rules.md` | Canvas, frames, omnibar, floors, branches. What spatial means. Anti-patterns. |
+| 2 | `design/harkly/foundations/philosophy.md` | Brand → design bridge. Warm Bauhaus. What Harkly is NOT. |
+| 3 | `design/harkly/foundations/principles.md` | 5 Bauhaus principles adapted for Harkly. Rounded corners, warm shadows, breathing space. |
+| 4 | `design/harkly/guidelines/color.md` | 21 tokens, warm palette rules, green for success, chromatic restraint. |
+| 5 | `design/harkly/guidelines/spacing.md` | Scale {4..80}, breathing must be justified, component aliases. |
+| 6 | `design/harkly/guidelines/elevation.md` | Light theme elevation, shadow as structural signal, z-index scale, Pencil workaround. |
+| 7 | `design/harkly/guidelines/data-visualization.md` | Charts, graphs, entity lists, quote display, empathy map, tables. |
+| 8 | `design/harkly/guidelines/pencil-naming.md` | Node naming convention: components, artboards, internal nodes. |
+| 9 | `development/harkly/brand/omnibar-primacy.md` | Omnibar = primary input. Floors = spatial canvas. No dashboard patterns. |
+| 10 | `development/harkly/brand/ui-language-ru.md` | All UI text in Russian. Floor name translations. |
+
+**Skip reading = skip designing.** These docs ARE the design system. Pencil tokens and components implement them.
 
 ## Key Node IDs
 
@@ -21,7 +40,7 @@ Light theme. Baukasten 8px grid. Schlemmer spatial zones. Thelos design system t
 | Shell · Omnibar Collapsed | 7OCdH | 1440×900 artboard, x:0 y:1176 |
 | Shell · Omnibar Expanded | yil9s | 1440×900 artboard, x:1500 y:1176 |
 | F0 · Scratchpad | oeslM | 1440×900, x:0 y:2176 |
-| F1 · Connectors | 4d2op | 1440×900, x:1500 y:2176 |
+| F1 · Источники | GATr5 | 1440×900, x:1500 y:2176 (WIP — has dashboard layout from earlier session, needs spatial redo) |
 | F2 · Raw | 4nrvq | 1440×900, x:3000 y:2176 |
 | F3 · Insights | MnI3g | 1440×900, x:4500 y:2176 |
 | F4 · Artifacts | 4Q98Z | 1440×900, x:6000 y:2176 |
@@ -55,6 +74,9 @@ Light theme. Baukasten 8px grid. Schlemmer spatial zones. Thelos design system t
 | F0 · FloorPill | MzfcR | text "Черновик" = Rry8L |
 | F0 · Screen label | lTH5M | — |
 | F0 · Omnibar expanded | pFhBG | — |
+| **F0 Variants artboard (Framing Studio layouts)** | | |
+| copiedF0 artboard | ugSNR | 1440×900, x:0 y:3176 — F0 variant exploration |
+| copiedF0 · Framing Studio panel variant | icVH5 | 544×416, x:640 y:150 — tabular layout, NPS/SPICE framework display (segment rows with colored badges) |
 
 ## Artboard Structure (all 8 artboards identical)
 
@@ -145,7 +167,7 @@ Pill right edges: FloorPill 1008+120=1128 / BranchPill 1136+144=1280 / CoordPill
 | Floor | Name | Content |
 |---|---|---|
 | F0 | Черновик | Empty canvas, Omnibar, Framing Studio (appears on question input — JTBD primary) |
-| F1 | Connectors | Integrations: OAuth status, API keys, rate limits, quotas |
+| F1 | Источники | Source status frames on spatial canvas — infrastructure overview |
 | F2 | Raw | Corpus list, triage include/exclude, document viewer |
 | F3 | Insights | Knowledge graph, entity list, quotes with drill-down to F2 |
 | F4 | Artifacts | Empathy Map / Fact Pack / Journey Map / Evidence Map, drill-down F3→F2 |
@@ -187,7 +209,7 @@ Spine stages: Framing → Planning → Ingestion → Extraction → Synthesis �
 
 ### Screens
 - [x] F0 Черновик — Framing Studio all V1 frameworks: JTBD ✅ SPICE ✅ PEO ✅ Issue Tree ✅ FINER ✅ · value text alignment fixed · formal tokens applied
-- [ ] F1 Источники — integrations list, OAuth status, API quotas
+- [ ] F1 Источники — source status frames on spatial canvas (see `design/harkly/guidelines/data-visualization.md`)
 - [ ] F2 Raw — corpus list, triage (include/exclude), document viewer
 - [ ] F3 Insights — knowledge graph, entity list, quotes with sources
 - [ ] F4 Artifacts — Empathy Map / Fact Pack / Journey Map with drill-down to F3→F2
@@ -232,7 +254,7 @@ Spine stages: Framing → Planning → Ingestion → Extraction → Synthesis �
 
 ### Design implications для F0 Pencil
 
-- Текущий Pencil F0 показывает PICOT — **нужно переделать на JTBD framing**
+- ~~Текущий Pencil F0 показывает PICOT~~ — ✅ DONE, rebuilt to JTBD framing (session 162)
 - JTBD statement: "Когда [ситуация], я хочу [мотив], чтобы [результат]"
 - Дополнительно: Problem Statement как entry (первое что PM вводит) → AI классифицирует → предлагает JTBD/SPICE/PEO
 - Название "Студия фрейминга" ✅ — корректно отражает концепцию

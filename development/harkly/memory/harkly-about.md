@@ -1,7 +1,7 @@
 ---
 # harkly-about.md — Harkly Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-14
+> Last updated: 2026-03-18
 ---
 
 ## Identity
@@ -38,7 +38,7 @@ Team: nopoint (founder) + Артём (co-founder, roles TBD).
 | Landing state | `development/harkly/memory/landing-page-state.md` |
 | Marketing domain | `nospace/marketing/` (branding, copywriting, campaigns, seo) |
 | Brand TOV | `nospace/development/harkly/brand/tov.md` |
-| Brand Values | `nospace/marketing/branding/values.md` |
+| Brand Values | `development/harkly/brand/values.md` |
 | Brand Bible | `nospace/development/harkly/brand/brand-bible.md` |
 | LinkedIn scraper | `nospace/tools/linkedin-scraper/scrape.ts` |
 | Stealth scraping docs | `development/harkly/memory/stealth-scraping-techniques.md` |
@@ -63,14 +63,11 @@ Team: nopoint (founder) + Артём (co-founder, roles TBD).
 - Pending migrations: `e4_artifacts.sql` + `e6_share.sql` — apply in Supabase SQL editor
 - Models: workspaces, research_projects, documents, extractions, artifacts, shares
 
-## Canvas Architecture
+## Canvas Architecture (code will be rewritten from Pencil mockups)
 
-- `Canvas.tsx` — infinite canvas (pan + zoom, CSS transform)
-- `CanvasFrame.tsx` — draggable/resizable frame, `data-canvas-frame`
-- `FrameContentRouter.tsx` — routes `frame.module` → React component
-- `useCanvasState.ts` — Zustand store with localStorage persist
-- `ChatPanel.tsx` — floating chat (3 positions: left/center/right)
-- `AgentStatusBar.tsx` — active agent status
+Legacy code references (harkly-saas/, will be replaced):
+- `Canvas.tsx`, `CanvasFrame.tsx`, `FrameContentRouter.tsx`, `useCanvasState.ts`
+- Source of truth for UI: `nospace/design/harkly/harkly-ui.pen`
 
 ## Compliance
 
@@ -113,20 +110,44 @@ Player subagent: `nextjs-developer` (frontend) | `backend-developer` (API/Rust)
 
 → [nospace/docs/research/open-apis/index.md](../../../../docs/research/open-apis/index.md) — available APIs for ingestion layer (social, news, business, text analysis)
 
-**Priority APIs for MVP ingestion:**
-- Reddit API (OAuth) — UC-2/UC-3 primary source
-- Hacker News Algolia API (no auth) — UC-3 tech signal
-- NewsAPI / The Guardian (apiKey) — UC-3 news coverage
-- Rss2Json (no auth) — forum/blog RSS to JSON
-- Scrapling (Python lib) — unstructured scraping targets (App Store, forums)
+**Priority connectors (from F1 audience research 2026-03-18):**
+- P0: Manual upload (files, transcripts) + Telegram channels
+- P1: Support tickets (Zendesk/Intercom) + vc.ru
+- P2: Surveys/NPS exports + marketplace reviews (Ozon/WB)
+- P3: YouTube, Habr
+- P4: Reddit, HN (low RU audience relevance)
+
+## Brand Docs
+
+| Doc | Path |
+|---|---|
+| Brand Bible | `development/harkly/brand/brand-bible.md` |
+| Values | `development/harkly/brand/values.md` |
+| Positioning | `development/harkly/brand/positioning.md` |
+| Category Manifesto | `development/harkly/brand/category-manifesto.md` |
+| TOV | `development/harkly/brand/tov.md` (v3) |
+
+## Design System
+
+**Pencil (source of truth):** `nospace/design/harkly/harkly-ui.pen`
+- Color System (DpHtH) · Spacing System (jrVLH) · Typography System (Kf1xa) · Motion System (zqE0U) · Interface Examples (xF6MT) · Component Library (ejLN6, 17 components)
+
+**Docs:** `nospace/design/harkly/`
+- `README.md` · `foundations/` (philosophy, principles) · `guidelines/` (color, typography, spacing, layout, elevation, motion) · `patterns/` (workspace, composition, interaction, navigation, error-states) · `components/inventory.md`
+
+**Upstream:** tLOS Bauhaus RAG `nospace/design/design_system/` (80 files) + `docs/tLOS/design/bauhaus-code/` (107 extractions) + Qdrant `bauhaus_knowledge` (10,288 vectors)
+
+Берём из tLOS: 5 принципов, spacing scale, typography rules, spatial paradigm. Своё: warm palette, soft corners, light theme, calm density.
 
 ## Navigation
 
 | Need | File |
 |---|---|
 | Roadmap | [harkly-roadmap.md](harkly-roadmap.md) (L2) |
+| Design system | `nospace/design/harkly/README.md` |
 | Chronicle index | `memory/chronicle/index.md` |
-| Architecture spec | `branches/feat-saas-v1/Harkly Architecture Spec.md` |
+| Architecture (EN) | `architecture/harkly-product-architecture-en.md` |
+| Architecture (RU) | `architecture/harkly-spine-process-ru.md` |
 | Report catalog (Steam era) | `memory/report-catalog.md` |
 | SemComp algorithms | `memory/semcomp-registry.md` |
 | Cold outreach research | `memory/cold-outreach-research.md` + `cold-outreach-funnel-research.md` |

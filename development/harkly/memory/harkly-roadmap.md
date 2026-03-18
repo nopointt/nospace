@@ -18,15 +18,10 @@
 | **5** | **G3 Backend Build** | **🔜 NEXT — highest priority** |
 | 6 | Manual Testing + Beta | 🔒 blocked by Stage 5 |
 
-## HARKLY-05 G3 Roadmap (Stage 5 — строгая очерёдность)
+## HARKLY-05 Stage 5 — Backend Build (pending)
 
-1. **G3 #5** — Backend security: rate limiting (governor/tower) + input validation (appid, limit, name)
-2. **Deploy** — Cloudflare Workers (Rust→Wasm via `worker` crate) + CF Pages (Next.js) via Wrangler
-3. **JTBD Report** — full Jobs-to-be-Done feature analysis
-4. **G3 #4** — UI completeness: Create Research form + auth guard + logout
-
-**G3 rule:** prompt via file (`cat spec.md`). Claude = Coach, does not write code.
-**CF Workers:** Rust→Wasm requires `worker` crate + `wrangler deploy`. PostgreSQL → Hyperdrive.
+Backend approach TBD after UI design (HARKLY-15) completes. Code will be rewritten from Pencil mockups.
+Deploy: Vercel (current). G3 rule: prompt via file (`cat spec.md`). Axis = Coach.
 
 ## Active Epics
 
@@ -36,6 +31,7 @@
 | **HARKLY-14** | **Marketing: Content Auto-Writing System** | **🔶 IN PROGRESS** | `harkly-marketing-content.md` |
 | HARKLY-05 | saas-v1: Stage 5 G3 Backend Build | 🔜 NEXT | `harkly-saas-v1.md` |
 | HARKLY-12 | saas-v1: Canvas Workspace Redesign (3.5) | ⏸ on-hold | `harkly-canvas-redesign.md` |
+| HARKLY-16 | Claude Code CLI integration — ToS inquiry + architecture | 📬 PENDING REPLY | `anthropic-claudecode-inquiry.md` |
 | HARKLY-06 | Cold outreach Steam indie games | ⏸ on-hold | `harkly-cold-outreach.md` |
 | HARKLY-13 | saas-v1: Landing Page | ✅ DONE — harkly-saas.vercel.app | — |
 | HARKLY-11 | saas-v1: Stage 3 G3 Frontend Build | ✅ DONE — E0–E6 done | — |
@@ -51,7 +47,7 @@
 
 ## Next Priority
 
-1. **HARKLY-15 UI Design** — F0 rebuild (PICOT → JTBD), F1–F5 screens ← **активно сейчас**
+1. **HARKLY-15 UI Design** — F0 done (JTBD ✅), design system done ✅, F1–F5 screens pending ← **активно сейчас**
 2. **HARKLY-14 Marketing Content System** — Brand TOV + channel agents + Idea Hub + pipeline
 3. **Stage 5 — G3 Backend Build** (G3 #5: rate limiting + validation)
 4. **Apply pending SQL migrations** (e4_artifacts.sql + e6_share.sql in Supabase)
@@ -59,7 +55,33 @@
 
 ## Reference
 
-- Full spec: `branches/feat-saas-v1/Harkly Architecture Spec.md`
-- Business brief: `branches/feat-saas-v1/opus_business_brief.md`
+### Brand (all in `development/harkly/brand/`)
+- Brand Bible: `brand-bible.md` (consolidated source)
+- Values: `values.md` (canonical 5 values, vibe, symbol, methodology)
+- Positioning: `positioning.md` (audience, GTM, metric)
+- Category Manifesto: `category-manifesto.md`
+- TOV: `tov.md` (v3 — 4 pillars, infostyle, inner child)
+- Omnibar Primacy: `omnibar-primacy.md` (spatial canvas rules)
+- UI Language: `ui-language-ru.md` (RU translations for all UI elements)
+- Brand + Design Overview: `brand-and-design-overview.md` (full inventory)
+
+### Design System (`nospace/design/harkly/`)
+- Pencil: `harkly-ui.pen` (source of truth — tokens, components, artboards)
+- Docs: README, foundations/, guidelines/, patterns/, components/
+- Spatial rules: `harkly-spatial-interface-rules.md`
+- RAG: `bauhaus-rag-results.md` + `bauhaus-validation-results.md`
+- Upstream: `nospace/design/design_system/` (tLOS) + `nospace/design/tlos-ui.pen`
+
+### Architecture (`development/harkly/architecture/`)
+- Product architecture (EN): `harkly-product-architecture-en.md`
+- Spine-процесс (RU): `harkly-spine-process-ru.md`
+- Business brief: `opus_business_brief.md`
 - Methodology schools: `branches/feat-saas-v1/methodology_schools_detailed.md`
 - Specs E0–E6: `branches/feat-saas-v1/specs/`
+
+### Research
+- F1: `docs/research/f1-connector-ux-research.md` · `f1-pm-sources-web-research.md` · `f1-audience-sources-mining.md`
+- Framing frameworks: `docs/research/framing-frameworks-research.md`
+
+### Archive
+- `development/harkly/archive/` — old copies of restructured files
