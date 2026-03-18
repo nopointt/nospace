@@ -1,7 +1,7 @@
 ---
 # harkly-roadmap.md — Harkly Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start or on demand
-> Last updated: 2026-03-17
+> Last updated: 2026-03-18
 ---
 
 ## saas-v1 — 6-Stage Roadmap
@@ -51,10 +51,11 @@
 
 ## Next Priority
 
-1. **HARKLY-14 Marketing Content System** — Brand TOV + channel agents + Idea Hub + pipeline
-2. **Stage 5 — G3 Backend Build** (G3 #5: rate limiting + validation)
-3. **Apply pending SQL migrations** (e4_artifacts.sql + e6_share.sql in Supabase)
-4. **Canvas 3.5** — floor navigation + per-floor content (after Stage 5)
+1. **HARKLY-15 UI Design** — F0 rebuild (PICOT → JTBD), F1–F5 screens ← **активно сейчас**
+2. **HARKLY-14 Marketing Content System** — Brand TOV + channel agents + Idea Hub + pipeline
+3. **Stage 5 — G3 Backend Build** (G3 #5: rate limiting + validation)
+4. **Apply pending SQL migrations** (e4_artifacts.sql + e6_share.sql in Supabase)
+5. **Canvas 3.5** — floor navigation + per-floor content (after Stage 5)
 
 ## Reference
 

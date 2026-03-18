@@ -104,7 +104,10 @@ Player subagent: `nextjs-developer` (frontend) | `backend-developer` (API/Rust)
 | `memory/harkly-saas-v1.md` (L3) | Axis — task tracking |
 | `memory/chronicle/harkly-current.md` | Axis — append only |
 | `memory/chronicle/index.md` | Axis — append only |
-| `memory/session-scratch.md` (L4) | Axis — write during session, clear on close |
+| `memory/session+{N}-scratch.md` (L4) | Axis — write during session, archive to chronicle/scratches/ on close |
+| `memory/chronicle/harkly-current.md` | Axis — append only (queue drain) |
+| `memory/chronicle/queue/` | Axis — staging queue for CLOSE entries |
+| `memory/chronicle/scratches/` | Axis — archived session scratches |
 
 ## Open APIs & Data Sources
 

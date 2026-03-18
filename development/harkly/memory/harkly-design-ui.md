@@ -1,7 +1,7 @@
 ---
 # harkly-design-ui.md — Harkly UI Design Epic
 > Layer: L3 | Epic: harkly-design-ui | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-18 (close #156, Axis)
+> Last updated: 2026-03-18 (session 159 CLOSE — F0 Framing Studio rebuilt JTBD, header controls, collapsed card, closeaxis fixed)
 ---
 
 ## Goal
@@ -18,16 +18,63 @@ Light theme. Baukasten 8px grid. Schlemmer spatial zones. Thelos design system t
 | Node | ID | Notes |
 |---|---|---|
 | Component library frame | ejLN6 | 17 components (buttons, inputs, badges, cards, SpineProgress) |
-| Shell · Omnibar Collapsed | 7OCdH | 1440×900 artboard |
-| Shell · Omnibar Expanded | yil9s | 1440×900 artboard, omnibar 360×852 full height |
-| F0 · Scratchpad | oeslM | floor artboard |
-| F1 · Connectors | 4d2op | floor artboard |
-| F2 · Raw | 4nrvq | floor artboard |
-| F3 · Insights | MnI3g | floor artboard |
-| F4 · Artifacts | 4Q98Z | floor artboard |
-| F5 · Stakeholders | xhXjO | floor artboard |
-| Omnibar collapsed pill | fYZfh | 320×48, bottom-left, shadow border |
-| Omnibar expanded panel | keCtm | 360×852, bottom-left, shadow border, full height |
+| Shell · Omnibar Collapsed | 7OCdH | 1440×900 artboard, x:0 y:1176 |
+| Shell · Omnibar Expanded | yil9s | 1440×900 artboard, x:1500 y:1176 |
+| F0 · Scratchpad | oeslM | 1440×900, x:0 y:2176 |
+| F1 · Connectors | 4d2op | 1440×900, x:1500 y:2176 |
+| F2 · Raw | 4nrvq | 1440×900, x:3000 y:2176 |
+| F3 · Insights | MnI3g | 1440×900, x:4500 y:2176 |
+| F4 · Artifacts | 4Q98Z | 1440×900, x:6000 y:2176 |
+| F5 · Stakeholders | xhXjO | 1440×900, x:7500 y:2176 |
+| Omnibar collapsed pill | fYZfh | 320×48, x:24 y:828, cornerRadius:24, shadow border |
+| Omnibar expanded panel | keCtm | 360×852, x:24 y:24, cornerRadius:16, shadow border |
+| Omnibar · LogoDot | e259P | 8×8, fill $--accent-blue |
+| Omnibar · Placeholder | 7BofV | fill_container, $--text-tertiary |
+| Omnibar · SendBtn | sIhoZ | 32×32, $--accent-blue, lucide arrow-up |
+| Omnibar expanded · Header | koe96 | fill_container×52, padding:[0,16], bottom divider #E8DDD0 |
+| Omnibar expanded · Body | seIAG | fill_container×fill_container, $--bg-surface, padding:16 |
+| Omnibar expanded · Divider | 4e4x5 | fill_container×1, $--border-subtle |
+| Omnibar expanded · InputRow | hqN5U | fill_container×52, padding:[0,16] |
+| **F0 Framing Studio nodes (JTBD layout ✅)** | | |
+| F0 · Framing Studio panel | j5n3U | x:640 y:150, 544px wide, vertical layout, bg-surface, shadow border |
+| F0 · FS Header frame | JnD93 | fill_container |
+| F0 · FS Title row | SZvLI | horizontal, space_between |
+| F0 · FS Title text | p9aSx | "Студия фрейминга" |
+| F0 · FS JTBD chip group | 1e55k | horizontal, gap:8 — contains chip + X |
+| F0 · FS JTBD chip | OScrE | fill:#EDE0C4, cornerRadius:4, padding:[2,6] |
+| F0 · FS JTBD label | OqRyf | "JTBD", text-secondary, 10px |
+| F0 · FS Close icon | cPd6C | lucide x, text-tertiary |
+| F0 · FS Question text | JYXtL | question display |
+| F0 · FS Divider 1 | qYftV | — |
+| F0 · FS Table body | eTecO | JTBD rows (Когда / Хочу / Чтобы) |
+| F0 · Row Когда / Badge / Value | 6DCt5 / E20yQ / wN0k3 | badge: 64px, #EDE0C4 |
+| F0 · Row Хочу / Badge / Value | yfUHb / qJv6S / fzBq4 | badge: 64px, #EDE0C4 |
+| F0 · Row Чтобы / Badge / Value | hTLyT / s9JDf / 60QU1 | badge: 64px, #EDE0C4 |
+| F0 · FS Divider 2 | CsV1P | — |
+| F0 · FS Footer | 8pBUd | Уточнить (SUBXx/dXnDo) + Начать исследование (sv14P/C8efQ) |
+| F0 · FloorPill | MzfcR | text "Черновик" = Rry8L |
+| F0 · Screen label | lTH5M | — |
+| F0 · Omnibar expanded | pFhBG | — |
+
+## Artboard Structure (all 8 artboards identical)
+
+```
+Artboard (1440×900, fill:$--bg-canvas, layout:none)
+├── Grid (64px Baukasten: 14H + 22V lines #EBEBEB, z:0)
+├── ScreenLabel (text, $--text-tertiary, x:24 y:16)
+├── FloorPill (120×28, x:1008 y:16, cornerRadius:14, $--bg-surface, gap:6)
+│   ├── text "Scratchpad" / "Connectors" / etc. ($--text-secondary, fontSize:11)
+│   └── icon_font lucide chevron-down (14×14)
+├── BranchPill (144×28, x:1136 y:16, cornerRadius:14, $--bg-surface, gap:6)
+│   ├── text "Branch 1" ($--text-secondary, fontSize:11)
+│   └── icon_font lucide chevron-down (14×14)
+├── CoordPill (128×28, x:1288 y:16, cornerRadius:14, $--bg-surface, gap:6)
+│   ├── text "x: 0  y: 0" ($--text-secondary, fontSize:11)
+│   └── icon_font lucide crosshair (14×14)
+└── Omnibar [collapsed 320×48 / expanded 360×852] (x:24, bottom-left)
+```
+
+Pill right edges: FloorPill 1008+120=1128 / BranchPill 1136+144=1280 / CoordPill 1288+128=1416 (24px from edge).
 
 ## Icon System
 
@@ -35,25 +82,81 @@ Light theme. Baukasten 8px grid. Schlemmer spatial zones. Thelos design system t
 - CoordPill icon: `crosshair`
 - FloorPill / BranchPill icon: `chevron-down`
 - Omnibar send button: `arrow-up`
-- Usage: `{type:"icon_font", iconFontFamily:"lucide", iconFontName:"<name>", width:14, height:14}`
+- Confirmed icons: `plus`, `search`, `message-circle`, `triangle`, `arrow-up`, `chevron-down`, `crosshair`
+- Usage: `{type:"icon_font", iconFontFamily:"lucide", iconFontName:"<name>", width:N, height:N}`
+- ⚠️ Unicode ▾ (U+25BE) и ⊕ (U+2295) — Inter не рендерит → always use Lucide icon_font
 
 ## Design Decisions (frozen)
 
 - Grid: Baukasten 8px base → 64px visual grid (8×8)
-- Background: `$--bg-canvas` = #FFF8E7 (comic latte)
-- Grid lines: #EBEBEB
+- Background: `$--bg-canvas` = #FFF8E7 (Cosmic Latte)
+- Grid lines: #EBEBEB (slightly warm)
 - Omnibar: bottom-LEFT (not center — distinct Harkly pattern)
-- Border style: shadow workaround (Pencil stroke silently drops)
+- Border style: shadow effect workaround (Pencil stroke silently drops)
 - Padding in Pencil: `[vertical, horizontal]` CSS shorthand order
+- Warm gray rationale: Kandinsky Grundfläche (hue ~43°) + Oud Tönung → surfaces in same thermal family. Derivation: hue ~40°, lightness -5-7pt per step, saturation increases slightly
 
-## Token System
+## Token System (19 variables in Pencil — all updated)
 
-18 variables in Pencil. Key tokens:
-- `--bg-canvas` = #FFF8E7
-- `--bg-surface` = #F8F8F8 (⚠️ may need warm variant #F5EDD8 — pending decision)
-- `--border-default` = #C6C6C6
-- `--accent-blue` = #1E3EA0
-- `--text-tertiary` = #8E8E8E
+| Token | Value | Notes |
+|---|---|---|
+| `--bg-canvas` | #FFF8E7 | Cosmic Latte ✅ |
+| `--bg-surface` | #F5EDD8 | warm ✅ (was #F8F8F8) |
+| `--bg-elevated` | #EDE0C4 | warm ✅ (new — floating UI: pills, toolbars) |
+| `--bg-pressed` | #E0CFA9 | warm ✅ (new) |
+| `--interactive-hover` | #F0E8D5 | warm ✅ (was #F5F5F5) |
+| `--interactive-pressed` | #E0CFA9 | warm ✅ (was #E3E3E3) |
+| `--accent-blue` | #1E3EA0 | — |
+| `--accent-red` | #C82020 | — |
+| `--accent-yellow` | #F2C200 | — |
+| `--text-primary` | #1C1C1C | — |
+| `--text-secondary` | #555555 | — |
+| `--text-tertiary` | #8E8E8E | — |
+| `--text-disabled` | #C6C6C6 | — |
+| `--border-default` | #C6C6C6 | — |
+| `--border-subtle` | #E8DDD0 | warm ✅ (was #E3E3E3) |
+| `--border-strong` | #AAAAAA | — |
+| `--signal-error` | #C82020 | — |
+| `--signal-info` | #1E3EA0 | — |
+| `--signal-warning` | #F2C200 | — |
+
+## ⚠️ Pencil MCP Critical Rules
+
+| Rule | Detail |
+|---|---|
+| **stroke** | Silently drops with no error. **Always use** `effect:{type:"shadow",...}` for borders |
+| **border tokens** | **CRITICAL:** `effect.shadow` does NOT accept token variables (`$--token`). Always use **hardcoded hex** for shadow color in borders |
+| **padding** | Order is `[vertical, horizontal]` (CSS shorthand — NOT reversed) |
+| **effect shadow** | Does NOT accept `x`/`y` properties — only `blur`, `spread`, `color` |
+| **text nodes** | Property is `content`, not `value` |
+| **icon_font** | Requires `iconFontFamily` + `iconFontName` + explicit `width`/`height` |
+| **M() + layout bug** | After `M()` into a new frame — always `batch_get` and verify `layout` didn't drop. If missing → `U(id, {layout:"horizontal"})` immediately |
+| **gap off-grid** | gap must always be a multiple of 4px (4, 8, 12, 16, 24...). gap:6 — off-grid, never use |
+| **set_variables format** | Must be `{"--token": {"type":"color","value":"#HEX"}}` — plain string `"#HEX"` throws error |
+| **Lucide X optical weight** | `x` glyph is visually lighter than other icons at same px size. Accept it — resizing doesn't fix it |
+| **Compact header controls** | Baukasten rule: uniform 24px height, icons 16×16, gap between icons 8px, gap chip→icons 8px |
+
+## Floor Architecture
+
+| Floor | Name | Content |
+|---|---|---|
+| F0 | Черновик | Empty canvas, Omnibar, Framing Studio (appears on question input — JTBD primary) |
+| F1 | Connectors | Integrations: OAuth status, API keys, rate limits, quotas |
+| F2 | Raw | Corpus list, triage include/exclude, document viewer |
+| F3 | Insights | Knowledge graph, entity list, quotes with drill-down to F2 |
+| F4 | Artifacts | Empathy Map / Fact Pack / Journey Map / Evidence Map, drill-down F3→F2 |
+| F5 | Stakeholders | Export: PDF/PPTX/MD, audience presets (C-Suite / Product / Research) |
+
+Spine stages: Framing → Planning → Ingestion → Extraction → Synthesis → Notebook
+
+**Branch model (updated 2026-03-18):**
+- F0 is NOT global — it's per-branch. Branch 1 has its own F0, Branch 2 has its own F0 (separate empty canvas).
+- New branch = new F0 (empty scratchpad) + F1–F5 isolated instances.
+- No shared canvas across branches.
+
+**PICOT bar (resolved 2026-03-18):**
+- NOT sticky by default anywhere.
+- Visibility controlled by user (toggle). No persistent PICOT context bar on all floors.
 
 ## Tasks
 
@@ -67,33 +170,74 @@ Light theme. Baukasten 8px grid. Schlemmer spatial zones. Thelos design system t
 - [x] FloorPill: lucide chevron-down icon
 - [x] BranchPill: lucide chevron-down icon
 - [x] CoordPill: lucide crosshair icon
-- [x] 6 floor artboards (F0–F5) с правильными FloorPill labels
-- [x] Floor structure defined: F0 Scratchpad / F1 Connectors / F2 Raw / F3 Insights / F4 Artifacts / F5 Stakeholders
+- [x] 6 floor artboards (F0–F5) with correct FloorPill labels
 
-### Token system (in progress)
-- [ ] `--bg-surface` warm variant — ждём RAG-агента (тёплые серые под Cosmic Latte)
-- [ ] Добавить `--bg-elevated` токен для floating UI (пилюли, тулбары)
-- [ ] Обновить значения в Pencil variables после решения по токенам
+### Token system (done)
+- [x] `--bg-surface` warm variant → #F5EDD8
+- [x] `--bg-elevated` token → #EDE0C4 (floating UI)
+- [x] `--bg-pressed` token → #E0CFA9 (new)
+- [x] `--interactive-hover` / `--interactive-pressed` warm variants
+- [x] All 19 tokens updated in Pencil variables
 
-### Screens (not started)
-- [ ] F0 Scratchpad — пустой канвас, Omnibar, Framing Studio появляется при вводе
-- [ ] F1 Connectors — список интеграций, OAuth статусы, API квоты
+### Screens
+- [~] F0 Черновик — Omnibar ✅, Framing Studio JTBD ✅, collapsed card ✅ — omnibar dialog intent normalization отдельный эпик
+- [ ] F1 Источники — integrations list, OAuth status, API quotas
 - [ ] F2 Raw — corpus list, triage (include/exclude), document viewer
-- [ ] F3 Insights — граф знаний, entity list, цитаты с источниками
-- [ ] F4 Artifacts — Empathy Map / Fact Pack / Journey Map с drill-down до F3→F2
-- [ ] F5 Stakeholders — export, аудитория-preset, форматы (PDF/PPTX/MD)
+- [ ] F3 Insights — knowledge graph, entity list, quotes with sources
+- [ ] F4 Artifacts — Empathy Map / Fact Pack / Journey Map with drill-down to F3→F2
+- [ ] F5 Stakeholders — export, audience presets, formats (PDF/PPTX/MD)
 
 ### Components (pending)
-- [ ] Omnibar → reusable component (сейчас one-off frames)
-- [ ] FloorPill / BranchPill / CoordPill → reusable компоненты в ejLN6
-- [ ] Dropdown overlay компонент (для FloorPill/BranchPill списков)
-- [ ] SpineProgress bar в header омнибара (F0 не нужен, F1–F5 показывает прогресс)
+- [ ] Omnibar → reusable component (currently one-off frames)
+- [ ] FloorPill / BranchPill / CoordPill → reusable components in ejLN6
+- [ ] Dropdown overlay component (floor + branch lists)
+- [ ] SpineProgress bar in omnibar header (F1–F5 only, not F0)
+
+## Framing Studio Architecture (resolved 2026-03-18)
+
+**Source:** `nospace/docs/research/framing-frameworks-research.md` (735 lines, full research)
+
+### Core decision: гибридная модель, не один фреймворк
+
+**Input layer:** Принимать любой NL — HMW, Problem Statement, JTBD, расплывчатый сигнал. Не заставлять PM знать фреймворки.
+
+**AI classification (internal):**
+- Exploratory qualitative CX → **SPIDER** (drives source/method recommendations)
+- Service/experience evaluation → **SPICE**
+- Hypothesis testing / A-B review → **PICO(T)**
+- Complex multi-branch → **Issue Tree** → затем SPIDER/SPICE per branch
+- Discovery / generative → **JTBD** → затем SPIDER для evidence
+
+**User-facing output:** PM-native язык (не "S-P-I-D-E-R элементы", а "Кто / Что изучаем / Как / Что ищем"). Название фреймворка — информационный лейбл, не primary UI.
+
+**FINER gate (internal):** Score по Feasibility и Relevance перед финализацией. Флагировать слишком широкие или нереализуемые вопросы.
+
+### V1 Priority Frameworks
+
+| # | Фреймворк | Роль | Аудитория |
+|---|---|---|---|
+| 1 | **JTBD Framing** | Primary frame для discovery/exploratory | PM-нативный, знаком в RU (GoPractice, ProductSense) |
+| 2 | **SPICE** | Service/experience evaluation | Internal — показывать в PM-нативном языке |
+| 3 | **PEO** | Quick fallback для простых вопросов | Минимальный, 3 элемента |
+| 4 | **FINER** | Validation gate (internal) | Показывать только Feasibility warning |
+| 5 | **Issue Tree** | Advanced mode, сложные программы | Power users |
+
+**PICOT/PICO** → advanced mode only. Только если PM явно тестирует гипотезу с измеримыми outcomes.
+
+### Design implications для F0 Pencil
+
+- Текущий Pencil F0 показывает PICOT — **нужно переделать на JTBD framing**
+- JTBD statement: "Когда [ситуация], я хочу [мотив], чтобы [результат]"
+- Дополнительно: Problem Statement как entry (первое что PM вводит) → AI классифицирует → предлагает JTBD/SPICE/PEO
+- Название "Студия фрейминга" ✅ — корректно отражает концепцию
+- Market gap: ни один существующий инструмент не имеет framework-aware Framing Studio как first-class feature
 
 ## Open Issues
 
-- [ ] `--bg-surface` warm variant: RAG-агент запущен, ждём рекомендации
-- [ ] Stroke format unresolved → shadow workaround до решения Pencil MCP
-- [ ] Pencil icon pack: Lucide доступен нативно ✅ — никакого pack install не нужно
+- [x] Переделать Pencil F0: PICOT → JTBD framing (primary V1 frame) ✅ 2026-03-18
+- [x] `--border-subtle` → #E8DDD0 (warm) ✅ 2026-03-18
+- [ ] Omnibar frames → reusable components (currently one-off)
+- [ ] Omnibar placeholder "Ask Harkly…" → перевести на русский
 
 ## Blockers
 
