@@ -1,7 +1,7 @@
 ---
 # harkly-design-ui.md — Harkly UI Design Epic
 > Layer: L3 | Epic: harkly-design-ui | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-18 (session 165 CLOSE — design system 19 docs, F1 Sources 6 artboards, Bauhaus RAG validated, architecture restructured)
+> Last updated: 2026-03-18 (session 168 CLOSE — drag fix, floor/branch mechanics, scroll, F1 research launched)
 ---
 
 ## Goal
@@ -118,7 +118,7 @@ Pill right edges: FloorPill 1008+120=1128 / BranchPill 1136+144=1280 / CoordPill
 - Padding in Pencil: `[vertical, horizontal]` CSS shorthand order
 - Warm gray rationale: Kandinsky Grundfläche (hue ~43°) + Oud Tönung → surfaces in same thermal family. Derivation: hue ~40°, lightness -5-7pt per step, saturation increases slightly
 
-## Token System (21 variables in Pencil — all updated)
+## Token System (23 variables in Pencil — all updated)
 
 | Token | Value | Notes |
 |---|---|---|
@@ -164,14 +164,18 @@ Pill right edges: FloorPill 1008+120=1128 / BranchPill 1136+144=1280 / CoordPill
 
 ## Floor Architecture
 
-| Floor | Name | Content |
-|---|---|---|
-| F0 | Черновик | Empty canvas, Omnibar, Framing Studio (appears on question input — JTBD primary) |
-| F1 | Источники | Source status frames on spatial canvas — infrastructure overview |
-| F2 | Raw | Corpus list, triage include/exclude, document viewer |
-| F3 | Insights | Knowledge graph, entity list, quotes with drill-down to F2 |
-| F4 | Artifacts | Empathy Map / Fact Pack / Journey Map / Evidence Map, drill-down F3→F2 |
-| F5 | Stakeholders | Export: PDF/PPTX/MD, audience presets (C-Suite / Product / Research) |
+| Floor | Name (RU) | Spine Stage | Content |
+|---|---|---|---|
+| F0 | Фрейминг | Framing | Framing Studio — формулировка вопроса (JTBD/SPICE/PEO + FINER gate) |
+| F1 | Планирование | Planning | Source connectors + Collection Plan (AI-generated queries per source) |
+| F2 | Сырые данные | Ingestion | Сбор, нормализация, triage (include/exclude/maybe) |
+| F3 | Инсайты | Extraction | Паттерны, факты, цитаты — каждый трассируется до источника |
+| F4 | Артефакты | Synthesis | Empathy Map / Fact Pack / Journey Map / Evidence Map |
+| F5 | Блокнот | Notebook | Per-branch рабочий стол — заметки, наблюдения, черновики |
+
+**Sharing** = глобальная фича, можно шейрить любой этаж или несколько.
+**Omnibar** = единый поток сознания через все этажи и ветки.
+**Floor transitions** = юзер через coords/scroll ИЛИ AI автопереключает когда нужно показать результат.
 
 Spine stages: Framing → Planning → Ingestion → Extraction → Synthesis → Notebook
 
@@ -205,18 +209,18 @@ Spine stages: Framing → Planning → Ingestion → Extraction → Synthesis �
 - [x] `--interactive-hover` / `--interactive-pressed` warm variants
 - [x] All 19 tokens updated in Pencil variables
 - [x] `--signal-success` + `--signal-success-bg` added (21 total)
-- [ ] `--signal-warning-bg` + `--signal-warning-text` (FINER F-badge hardcode #FFF3CD/#B8860B)
+- [x] `--signal-warning-bg` + `--signal-warning-text` added (23 total) ✅ 2026-03-18
 
 ### Screens
 - [x] F0 Черновик — Framing Studio all V1 frameworks: JTBD ✅ SPICE ✅ PEO ✅ Issue Tree ✅ FINER ✅ · value text alignment fixed · formal tokens applied
-- [ ] F1 Источники — source status frames on spatial canvas (see `design/harkly/guidelines/data-visualization.md`)
+- [ ] F1 Планирование — FULL REDESIGN pending: "серьёзный документ" (research synthesis from OSINT + methodology docs → new design)
 - [ ] F2 Raw — corpus list, triage (include/exclude), document viewer
 - [ ] F3 Insights — knowledge graph, entity list, quotes with sources
 - [ ] F4 Artifacts — Empathy Map / Fact Pack / Journey Map with drill-down to F3→F2
 - [ ] F5 Stakeholders — export, audience presets, formats (PDF/PPTX/MD)
 
-### Components (pending)
-- [ ] Omnibar → reusable component (currently one-off frames)
+### Components
+- [x] Omnibar/Collapsed (fYZfh) + Omnibar/Expanded (keCtm) → reusable, 14 instances replaced with refs ✅ 2026-03-18
 - [ ] FloorPill / BranchPill / CoordPill → reusable components in ejLN6
 - [ ] Dropdown overlay component (floor + branch lists)
 - [ ] SpineProgress bar in omnibar header (F1–F5 only, not F0)
@@ -266,9 +270,9 @@ Spine stages: Framing → Planning → Ingestion → Extraction → Synthesis �
 - [x] `--border-subtle` → #E8DDD0 (warm) ✅ 2026-03-18
 - [x] All V1 Framing Studio frameworks finalized ✅ 2026-03-18
 - [x] Value text column alignment fixed (gap:8, PEO badge 80px) ✅ 2026-03-18
-- [ ] `--signal-warning-bg` + `--signal-warning-text` tokens (FINER F-badge hardcode)
-- [ ] Omnibar frames → reusable components (currently one-off)
-- [ ] Omnibar placeholder "Ask Harkly…" → перевести на русский
+- [x] `--signal-warning-bg` + `--signal-warning-text` tokens ✅ 2026-03-18
+- [x] Omnibar/Collapsed + Omnibar/Expanded → reusable components (14 refs) ✅ 2026-03-18
+- [x] Omnibar placeholder → "Спросите Harkly…" (русский) ✅ 2026-03-18
 
 ## Blockers
 

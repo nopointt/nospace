@@ -78,6 +78,7 @@ Legacy code references (harkly-saas/, will be replaced):
 | Epic | File | Status |
 |---|---|---|
 | HARKLY-15 UI Design (Pencil) | [harkly-design-ui.md](harkly-design-ui.md) | 🔶 IN PROGRESS |
+| HARKLY-17 Shell (Tauri + SolidJS) | [harkly-shell-epic.md](harkly-shell-epic.md) | 📋 PLANNING |
 | HARKLY-14 Content Auto-Writing System | [harkly-marketing-content.md](harkly-marketing-content.md) | 🔶 IN PROGRESS |
 | Stage 5 G3 Backend Build | [harkly-saas-v1.md](harkly-saas-v1.md) | ⬜ NOT STARTED |
 | HARKLY-12 Canvas Workspace Redesign | [harkly-canvas-redesign.md](harkly-canvas-redesign.md) | ⏸ ON-HOLD |
@@ -130,7 +131,7 @@ Player subagent: `nextjs-developer` (frontend) | `backend-developer` (API/Rust)
 ## Design System
 
 **Pencil (source of truth):** `nospace/design/harkly/harkly-ui.pen`
-- Color System (DpHtH) · Spacing System (jrVLH) · Typography System (Kf1xa) · Motion System (zqE0U) · Interface Examples (xF6MT) · Component Library (ejLN6, 17 components)
+- Color System (DpHtH) · Spacing System (jrVLH) · Typography System (Kf1xa) · Motion System (zqE0U) · Interface Examples (xF6MT) · Component Library (ejLN6, 17 components) · Omnibar/Collapsed (fYZfh) · Omnibar/Expanded (keCtm) — total 19 reusable components
 
 **Docs:** `nospace/design/harkly/`
 - `README.md` · `foundations/` (philosophy, principles) · `guidelines/` (color, typography, spacing, layout, elevation, motion) · `patterns/` (workspace, composition, interaction, navigation, error-states) · `components/inventory.md`
@@ -148,6 +149,7 @@ Player subagent: `nextjs-developer` (frontend) | `backend-developer` (API/Rust)
 | Chronicle index | `memory/chronicle/index.md` |
 | Architecture (EN) | `architecture/harkly-product-architecture-en.md` |
 | Architecture (RU) | `architecture/harkly-spine-process-ru.md` |
+| CJM Spine Flow | `architecture/harkly-cjm-spine-flow.md` |
 | Report catalog (Steam era) | `memory/report-catalog.md` |
 | SemComp algorithms | `memory/semcomp-registry.md` |
 | Cold outreach research | `memory/cold-outreach-research.md` + `cold-outreach-funnel-research.md` |

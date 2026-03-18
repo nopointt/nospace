@@ -236,3 +236,34 @@
 - Pencil Card → Frame. Naming convention doc created.
 
 **Files:** 22 created, 8 updated. Design system complete. F1 complete. F2-F5 pending.
+<!-- ENTRY:2026-03-18:CLOSE:168:harkly:harkly-design-ui [AXIS] -->
+## 2026-03-18 — сессия 168 CLOSE [Axis]
+
+**Decisions:**
+- Floors = Z-layers (same canvas, different content), not Y-zones
+- Branches = isolated canvases per research thread, 5 default branches
+- Auto-snap removed — frames drag freely
+- Scroll: plain=vertical pan, Shift=horizontal, Ctrl=zoom, Ctrl+Alt=floors, Ctrl+Shift=branches
+- Frame drag bug root cause: animate-h-enter CSS fill-mode overriding inline transform
+- F1 Collection Plan needs full redesign as "serious research document"
+
+**Files changed:**
+- `harkly-shell/src/components/DynamicComponent.tsx` — drag fix (animation moved to inner div)
+- `harkly-shell/src/hooks/useFloor.ts` — branches, goToFloor, createBranch, switchBranch
+- `harkly-shell/src/hooks/useViewport.ts` — scroll mechanics (vertical/horizontal/passthrough)
+- `harkly-shell/src/hooks/useSnap.ts` — auto-snap removed
+- `harkly-shell/src/components/FloorPill.tsx` — dropdown with 6 floors
+- `harkly-shell/src/components/BranchPill.tsx` — dropdown with branches + create
+- `harkly-shell/src/App.tsx` — floor+branch filtering, auto-load, spawn inheritance
+- `harkly-shell/src/commands/frameLayouts.ts` — 5 branches with varied content
+- `harkly-shell/src/types/frame.ts` — floor, branch fields
+- `docs/research/f1-osint-collection-planning-research.md` — NEW 1297 lines
+- `docs/research/f1-research-planning-methodologies-research.md` — NEW 1298 lines
+- `~/.claude/hooks/eidolon-register.py` — active→completed lifecycle fix
+- `~/.tlos/eidolons.json` — cleaned
+
+**Completed:**
+- Frame drag bug, floor/branch mechanics, scroll, auto-snap removal, 2 research docs, eidolon hook fix
+
+**Opened:**
+- F1 redesign (research synthesis pending), design system gaps, demo script, Cargo rename
