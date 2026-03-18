@@ -80,6 +80,7 @@ Team: nopoint (founder) + Артём (co-founder, roles TBD).
 
 | Epic | File | Status |
 |---|---|---|
+| HARKLY-15 UI Design (Pencil) | [harkly-design-ui.md](harkly-design-ui.md) | 🔶 IN PROGRESS |
 | HARKLY-14 Content Auto-Writing System | [harkly-marketing-content.md](harkly-marketing-content.md) | 🔶 IN PROGRESS |
 | Stage 5 G3 Backend Build | [harkly-saas-v1.md](harkly-saas-v1.md) | ⬜ NOT STARTED |
 | HARKLY-12 Canvas Workspace Redesign | [harkly-canvas-redesign.md](harkly-canvas-redesign.md) | ⏸ ON-HOLD |
@@ -104,6 +105,17 @@ Player subagent: `nextjs-developer` (frontend) | `backend-developer` (API/Rust)
 | `memory/chronicle/harkly-current.md` | Axis — append only |
 | `memory/chronicle/index.md` | Axis — append only |
 | `memory/session-scratch.md` (L4) | Axis — write during session, clear on close |
+
+## Open APIs & Data Sources
+
+→ [nospace/docs/research/open-apis/index.md](../../../../docs/research/open-apis/index.md) — available APIs for ingestion layer (social, news, business, text analysis)
+
+**Priority APIs for MVP ingestion:**
+- Reddit API (OAuth) — UC-2/UC-3 primary source
+- Hacker News Algolia API (no auth) — UC-3 tech signal
+- NewsAPI / The Guardian (apiKey) — UC-3 news coverage
+- Rss2Json (no auth) — forum/blog RSS to JSON
+- Scrapling (Python lib) — unstructured scraping targets (App Store, forums)
 
 ## Navigation
 
