@@ -1,7 +1,7 @@
 ---
 # harkly-design-ui.md — Harkly UI Design Epic
 > Layer: L3 | Epic: harkly-design-ui | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-18 (session 159 CLOSE — F0 Framing Studio rebuilt JTBD, header controls, collapsed card, closeaxis fixed)
+> Last updated: 2026-03-18 (session 162 CLOSE — FINER tokens, value text alignment, PEO badge fix, all V1 frameworks finalized)
 ---
 
 ## Goal
@@ -96,7 +96,7 @@ Pill right edges: FloorPill 1008+120=1128 / BranchPill 1136+144=1280 / CoordPill
 - Padding in Pencil: `[vertical, horizontal]` CSS shorthand order
 - Warm gray rationale: Kandinsky Grundfläche (hue ~43°) + Oud Tönung → surfaces in same thermal family. Derivation: hue ~40°, lightness -5-7pt per step, saturation increases slightly
 
-## Token System (19 variables in Pencil — all updated)
+## Token System (21 variables in Pencil — all updated)
 
 | Token | Value | Notes |
 |---|---|---|
@@ -119,6 +119,8 @@ Pill right edges: FloorPill 1008+120=1128 / BranchPill 1136+144=1280 / CoordPill
 | `--signal-error` | #C82020 | — |
 | `--signal-info` | #1E3EA0 | — |
 | `--signal-warning` | #F2C200 | — |
+| `--signal-success` | #2D7D46 | new ✅ (FINER I/N/E/R text) |
+| `--signal-success-bg` | #EAF4EB | new ✅ (FINER I/N/E/R badge fill) |
 
 ## ⚠️ Pencil MCP Critical Rules
 
@@ -135,6 +137,8 @@ Pill right edges: FloorPill 1008+120=1128 / BranchPill 1136+144=1280 / CoordPill
 | **set_variables format** | Must be `{"--token": {"type":"color","value":"#HEX"}}` — plain string `"#HEX"` throws error |
 | **Lucide X optical weight** | `x` glyph is visually lighter than other icons at same px size. Accept it — resizing doesn't fix it |
 | **Compact header controls** | Baukasten rule: uniform 24px height, icons 16×16, gap between icons 8px, gap chip→icons 8px |
+| **flexbox children x/y** | In flexbox-layout row frames, x/y of children are IGNORED. Fix column alignment via `gap` on the parent row frame, not x on child text node |
+| **badge justifyContent** | Badge frames use `justifyContent:"center"` — intentional design. Do NOT change to flex-start (breaks pill visual) |
 
 ## Floor Architecture
 
@@ -178,9 +182,11 @@ Spine stages: Framing → Planning → Ingestion → Extraction → Synthesis �
 - [x] `--bg-pressed` token → #E0CFA9 (new)
 - [x] `--interactive-hover` / `--interactive-pressed` warm variants
 - [x] All 19 tokens updated in Pencil variables
+- [x] `--signal-success` + `--signal-success-bg` added (21 total)
+- [ ] `--signal-warning-bg` + `--signal-warning-text` (FINER F-badge hardcode #FFF3CD/#B8860B)
 
 ### Screens
-- [~] F0 Черновик — Omnibar ✅, Framing Studio JTBD ✅, collapsed card ✅ — omnibar dialog intent normalization отдельный эпик
+- [x] F0 Черновик — Framing Studio all V1 frameworks: JTBD ✅ SPICE ✅ PEO ✅ Issue Tree ✅ FINER ✅ · value text alignment fixed · formal tokens applied
 - [ ] F1 Источники — integrations list, OAuth status, API quotas
 - [ ] F2 Raw — corpus list, triage (include/exclude), document viewer
 - [ ] F3 Insights — knowledge graph, entity list, quotes with sources
@@ -236,6 +242,9 @@ Spine stages: Framing → Planning → Ingestion → Extraction → Synthesis �
 
 - [x] Переделать Pencil F0: PICOT → JTBD framing (primary V1 frame) ✅ 2026-03-18
 - [x] `--border-subtle` → #E8DDD0 (warm) ✅ 2026-03-18
+- [x] All V1 Framing Studio frameworks finalized ✅ 2026-03-18
+- [x] Value text column alignment fixed (gap:8, PEO badge 80px) ✅ 2026-03-18
+- [ ] `--signal-warning-bg` + `--signal-warning-text` tokens (FINER F-badge hardcode)
 - [ ] Omnibar frames → reusable components (currently one-off)
 - [ ] Omnibar placeholder "Ask Harkly…" → перевести на русский
 

@@ -195,3 +195,32 @@
 - M() + layout drop bug: после M() всегда batch_get проверить layout
 - set_variables формат: {type:"color",value:"#HEX"} — plain string не работает
 - gap off-grid (gap:6) — запрещён, только кратные 4
+<!-- ENTRY:2026-03-18:CLOSE:162:harkly:harkly-design-ui [AXIS] -->
+## 2026-03-18 — сессия 162 CLOSE [Axis]
+
+**Decisions:**
+- Badge text = CENTER (`justifyContent:"center"`) — user rejected left-align (flex-start). Центрирование — намеренный дизайн.
+- Value text column alignment: исправлено через gap:8 на row frames (PEO, FINER), не через x детей (flexbox игнорирует x).
+- PEO badge width: 64px → 80px — "Воздействие" (65px текст) не клипалось в 64px. 80px = корректный размер.
+- Консистентность value text в FINER: row frames F/I/N gap:8 → value text x:104 (было x:108). Row E/R (layout:none) x:104 тоже. Все 5 строк на одной линии.
+- `--signal-warning-bg` / `--signal-warning` токены — пропущено. F (Реализуемо) остаётся hardcode #FFF3CD / #B8860B до отдельной задачи.
+
+**Files changed:**
+- `untitled.pen` — 2 formal tokens добавлены; FINER badge colors → tokens; PEO badge width 80px; FINER/PEO row gaps → 8px; badge justifyContent center restored; value text columns aligned
+
+**Completed:**
+- FINER formal tokens (`--signal-success` + `--signal-success-bg`) → Pencil variables ✅
+- FINER I/N/E/R badges → formal tokens ✅
+- Badge alignment investigation (center vs flex-start) + revert ✅
+- PEO badge clipping fix (width:80) ✅
+- Value text column alignment: все 5 фреймворков ✅
+- Все V1 Framing Studio фреймворки финализированы ✅
+
+**Opened:**
+- `--signal-warning-bg` + `--signal-warning` токены (F badge hardcode)
+- F1 Источники screen design
+
+**Notes:**
+- Pencil flexbox rule: в flexbox-row frames нельзя задать x/y дочерним нодам — только gap/padding на parent
+- Token count: 21 в Pencil (19 base + 2 signal-success)
+- Все 5 V1 фреймворков (JTBD/SPICE/PEO/Issue Tree/FINER) готовы → следующий этап: F1–F5 screens
