@@ -267,3 +267,13 @@
 
 **Opened:**
 - F1 redesign (research synthesis pending), design system gaps, demo script, Cargo rename
+<!-- ENTRY:2026-03-19:CLOSE:170:harkly:harkly-mvp-data-layer [AXIS] -->
+## 2026-03-19 — сессия 170 CLOSE [Axis]
+
+**Summary:** Full MVP planning session. Copy First research (9 research files, 14 repos evaluated, 4 deep evals), 5 MVP specification documents (architecture, copy map, data model, API spec, build plan), stack pivot SolidStart + Cloudflare, memory L0-L3 updated, 5 sub-epics (18.1–18.5) created. Ready to code HARKLY-18.1 Scaffold.
+
+**Key decisions:** Stack = SolidStart + CF (D1/R2/Vectorize/Queues) + better-auth + Drizzle. Web-first (Tauri v2). Audio in MVP, video v2. No LLM chat (v1.1). All epics paused, full focus HARKLY-18. 5 sub-epics with dependency graph.
+
+**Created:** 9 research files, 5 MVP specs, 5 sub-epic L3 files, disk cleanup guide, saas-v1 roadmap archive. **Modified:** L0 stack, L1 full rewrite, L2 new roadmap, L3 updated, eidolon hooks.
+
+**Next:** `/continueaxis` → G3 HARKLY-18.1 Scaffold on Sonnet.

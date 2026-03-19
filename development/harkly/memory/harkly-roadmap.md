@@ -1,87 +1,94 @@
 ---
 # harkly-roadmap.md — Harkly Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start or on demand
-> Last updated: 2026-03-18
+> Last updated: 2026-03-19
 ---
 
-## saas-v1 — 6-Stage Roadmap
+## Current Focus: HARKLY-18 MVP Data Layer
 
-| Stage | Name | Status |
-|---|---|---|
-| 0 | Research Foundation | ✅ DONE |
-| 1 | Business Design (Opus) | ✅ DONE — `opus_business_brief.md` written |
-| 2 | Spec Lock | ✅ DONE — 8 specs (E0, E0.5, E1–E6), DoR 100% |
-| 3 | G3 Frontend Build | ✅ DONE — E0–E6 all complete |
-| 4 | Tech Debt Analysis | ✅ DONE — `tech-debt-frontend.md` + `ux-debt-report.md` |
-| 3.5 | Canvas Workspace Redesign | ⏸ ON-HOLD — floor nav + per-floor content pending |
-| L | Landing Page | ✅ DONE — deployed harkly-saas.vercel.app |
-| **5** | **G3 Backend Build** | **🔜 NEXT — highest priority** |
-| 6 | Manual Testing + Beta | 🔒 blocked by Stage 5 |
+All resources on MVP. Everything else paused.
 
-## HARKLY-05 Stage 5 — Backend Build (pending)
+**MVP scope:** Upload (PDF, DOCX, CSV, TXT, audio, YouTube subs) → AI schema discovery → user confirmation → structured extraction to D1 → MCP Server (OAuth 2.1) → spatial canvas (web).
 
-Backend approach TBD after UI design (HARKLY-15) completes. Code will be rewritten from Pencil mockups.
-Deploy: Vercel (current). G3 rule: prompt via file (`cat spec.md`). Axis = Coach.
+**What's NOT in MVP:** LLM chat (v1.1), video files (v2), Instagram (v2), Tauri desktop (v2), billing (last).
+
+---
+
+## HARKLY-18 Sub-Epics
+
+| Sub-Epic | Scope | Status | Blocks | Parallel with |
+|---|---|---|---|---|
+| **18.1** Scaffold | SolidStart + CF + D1 + auth + wrangler.toml | 🔜 NEXT | — | — |
+| **18.2** Upload + Process | R2 presigned, Queues, chunking, embedding, audio/Whisper, YouTube subs | ⬜ BLOCKED | 18.1 | 18.4 |
+| **18.3** Schema + Extract | Discovery, confirmation UI, Zod compilation, instructor-js extraction | ⬜ BLOCKED | 18.2 | — |
+| **18.4** MCP + OAuth | workers-oauth-provider, mcp-ts-template, better-auth consent, 6 MCP tools | ⬜ BLOCKED | 18.1 | 18.2 |
+| **18.5** Canvas Port | harkly-shell → web SolidStart, connect to D1 data, Omnibar (hidden) | ⬜ BLOCKED | 18.3 | — |
+
+**Dependency graph:**
+```
+18.1 ──→ 18.2 ──→ 18.3 ──→ 18.5
+  └────→ 18.4 (parallel with 18.2)
+```
+
+---
 
 ## Active Epics
 
 | Epic | Description | Status | L3 File |
 |---|---|---|---|
-| **HARKLY-15** | **UI Design in Pencil MCP (shell + floors)** | **🔶 IN PROGRESS** | `harkly-design-ui.md` |
-| **HARKLY-14** | **Marketing: Content Auto-Writing System** | **🔶 IN PROGRESS** | `harkly-marketing-content.md` |
-| HARKLY-05 | saas-v1: Stage 5 G3 Backend Build | 🔜 NEXT | `harkly-saas-v1.md` |
-| HARKLY-12 | saas-v1: Canvas Workspace Redesign (3.5) | ⏸ on-hold | `harkly-canvas-redesign.md` |
-| HARKLY-16 | Claude Code CLI integration — ToS inquiry + architecture | 📬 PENDING REPLY | `anthropic-claudecode-inquiry.md` |
-| HARKLY-06 | Cold outreach Steam indie games | ⏸ on-hold | `harkly-cold-outreach.md` |
-| HARKLY-13 | saas-v1: Landing Page | ✅ DONE — harkly-saas.vercel.app | — |
-| HARKLY-11 | saas-v1: Stage 3 G3 Frontend Build | ✅ DONE — E0–E6 done | — |
-| HARKLY-03 | ProxyMarket partnership | ✅ CLOSED 2026-03-10 | — |
+| **HARKLY-18** | **MVP Data Layer Platform** | **🔶 IN PROGRESS** | `harkly-mvp-data-layer.md` |
+| HARKLY-15 | UI Design in Pencil (shell + floors) | ⏸ PAUSED | `harkly-design-ui.md` |
+| HARKLY-17 | Shell (Tauri + SolidJS) — desktop v2 | ⏸ PAUSED | `harkly-shell-epic.md` |
+| HARKLY-14 | Marketing: Content Auto-Writing System | ⏸ PAUSED | `harkly-marketing-content.md` |
+| HARKLY-05 | saas-v1: Backend Build (superseded by 18) | ⏸ PAUSED | `harkly-saas-v1.md` |
+| HARKLY-16 | Claude CLI Integration (MCP path chosen) | ⏸ PAUSED | `anthropic-claudecode-inquiry.md` |
+| HARKLY-12 | Canvas Workspace Redesign | ⏸ PAUSED | `harkly-canvas-redesign.md` |
+| HARKLY-06 | Cold Outreach Steam | ⏸ PAUSED | `harkly-cold-outreach.md` |
 
-## Completed Epics → Summaries
+## Completed Epics
 
 | Epic | Report |
 |---|---|
-| E0 Scaffold + Auth | `chronicle/summaries/harkly-e0-report.md` |
-| E0.5 Canvas Shell | `chronicle/summaries/harkly-e05-report.md` |
-| E1–E6 Frames | `chronicle/summaries/harkly-e1-e6-report.md` |
+| HARKLY-13 Landing Page | ✅ `harkly-saas.vercel.app` live |
+| HARKLY-11 Stage 3 Frontend Build | ✅ E0–E6 complete |
+| HARKLY-03 ProxyMarket partnership | ✅ CLOSED 2026-03-10 |
 
-## Next Priority
+## Legacy: saas-v1 Roadmap
 
-1. **HARKLY-15 UI Design** — F0 done (JTBD ✅), design system done ✅, F1–F5 screens pending ← **активно сейчас**
-2. **HARKLY-14 Marketing Content System** — Brand TOV + channel agents + Idea Hub + pipeline
-3. **Stage 5 — G3 Backend Build** (G3 #5: rate limiting + validation)
-4. **Apply pending SQL migrations** (e4_artifacts.sql + e6_share.sql in Supabase)
-5. **Canvas 3.5** — floor navigation + per-floor content (after Stage 5)
+→ Moved to [harkly-saas-v1-roadmap-archive.md](harkly-saas-v1-roadmap-archive.md) (historical reference)
+
+Original 6-stage pipeline (Stages 0-6) was about the old Next.js/Vercel/Supabase stack. Superseded by HARKLY-18 MVP on SolidStart + Cloudflare.
+
+---
 
 ## Reference
 
 ### Brand (all in `development/harkly/brand/`)
-- Brand Bible: `brand-bible.md` (consolidated source)
-- Values: `values.md` (canonical 5 values, vibe, symbol, methodology)
-- Positioning: `positioning.md` (audience, GTM, metric)
+- Brand Bible: `brand-bible.md`
+- Values: `values.md`
+- Positioning: `positioning.md`
 - Category Manifesto: `category-manifesto.md`
-- TOV: `tov.md` (v3 — 4 pillars, infostyle, inner child)
-- Omnibar Primacy: `omnibar-primacy.md` (spatial canvas rules)
-- UI Language: `ui-language-ru.md` (RU translations for all UI elements)
-- Brand + Design Overview: `brand-and-design-overview.md` (full inventory)
+- TOV: `tov.md` (v3)
+- Omnibar Primacy: `omnibar-primacy.md`
+- UI Language: `ui-language-ru.md`
+- Brand + Design Overview: `brand-and-design-overview.md`
 
 ### Design System (`nospace/design/harkly/`)
-- Pencil: `harkly-ui.pen` (source of truth — tokens, components, artboards)
+- Pencil: `harkly-ui.pen` (source of truth)
 - Docs: README, foundations/, guidelines/, patterns/, components/
 - Spatial rules: `harkly-spatial-interface-rules.md`
-- RAG: `bauhaus-rag-results.md` + `bauhaus-validation-results.md`
-- Upstream: `nospace/design/design_system/` (tLOS) + `nospace/design/tlos-ui.pen`
 
-### Architecture (`development/harkly/architecture/`)
-- Product architecture (EN): `harkly-product-architecture-en.md`
-- Spine-процесс (RU): `harkly-spine-process-ru.md`
-- Business brief: `opus_business_brief.md`
-- Methodology schools: `branches/feat-saas-v1/methodology_schools_detailed.md`
-- Specs E0–E6: `branches/feat-saas-v1/specs/`
+### Architecture
+- **MVP (current):** `nospace/docs/research/harkly-mvp-architecture.md`
+- **MVP Data Model:** `nospace/docs/research/harkly-mvp-data-model.md`
+- **MVP API Spec:** `nospace/docs/research/harkly-mvp-api-spec.md`
+- **MVP Copy Map:** `nospace/docs/research/harkly-mvp-copy-map.md`
+- **MVP Build Plan:** `nospace/docs/research/harkly-mvp-build-plan.md`
+- Old product architecture (EN): `architecture/harkly-product-architecture-en.md` (legacy)
+- Old Spine process (RU): `architecture/harkly-spine-process-ru.md` (legacy)
 
 ### Research
-- F1: `docs/research/f1-connector-ux-research.md` · `f1-pm-sources-web-research.md` · `f1-audience-sources-mining.md`
-- Framing frameworks: `docs/research/framing-frameworks-research.md`
-
-### Archive
-- `development/harkly/archive/` — old copies of restructured files
+- MVP research (9 files): `nospace/docs/research/harkly-research-*.md` + `harkly-eval-*.md`
+- NotebookLM: `docs/research/notebooklm-research.md`
+- LLM integration: `docs/research/llm-local-integration-research.md`
+- Open APIs: `docs/research/open-apis/index.md`
