@@ -1,0 +1,57 @@
+name = "harkly-web"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".output/public"
+
+[observability]
+enabled = true
+
+# ── D1 Databases ──────────────────────────────────────────────
+[[d1_databases]]
+binding = "KB_DB"
+database_name = "harkly-kb"
+database_id = "1e070dfd-dc58-4e21-897d-4ca5f2287017"
+migrations_dir = "drizzle/migrations/kb"
+
+[[d1_databases]]
+binding = "AUTH_DB"
+database_name = "harkly-auth"
+database_id = "7909c74e-2f5a-4df3-a05b-0611e09e466c"
+migrations_dir = "drizzle/migrations/auth"
+
+# ── R2 Object Storage ────────────────────────────────────────
+[[r2_buckets]]
+binding = "HARKLY_R2"
+bucket_name = "harkly-uploads"
+
+# ── KV Namespaces ─────────────────────────────────────────────
+[[kv_namespaces]]
+binding = "OAUTH_KV"
+id = "9b76ce88730747e58047673981a542ae"
+
+[[kv_namespaces]]
+binding = "AUTH_KV"
+id = "e46ea29d97f54e3c807ba458615ac276"
+
+[[kv_namespaces]]
+binding = "SESSION_KV"
+id = "07376228025543e89e4345d9ac0ac61d"
+
+# ── Vectorize ─────────────────────────────────────────────────
+[[vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "harkly-kb"
+
+# ── Queues ────────────────────────────────────────────────────
+[[queues.producers]]
+binding = "INGEST_QUEUE"
+queue = "harkly-ingest"
+
+[[queues.consumers]]
+queue = "harkly-ingest"
+max_batch_size = 10
+max_retries = 3
+
+# ── Workers AI ────────────────────────────────────────────────
+[ai]
+binding = "AI"

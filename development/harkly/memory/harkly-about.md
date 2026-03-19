@@ -1,7 +1,7 @@
 ---
 # harkly-about.md — Harkly Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-19
+> Last updated: 2026-03-19 (session 172 — 18.1-18.3 code complete)
 ---
 
 ## Identity
@@ -37,7 +37,7 @@ Team: nopoint (founder) + Артём (co-founder, roles TBD).
 |---|---|
 | Project root | `nospace/development/harkly/` |
 | Frontend source (canonical) | `development/harkly/harkly-shell/src/` (77 SolidJS files, porting to web) |
-| MVP new project | TBD — `development/harkly/harkly-web/` or scaffold from C3 CLI |
+| MVP project | `development/harkly/harkly-web/` (53 src files, SolidStart 1.3.2 + CF Pages) |
 | Branch specs | `development/harkly/branches/` |
 | Epics log | `development/harkly/memory/epics-log-harkly.md` |
 | Decisions log | `development/harkly/memory/decisions-harkly.md` |
@@ -86,10 +86,10 @@ Port from harkly-shell (Tauri SolidJS) → web SolidStart. 77 existing files:
 | Epic | File | Status |
 |---|---|---|
 | **HARKLY-18 MVP Data Layer** | [harkly-mvp-data-layer.md](harkly-mvp-data-layer.md) | 🔶 IN PROGRESS |
-| — HARKLY-18.1 Scaffold | [harkly-18-1-scaffold.md](harkly-18-1-scaffold.md) | 🔜 NEXT |
-| — HARKLY-18.2 Upload + Process | [harkly-18-2-upload.md](harkly-18-2-upload.md) | ⬜ BLOCKED by 18.1 |
-| — HARKLY-18.3 Schema + Extract | [harkly-18-3-schema.md](harkly-18-3-schema.md) | ⬜ BLOCKED by 18.2 |
-| — HARKLY-18.4 MCP + OAuth | [harkly-18-4-mcp.md](harkly-18-4-mcp.md) | ⬜ BLOCKED by 18.1 |
+| — HARKLY-18.1 Scaffold | [harkly-18-1-scaffold.md](harkly-18-1-scaffold.md) | ✅ DONE |
+| — HARKLY-18.2 Upload + Process | [harkly-18-2-upload.md](harkly-18-2-upload.md) | ✅ CODE COMPLETE |
+| — HARKLY-18.3 Schema + Extract | [harkly-18-3-schema.md](harkly-18-3-schema.md) | ✅ CODE COMPLETE |
+| — HARKLY-18.4 MCP + OAuth | [harkly-18-4-mcp.md](harkly-18-4-mcp.md) | 🔜 NEXT |
 | — HARKLY-18.5 Canvas Port | [harkly-18-5-canvas.md](harkly-18-5-canvas.md) | ⬜ BLOCKED by 18.3 |
 | HARKLY-15 UI Design (Pencil) | [harkly-design-ui.md](harkly-design-ui.md) | ⏸ PAUSED |
 | HARKLY-17 Shell (Tauri + SolidJS) | [harkly-shell-epic.md](harkly-shell-epic.md) | ⏸ PAUSED (v2) |

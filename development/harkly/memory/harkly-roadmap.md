@@ -18,10 +18,10 @@ All resources on MVP. Everything else paused.
 
 | Sub-Epic | Scope | Status | Blocks | Parallel with |
 |---|---|---|---|---|
-| **18.1** Scaffold | SolidStart + CF + D1 + auth + wrangler.toml | 🔜 NEXT | — | — |
-| **18.2** Upload + Process | R2 presigned, Queues, chunking, embedding, audio/Whisper, YouTube subs | ⬜ BLOCKED | 18.1 | 18.4 |
-| **18.3** Schema + Extract | Discovery, confirmation UI, Zod compilation, instructor-js extraction | ⬜ BLOCKED | 18.2 | — |
-| **18.4** MCP + OAuth | workers-oauth-provider, mcp-ts-template, better-auth consent, 6 MCP tools | ⬜ BLOCKED | 18.1 | 18.2 |
+| **18.1** Scaffold | SolidStart + CF + D1 + auth + wrangler.toml | ✅ DONE | — | — |
+| **18.2** Upload + Process | R2 proxy upload, Queues, chunking, embedding | ✅ CODE COMPLETE | 18.1 | 18.4 |
+| **18.3** Schema + Extract | Discovery, confirmation UI, Zod compilation, extraction | ✅ CODE COMPLETE | 18.2 | — |
+| **18.4** MCP + OAuth | workers-oauth-provider, mcp-ts-template, better-auth consent, 6 MCP tools | 🔜 NEXT | 18.1 | 18.2 |
 | **18.5** Canvas Port | harkly-shell → web SolidStart, connect to D1 data, Omnibar (hidden) | ⬜ BLOCKED | 18.3 | — |
 
 **Dependency graph:**

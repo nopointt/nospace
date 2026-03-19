@@ -1,7 +1,7 @@
 ---
 # harkly-mvp-data-layer.md — Harkly MVP: Data Layer Platform
 > Layer: L3 | Epic: HARKLY-18 | Status: 🔶 IN PROGRESS
-> Created: 2026-03-18 | Updated: 2026-03-19
+> Created: 2026-03-18 | Updated: 2026-03-19 (session 172)
 > Source: nopoint interview + Copy First research (9 files) + 5 MVP specs
 ---
 
@@ -56,13 +56,13 @@
 
 | Sub-Epic | File | Status | Scope |
 |---|---|---|---|
-| **18.1** | [harkly-18-1-scaffold.md](harkly-18-1-scaffold.md) | 🔜 NEXT | SolidStart + CF + D1 + auth + wrangler |
-| **18.2** | [harkly-18-2-upload.md](harkly-18-2-upload.md) | ⬜ BLOCKED by 18.1 | R2 upload, Queues, chunking, embedding, audio, YouTube |
-| **18.3** | [harkly-18-3-schema.md](harkly-18-3-schema.md) | ⬜ BLOCKED by 18.2 | Schema discovery, confirmation UI, Zod, extraction |
-| **18.4** | [harkly-18-4-mcp.md](harkly-18-4-mcp.md) | ⬜ BLOCKED by 18.1 | MCP server, OAuth 2.1, 6 tools, consent UI |
+| **18.1** | [harkly-18-1-scaffold.md](harkly-18-1-scaffold.md) | ✅ DONE | SolidStart + CF + D1 + auth + wrangler |
+| **18.2** | [harkly-18-2-upload.md](harkly-18-2-upload.md) | ✅ CODE COMPLETE | R2 upload, Queues, chunking, embedding, audio, YouTube |
+| **18.3** | [harkly-18-3-schema.md](harkly-18-3-schema.md) | ✅ CODE COMPLETE | Schema discovery, confirmation UI, Zod, extraction |
+| **18.4** | [harkly-18-4-mcp.md](harkly-18-4-mcp.md) | 🔜 NEXT | MCP server, OAuth 2.1, 6 tools, consent UI |
 | **18.5** | [harkly-18-5-canvas.md](harkly-18-5-canvas.md) | ⬜ BLOCKED by 18.3 | Canvas port, connect to data, Omnibar (hidden) |
 
-**Dependency:** 18.1 → {18.2 ∥ 18.4} → 18.3 → 18.5
+**Dependency:** 18.1 ✅ → {18.2 ✅ ∥ 18.4 🔜} → 18.3 ✅ → 18.5
 
 ---
 
@@ -103,5 +103,19 @@
 
 ## Blockers
 
-- FTS5 в D1 — нужно верифицировать (cloudflare-rag использует, но CF не документирует явно)
 - vinxi local dev + CF bindings — известный баг, workaround через `wrangler pages dev`
+- ~~FTS5 в D1~~ — verified: migrations apply successfully, FTS5 + triggers work in local D1
+
+## Tech Debt
+
+- `tenantId = "demo-user"` hardcoded in all API routes — needs auth session integration in middleware
+- wrangler.jsonc (C3 artifact) coexists with wrangler.toml — jsonc needs manual deletion
+- Temp spec files in project root (.qwen-task*.md, .opencode-task*.md) — cleanup needed
+
+## Implementation Notes (session 172)
+
+- **Project path:** `development/harkly/harkly-web/` (53 src files)
+- **Build:** `npx --yes vinxi build` → success (cloudflare-pages preset)
+- **Local D1:** 6 migrations applied (5 KB + 1 Auth)
+- **CLI agents:** OpenCode (MiniMax M2.5) = good for UI; Qwen needs `-y` + absolute paths
+- **CF Resources:** all created (D1 KB_DB, AUTH_DB, R2, 3×KV, Vectorize, Queues configured in wrangler.toml)

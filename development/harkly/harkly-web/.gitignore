@@ -1,0 +1,10 @@
+node_modules/
+.output/
+.vinxi/
+.wrangler/
+dist/
+*.local
+.env
+.env.*
+!.env.example
+worker-configuration.d.ts
