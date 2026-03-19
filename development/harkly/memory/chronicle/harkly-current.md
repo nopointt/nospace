@@ -308,3 +308,7 @@
 
 18.4 MCP + OAuth deployed (`harkly-mcp.nopoint.workers.dev`). 18.5 Canvas all 5 phases code complete (55+ files). Auth registration bug open (SolidStart event wrapping + BETTER_AUTH_SECRET + D1 adapter chain). 10/10 Playwright smoke tests green. harkly-web deployed to CF Pages.
 ---
+<!-- ENTRY:2026-03-19:CLOSE:177:harkly:harkly-mvp-data-layer [AXIS] -->
+## 2026-03-19 — session 177 CLOSE [Axis]
+
+QA Epic complete: 54 bugs found (7 CRITICAL), 770 auto-tests written, tech debt audited. Report: `harkly-web/QA-REPORT.md`. No fixes applied — audit only. Next: fix CRITICAL security bugs.

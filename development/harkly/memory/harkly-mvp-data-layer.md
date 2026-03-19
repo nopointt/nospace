@@ -117,7 +117,7 @@
 - `src/routes/api/debug.ts` — debug endpoint left in codebase, remove for prod
 - Queues commented out in wrangler.toml — need Workers Paid plan for async ingest
 - 29 pre-existing TS errors (APIEvent, FetchEvent, entry-server, embedder, zod-compiler)
-- nopoint requested: 3 parallel tracks (bug hunt + test coverage + tech debt audit) — not started
+- ✅ QA Epic complete (session 176): 54 bugs found (7 CRITICAL), 770 auto-tests written, tech debt audited. Report: `harkly-web/QA-REPORT.md`
 
 ## Implementation Notes (session 174)
 
