@@ -1,5 +1,6 @@
 import type { APIEvent } from "@solidjs/start/server";
 import { getBindings, createKbDb } from "~/lib/db";
+import { requireAuth } from "~/lib/auth-guard";
 import { documentChunks, projectSchemas, schemaFields } from "~/lib/schema";
 import { eq, and } from "drizzle-orm";
 import { ulid } from "ulid";
@@ -14,9 +15,10 @@ interface SchemaField {
 
 // POST /api/kb/[kbId]/schema/discover — AI schema discovery
 export async function POST(event: APIEvent) {
-  const env = getBindings(event);
-  const db = createKbDb(env.KB_DB);
-  const tenantId = "demo-user";
+  try {
+    const tenantId = requireAuth(event);
+    const env = getBindings(event);
+    const db = createKbDb(env.KB_DB);
   const { kbId } = event.params;
 
   // 1. Sample chunks from KB
@@ -126,4 +128,8 @@ Rules:
       fields: storedFields,
     },
   });
+  } catch (e) {
+    if (e instanceof Response) return e;
+    throw e;
+  }
 }

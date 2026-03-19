@@ -303,3 +303,8 @@
 
 **Completed:** 18.1 Scaffold, 18.2 Upload+Process, 18.3 Schema+Extract (code complete, build passes)
 **Opened:** 18.4 MCP+OAuth, 18.5 Canvas Port, integration testing, auth session integration, cleanup
+<!-- ENTRY:2026-03-19:CLOSE:174:harkly:harkly-mvp-data-layer [AXIS] -->
+## 2026-03-19 — сессия 174 CLOSE [Axis]
+
+18.4 MCP + OAuth deployed (`harkly-mcp.nopoint.workers.dev`). 18.5 Canvas all 5 phases code complete (55+ files). Auth registration bug open (SolidStart event wrapping + BETTER_AUTH_SECRET + D1 adapter chain). 10/10 Playwright smoke tests green. harkly-web deployed to CF Pages.
+---

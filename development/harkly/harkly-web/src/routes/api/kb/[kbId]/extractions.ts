@@ -1,13 +1,15 @@
 import type { APIEvent } from "@solidjs/start/server";
 import { getBindings, createKbDb } from "~/lib/db";
+import { requireAuth } from "~/lib/auth-guard";
 import { extractedEntities } from "~/lib/schema";
 import { eq, and, desc } from "drizzle-orm";
 
 // GET /api/kb/[kbId]/extractions — list extracted entities
 export async function GET(event: APIEvent) {
-  const env = getBindings(event);
-  const db = createKbDb(env.KB_DB);
-  const tenantId = "demo-user";
+  try {
+    const tenantId = requireAuth(event);
+    const env = getBindings(event);
+    const db = createKbDb(env.KB_DB);
   const { kbId } = event.params;
 
   const url = new URL(event.request.url);
@@ -71,4 +73,8 @@ export async function GET(event: APIEvent) {
   }
 
   return Response.json({ data: rows });
+  } catch (e) {
+    if (e instanceof Response) return e;
+    throw e;
+  }
 }

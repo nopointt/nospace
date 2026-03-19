@@ -1,5 +1,6 @@
 import type { APIEvent } from "@solidjs/start/server";
 import { getBindings, createKbDb } from "~/lib/db";
+import { requireAuth } from "~/lib/auth-guard";
 import {
   projectSchemas,
   schemaFields,
@@ -14,9 +15,10 @@ import { ulid } from "ulid";
 
 // POST /api/kb/[kbId]/extract — run extraction with a confirmed schema
 export async function POST(event: APIEvent) {
-  const env = getBindings(event);
-  const db = createKbDb(env.KB_DB);
-  const tenantId = "demo-user";
+  try {
+    const tenantId = requireAuth(event);
+    const env = getBindings(event);
+    const db = createKbDb(env.KB_DB);
   const { kbId } = event.params;
 
   const body = await event.request.json();
@@ -174,4 +176,8 @@ Output a JSON object with the field names as keys. Use null for missing fields. 
       totalItems: docs.length,
     },
   });
+  } catch (e) {
+    if (e instanceof Response) return e;
+    throw e;
+  }
 }

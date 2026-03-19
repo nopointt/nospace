@@ -10,7 +10,7 @@ export default function SchemaEditor() {
 
   const [schema] = createResource(async () => {
     const res = await fetch(`/api/kb/${params.kbId}/schemas/${params.schemaId}`);
-    const json = await res.json();
+    const json: any = await res.json();
     return json.data;
   });
 

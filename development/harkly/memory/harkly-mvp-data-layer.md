@@ -1,7 +1,7 @@
 ---
 # harkly-mvp-data-layer.md — Harkly MVP: Data Layer Platform
 > Layer: L3 | Epic: HARKLY-18 | Status: 🔶 IN PROGRESS
-> Created: 2026-03-18 | Updated: 2026-03-19 (session 172)
+> Created: 2026-03-18 | Updated: 2026-03-19 (session 174)
 > Source: nopoint interview + Copy First research (9 files) + 5 MVP specs
 ---
 
@@ -59,10 +59,12 @@
 | **18.1** | [harkly-18-1-scaffold.md](harkly-18-1-scaffold.md) | ✅ DONE | SolidStart + CF + D1 + auth + wrangler |
 | **18.2** | [harkly-18-2-upload.md](harkly-18-2-upload.md) | ✅ CODE COMPLETE | R2 upload, Queues, chunking, embedding, audio, YouTube |
 | **18.3** | [harkly-18-3-schema.md](harkly-18-3-schema.md) | ✅ CODE COMPLETE | Schema discovery, confirmation UI, Zod, extraction |
-| **18.4** | [harkly-18-4-mcp.md](harkly-18-4-mcp.md) | 🔜 NEXT | MCP server, OAuth 2.1, 6 tools, consent UI |
-| **18.5** | [harkly-18-5-canvas.md](harkly-18-5-canvas.md) | ⬜ BLOCKED by 18.3 | Canvas port, connect to data, Omnibar (hidden) |
+| **18.4** | [harkly-18-4-mcp.md](harkly-18-4-mcp.md) | ✅ DEPLOYED | MCP server, OAuth 2.1, 6 tools, consent UI |
+| **18.5** | [harkly-18-5-canvas.md](harkly-18-5-canvas.md) | ✅ CODE COMPLETE | Canvas port, D1 integration, dashboard, omnibar |
 
-**Dependency:** 18.1 ✅ → {18.2 ✅ ∥ 18.4 🔜} → 18.3 ✅ → 18.5
+**Dependency:** 18.1 ✅ → {18.2 ✅ ∥ 18.4 ✅} → 18.3 ✅ → 18.5 ✅
+
+**Plans:** [harkly-18-4-mcp-plan.md](harkly-18-4-mcp-plan.md) | [harkly-18-5-canvas-plan.md](harkly-18-5-canvas-plan.md)
 
 ---
 
@@ -103,19 +105,25 @@
 
 ## Blockers
 
-- vinxi local dev + CF bindings — известный баг, workaround через `wrangler pages dev`
-- ~~FTS5 в D1~~ — verified: migrations apply successfully, FTS5 + triggers work in local D1
+- **AUTH REGISTRATION 500** — sign-up/sign-in endpoint crashes on CF Pages. Root cause chain: SolidStart wraps Nitro event (`event.context` empty, bindings on `event.nativeEvent.context.cloudflare.env`), missing BETTER_AUTH_SECRET, D1 needs `withCloudflare` drizzle adapter, geolocation disabled. Still 500 after 6 iterations. Priority: HIGH — blocks all user flows.
+- ~~vinxi local dev + CF bindings~~ — workaround: `wrangler pages dev`
+- ~~FTS5 в D1~~ — verified working
 
 ## Tech Debt
 
-- `tenantId = "demo-user"` hardcoded in all API routes — needs auth session integration in middleware
-- wrangler.jsonc (C3 artifact) coexists with wrangler.toml — jsonc needs manual deletion
-- Temp spec files in project root (.qwen-task*.md, .opencode-task*.md) — cleanup needed
+- ~~`tenantId = "demo-user"` hardcoded~~ — ✅ FIXED session 173
+- ~~wrangler.jsonc~~ — ✅ FIXED session 173
+- ~~Temp spec files~~ — ✅ FIXED session 173
+- `src/routes/api/debug.ts` — debug endpoint left in codebase, remove for prod
+- Queues commented out in wrangler.toml — need Workers Paid plan for async ingest
+- 29 pre-existing TS errors (APIEvent, FetchEvent, entry-server, embedder, zod-compiler)
+- nopoint requested: 3 parallel tracks (bug hunt + test coverage + tech debt audit) — not started
 
-## Implementation Notes (session 172)
+## Implementation Notes (session 174)
 
-- **Project path:** `development/harkly/harkly-web/` (53 src files)
-- **Build:** `npx --yes vinxi build` → success (cloudflare-pages preset)
-- **Local D1:** 6 migrations applied (5 KB + 1 Auth)
-- **CLI agents:** OpenCode (MiniMax M2.5) = good for UI; Qwen needs `-y` + absolute paths
-- **CF Resources:** all created (D1 KB_DB, AUTH_DB, R2, 3×KV, Vectorize, Queues configured in wrangler.toml)
+- **Deployed:** `harkly-web.pages.dev` (CF Pages) + `harkly-mcp.nopoint.workers.dev` (CF Worker)
+- **Remote D1 migrations:** 5 KB + 1 Auth applied to prod
+- **Playwright:** 10/10 smoke tests green (e2e-smoke.spec.ts)
+- **Event binding pattern:** `event.nativeEvent.context.cloudflare.env` — the only way to get CF bindings in SolidStart API routes on CF Pages
+- **BETTER_AUTH_SECRET:** set as Pages secret via `wrangler pages secret put`
+- **CLI agents used:** Qwen (auth fix, 9 files), Opus subagent (canvas Phase 1-2: 22 files, Phase 3-5: ~30 files)

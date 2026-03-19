@@ -11,7 +11,7 @@ export default function RunExtraction() {
 
   const [schemas] = createResource(async () => {
     const res = await fetch(`/api/kb/${params.kbId}/schemas?status=confirmed`);
-    const json = await res.json();
+    const json: any = await res.json();
     return json.data ?? [];
   });
 
@@ -27,7 +27,7 @@ export default function RunExtraction() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ schemaId: selectedSchema() }),
       });
-      const json = await res.json();
+      const json: any = await res.json();
       if (!res.ok) {
         setError(json.error || "Ошибка экстракции");
       } else {

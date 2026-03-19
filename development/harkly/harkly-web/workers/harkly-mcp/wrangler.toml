@@ -1,0 +1,40 @@
+name = "harkly-mcp"
+main = "src/index.ts"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+# ── D1 Databases (shared with harkly-web) ────────────────────
+[[d1_databases]]
+binding = "KB_DB"
+database_name = "harkly-kb"
+database_id = "1e070dfd-dc58-4e21-897d-4ca5f2287017"
+
+[[d1_databases]]
+binding = "AUTH_DB"
+database_name = "harkly-auth"
+database_id = "7909c74e-2f5a-4df3-a05b-0611e09e466c"
+
+# ── KV Namespaces ────────────────────────────────────────────
+[[kv_namespaces]]
+binding = "OAUTH_KV"
+id = "9b76ce88730747e58047673981a542ae"
+
+[[kv_namespaces]]
+binding = "MCP_SESSION_KV"
+id = "07376228025543e89e4345d9ac0ac61d"
+
+[[kv_namespaces]]
+binding = "AUTH_KV"
+id = "e46ea29d97f54e3c807ba458615ac276"
+
+# ── Vectorize ────────────────────────────────────────────────
+[[vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "harkly-kb"
+
+# ── Workers AI ───────────────────────────────────────────────
+[ai]
+binding = "AI"

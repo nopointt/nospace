@@ -13,7 +13,7 @@ export function createAuthDb(d1: D1Database): DrizzleD1Database {
 
 // Helper to get bindings from request event
 export function getBindings(event: any): Env {
-  const bindings = event.context?.bindings ?? event.context?.cloudflare?.env;
+  const bindings = event.context?.bindings ?? event.context?.cloudflare?.env ?? event.nativeEvent?.context?.cloudflare?.env;
   if (!bindings) {
     throw new Error("CF bindings not available. Run with wrangler pages dev or deploy to CF Pages.");
   }

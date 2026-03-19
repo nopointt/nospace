@@ -1,17 +1,31 @@
 import { createMiddleware } from "@solidjs/start/middleware";
+import { getAuth } from "~/lib/auth";
 
 // CF binding injection middleware
-// Dev: uses wrangler.getPlatformProxy()
-// Prod: bindings available natively on event.context.cloudflare.env
+// SolidStart wraps Nitro event — bindings are on event.nativeEvent.context.cloudflare.env
 export default createMiddleware({
   onRequest: [
     async (event) => {
-      // In production, CF bindings are on event.context.cloudflare.env
-      // In dev with `wrangler pages dev`, they're also injected
-      // We normalize access through event.context.bindings
-      const cf = (event.context as any).cloudflare;
+      const ctx = event?.context as any;
+      if (!ctx) return;
+
+      // SolidStart: CF bindings on nativeEvent.context.cloudflare.env
+      const nativeCtx = (event as any).nativeEvent?.context;
+      const cf = ctx.cloudflare ?? nativeCtx?.cloudflare;
       if (cf?.env) {
-        (event.context as any).bindings = cf.env;
+        ctx.bindings = cf.env;
+      }
+
+      // Extract userId from better-auth session
+      const env = ctx.bindings;
+      if (env?.AUTH_DB) {
+        try {
+          const auth = getAuth(env.AUTH_DB, env.BETTER_AUTH_SECRET);
+          const session = await auth.api.getSession({ headers: event.request.headers });
+          ctx.userId = session?.user?.id ?? null;
+        } catch {
+          ctx.userId = null;
+        }
       }
     },
   ],

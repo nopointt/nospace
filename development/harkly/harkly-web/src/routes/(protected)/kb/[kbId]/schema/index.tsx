@@ -6,7 +6,7 @@ export default function SchemaList() {
   const params = useParams();
   const [schemas] = createResource(async () => {
     const res = await fetch(`/api/kb/${params.kbId}/schemas`);
-    const json = await res.json();
+    const json: any = await res.json();
     return json.data ?? [];
   });
 

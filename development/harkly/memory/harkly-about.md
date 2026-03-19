@@ -89,8 +89,8 @@ Port from harkly-shell (Tauri SolidJS) → web SolidStart. 77 existing files:
 | — HARKLY-18.1 Scaffold | [harkly-18-1-scaffold.md](harkly-18-1-scaffold.md) | ✅ DONE |
 | — HARKLY-18.2 Upload + Process | [harkly-18-2-upload.md](harkly-18-2-upload.md) | ✅ CODE COMPLETE |
 | — HARKLY-18.3 Schema + Extract | [harkly-18-3-schema.md](harkly-18-3-schema.md) | ✅ CODE COMPLETE |
-| — HARKLY-18.4 MCP + OAuth | [harkly-18-4-mcp.md](harkly-18-4-mcp.md) | 🔜 NEXT |
-| — HARKLY-18.5 Canvas Port | [harkly-18-5-canvas.md](harkly-18-5-canvas.md) | ⬜ BLOCKED by 18.3 |
+| — HARKLY-18.4 MCP + OAuth | [harkly-18-4-mcp.md](harkly-18-4-mcp.md) | ✅ DEPLOYED |
+| — HARKLY-18.5 Canvas Port | [harkly-18-5-canvas.md](harkly-18-5-canvas.md) | ✅ CODE COMPLETE |
 | HARKLY-15 UI Design (Pencil) | [harkly-design-ui.md](harkly-design-ui.md) | ⏸ PAUSED |
 | HARKLY-17 Shell (Tauri + SolidJS) | [harkly-shell-epic.md](harkly-shell-epic.md) | ⏸ PAUSED (v2) |
 | HARKLY-14 Content Auto-Writing | [harkly-marketing-content.md](harkly-marketing-content.md) | ⏸ PAUSED |

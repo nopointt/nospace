@@ -17,7 +17,7 @@ export default function DiscoverSchema() {
 
     try {
       const res = await fetch(`/api/kb/${params.kbId}/schema/discover`, { method: "POST" });
-      const json = await res.json();
+      const json: any = await res.json();
       if (!res.ok) {
         setError(json.error || "Ошибка обнаружения");
         return;

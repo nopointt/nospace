@@ -42,15 +42,10 @@ id = "07376228025543e89e4345d9ac0ac61d"
 binding = "VECTORIZE_INDEX"
 index_name = "harkly-kb"
 
-# ── Queues ────────────────────────────────────────────────────
-[[queues.producers]]
-binding = "INGEST_QUEUE"
-queue = "harkly-ingest"
-
-[[queues.consumers]]
-queue = "harkly-ingest"
-max_batch_size = 10
-max_retries = 3
+# ── Queues (deferred — requires Workers Paid plan) ───────────
+# [[queues.producers]]
+# binding = "INGEST_QUEUE"
+# queue = "harkly-ingest"
 
 # ── Workers AI ────────────────────────────────────────────────
 [ai]

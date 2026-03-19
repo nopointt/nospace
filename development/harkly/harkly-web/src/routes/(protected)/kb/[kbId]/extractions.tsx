@@ -7,7 +7,7 @@ export default function Extractions() {
 
   const [entities] = createResource(async () => {
     const res = await fetch(`/api/kb/${params.kbId}/extractions`);
-    const json = await res.json();
+    const json: any = await res.json();
     return json.data ?? [];
   });
 

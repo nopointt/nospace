@@ -1,14 +1,16 @@
 import type { APIEvent } from "@solidjs/start/server";
 import { getBindings, createKbDb } from "~/lib/db";
+import { requireAuth } from "~/lib/auth-guard";
 import { sources, ingestJobs } from "~/lib/schema";
 import { ulid } from "ulid";
 import { AwsClient } from "aws4fetch";
 
 // POST /api/kb/[kbId]/upload — get presigned R2 upload URL
 export async function POST(event: APIEvent) {
-  const env = getBindings(event);
-  const db = createKbDb(env.KB_DB);
-  const tenantId = "demo-user";
+  try {
+    const tenantId = requireAuth(event);
+    const env = getBindings(event);
+    const db = createKbDb(env.KB_DB);
   const kbId = event.params.kbId;
 
   const body = await event.request.json();
@@ -67,4 +69,8 @@ export async function POST(event: APIEvent) {
       r2Key,
     },
   });
+  } catch (e) {
+    if (e instanceof Response) return e;
+    throw e;
+  }
 }
