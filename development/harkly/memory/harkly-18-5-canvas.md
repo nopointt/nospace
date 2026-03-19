@@ -5,6 +5,14 @@
 > Source: `development/harkly/harkly-shell/src/` (77 SolidJS files)
 ---
 
+## Required Reading (before any code)
+
+1. `nospace/docs/research/harkly-eval-ui-canvas.md` — FULL (quantum Tauri config, solid-pages CF patterns, solid-flow rejected, canvas recommendation, Frontend Architecture)
+2. `nospace/docs/research/harkly-mvp-architecture.md` — section 6 (Frontend Architecture, build matrix)
+3. `nospace/docs/research/harkly-mvp-copy-map.md` — sections 3 (Existing Harkly Code), 4 (Port from harkly-saas)
+4. `nospace/development/harkly/harkly-shell/src/` — browse file tree, understand structure before porting
+5. `nospace/docs/research/harkly-mvp-api-spec.md` — section 4 (Canvas endpoints)
+
 ## Goal
 
 Spatial canvas shows entities from extracted data. Existing harkly-shell components ported to web SolidStart. Product usable end-to-end.

@@ -5,6 +5,14 @@
 > Copy Map: `docs/research/harkly-mvp-copy-map.md`
 ---
 
+## Required Reading (before any code)
+
+1. `nospace/docs/research/harkly-eval-mcp-auth.md` — FULL (workers-mcp rejected, mcp-ts-template steal list, workers-oauth-provider architecture, better-auth integration, MCP Server Architecture)
+2. `nospace/docs/research/harkly-mvp-api-spec.md` — sections 2 (OAuth endpoints), 5 (MCP Tools with Zod schemas)
+3. `nospace/docs/research/harkly-research-mcp-access.md` — sections: MCP Ecosystem State, Recommendation for Harkly
+4. `nospace/docs/research/harkly-mvp-copy-map.md` — section 2 (Clone & Adapt: MCP/auth subsection)
+5. `nospace/docs/research/harkly-mvp-architecture.md` — section 5 (Auth Architecture)
+
 ## Goal
 
 Remote MCP Server on CF Worker. Claude Desktop, ChatGPT, Grok can connect via OAuth 2.1 and query user's knowledge base.

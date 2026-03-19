@@ -5,6 +5,14 @@
 > Copy Map: `docs/research/harkly-mvp-copy-map.md`
 ---
 
+## Required Reading (before any code)
+
+1. `nospace/docs/research/harkly-mvp-architecture.md` — section 4.1 (Upload → Process → Store), section 7 (Processing Pipeline)
+2. `nospace/docs/research/harkly-mvp-api-spec.md` — section 4 (Sources/Upload endpoints), section 6 (Queue Consumers: process_source, process_chunks)
+3. `nospace/docs/research/harkly-eval-rag-pipeline.md` — FULL (pipeline patterns, D1 schema, Vectorize usage, Copy Map)
+4. `nospace/docs/research/harkly-mvp-copy-map.md` — section 2 (Clone & Adapt: RAG pipeline subsection)
+5. `nospace/docs/research/harkly-research-stack.md` — sections B3 (Queues), B5 (R2 presigned), C (External Services)
+
 ## Goal
 
 Upload any supported file → text extracted → chunks in D1 + Vectorize → original in R2. Audio transcribed. YouTube subtitles fetched.

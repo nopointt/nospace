@@ -5,6 +5,14 @@
 > Copy Map: `docs/research/harkly-mvp-copy-map.md`
 ---
 
+## Required Reading (before any code)
+
+1. `nospace/docs/research/harkly-mvp-architecture.md` — sections 2 (Stack Decisions), 3 (Service Architecture), 6 (Frontend Architecture)
+2. `nospace/docs/research/harkly-mvp-data-model.md` — sections 2-3 (D1 Schema), 7 (Drizzle Schema), 8 (Migration Plan)
+3. `nospace/docs/research/harkly-mvp-copy-map.md` — section 1 (npm install), section 2 (Clone & Adapt: SolidStart infra subsection)
+4. `nospace/docs/research/harkly-eval-ui-canvas.md` — sections 2 (solid-pages: CF bindings pattern), 4 (better-auth + SolidStart)
+5. `nospace/docs/research/harkly-research-stack.md` — sections A (SolidStart + CF), E (Auth patterns)
+
 ## Goal
 
 SolidStart app deploys to CF Pages, auth works, D1 reads/writes work, all bindings configured.

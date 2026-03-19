@@ -5,6 +5,14 @@
 > Copy Map: `docs/research/harkly-mvp-copy-map.md`
 ---
 
+## Required Reading (before any code)
+
+1. `nospace/docs/research/harkly-eval-schema-extract.md` — FULL (documind, sift-kg, l1m, instructor-js patterns, Copy Map, Architecture)
+2. `nospace/docs/research/harkly-mvp-architecture.md` — section 4.2 (Schema Discovery → Extraction flow)
+3. `nospace/docs/research/harkly-mvp-api-spec.md` — section 4 (Schema endpoints, Extraction endpoints)
+4. `nospace/docs/research/harkly-mvp-copy-map.md` — section 2 (Clone & Adapt: schema inference subsection)
+5. `nospace/docs/research/harkly-mvp-data-model.md` — section 3.2 (Schema/extraction tables)
+
 ## Goal
 
 Upload documents → AI proposes schema → user confirms/edits → structured extraction to D1 rows.
