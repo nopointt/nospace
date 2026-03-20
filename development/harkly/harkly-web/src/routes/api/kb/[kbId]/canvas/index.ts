@@ -8,7 +8,7 @@ import { ulid } from "ulid";
 // GET /api/kb/[kbId]/canvas — load canvas state (frames + viewport)
 export async function GET(event: APIEvent) {
   try {
-    const tenantId = requireAuth(event);
+    const tenantId = await requireAuth(event);
     const env = getBindings(event);
     const db = createKbDb(env.KB_DB);
     const { kbId } = event.params;
@@ -53,7 +53,7 @@ export async function GET(event: APIEvent) {
 // PUT /api/kb/[kbId]/canvas — save canvas state (frames + viewport)
 export async function PUT(event: APIEvent) {
   try {
-    const tenantId = requireAuth(event);
+    const tenantId = await requireAuth(event);
     const env = getBindings(event);
     const db = createKbDb(env.KB_DB);
     const { kbId } = event.params;

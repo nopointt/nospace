@@ -1,11 +1,13 @@
 import type { APIEvent } from "@solidjs/start/server";
 import { getBindings, createKbDb } from "~/lib/db";
+import { requireAuth } from "~/lib/auth-guard";
 import { sources, ingestRuns, ingestJobs } from "~/lib/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { ulid } from "ulid";
 
 // PUT /api/kb/[kbId]/upload/[sourceId] — receive file body, store in R2, enqueue
 export async function PUT(event: APIEvent) {
+  const userId = await requireAuth(event);
   const env = getBindings(event);
   const db = createKbDb(env.KB_DB);
   const { kbId, sourceId } = event.params;
@@ -14,7 +16,7 @@ export async function PUT(event: APIEvent) {
   const [source] = await db
     .select()
     .from(sources)
-    .where(eq(sources.id, sourceId))
+    .where(and(eq(sources.id, sourceId), eq(sources.tenantId, userId)))
     .limit(1);
 
   if (!source) {

@@ -2,7 +2,8 @@ import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import { sources } from "./core";
 
-const timestamp = () => text().notNull().default(sql`(datetime('now'))`);
+const createdAt = () => text("created_at").notNull().default(sql`(datetime('now'))`);
+const updatedAt = () => text("updated_at").notNull().default(sql`(datetime('now'))`);
 
 // ── Query Stats ──────────────────────────────────────────────
 export const queryStats = sqliteTable(
@@ -19,7 +20,7 @@ export const queryStats = sqliteTable(
     vectorTimeMs: integer("vector_time_ms"),
     rrfTimeMs: integer("rrf_time_ms"),
     cacheHit: integer("cache_hit").default(0),
-    createdAt: timestamp(),
+    createdAt: createdAt(),
   },
   (t) => [
     index("idx_stats_project").on(t.projectId),
@@ -36,5 +37,5 @@ export const collectionTimestamps = sqliteTable("collection_timestamps", {
   lastSuccessfulCollection: text("last_successful_collection").notNull(),
   etag: text("etag"),
   lastModified: text("last_modified"),
-  updatedAt: timestamp(),
+  updatedAt: updatedAt(),
 });

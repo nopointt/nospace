@@ -8,7 +8,7 @@ import { mapEntitiesToFrames } from "~/lib/canvas/entity-mapper";
 // POST /api/kb/[kbId]/canvas/auto-layout — generate initial frame positions
 export async function POST(event: APIEvent) {
   try {
-    const tenantId = requireAuth(event);
+    const tenantId = await requireAuth(event);
     const env = getBindings(event);
     const db = createKbDb(env.KB_DB);
     const { kbId } = event.params;

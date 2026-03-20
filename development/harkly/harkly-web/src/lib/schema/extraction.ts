@@ -2,7 +2,8 @@ import { sqliteTable, text, integer, real, index } from "drizzle-orm/sqlite-core
 import { sql } from "drizzle-orm";
 import { projects, documents } from "./core";
 
-const timestamp = () => text().notNull().default(sql`(datetime('now'))`);
+const createdAt = () => text("created_at").notNull().default(sql`(datetime('now'))`);
+const updatedAt = () => text("updated_at").notNull().default(sql`(datetime('now'))`);
 
 // ── Project Schemas ──────────────────────────────────────────
 export const projectSchemas = sqliteTable(
@@ -18,8 +19,8 @@ export const projectSchemas = sqliteTable(
     status: text("status").notNull().default("draft"),
     discoveryPrompt: text("discovery_prompt"),
     modelUsed: text("model_used"),
-    createdAt: timestamp(),
-    updatedAt: timestamp(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
   },
   (t) => [
     index("idx_schemas_project").on(t.projectId),
@@ -46,7 +47,7 @@ export const schemaFields = sqliteTable(
     enumValues: text("enum_values"), // JSON array
     extractionHints: text("extraction_hints"),
     sortOrder: integer("sort_order").notNull().default(0),
-    createdAt: timestamp(),
+    createdAt: createdAt(),
   },
   (t) => [
     index("idx_fields_schema").on(t.schemaId),
@@ -76,8 +77,8 @@ export const extractedEntities = sqliteTable(
     verified: integer("verified").notNull().default(0),
     rejected: integer("rejected").notNull().default(0),
     annotation: text("annotation"),
-    createdAt: timestamp(),
-    updatedAt: timestamp(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
   },
   (t) => [
     index("idx_entities_project").on(t.projectId),
@@ -110,7 +111,7 @@ export const extractedRelations = sqliteTable(
     confidence: real("confidence"),
     evidence: text("evidence"),
     metadata: text("metadata"), // JSON
-    createdAt: timestamp(),
+    createdAt: createdAt(),
   },
   (t) => [
     index("idx_relations_project").on(t.projectId),

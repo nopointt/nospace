@@ -2,7 +2,8 @@ import { sqliteTable, text, integer, real, index, uniqueIndex } from "drizzle-or
 import { sql } from "drizzle-orm";
 import { projects } from "./core";
 
-const timestamp = () => text().notNull().default(sql`(datetime('now'))`);
+const createdAt = () => text("created_at").notNull().default(sql`(datetime('now'))`);
+const updatedAt = () => text("updated_at").notNull().default(sql`(datetime('now'))`);
 
 // ── Canvas Frames ────────────────────────────────────────────
 export const canvasFrames = sqliteTable(
@@ -23,8 +24,8 @@ export const canvasFrames = sqliteTable(
     minimized: integer("minimized").notNull().default(0),
     floor: integer("floor").notNull().default(0),
     frameData: text("frame_data"), // JSON
-    createdAt: timestamp(),
-    updatedAt: timestamp(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
   },
   (t) => [
     index("idx_frames_project").on(t.projectId),
@@ -45,7 +46,7 @@ export const canvasViewports = sqliteTable(
     panX: real("pan_x").notNull().default(0),
     panY: real("pan_y").notNull().default(0),
     zoom: real("zoom").notNull().default(1.0),
-    updatedAt: timestamp(),
+    updatedAt: updatedAt(),
   },
   (t) => [
     index("idx_viewports_project").on(t.projectId, t.tenantId),

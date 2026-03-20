@@ -1,7 +1,7 @@
 ---
 # harkly-about.md — Harkly Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-19 (session 172 — 18.1-18.3 code complete)
+> Last updated: 2026-03-20 (session 179 — web stack abandoned, Tauri pivot)
 ---
 
 ## Identity
@@ -85,7 +85,7 @@ Port from harkly-shell (Tauri SolidJS) → web SolidStart. 77 existing files:
 
 | Epic | File | Status |
 |---|---|---|
-| **HARKLY-18 MVP Data Layer** | [harkly-mvp-data-layer.md](harkly-mvp-data-layer.md) | 🔶 IN PROGRESS |
+| **HARKLY-18 MVP Data Layer (web)** | [harkly-mvp-data-layer.md](harkly-mvp-data-layer.md) | ⛔ ABANDONED |
 | — HARKLY-18.1 Scaffold | [harkly-18-1-scaffold.md](harkly-18-1-scaffold.md) | ✅ DONE |
 | — HARKLY-18.2 Upload + Process | [harkly-18-2-upload.md](harkly-18-2-upload.md) | ✅ CODE COMPLETE |
 | — HARKLY-18.3 Schema + Extract | [harkly-18-3-schema.md](harkly-18-3-schema.md) | ✅ CODE COMPLETE |
@@ -99,7 +99,7 @@ Port from harkly-shell (Tauri SolidJS) → web SolidStart. 77 existing files:
 | HARKLY-12 Canvas Redesign | [harkly-canvas-redesign.md](harkly-canvas-redesign.md) | ⏸ PAUSED |
 | HARKLY-06 Cold Outreach | [harkly-cold-outreach.md](harkly-cold-outreach.md) | ⏸ PAUSED |
 
-> Full focus: HARKLY-18 MVP Data Layer. All other epics paused until MVP ships.
+> HARKLY-18 web stack ABANDONED (session 179). Next: Tauri + SolidJS (harkly-shell, 77 files). HARKLY-17 becomes active.
 
 ## G3 Rule
 

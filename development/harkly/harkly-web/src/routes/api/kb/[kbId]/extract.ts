@@ -16,7 +16,7 @@ import { ulid } from "ulid";
 // POST /api/kb/[kbId]/extract — run extraction with a confirmed schema
 export async function POST(event: APIEvent) {
   try {
-    const tenantId = requireAuth(event);
+    const tenantId = await requireAuth(event);
     const env = getBindings(event);
     const db = createKbDb(env.KB_DB);
   const { kbId } = event.params;
@@ -32,7 +32,11 @@ export async function POST(event: APIEvent) {
   const [schema] = await db
     .select()
     .from(projectSchemas)
-    .where(and(eq(projectSchemas.id, schemaId), eq(projectSchemas.status, "confirmed")))
+    .where(and(
+      eq(projectSchemas.id, schemaId),
+      eq(projectSchemas.status, "confirmed"),
+      eq(projectSchemas.tenantId, tenantId),
+    ))
     .limit(1);
 
   if (!schema) {
@@ -54,7 +58,7 @@ export async function POST(event: APIEvent) {
   const docs = await db
     .select()
     .from(documents)
-    .where(eq(documents.projectId, kbId))
+    .where(and(eq(documents.projectId, kbId), eq(documents.tenantId, tenantId)))
     .all();
 
   if (docs.length === 0) {

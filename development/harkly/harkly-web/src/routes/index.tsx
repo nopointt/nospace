@@ -1,6 +1,24 @@
 import { Title } from "@solidjs/meta";
+import { onMount } from "solid-js";
+import { useNavigate } from "@solidjs/router";
+import { useSession } from "~/lib/auth-client";
 
 export default function Home() {
+  const session = useSession();
+  const navigate = useNavigate();
+
+  onMount(() => {
+    // If already authenticated, go straight to dashboard
+    const check = () => {
+      if (session()?.data?.user) {
+        navigate("/kb", { replace: true });
+      }
+    };
+    check();
+    // Re-check after session loads (async)
+    setTimeout(check, 1000);
+  });
+
   return (
     <main class="min-h-screen flex items-center justify-center bg-[#FFFAF5]">
       <Title>Harkly — Данные в структуру</Title>

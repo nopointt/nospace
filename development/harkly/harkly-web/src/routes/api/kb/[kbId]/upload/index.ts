@@ -8,7 +8,7 @@ import { AwsClient } from "aws4fetch";
 // POST /api/kb/[kbId]/upload — get presigned R2 upload URL
 export async function POST(event: APIEvent) {
   try {
-    const tenantId = requireAuth(event);
+    const tenantId = await requireAuth(event);
     const env = getBindings(event);
     const db = createKbDb(env.KB_DB);
   const kbId = event.params.kbId;

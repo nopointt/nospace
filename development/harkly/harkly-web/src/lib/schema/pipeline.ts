@@ -2,7 +2,7 @@ import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import { projects } from "./core";
 
-const timestamp = () => text().notNull().default(sql`(datetime('now'))`);
+const createdAt = () => text("created_at").notNull().default(sql`(datetime('now'))`);
 
 // ── Ingest Runs ──────────────────────────────────────────────
 export const ingestRuns = sqliteTable(
@@ -23,7 +23,7 @@ export const ingestRuns = sqliteTable(
     startedAt: text("started_at"),
     completedAt: text("completed_at"),
     errorMessage: text("error_message"),
-    createdAt: timestamp(),
+    createdAt: createdAt(),
   },
   (t) => [
     index("idx_runs_project").on(t.projectId),
@@ -49,7 +49,7 @@ export const ingestJobs = sqliteTable(
     startedAt: text("started_at"),
     completedAt: text("completed_at"),
     errorMessage: text("error_message"),
-    createdAt: timestamp(),
+    createdAt: createdAt(),
   },
   (t) => [
     index("idx_jobs_run").on(t.runId),
@@ -76,7 +76,7 @@ export const workItems = sqliteTable(
     processedData: text("processed_data"), // JSON
     retryCount: integer("retry_count").notNull().default(0),
     errorMessage: text("error_message"),
-    createdAt: timestamp(),
+    createdAt: createdAt(),
     processedAt: text("processed_at"),
   },
   (t) => [

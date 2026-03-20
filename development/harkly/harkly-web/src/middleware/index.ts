@@ -1,8 +1,8 @@
 import { createMiddleware } from "@solidjs/start/middleware";
-import { getAuth } from "~/lib/auth";
 
-// CF binding injection middleware
-// SolidStart wraps Nitro event — bindings are on event.nativeEvent.context.cloudflare.env
+// CF binding injection middleware — BINDINGS ONLY
+// Auth session is checked per-route via requireAuth() — NOT in middleware
+// Reason: middleware getSession() may consume request body on POST, breaking body parsing
 export default createMiddleware({
   onRequest: [
     async (event) => {
@@ -14,18 +14,6 @@ export default createMiddleware({
       const cf = ctx.cloudflare ?? nativeCtx?.cloudflare;
       if (cf?.env) {
         ctx.bindings = cf.env;
-      }
-
-      // Extract userId from better-auth session
-      const env = ctx.bindings;
-      if (env?.AUTH_DB) {
-        try {
-          const auth = getAuth(env.AUTH_DB, env.BETTER_AUTH_SECRET);
-          const session = await auth.api.getSession({ headers: event.request.headers });
-          ctx.userId = session?.user?.id ?? null;
-        } catch {
-          ctx.userId = null;
-        }
       }
     },
   ],

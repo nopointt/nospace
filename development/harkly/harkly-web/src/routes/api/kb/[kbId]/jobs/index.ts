@@ -7,7 +7,7 @@ import { eq, and, desc } from "drizzle-orm";
 // GET /api/kb/[kbId]/jobs — list recent jobs
 export async function GET(event: APIEvent) {
   try {
-    const tenantId = requireAuth(event);
+    const tenantId = await requireAuth(event);
     const env = getBindings(event);
     const db = createKbDb(env.KB_DB);
 

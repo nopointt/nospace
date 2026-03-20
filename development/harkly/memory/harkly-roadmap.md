@@ -1,12 +1,12 @@
 ---
 # harkly-roadmap.md — Harkly Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start or on demand
-> Last updated: 2026-03-19
+> Last updated: 2026-03-20
 ---
 
-## Current Focus: HARKLY-18 MVP Data Layer
+## Current Focus: Tauri + SolidJS (desktop first)
 
-All resources on MVP. Everything else paused.
+HARKLY-18 web stack ABANDONED. Pivot to Tauri (harkly-shell) → web port later.
 
 **MVP scope:** Upload (PDF, DOCX, CSV, TXT, audio, YouTube subs) → AI schema discovery → user confirmation → structured extraction to D1 → MCP Server (OAuth 2.1) → spatial canvas (web).
 
@@ -36,7 +36,7 @@ All resources on MVP. Everything else paused.
 
 | Epic | Description | Status | L3 File |
 |---|---|---|---|
-| **HARKLY-18** | **MVP Data Layer Platform** | **🔶 IN PROGRESS** | `harkly-mvp-data-layer.md` |
+| **HARKLY-18** | **MVP Data Layer Platform (web)** | **⛔ ABANDONED** | `harkly-mvp-data-layer.md` |
 | HARKLY-15 | UI Design in Pencil (shell + floors) | ⏸ PAUSED | `harkly-design-ui.md` |
 | HARKLY-17 | Shell (Tauri + SolidJS) — desktop v2 | ⏸ PAUSED | `harkly-shell-epic.md` |
 | HARKLY-14 | Marketing: Content Auto-Writing System | ⏸ PAUSED | `harkly-marketing-content.md` |

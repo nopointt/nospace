@@ -1,8 +1,8 @@
 import { sqliteTable, text, integer, real, index } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 
-const timestamp = () => text().notNull().default(sql`(datetime('now'))`);
-const optionalTimestamp = () => text().default(sql`(datetime('now'))`);
+const createdAt = () => text("created_at").notNull().default(sql`(datetime('now'))`);
+const updatedAt = () => text("updated_at").notNull().default(sql`(datetime('now'))`);
 
 // ── Projects ─────────────────────────────────────────────────
 export const projects = sqliteTable(
@@ -15,8 +15,8 @@ export const projects = sqliteTable(
     frameType: text("frame_type"),
     frameData: text("frame_data"), // JSON
     status: text("status").notNull().default("active"),
-    createdAt: timestamp(),
-    updatedAt: timestamp(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
   },
   (t) => [
     index("idx_projects_tenant").on(t.tenantId),
@@ -41,8 +41,8 @@ export const sources = sqliteTable(
     status: text("status").notNull().default("pending"),
     errorMessage: text("error_message"),
     metadata: text("metadata"), // JSON
-    createdAt: timestamp(),
-    updatedAt: timestamp(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
   },
   (t) => [
     index("idx_sources_project").on(t.projectId),
@@ -70,8 +70,8 @@ export const documents = sqliteTable(
     screeningReason: text("screening_reason"),
     relevanceScore: real("relevance_score"),
     metadata: text("metadata"), // JSON
-    createdAt: timestamp(),
-    updatedAt: timestamp(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
   },
   (t) => [
     index("idx_documents_project").on(t.projectId),
@@ -94,7 +94,7 @@ export const documentChunks = sqliteTable(
     chunkIndex: integer("chunk_index").notNull(),
     content: text("content").notNull(),
     tokenCount: integer("token_count"),
-    createdAt: timestamp(),
+    createdAt: createdAt(),
   },
   (t) => [
     index("idx_chunks_document").on(t.documentId),

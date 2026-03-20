@@ -16,7 +16,7 @@ interface SchemaField {
 // POST /api/kb/[kbId]/schema/discover — AI schema discovery
 export async function POST(event: APIEvent) {
   try {
-    const tenantId = requireAuth(event);
+    const tenantId = await requireAuth(event);
     const env = getBindings(event);
     const db = createKbDb(env.KB_DB);
   const { kbId } = event.params;

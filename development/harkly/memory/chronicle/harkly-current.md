@@ -312,3 +312,41 @@
 ## 2026-03-19 — session 177 CLOSE [Axis]
 
 QA Epic complete: 54 bugs found (7 CRITICAL), 770 auto-tests written, tech debt audited. Report: `harkly-web/QA-REPORT.md`. No fixes applied — audit only. Next: fix CRITICAL security bugs.
+
+<!-- ENTRY:2026-03-19:CHECKPOINT:178:harkly:harkly-mvp-data-layer [AXIS] -->
+## 2026-03-19 — checkpoint 178 [Axis]
+
+**Decisions:**
+- `better-auth-cloudflare@0.1.0` (unstable community pkg, 6 iterations no fix) → native `drizzleAdapter("sqlite")` built-in. Schema unchanged — same tables.
+- `trustedOrigins` added: harkly-web.pages.dev + c7b842b3.harkly-web.pages.dev
+- `wrangler.toml` `pages_build_output_dir` fixed: `.output/public` → `dist`
+- G3 used for all QA fixes: lead-backend (Player-A) + lead-frontend (Player-B), parallel, both builds clean
+
+**Completed:**
+- 7 CRITICAL QA bugs fixed (B1-B4, M1-M3)
+- 16 HIGH QA bugs fixed (B5-B11, F1, F4, F6, F8, F9, F11, F18, F19a, F19b)
+- Pages deployed: https://c7b842b3.harkly-web.pages.dev
+- MCP Worker deployed: harkly-mcp.nopoint.workers.dev
+- auth adapter migrated: better-auth-cloudflare → drizzleAdapter
+
+**In progress:**
+- Auth 500 fix deployed, needs manual test (sign-up/sign-in on harkly-web.pages.dev)
+
+**Opened:**
+- "Error | Uncaught Client Exception" on /register — SSR/hydration crash on frontend, new issue
+<!-- ENTRY:2026-03-20:CLOSE:179:harkly:harkly-mvp-data-layer [AXIS] -->
+## 2026-03-20 — сессия 179 CLOSE [Axis]
+
+**Decisions:**
+- harkly-web (SolidStart + Nitro + CF Pages) = DEPRECATED
+- Pivot: Tauri + SolidJS first, web port later
+- 5 auth/DB bugs fixed locally, canvas renders locally, production POST broken (Nitro on workerd)
+
+**Completed:**
+- Canvas renders locally (full Playwright flow)
+- 5 bugs: auth secret, Nitro body, D1 types, auth-guard context, Drizzle columns
+- Bug report: `harkly-web/BUG-REPORT-session-179.md`
+
+**Opened:**
+- Production POST broken (Nitro 500 on workerd)
+- Stack abandoned → Tauri restart

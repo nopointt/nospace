@@ -6,5 +6,6 @@ dist/
 *.local
 .env
 .env.*
+.dev.vars
 !.env.example
 worker-configuration.d.ts

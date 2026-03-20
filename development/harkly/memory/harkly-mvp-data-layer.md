@@ -1,7 +1,7 @@
 ---
 # harkly-mvp-data-layer.md — Harkly MVP: Data Layer Platform
-> Layer: L3 | Epic: HARKLY-18 | Status: 🔶 IN PROGRESS
-> Created: 2026-03-18 | Updated: 2026-03-19 (session 174)
+> Layer: L3 | Epic: HARKLY-18 | Status: ⛔ ABANDONED (web stack deprecated)
+> Created: 2026-03-18 | Updated: 2026-03-20 (session 179)
 > Source: nopoint interview + Copy First research (9 files) + 5 MVP specs
 ---
 
@@ -105,7 +105,8 @@
 
 ## Blockers
 
-- **AUTH REGISTRATION 500** — sign-up/sign-in endpoint crashes on CF Pages. Root cause chain: SolidStart wraps Nitro event (`event.context` empty, bindings on `event.nativeEvent.context.cloudflare.env`), missing BETTER_AUTH_SECRET, D1 needs `withCloudflare` drizzle adapter, geolocation disabled. Still 500 after 6 iterations. Priority: HIGH — blocks all user flows.
+- **⛔ STACK ABANDONED (session 179):** SolidStart + Nitro + CF Pages = нестабильный стек. POST body parsing сломан на production workerd (Nitro перехватывает и corruption). 5 багов пофикшено локально, но production unfixable. Решение: pivot на Tauri + SolidJS.
+- ~~AUTH REGISTRATION 500~~ — fixed locally (session 179): wrapD1 proxy, buildCleanRequest, async requireAuth
 - ~~vinxi local dev + CF bindings~~ — workaround: `wrangler pages dev`
 - ~~FTS5 в D1~~ — verified working
 
@@ -118,6 +119,14 @@
 - Queues commented out in wrangler.toml — need Workers Paid plan for async ingest
 - 29 pre-existing TS errors (APIEvent, FetchEvent, entry-server, embedder, zod-compiler)
 - ✅ QA Epic complete (session 176): 54 bugs found (7 CRITICAL), 770 auto-tests written, tech debt audited. Report: `harkly-web/QA-REPORT.md`
+
+## Implementation Notes (session 178)
+
+- **Auth adapter replaced:** `better-auth-cloudflare@0.1.0` → `drizzleAdapter("sqlite")` built-in. Schema unchanged — same tables (user/session/account/verification).
+- **QA Fixes deployed (session 178):** 7 CRITICAL + 16 HIGH bugs fixed. Backend (B1-B11, M1-M3), Frontend (F1, F4, F6, F8, F9, F11, F18, F19).
+- **wrangler.toml:** `pages_build_output_dir` fixed to `dist` (was `.output/public`).
+- **Deploy:** `https://c7b842b3.harkly-web.pages.dev` | MCP: `harkly-mcp.nopoint.workers.dev`
+- **Auth debug logging:** `console.error` in catch block → visible in CF Pages logs.
 
 ## Implementation Notes (session 174)
 

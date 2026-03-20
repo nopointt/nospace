@@ -22,7 +22,7 @@ export default function Login() {
       });
 
       if (!result.error) {
-        navigate("/", { replace: true });
+        navigate("/kb", { replace: true });
       } else {
         setError(result.error.message || "Ошибка входа. Проверьте email и пароль.");
       }

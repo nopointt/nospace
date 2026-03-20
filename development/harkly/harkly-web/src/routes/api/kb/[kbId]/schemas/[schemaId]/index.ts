@@ -1,11 +1,13 @@
 import type { APIEvent } from "@solidjs/start/server";
 import { getBindings, createKbDb } from "~/lib/db";
+import { requireAuth } from "~/lib/auth-guard";
 import { projectSchemas, schemaFields } from "~/lib/schema";
 import { eq, and } from "drizzle-orm";
 import { ulid } from "ulid";
 
 // GET /api/kb/[kbId]/schemas/[schemaId] — schema with fields
 export async function GET(event: APIEvent) {
+  const userId = await requireAuth(event);
   const env = getBindings(event);
   const db = createKbDb(env.KB_DB);
   const { schemaId } = event.params;
@@ -13,7 +15,7 @@ export async function GET(event: APIEvent) {
   const [schema] = await db
     .select()
     .from(projectSchemas)
-    .where(eq(projectSchemas.id, schemaId))
+    .where(and(eq(projectSchemas.id, schemaId), eq(projectSchemas.tenantId, userId)))
     .limit(1);
 
   if (!schema) {
@@ -32,9 +34,21 @@ export async function GET(event: APIEvent) {
 
 // PUT /api/kb/[kbId]/schemas/[schemaId] — update fields
 export async function PUT(event: APIEvent) {
+  const userId = await requireAuth(event);
   const env = getBindings(event);
   const db = createKbDb(env.KB_DB);
   const { schemaId } = event.params;
+
+  // Verify ownership before mutating
+  const [existing] = await db
+    .select()
+    .from(projectSchemas)
+    .where(and(eq(projectSchemas.id, schemaId), eq(projectSchemas.tenantId, userId)))
+    .limit(1);
+
+  if (!existing) {
+    return Response.json({ error: "Schema not found" }, { status: 404 });
+  }
 
   const body = await event.request.json();
   const { fields: newFields, name } = body as {
@@ -53,7 +67,7 @@ export async function PUT(event: APIEvent) {
     await db
       .update(projectSchemas)
       .set({ name, updatedAt: new Date().toISOString() })
-      .where(eq(projectSchemas.id, schemaId));
+      .where(and(eq(projectSchemas.id, schemaId), eq(projectSchemas.tenantId, userId)));
   }
 
   // Delete existing fields and re-insert

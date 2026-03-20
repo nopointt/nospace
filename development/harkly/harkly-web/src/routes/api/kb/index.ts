@@ -7,10 +7,11 @@ import { ulid } from "ulid";
 
 // GET /api/kb — list user's knowledge bases
 export async function GET(event: APIEvent) {
-  try {
-    const tenantId = requireAuth(event);
-    const env = getBindings(event);
-    const db = createKbDb(env.KB_DB);
+  const tenantId = await requireAuth(event);
+  if (!tenantId) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
+
+  const env = getBindings(event);
+  const db = createKbDb(env.KB_DB);
 
   const rows = await db
     .select()
@@ -18,38 +19,42 @@ export async function GET(event: APIEvent) {
     .where(eq(projects.tenantId, tenantId))
     .all();
 
-  return Response.json({ data: rows });
-  } catch (e) {
-    if (e instanceof Response) return e;
-    throw e;
-  }
+  return new Response(JSON.stringify({ data: rows }), { headers: { "Content-Type": "application/json" } });
 }
 
 // POST /api/kb — create knowledge base
 export async function POST(event: APIEvent) {
   try {
-    const tenantId = requireAuth(event);
+    const tenantId = await requireAuth(event);
+    if (!tenantId) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
+
     const env = getBindings(event);
     const db = createKbDb(env.KB_DB);
 
-  const body = await event.request.json();
-  const { title, description } = body as { title: string; description?: string };
+    let title = "";
+    let description: string | null = null;
+    try {
+      const body = await event.request.json() as any;
+      title = body?.title ?? "";
+      description = body?.description ?? null;
+    } catch {
+      return new Response(JSON.stringify({ error: "Cannot parse body" }), { status: 400, headers: { "Content-Type": "application/json" } });
+    }
 
-  if (!title?.trim()) {
-    return Response.json({ error: "Название обязательно" }, { status: 400 });
-  }
+    if (!title?.trim()) {
+      return new Response(JSON.stringify({ error: "Название обязательно" }), { status: 400, headers: { "Content-Type": "application/json" } });
+    }
 
-  const id = ulid();
-  await db.insert(projects).values({
-    id,
-    tenantId,
-    title: title.trim(),
-    description: description?.trim() ?? null,
-  });
+    const id = ulid();
+    await db.insert(projects).values({
+      id,
+      tenantId,
+      title: title.trim(),
+      description: description?.trim() ?? null,
+    });
 
-  return Response.json({ data: { id, title } }, { status: 201 });
-  } catch (e) {
-    if (e instanceof Response) return e;
-    throw e;
+    return new Response(JSON.stringify({ data: { id, title } }), { status: 201, headers: { "Content-Type": "application/json" } });
+  } catch (e: any) {
+    return new Response(JSON.stringify({ error: e?.message || "Internal error" }), { status: 500, headers: { "Content-Type": "application/json" } });
   }
 }

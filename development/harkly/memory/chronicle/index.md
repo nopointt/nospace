@@ -22,3 +22,5 @@
 | 2026-03-19 | harkly | CLOSE | 170 | harkly-mvp-data-layer | harkly-current.md |
 | 2026-03-19 | harkly | CLOSE | 172 | harkly-mvp-data-layer | harkly-current.md |
 | 2026-03-19 | harkly | CLOSE | 177 | harkly-mvp-data-layer | harkly-current.md |
+| 2026-03-19 | harkly | CHECKPOINT | 178 | harkly-mvp-data-layer | harkly-current.md |
+| 2026-03-20 | harkly | CLOSE | 179 | harkly-mvp-data-layer | harkly-current.md |
