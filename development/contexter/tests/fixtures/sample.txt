@@ -1,0 +1,6 @@
+This is a sample text file for parser testing.
+
+It contains multiple paragraphs to verify word counting and content preservation.
+
+Third paragraph with special characters: café, naïve, résumé, über.
+Numbers: 42, 3.14, -100. Symbols: @#$%^&*()

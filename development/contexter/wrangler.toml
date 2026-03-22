@@ -1,0 +1,41 @@
+name = "contexter"
+main = "src/index.ts"
+compatibility_date = "2025-03-01"
+compatibility_flags = ["nodejs_compat"]
+
+[dev]
+port = 8787
+
+# D1 — metadata (documents, chunks, jobs, users)
+[[d1_databases]]
+binding = "DB"
+database_name = "contexter-db"
+database_id = "26e9545b-9d18-48fc-93b7-4493d505a318"
+migrations_dir = "drizzle"
+
+# R2 — original file storage
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "contexter-files"
+
+# KV — sessions, rate limits
+[[kv_namespaces]]
+binding = "KV"
+id = "533cd83048f64a4e8d8ed28c01ac32de"
+
+# Vectorize — semantic search index
+[[vectorize]]
+binding = "VECTOR_INDEX"
+index_name = "contexter-vectors"
+#remote = true
+
+# Workers AI — toMarkdown + fallback LLM
+[ai]
+binding = "AI"
+
+[vars]
+JINA_API_URL = "https://api.jina.ai/v1/embeddings"
+GROQ_API_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
+ENVIRONMENT = "development"
+# JINA_API_KEY and GROQ_API_KEY set via: npx wrangler secret put <NAME>
+# For local dev, they are loaded from .dev.vars

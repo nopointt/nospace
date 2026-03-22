@@ -1,0 +1,9 @@
+{
+  "company": "Contexter",
+  "employees": [
+    { "name": "Alice", "role": "Engineer", "skills": ["TypeScript", "Rust"] },
+    { "name": "Bob", "role": "Designer", "skills": ["Figma", "CSS"] }
+  ],
+  "founded": 2026,
+  "active": true
+}
