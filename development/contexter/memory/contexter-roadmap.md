@@ -1,7 +1,7 @@
 ---
 # contexter-roadmap.md — Contexter Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start
-> Last updated: 2026-03-21
+> Last updated: 2026-03-22
 ---
 
 ## Current Focus: Demo MVP on CF Workers
@@ -48,11 +48,13 @@
 | Task | Status |
 |---|---|
 | Design system MD docs (12 files) | ✅ DONE |
-| Pencil frames (14 frames) | ✅ DONE (needs quality rework) |
-| Rework visualization (world-class quality) | ⬜ TODO |
-| Hero screen design | ⬜ TODO |
-| Upload + Pipeline screen design | ⬜ TODO |
-| Dashboard screen design | ⬜ TODO |
+| Pencil frames (45 screen states) | ✅ DONE |
+| Design audit (consistency, Bauhaus, design system, frontend-readiness) | ✅ DONE |
+| Nav → 3 reusable components (45 instances) | ✅ DONE |
+| Component Library: hover/focused/disabled states | ✅ DONE |
+| Stage 1 responsive research (6 reports, 300+ sources) | ✅ DONE |
+| Stage 2: Content architecture mapping (3 device paradigms) | ⬜ TODO |
+| Stage 3: Mobile (360px) + Tablet (768px) Pencil screens | ⬜ TODO |
 
 ---
 

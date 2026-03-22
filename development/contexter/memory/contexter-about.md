@@ -91,7 +91,7 @@ PDF, DOCX, XLSX, PPTX, CSV, JSON, TXT, MD, Images (PNG/JPG/WebP/SVG), Audio (MP3
 Swiss/Bauhaus. JetBrains Mono only. B&W (#0A0A0A / #FAFAFA) + blue (#1E3EA0). 0px corners. No shadows.
 Tokens inherited from Harkly structure, values adapted for cold palette.
 RAG-verified: 8 design decisions with Bauhaus citations.
-Pencil: `contexter-ui.pen` (14 frames). Docs: `design/contexter/` (12 MD files).
+Pencil: `contexter-ui.pen` (45 screen states, 14 reusable components incl. Nav/Hero, Nav/App, Nav/Skeleton). Docs: `design/contexter/` (12 MD files).
 
 ## Active L3
 

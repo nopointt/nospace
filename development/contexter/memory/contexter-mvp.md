@@ -1,7 +1,7 @@
 ---
 # contexter-mvp.md — CTX-01 MVP Pipeline
 > Layer: L3 | Epic: CTX-01 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-22 (session 183)
+> Last updated: 2026-03-22 (session 185)
 ---
 
 ## Goal
@@ -21,7 +21,11 @@ All pipeline stages working. Deployed. MCP connected. Auth + sharing working. Re
 - [x] Design system: 45/45 screen states designed in Pencil
 - [x] JTBD analysis + design audit (32 criteria)
 - [x] Workspace consciousness skills updated for contexter
-- [ ] CTX-03: Frontend implementation (SolidJS SPA) — use 45 screen states as spec
+- [x] Nav refactored to 3 reusable components (Nav/Hero, Nav/App, Nav/Skeleton) — 45 instances
+- [x] Stage 1 responsive research complete (6 reports, ~160KB, 300+ sources)
+- [ ] Stage 2: Content architecture mapping (45 screens → 3 device paradigms)
+- [ ] Stage 3: Mobile (360px) + Tablet (768px) screen designs in Pencil
+- [ ] CTX-03: Frontend implementation (SolidJS SPA) — use screen states as spec
 
 ## Blockers
 
