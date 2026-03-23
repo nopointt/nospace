@@ -1,0 +1,17 @@
+{
+  "updated": "2026-03-23T10:02:54.824584+00:00",
+  "mode": "dry_run",
+  "initial_capital": 260.0,
+  "current_balance": 260.0,
+  "currency": "USDT",
+  "open_positions": [],
+  "total_trades": 0,
+  "winning_trades": 0,
+  "losing_trades": 0,
+  "total_pnl": 0,
+  "max_drawdown": 0.0,
+  "daily_pnl": 0,
+  "weekly_pnl": 0,
+  "halted": false,
+  "halt_reason": null
+}
