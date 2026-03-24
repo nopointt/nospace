@@ -50,10 +50,12 @@ export class VectorStoreService {
     const topK = options.topK ?? DEFAULT_TOP_K
     const threshold = options.scoreThreshold ?? DEFAULT_SCORE_THRESHOLD
 
-    // Run both searches in parallel
+    const userId = options.userId
+
+    // Run both searches in parallel — filtered by userId
     const [vectorResults, ftsResults] = await Promise.all([
-      this.vector.search(queryVector, topK * 2),
-      this.fts.search(queryText, topK * 2),
+      this.vector.search(queryVector, topK * 2, userId),
+      this.fts.search(queryText, topK * 2, userId),
     ])
 
     // Fuse results

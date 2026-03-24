@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-21 (session 180 — initial creation)
+> Last updated: 2026-03-24 (session 187 — frontend + async pipeline + production deploy)
 ---
 
 ## Identity
@@ -14,9 +14,9 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Layer | Technology |
 |---|---|
 | Runtime | Bun |
-| Frontend | SolidJS (static SPA, planned) |
+| Frontend | SolidJS 1.9 + Vite 8 (static SPA, **deployed**) |
 | API | Hono on CF Workers |
-| CSS | Tailwind CSS 4 (planned) |
+| CSS | Tailwind CSS 4 (**deployed**, @theme tokens) |
 | ORM | Drizzle ORM (sqlite) |
 | Deploy | Cloudflare Pages + Workers |
 | Metadata DB | CF D1 |
@@ -27,7 +27,7 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Embeddings | Jina v4 API (truncate_dim=1024, multimodal) |
 | Transcription | Groq Whisper Large v3 API |
 | RAG answer | Workers AI / Groq / NIM (fallback chain) |
-| User auth | better-auth 1.5 (D1, OAuth 2.1 Provider, MCP Auth) |
+| User auth | Custom token-based (register → apiToken). OAuth planned (Google/Telegram/Yandex) |
 | MCP server | Streamable HTTP (custom JSON-RPC on /sse) |
 | Document parsing | env.AI.toMarkdown() (free, CF native) |
 
@@ -38,7 +38,10 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Project root | `nospace/development/contexter/` |
 | Source code | `development/contexter/src/` |
 | Services | `development/contexter/src/services/` (parsers, chunker, embedder, vectorstore, rag, mcp, auth, pipeline) |
-| Routes | `development/contexter/src/routes/` (upload, query, status, auth, dev, mcp, mcp-remote, health) |
+| Routes | `development/contexter/src/routes/` (upload, query, status, auth, dev, mcp, mcp-remote, health, **retry**) |
+| Frontend | `development/contexter/web/` (SolidJS SPA, 10 components, 5 pages) |
+| Frontend build | `development/contexter/web/dist/` (CF Pages deploy source) |
+| CTO specs | `development/contexter/FRONTEND-SPEC.md`, `BACKEND-PIPELINE-SPEC.md` |
 | Tests (unit) | `development/contexter/tests/` (128 tests) |
 | Tests (e2e) | `development/contexter/e2e/` (Playwright) |
 | MCP bridge | `development/contexter/mcp-bridge/` (stdio for Claude Desktop) |
@@ -58,6 +61,7 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Health | https://contexter.nopoint.workers.dev/health |
 | MCP endpoint | https://contexter.nopoint.workers.dev/sse?token={TOKEN} |
 | GitHub | https://github.com/nopointt/contexter |
+| **Frontend** | **https://contexter-web.pages.dev** |
 
 ## CF Resources (created)
 
@@ -91,7 +95,7 @@ PDF, DOCX, XLSX, PPTX, CSV, JSON, TXT, MD, Images (PNG/JPG/WebP/SVG), Audio (MP3
 Swiss/Bauhaus. JetBrains Mono only. B&W (#0A0A0A / #FAFAFA) + blue (#1E3EA0). 0px corners. No shadows.
 Tokens inherited from Harkly structure, values adapted for cold palette.
 RAG-verified: 8 design decisions with Bauhaus citations.
-Pencil: `contexter-ui.pen` (45 screen states, 14 reusable components incl. Nav/Hero, Nav/App, Nav/Skeleton). Docs: `design/contexter/` (12 MD files).
+Pencil: `contexter-ui.pen` (31 recovered nodes, 11 reusable components). Recovery data: `design/contexter/recovery/` (4 files). Docs: `design/contexter/` (12 MD + 2 UX files).
 
 ## Active L3
 
@@ -112,4 +116,24 @@ Pencil: `contexter-ui.pen` (45 screen states, 14 reusable components incl. Nav/H
 
 ## G3 Rule
 
-Player subagent: `backend-developer` (Hono/CF Workers) | `lead-frontend` (SolidJS)
+**Bauhaus Team (7 permanent Eidolons):**
+| Name | Role | Pair |
+|---|---|---|
+| **Gropius** | Frontend Player (SolidJS/Tailwind) | Breuer |
+| **Breuer** | Frontend Coach (visual regression) | Gropius |
+| **Itten** | Web Designer Player (composition) | Albers |
+| **Albers** | Design Coach (token audit) | Itten |
+| **Mies** | Backend Player (Hono/CF/D1) | Schlemmer |
+| **Schlemmer** | Backend Coach (API testing) | Mies |
+| **Moholy** | QA Engineer (E2E Playwright) | — |
+
+Identities: `nospace/agents/{name}/L0-identity.md`
+Claude agents: `~/.claude/agents/{name}.md`
+
+## Pipeline Architecture (async, 2026-03-24)
+
+Upload → R2 store + D1 doc row + 4 job rows (pending) → **return 202 immediately**
+→ waitUntil: parse → chunk → embed → index (each stage updates jobs table)
+→ Status API returns stages[] from jobs table
+→ Retry endpoint resumes from failed stage
+→ User isolation: Vectorize filter by userId, FTS5 JOIN by user_id

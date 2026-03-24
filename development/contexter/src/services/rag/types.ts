@@ -1,5 +1,6 @@
 export interface RagQuery {
   query: string
+  userId?: string
   topK?: number
   scoreThreshold?: number
 }

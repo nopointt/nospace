@@ -23,6 +23,7 @@ export class VectorService {
         values: r.vector,
         metadata: {
           documentId: r.metadata.documentId,
+          userId: r.metadata.userId ?? "",
           chunkIndex: r.metadata.chunkIndex,
           content: r.metadata.content.slice(0, 1000), // Vectorize metadata size limit
         },
@@ -34,12 +35,16 @@ export class VectorService {
   /**
    * Search by vector similarity.
    */
-  async search(queryVector: number[], topK: number = 10): Promise<SearchResult[]> {
-    const results = await this.index.query(queryVector, {
+  async search(queryVector: number[], topK: number = 10, userId?: string): Promise<SearchResult[]> {
+    const queryOpts: VectorizeQueryOptions = {
       topK,
       returnValues: false,
       returnMetadata: "all",
-    })
+    }
+    if (userId) {
+      queryOpts.filter = { userId }
+    }
+    const results = await this.index.query(queryVector, queryOpts)
 
     return (results.matches ?? []).map((match) => ({
       id: match.id,

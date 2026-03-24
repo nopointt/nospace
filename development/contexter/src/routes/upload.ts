@@ -1,6 +1,6 @@
 import { Hono } from "hono"
 import type { Env } from "../types/env"
-import { runPipeline } from "../services/pipeline"
+import { runPipelineAsync, createPendingJobs } from "../services/pipeline"
 import { resolveAuth } from "../services/auth"
 
 export const upload = new Hono<{ Bindings: Env }>()
@@ -48,33 +48,38 @@ upload.post("/", async (c) => {
   const buffer = await file.arrayBuffer()
   const r2Key = `${auth.userId}/${documentId}/${file.name}`
 
+  // Store file in R2
   await c.env.STORAGE.put(r2Key, buffer, {
     customMetadata: { fileName: file.name, mimeType, documentId, userId: auth.userId },
   })
 
+  // Insert document row
   await c.env.DB.prepare(
     "INSERT INTO documents (id, user_id, name, mime_type, size, r2_key, status) VALUES (?, ?, ?, ?, ?, ?, ?)"
   ).bind(documentId, auth.userId, file.name, mimeType, file.size, r2Key, "processing").run()
 
-  try {
-    const result = await runPipeline(documentId, { file: buffer, fileName: file.name, mimeType, fileSize: file.size }, c.env, auth.userId)
-    const allDone = result.stages.every((s) => s.status === "done")
-    const errorMsg = result.stages.find((s) => s.status === "error")?.error ?? null
+  // Create 4 pending job rows (parse, chunk, embed, index)
+  const jobIds = await createPendingJobs(c.env.DB, documentId, auth.userId)
 
-    await c.env.DB.prepare(
-      "UPDATE documents SET status = ?, error_message = ?, updated_at = datetime('now') WHERE id = ?"
-    ).bind(allDone ? "ready" : "error", errorMsg, documentId).run()
+  // Run pipeline asynchronously -- response returns immediately
+  c.executionCtx.waitUntil(
+    runPipelineAsync(
+      documentId,
+      { file: buffer, fileName: file.name, mimeType, fileSize: file.size },
+      c.env,
+      auth.userId,
+      jobIds
+    )
+  )
 
-    return c.json({
-      documentId, status: allDone ? "ready" : "error", fileName: file.name, fileSize: file.size, mimeType,
-      pipeline: result.stages.map((s) => ({ stage: s.stage, status: s.status, durationMs: s.durationMs, error: s.error })),
-    }, allDone ? 201 : 207)
-  } catch (e) {
-    await c.env.DB.prepare(
-      "UPDATE documents SET status = 'error', error_message = ?, updated_at = datetime('now') WHERE id = ?"
-    ).bind(e instanceof Error ? e.message : String(e), documentId).run()
-    return c.json({ documentId, status: "error", error: e instanceof Error ? e.message : String(e) }, 500)
-  }
+  return c.json({
+    documentId,
+    status: "processing",
+    message: "Pipeline started. Poll /api/status/" + documentId + " for progress.",
+    fileName: file.name,
+    fileSize: file.size,
+    mimeType,
+  }, 202)
 })
 
 upload.get("/formats", (c) => {

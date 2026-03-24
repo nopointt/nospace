@@ -1,0 +1,24 @@
+{
+  "name": "contexter-web",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@tailwindcss/vite": "^4.2.2",
+    "lucide-solid": "^0.577.0",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.1",
+    "vite-plugin-solid": "^2.11.11"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.16.1",
+    "solid-js": "^1.9.11"
+  }
+}

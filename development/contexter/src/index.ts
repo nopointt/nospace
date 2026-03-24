@@ -8,6 +8,7 @@ import { status } from "./routes/status"
 import { mcp } from "./routes/mcp"
 import { mcpRemote } from "./routes/mcp-remote"
 import { auth } from "./routes/auth"
+import { retry } from "./routes/retry"
 import { dev } from "./routes/dev"
 
 const app = new Hono<{ Bindings: Env }>()
@@ -21,6 +22,7 @@ app.route("/api/status", status)
 app.route("/mcp", mcp)
 app.route("/sse", mcpRemote)
 app.route("/api/auth", auth)
+app.route("/api/retry", retry)
 app.route("/dev", dev)
 
 export default app

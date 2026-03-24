@@ -4,6 +4,13 @@ import { resolveAuth, canAccessDocument } from "../services/auth"
 
 export const status = new Hono<{ Bindings: Env }>()
 
+interface JobRow {
+  type: string
+  status: string
+  progress: number
+  error_message: string | null
+}
+
 status.get("/:documentId", async (c) => {
   const auth = await resolveAuth(c.env.DB, c.req.raw)
   if (!auth) return c.json({ error: "Unauthorized." }, 401)
@@ -24,10 +31,39 @@ status.get("/:documentId", async (c) => {
     "SELECT COUNT(*) as count FROM chunks WHERE document_id = ?"
   ).bind(documentId).first<{ count: number }>()
 
+  // Query stages from jobs table, ordered by pipeline sequence
+  const jobsResult = await c.env.DB.prepare(
+    "SELECT type, status, progress, error_message FROM jobs WHERE document_id = ? ORDER BY CASE type WHEN 'parse' THEN 1 WHEN 'chunk' THEN 2 WHEN 'embed' THEN 3 WHEN 'index' THEN 4 ELSE 5 END"
+  ).bind(documentId).all<JobRow>()
+
+  const stages = (jobsResult.results ?? []).map((job) => ({
+    type: job.type,
+    status: job.status,
+    progress: job.progress,
+    ...(job.error_message ? { error_message: job.error_message } : {}),
+  }))
+
+  // Derive effective status from jobs to avoid race condition:
+  // pipeline sets all jobs to "done" before updating document.status to "ready"
+  let effectiveStatus = doc.status
+  if (stages.length === 4 && doc.status === "processing") {
+    const allDone = stages.every((s) => s.status === "done")
+    const anyError = stages.some((s) => s.status === "error")
+    if (allDone) effectiveStatus = "ready"
+    else if (anyError) effectiveStatus = "error"
+  }
+
   return c.json({
-    documentId: doc.id, fileName: doc.name, mimeType: doc.mime_type, fileSize: doc.size,
-    status: doc.status, error: doc.error_message, chunks: chunkCount?.count ?? 0,
-    createdAt: doc.created_at, updatedAt: doc.updated_at,
+    documentId: doc.id,
+    fileName: doc.name,
+    mimeType: doc.mime_type,
+    fileSize: doc.size,
+    status: effectiveStatus,
+    error: doc.error_message,
+    stages,
+    chunks: chunkCount?.count ?? 0,
+    createdAt: doc.created_at,
+    updatedAt: doc.updated_at,
   })
 })
 

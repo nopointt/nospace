@@ -30,6 +30,7 @@ query.post("/", async (c) => {
   try {
     const result = await rag.query({
       query: body.query.trim(),
+      userId: auth.userId,
       topK: Math.min(body.topK ?? 5, 20),
       scoreThreshold: 0,
     })

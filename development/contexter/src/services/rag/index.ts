@@ -61,6 +61,7 @@ export class RagService {
         {
           topK: input.topK ?? 10,
           scoreThreshold: input.scoreThreshold ?? 0,
+          userId: input.userId,
         }
       )
 

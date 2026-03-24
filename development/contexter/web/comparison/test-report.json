@@ -1,0 +1,333 @@
+{
+  "results": [
+    {
+      "step": "1a",
+      "status": "PASS",
+      "details": "Nav visible: true"
+    },
+    {
+      "step": "1b",
+      "status": "PASS",
+      "details": "Drop zone text present: true"
+    },
+    {
+      "step": "1c",
+      "status": "PASS",
+      "details": "\"начать\" button visible: true"
+    },
+    {
+      "step": "1d",
+      "status": "PASS",
+      "details": "\"docs\" link visible: true"
+    },
+    {
+      "step": "1e",
+      "status": "PASS",
+      "details": "\"pricing\" link visible: true"
+    },
+    {
+      "step": "1f",
+      "status": "PASS",
+      "details": "Headline \"загрузите файлы\" present: true"
+    },
+    {
+      "step": "1g",
+      "status": "PASS",
+      "details": "\"как это работает\" section present: true"
+    },
+    {
+      "step": "1h",
+      "status": "PASS",
+      "details": "Format hints present: true"
+    },
+    {
+      "step": "1i",
+      "status": "PASS",
+      "details": "Ctrl+V hint present: true"
+    },
+    {
+      "step": "2a",
+      "status": "PASS",
+      "details": "\"начать\" opened file chooser (unauthenticated user goes to upload flow)"
+    },
+    {
+      "step": "2b",
+      "status": "PASS",
+      "details": "Current URL after начать: https://contexter-web.pages.dev/"
+    },
+    {
+      "step": "3a",
+      "status": "PASS",
+      "details": "File chooser opened on drop zone click"
+    },
+    {
+      "step": "3b",
+      "status": "PASS",
+      "details": "Auth modal appeared: true"
+    },
+    {
+      "step": "4a",
+      "status": "PASS",
+      "details": "Auth modal is visible for registration"
+    },
+    {
+      "step": "4b",
+      "status": "PASS",
+      "details": "Email field filled"
+    },
+    {
+      "step": "4c",
+      "status": "PASS",
+      "details": "Name field filled"
+    },
+    {
+      "step": "4d",
+      "status": "PASS",
+      "details": "Modal closed after register: true"
+    },
+    {
+      "step": "4e",
+      "status": "PASS",
+      "details": "Auth token stored: 88b0cd84ecf9..."
+    },
+    {
+      "step": "4f",
+      "status": "PASS",
+      "details": "User ID: ca9e7e62..."
+    },
+    {
+      "step": "4g",
+      "status": "PASS",
+      "details": "MCP URL stored: true"
+    },
+    {
+      "step": "5b",
+      "status": "WARN",
+      "details": "File list visible: false"
+    },
+    {
+      "step": "5c",
+      "status": "WARN",
+      "details": "Pipeline indicator visible: false"
+    },
+    {
+      "step": "6",
+      "status": "PASS",
+      "details": "Pipeline completed (ready) after 2.5s"
+    },
+    {
+      "step": "7a",
+      "status": "PASS",
+      "details": "On dashboard page: true"
+    },
+    {
+      "step": "7b",
+      "status": "PASS",
+      "details": "Stats visible: true"
+    },
+    {
+      "step": "7c",
+      "status": "PASS",
+      "details": "Document table header visible: true"
+    },
+    {
+      "step": "7d",
+      "status": "PASS",
+      "details": "Has documents: true"
+    },
+    {
+      "step": "7e",
+      "status": "PASS",
+      "details": "Query panel visible: true"
+    },
+    {
+      "step": "7f",
+      "status": "PASS",
+      "details": "Answer placeholder visible: true"
+    },
+    {
+      "step": "7g",
+      "status": "PASS",
+      "details": "MCP status shown: true"
+    },
+    {
+      "step": "8a",
+      "status": "PASS",
+      "details": "Query input filled"
+    },
+    {
+      "step": "8b",
+      "status": "PASS",
+      "details": "Query submitted"
+    },
+    {
+      "step": "8c",
+      "status": "PASS",
+      "details": "Query returned an answer"
+    },
+    {
+      "step": "8d",
+      "status": "PASS",
+      "details": "Sources section present: true"
+    },
+    {
+      "step": "9a",
+      "status": "PASS",
+      "details": "On API page: true"
+    },
+    {
+      "step": "9b",
+      "status": "PASS",
+      "details": "API endpoints section: true"
+    },
+    {
+      "step": "9c",
+      "status": "PASS",
+      "details": "Curl examples present: true"
+    },
+    {
+      "step": "9d",
+      "status": "PASS",
+      "details": "MCP connection section: true"
+    },
+    {
+      "step": "9e",
+      "status": "PASS",
+      "details": "MCP URL with token present: true"
+    },
+    {
+      "step": "9f",
+      "status": "PASS",
+      "details": "MCP steps present: true"
+    },
+    {
+      "step": "9g",
+      "status": "PASS",
+      "details": "Copy buttons present: 7"
+    },
+    {
+      "step": "9h",
+      "status": "PASS",
+      "details": "Tokens & sharing section: true"
+    },
+    {
+      "step": "9i",
+      "status": "PASS",
+      "details": "API token field present: true"
+    },
+    {
+      "step": "9j",
+      "status": "PASS",
+      "details": "Streamable HTTP section: true"
+    },
+    {
+      "step": "9k",
+      "status": "PASS",
+      "details": "Config JSON example: true"
+    },
+    {
+      "step": "10a",
+      "status": "PASS",
+      "details": "On Settings page: true"
+    },
+    {
+      "step": "10b",
+      "status": "PASS",
+      "details": "Profile section: true"
+    },
+    {
+      "step": "10c",
+      "status": "PASS",
+      "details": "Email field present: true"
+    },
+    {
+      "step": "10d",
+      "status": "PASS",
+      "details": "Usage cards present: true"
+    },
+    {
+      "step": "10e",
+      "status": "PASS",
+      "details": "Last login shown: true"
+    },
+    {
+      "step": "10f",
+      "status": "PASS",
+      "details": "Danger zone present: true"
+    },
+    {
+      "step": "10g",
+      "status": "PASS",
+      "details": "Logout button present: true"
+    },
+    {
+      "step": "10h",
+      "status": "PASS",
+      "details": "Page title \"настройки\" present: true"
+    },
+    {
+      "step": "11",
+      "status": "PASS",
+      "details": "Nav item \"документы\": true"
+    },
+    {
+      "step": "11",
+      "status": "PASS",
+      "details": "Nav item \"отправить\": true"
+    },
+    {
+      "step": "11",
+      "status": "PASS",
+      "details": "Nav item \"api\": true"
+    },
+    {
+      "step": "11",
+      "status": "PASS",
+      "details": "Nav item \"подключение\": true"
+    },
+    {
+      "step": "11",
+      "status": "PASS",
+      "details": "Nav item \"выход\": true"
+    },
+    {
+      "step": "11nav",
+      "status": "PASS",
+      "details": "Clicked \"api\" -> https://contexter-web.pages.dev/api"
+    },
+    {
+      "step": "11nav",
+      "status": "PASS",
+      "details": "Clicked \"подключение\" -> https://contexter-web.pages.dev/settings"
+    },
+    {
+      "step": "12a",
+      "status": "PASS",
+      "details": "Auth cleared from localStorage: true"
+    },
+    {
+      "step": "12b",
+      "status": "PASS",
+      "details": "Redirected to hero: https://contexter-web.pages.dev/"
+    },
+    {
+      "step": "12c",
+      "status": "PASS",
+      "details": "Hero nav variant after logout: true"
+    },
+    {
+      "step": "13a",
+      "status": "WARN",
+      "details": "Backend root endpoint: status 404"
+    },
+    {
+      "step": "13b",
+      "status": "PASS",
+      "details": "Register API: status=201, hasToken=true, hasUserId=true"
+    }
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 ()"
+  ],
+  "timestamp": "2026-03-24T16:59:29.593Z"
+}

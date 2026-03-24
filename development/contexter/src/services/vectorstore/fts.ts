@@ -59,20 +59,26 @@ export class FtsService {
   /**
    * Search FTS5 index using BM25 ranking.
    */
-  async search(query: string, topK: number = 10): Promise<SearchResult[]> {
+  async search(query: string, topK: number = 10, userId?: string): Promise<SearchResult[]> {
     const sanitized = sanitizeFtsQuery(query)
     if (!sanitized) return []
 
-    const results = await this.db
-      .prepare(
-        `SELECT id, document_id, content, chunk_index, rank
+    const sql = userId
+      ? `SELECT f.id, f.document_id, f.content, f.chunk_index, f.rank
+         FROM chunks_fts f
+         JOIN chunks c ON c.id = f.id
+         WHERE chunks_fts MATCH ? AND c.user_id = ?
+         ORDER BY f.rank
+         LIMIT ?`
+      : `SELECT id, document_id, content, chunk_index, rank
          FROM chunks_fts
          WHERE chunks_fts MATCH ?
          ORDER BY rank
          LIMIT ?`
-      )
-      .bind(sanitized, topK)
-      .all<FtsRow>()
+
+    const results = userId
+      ? await this.db.prepare(sql).bind(sanitized, userId, topK).all<FtsRow>()
+      : await this.db.prepare(sql).bind(sanitized, topK).all<FtsRow>()
 
     return (results.results ?? []).map((row) => ({
       id: row.id,

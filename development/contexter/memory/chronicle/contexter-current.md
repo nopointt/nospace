@@ -61,3 +61,40 @@ Design system: 12 MD docs + 14 Pencil frames. Swiss/Bauhaus identity. Needs visu
 **Opened:**
 - Stage 2: Content architecture (45 screens → 3 devices)
 - Stage 3: Pencil mobile (360px) + tablet (768px) design
+<!-- ENTRY:2026-03-22:CLOSE:186:contexter:none [LOGOS] -->
+## 2026-03-22 — сессия 186 CLOSE [Logos]
+
+**Decisions:**
+- Full nospace workspace restructuring audit (admin domain, not contexter-specific)
+- 26 structural improvements proposed in 4 phases (admin/action-plan-final.md)
+- 4 Logos skills unified with Axis logic (start/close/checkpoint/continue)
+- logos-active: contexter preserved as last project
+
+**Files changed:**
+- `admin/` — 11 files (4,213 lines): index, audits, plans
+- `docs/research/` — 5 research reports (3,627 lines, 150+ sources)
+- `~/.claude/commands/{startlogos,closelogos,checkpointlogos,continuelogos}.md` — unified with Axis
+
+**Completed:**
+- Full nospace directory scan (21,371 files)
+- 5 web research + 6 directory audits (parallel agents)
+- Final restructuring action plan
+- Logos skill unification
+
+**Opened:**
+- Phase 1-4 restructuring execution (pending nopoint approval)
+
+**Notes:**
+- Session invoked as /startlogos, work was Orchestrator-level admin
+- No contexter code/DB changes
+- Key finding: 8,886 tokens/prompt always-loaded, 14,892 tokens /startgsession
+
+<!-- ENTRY:2026-03-24:CLOSE:188:contexter:contexter-mvp [AXIS] -->
+## 2026-03-24 — сессия 188 CLOSE [Axis]
+
+**Summary:** Frontend SPA + async pipeline + user isolation + production deploy. 7 Bauhaus Eidolons created. 62/62 E2E tests pass.
+
+**Completed:** Frontend (CF Pages), Backend async pipeline (CF Workers), Pencil recovery (31 nodes), Bauhaus Team (7 agents), E2E tests (62 pass), user isolation (Vectorize + FTS5).
+
+**Opened:** Document viewer, hero copy, auth UX, OAuth, RAG quality, verification passes, responsive.
+

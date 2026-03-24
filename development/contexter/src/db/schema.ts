@@ -37,7 +37,7 @@ export const jobs = sqliteTable("jobs", {
   id: text("id").primaryKey(),
   documentId: text("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
   userId: text("user_id").notNull().references(() => users.id),
-  type: text("type", { enum: ["parse", "chunk", "embed"] }).notNull(),
+  type: text("type", { enum: ["parse", "chunk", "embed", "index"] }).notNull(),
   status: text("status", { enum: ["pending", "running", "done", "error"] }).notNull().default("pending"),
   progress: integer("progress").default(0),
   errorMessage: text("error_message"),

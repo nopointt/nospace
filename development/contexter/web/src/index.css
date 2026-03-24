@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "@fontsource/jetbrains-mono/700.css";
+
+/*
+ * Contexter Design System — Tailwind CSS 4 Theme
+ * Bauhaus root. Swiss expression. Black, white, blue.
+ * Single typeface: JetBrains Mono. 0px corners. No shadows.
+ */
+
+@theme {
+  /* === Core Colors (3 colors. Period.) === */
+  --color-black: #0A0A0A;
+  --color-white: #FAFAFA;
+  --color-accent: #1E3EA0;
+
+  /* === Text Hierarchy === */
+  --color-text-primary: #0A0A0A;
+  --color-text-secondary: #333333;
+  --color-text-tertiary: #808080;
+  --color-text-disabled: #CCCCCC;
+
+  /* === Background Elevation (no shadows — color shift only) === */
+  --color-bg-canvas: #FAFAFA;
+  --color-bg-surface: #F2F2F2;
+  --color-bg-elevated: #E5E5E5;
+  --color-bg-pressed: #D9D9D9;
+
+  /* === Borders === */
+  --color-border-subtle: #E5E5E5;
+  --color-border-default: #CCCCCC;
+  --color-border-strong: #808080;
+
+  /* === Interactive States === */
+  --color-interactive-hover: #F2F2F2;
+  --color-interactive-pressed: #D9D9D9;
+
+  /* === Signal (functional only) === */
+  --color-signal-error: #D32F2F;
+  --color-signal-success: #2E7D32;
+  --color-signal-warning: #F2C200;
+  --color-signal-info: #1E3EA0;
+
+  /* === Typography — JetBrains Mono only === */
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* === Spacing Scale (4px atom) === */
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 32px;
+  --spacing-8: 40px;
+  --spacing-9: 48px;
+  --spacing-10: 64px;
+  --spacing-11: 80px;
+  --spacing-12: 96px;
+
+  /* === Motion (minimal, functional) === */
+  --duration-instant: 80ms;
+  --duration-fast: 150ms;
+  --duration-standard: 250ms;
+  --duration-deliberate: 400ms;
+
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-change: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === Base Reset (inside @layer so Tailwind utilities win) === */
+@layer base {
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 0;
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text-primary);
+    background: var(--color-bg-canvas);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-white);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-default);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-strong);
+  }
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
+  }
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -6,6 +6,7 @@ export interface VectorRecord {
 
 export interface VectorMetadata {
   documentId: string
+  userId?: string
   chunkIndex: number
   content: string
 }
@@ -26,6 +27,7 @@ export interface HybridSearchResult {
 export interface SearchOptions {
   topK?: number
   scoreThreshold?: number
+  userId?: string
 }
 
 export const DEFAULT_TOP_K = 10

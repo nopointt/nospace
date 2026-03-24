@@ -1,0 +1,7 @@
+Contexter is a RAG-as-a-service platform that allows users to upload documents and query them using natural language. The platform supports multiple file formats including PDF, DOCX, TXT, CSV, and audio files.
+
+The pipeline consists of four stages: parsing extracts text from the uploaded file, chunking splits the text into semantic segments, embedding converts chunks into vector representations using Jina AI, and indexing stores the vectors in Cloudflare Vectorize for fast retrieval.
+
+Users can interact with their knowledge base through a web interface or via the MCP protocol, which enables integration with AI assistants like Claude. The system provides real-time progress tracking as documents move through the pipeline stages.
+
+Key features include multi-format support, real-time pipeline status tracking, semantic search with reranking, and a share system that allows users to grant read access to their knowledge base via share tokens.
