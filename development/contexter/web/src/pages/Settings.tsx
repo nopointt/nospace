@@ -30,10 +30,10 @@ function UsageCard(props: {
       <Show
         when={!props.loading}
         fallback={
-          <span class="inline-block w-3 h-3 border border-text-tertiary border-t-transparent rounded-full animate-spin" />
+          <span class="inline-block w-3 h-3 border border-text-tertiary border-t-transparent animate-spin" />
         }
       >
-        <span class="text-[24px] font-bold text-black leading-none">
+        <span class="text-[24px] font-bold text-text-primary leading-none">
           {props.value} / {props.max}
         </span>
         <ProgressBar value={props.value} max={props.max} />
@@ -82,7 +82,7 @@ const Settings: Component = () => {
       setShowDeleteConfirm(false)
       navigate("/dashboard")
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "ошибка удаления", "error")
+      showToast(e instanceof Error ? e.message : "не удалось удалить — попробуйте ещё раз", "error")
     } finally {
       setDeleting(false)
     }
@@ -114,15 +114,15 @@ const Settings: Component = () => {
   /* ── not authenticated ── */
   if (!isAuthenticated()) {
     return (
-      <div class="min-h-screen bg-bg-canvas font-mono">
+      <div class="min-h-screen bg-bg-canvas">
         <Nav variant="app" />
         <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-24">
           <div class="flex flex-col items-center gap-6 text-center">
             <p class="text-text-secondary text-sm">
-              войдите чтобы получить доступ к api
+              войдите, чтобы управлять настройками
             </p>
             <Button variant="primary" onClick={() => navigate("/upload")}>
-              начать
+              войти
             </Button>
           </div>
         </div>
@@ -132,12 +132,12 @@ const Settings: Component = () => {
   }
 
   return (
-    <div class="min-h-screen bg-bg-canvas font-mono">
+    <div class="min-h-screen bg-bg-canvas">
       <Nav variant="app" />
 
       <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-12">
         {/* ── page header ── */}
-        <h1 class="text-[24px] font-bold lowercase leading-[1.2] text-black mb-2">
+        <h1 class="text-[24px] font-bold lowercase leading-[1.2] text-text-primary mb-2">
           настройки
         </h1>
         <p class="text-text-secondary text-xs mb-12">
@@ -149,7 +149,7 @@ const Settings: Component = () => {
            ══════════════════════════════════════════════ */}
         <section class="mb-16">
           <div class="flex items-baseline justify-between mb-6">
-            <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-black">
+            <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-text-primary">
               профиль
             </h2>
             <span class="text-xs text-text-tertiary">
@@ -191,7 +191,7 @@ const Settings: Component = () => {
               loading={docsData.loading}
             />
             <UsageCard
-              label="чанки"
+              label="фрагменты"
               value={chunkCount()}
               max={500}
               loading={docsData.loading}
@@ -220,7 +220,7 @@ const Settings: Component = () => {
                     удалить все данные
                   </h3>
                   <p class="text-xs text-text-secondary">
-                    удалит все документы, чанки и векторы. необратимо.
+                    удалит все файлы и базу знаний. это нельзя отменить.
                   </p>
                 </div>
                 <Button
@@ -235,7 +235,7 @@ const Settings: Component = () => {
               <Show when={showDeleteConfirm()}>
                 <div class="border border-signal-error bg-signal-error/5 p-4 flex flex-col gap-4">
                   <p class="text-xs text-text-primary font-bold">
-                    удалить ВСЕ документы, чанки и векторы? это необратимо.
+                    удалить все файлы и базу знаний? это нельзя отменить.
                   </p>
                   <div class="flex items-center gap-3">
                     <Button
@@ -266,7 +266,7 @@ const Settings: Component = () => {
                   выйти
                 </h3>
                 <p class="text-xs text-text-secondary">
-                  токен останется в хранилище до ручной очистки
+                  сессия завершится на этом устройстве
                 </p>
               </div>
               <Button variant="ghost" onClick={handleLogout}>

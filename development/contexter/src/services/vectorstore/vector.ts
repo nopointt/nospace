@@ -34,19 +34,27 @@ export class VectorService {
 
   /**
    * Search by vector similarity.
+   * Note: Vectorize metadata filtering requires a metadata index to be created first.
+   * Until `create-metadata-index` propagates for userId, we fetch topK*4 results
+   * and filter post-query by userId from the returned metadata.
    */
   async search(queryVector: number[], topK: number = 10, userId?: string): Promise<SearchResult[]> {
     const queryOpts: VectorizeQueryOptions = {
-      topK,
+      // Fetch extra results to compensate for post-query userId filtering
+      topK: userId ? topK * 4 : topK,
       returnValues: false,
       returnMetadata: "all",
     }
-    if (userId) {
-      queryOpts.filter = { userId }
-    }
     const results = await this.index.query(queryVector, queryOpts)
 
-    return (results.matches ?? []).map((match) => ({
+    const matches = results.matches ?? []
+
+    // Post-query userId filter using metadata (works without a Vectorize metadata index)
+    const filtered = userId
+      ? matches.filter((m) => (m.metadata?.userId as string | undefined) === userId)
+      : matches
+
+    return filtered.slice(0, topK).map((match) => ({
       id: match.id,
       score: match.score ?? 0,
       metadata: {

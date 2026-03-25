@@ -55,16 +55,17 @@ test.describe.serial("CJM Pipeline — Full User Journey", () => {
   // ============================================================
 
   test("2. Register user — returns userId, apiToken, mcpUrl", async ({ request }) => {
-    const uniqueEmail = `moholy-${Date.now()}@test.contexter.dev`
+    // Fixed email: idempotent re-runs return 200 (email dedup) instead of 201.
+    // Both are acceptable — the important thing is getting a valid token.
     const res = await request.post(`${PROD}/api/auth/register`, {
       headers: { "Content-Type": "application/json" },
       data: JSON.stringify({
         name: "moholy-test",
-        email: uniqueEmail,
+        email: "moholy-cjm-pipeline@test.contexter.dev",
       }),
     })
 
-    expect(res.status()).toBe(201)
+    expect([200, 201]).toContain(res.status())
     const body = await res.json()
 
     expect(body.userId).toBeTruthy()
@@ -210,35 +211,57 @@ test.describe.serial("CJM Pipeline — Full User Journey", () => {
   // ============================================================
 
   test("6. Query documents — returns answer with sources", async ({ request }) => {
-    const res = await request.post(`${PROD}/api/query`, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-        "Content-Type": "application/json",
-      },
-      data: JSON.stringify({
-        query: "What is Contexter and what does the pipeline do?",
-      }),
-    })
+    // Vectorize is eventually consistent: vectors may not be queryable immediately
+    // after insert. Cloudflare Vectorize can take 2-5 minutes to index.
+    // Poll the query until sources appear (max 5 minutes).
+    test.setTimeout(360_000) // 6 minutes: 5 min poll + buffer
+    const maxWaitMs = 300_000
+    const pollIntervalMs = 10_000
+    const startTime = Date.now()
+    let body: Record<string, unknown> | null = null
 
-    expect(res.status()).toBe(200)
-    const body = await res.json()
+    while (Date.now() - startTime < maxWaitMs) {
+      const res = await request.post(`${PROD}/api/query`, {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify({
+          query: "What is Contexter and what does the pipeline do?",
+        }),
+      })
 
-    expect(body.answer).toBeTruthy()
-    expect(typeof body.answer).toBe("string")
-    expect(body.answer.length).toBeGreaterThan(10)
+      expect(res.status()).toBe(200)
+      body = await res.json()
 
-    expect(body.sources).toBeDefined()
-    expect(Array.isArray(body.sources)).toBeTruthy()
-    expect(body.sources.length).toBeGreaterThan(0)
+      const sources = body?.sources as unknown[]
+      if (Array.isArray(sources) && sources.length > 0) {
+        console.log(`Vectorize indexed after ${Math.round((Date.now() - startTime) / 1000)}s`)
+        break
+      }
+
+      console.log(`[${Math.round((Date.now() - startTime) / 1000)}s] sources=0, waiting for Vectorize consistency...`)
+      await sleep(pollIntervalMs)
+    }
+
+    expect(body).not.toBeNull()
+
+    expect(body!.answer).toBeTruthy()
+    expect(typeof body!.answer).toBe("string")
+    expect((body!.answer as string).length).toBeGreaterThan(10)
+
+    expect(body!.sources).toBeDefined()
+    expect(Array.isArray(body!.sources)).toBeTruthy()
+    expect((body!.sources as unknown[]).length).toBeGreaterThan(0)
 
     // Each source should have content and score
-    for (const source of body.sources) {
+    for (const source of body!.sources as Array<Record<string, unknown>>) {
       expect(source.content).toBeTruthy()
       expect(typeof source.score).toBe("number")
     }
 
-    console.log(`Query answer (${body.answer.length} chars): ${body.answer.slice(0, 200)}...`)
-    console.log(`Sources: ${body.sources.length}`)
+    console.log(`Query answer (${(body!.answer as string).length} chars): ${(body!.answer as string).slice(0, 200)}...`)
+    console.log(`Sources: ${(body!.sources as unknown[]).length}`)
   })
 
   // ============================================================
@@ -274,6 +297,27 @@ test.describe.serial("CJM Pipeline — Full User Journey", () => {
 // ============================================================
 
 test.describe("Error Scenarios", () => {
+  // Shared token for all error scenario tests — avoids repeated registrations
+  // Uses a fixed email so email-dedup returns the same token on re-runs
+  let sharedToken: string
+
+  test.beforeAll(async ({ request }: { request: import("@playwright/test").APIRequestContext }) => {
+    const regRes = await request.post(`${PROD}/api/auth/register`, {
+      headers: { "Content-Type": "application/json" },
+      data: JSON.stringify({
+        name: "error-scenarios-test",
+        email: "moholy-error-test@test.contexter.dev",
+      }),
+    })
+    const reg = await regRes.json()
+    // Accept 201 (new) or 200 (email dedup — already exists)
+    if (reg.apiToken) {
+      sharedToken = reg.apiToken
+    } else {
+      throw new Error(`Failed to register shared test user: ${JSON.stringify(reg)}`)
+    }
+  })
+
   test("Auth — request without token returns 401", async ({ request }) => {
     const res = await request.get(`${PROD}/api/status`)
     expect(res.status()).toBe(401)
@@ -289,15 +333,8 @@ test.describe("Error Scenarios", () => {
   })
 
   test("Upload — no file returns 400", async ({ request }) => {
-    // First register to get a valid token
-    const regRes = await request.post(`${PROD}/api/auth/register`, {
-      headers: { "Content-Type": "application/json" },
-      data: JSON.stringify({ name: "error-test" }),
-    })
-    const { apiToken: token } = await regRes.json()
-
     const res = await request.post(`${PROD}/api/upload`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${sharedToken}` },
       multipart: {},
     })
 
@@ -319,29 +356,16 @@ test.describe("Error Scenarios", () => {
   })
 
   test("Status — nonexistent document returns 404", async ({ request }) => {
-    // Register to get token
-    const regRes = await request.post(`${PROD}/api/auth/register`, {
-      headers: { "Content-Type": "application/json" },
-      data: JSON.stringify({ name: "404-test" }),
-    })
-    const { apiToken: token } = await regRes.json()
-
     const res = await request.get(`${PROD}/api/status/nonexistent_doc_id`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${sharedToken}` },
     })
     expect(res.status()).toBe(404)
   })
 
   test("Query — empty query returns 400", async ({ request }) => {
-    const regRes = await request.post(`${PROD}/api/auth/register`, {
-      headers: { "Content-Type": "application/json" },
-      data: JSON.stringify({ name: "query-error-test" }),
-    })
-    const { apiToken: token } = await regRes.json()
-
     const res = await request.post(`${PROD}/api/query`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${sharedToken}`,
         "Content-Type": "application/json",
       },
       data: JSON.stringify({ query: "" }),
@@ -350,15 +374,9 @@ test.describe("Error Scenarios", () => {
   })
 
   test("Query — no body returns 400", async ({ request }) => {
-    const regRes = await request.post(`${PROD}/api/auth/register`, {
-      headers: { "Content-Type": "application/json" },
-      data: JSON.stringify({ name: "query-nobody-test" }),
-    })
-    const { apiToken: token } = await regRes.json()
-
     const res = await request.post(`${PROD}/api/query`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${sharedToken}`,
         "Content-Type": "application/json",
       },
       data: JSON.stringify({}),
@@ -378,10 +396,13 @@ test.describe.serial("Share System", () => {
   let ownerDocId: string
 
   test("Create owner and upload a document", async ({ request }) => {
-    // Register owner
+    // Register owner — fixed email for idempotent re-runs
     const regRes = await request.post(`${PROD}/api/auth/register`, {
       headers: { "Content-Type": "application/json" },
-      data: JSON.stringify({ name: "share-owner" }),
+      data: JSON.stringify({
+        name: "share-owner",
+        email: "moholy-share-owner@test.contexter.dev",
+      }),
     })
     const reg = await regRes.json()
     ownerToken = reg.apiToken
@@ -487,9 +508,13 @@ test.describe("Upload Format Variants", () => {
   let formatToken: string
 
   test.beforeAll(async ({ request }: { request: import("@playwright/test").APIRequestContext }) => {
+    // Fixed email for idempotent re-runs — hits email dedup on second run
     const regRes = await request.post(`${PROD}/api/auth/register`, {
       headers: { "Content-Type": "application/json" },
-      data: JSON.stringify({ name: "format-test" }),
+      data: JSON.stringify({
+        name: "format-test",
+        email: "moholy-format-test@test.contexter.dev",
+      }),
     })
     const reg = await regRes.json()
     formatToken = reg.apiToken

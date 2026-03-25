@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/700.css";
 @import "@fontsource/jetbrains-mono/400.css";
 @import "@fontsource/jetbrains-mono/500.css";
 @import "@fontsource/jetbrains-mono/700.css";
@@ -18,8 +21,8 @@
   /* === Text Hierarchy === */
   --color-text-primary: #0A0A0A;
   --color-text-secondary: #333333;
-  --color-text-tertiary: #808080;
-  --color-text-disabled: #CCCCCC;
+  --color-text-tertiary: #666666;
+  --color-text-disabled: #999999;
 
   /* === Background Elevation (no shadows — color shift only) === */
   --color-bg-canvas: #FAFAFA;
@@ -42,7 +45,8 @@
   --color-signal-warning: #F2C200;
   --color-signal-info: #1E3EA0;
 
-  /* === Typography — JetBrains Mono only === */
+  /* === Typography — Inter (body) + JetBrains Mono (code) === */
+  --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
   /* === Spacing Scale (4px atom) === */
@@ -83,7 +87,7 @@
 
 @layer base {
   html {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: 14px;
     line-height: 1.5;
     color: var(--color-text-primary);

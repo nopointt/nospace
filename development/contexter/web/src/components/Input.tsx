@@ -26,7 +26,7 @@ const Input: Component<InputProps> = (props) => {
         class={`
           w-full h-10 px-4 font-mono text-sm
           bg-white border transition-colors duration-[80ms]
-          placeholder:text-text-disabled
+          placeholder:text-text-tertiary
           disabled:opacity-40 disabled:cursor-not-allowed
           ${props.error
             ? "border-signal-error focus:border-signal-error"

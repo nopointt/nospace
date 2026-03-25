@@ -24,6 +24,13 @@ async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
     body: opts.body,
   })
 
+  if (res.status === 401) {
+    // Token expired or invalid — clear auth and reload
+    localStorage.removeItem("contexter_auth")
+    window.location.href = "/"
+    throw new Error("сессия истекла — войдите снова")
+  }
+
   if (!res.ok) {
     const text = await res.text()
     throw new Error(text || `HTTP ${res.status}`)
@@ -146,6 +153,30 @@ export async function query(q: string, token: string) {
     token_usage: raw.token_usage ?? (raw.usage
       ? { input: raw.usage.llmPromptTokens, output: raw.usage.llmCompletionTokens }
       : undefined),
+  }
+}
+
+export async function getDocumentContent(documentId: string, token: string) {
+  const raw = await api<{
+    documentId: string
+    fileName: string
+    mimeType: string
+    fileSize: number
+    status: string
+    createdAt: string
+    chunkCount: number
+    chunks: { index: number; content: string; tokenCount: number | null }[]
+  }>(`/api/documents/${documentId}/content`, { token })
+
+  return {
+    id: raw.documentId,
+    name: raw.fileName ?? "unknown",
+    mime_type: raw.mimeType ?? "application/octet-stream",
+    size: raw.fileSize ?? 0,
+    status: raw.status ?? "unknown",
+    created_at: raw.createdAt ?? new Date().toISOString(),
+    chunkCount: raw.chunkCount ?? 0,
+    chunks: raw.chunks ?? [],
   }
 }
 

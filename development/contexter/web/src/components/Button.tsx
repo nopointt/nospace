@@ -41,7 +41,7 @@ const Button: Component<ButtonProps> = (props) => {
       `}
     >
       {props.loading && (
-        <span class="inline-block w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
+        <span class="inline-block w-3 h-3 border-2 border-current border-t-transparent animate-spin" />
       )}
       {props.children}
     </button>

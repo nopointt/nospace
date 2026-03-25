@@ -25,6 +25,30 @@ export type StageType = "parse" | "chunk" | "embed" | "index"
 
 const STAGE_ORDER: readonly StageType[] = ["parse", "chunk", "embed", "index"] as const
 
+// Per-stage timeout in ms. CF Workers kill waitUntil() tasks at ~30s wall clock.
+// Parse can be slow for large PDFs (Workers AI). Embed can be slow for many chunks.
+const STAGE_TIMEOUT_MS: Record<StageType, number> = {
+  parse: 25_000,
+  chunk: 5_000,
+  embed: 25_000,
+  index: 20_000,
+}
+
+/**
+ * Run a stage function with a timeout. Rejects with a clear message if exceeded.
+ */
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, stageName: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`Stage "${stageName}" timed out after ${timeoutMs}ms`))
+    }, timeoutMs)
+    promise.then(
+      (value) => { clearTimeout(timer); resolve(value) },
+      (err) => { clearTimeout(timer); reject(err) }
+    )
+  })
+}
+
 /**
  * Update a job row in D1. Creates immutable update (new prepared statement each call).
  */
@@ -252,7 +276,11 @@ export async function runPipelineAsync(
   let parseResult: ParseResult
   try {
     await updateJobStatus(db, jobIds.parse, "running")
-    parseResult = await parserService.parse(input)
+    parseResult = await withTimeout(
+      parserService.parse(input),
+      STAGE_TIMEOUT_MS.parse,
+      "parse"
+    )
     await updateJobStatus(db, jobIds.parse, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
@@ -265,9 +293,10 @@ export async function runPipelineAsync(
   let chunks: Chunk[]
   try {
     await updateJobStatus(db, jobIds.chunk, "running")
-    chunks = chunkerService.chunk(
-      parseResult.content,
-      parseResult.metadata.sourceFormat
+    chunks = await withTimeout(
+      Promise.resolve(chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat)),
+      STAGE_TIMEOUT_MS.chunk,
+      "chunk"
     )
     await updateJobStatus(db, jobIds.chunk, "done", 100)
   } catch (e) {
@@ -282,7 +311,11 @@ export async function runPipelineAsync(
   try {
     await updateJobStatus(db, jobIds.embed, "running")
     const texts = chunks.map((c) => c.content)
-    embedResult = await embedderService.embedBatch(texts)
+    embedResult = await withTimeout(
+      embedderService.embedBatch(texts),
+      STAGE_TIMEOUT_MS.embed,
+      "embed"
+    )
     await updateJobStatus(db, jobIds.embed, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
@@ -295,25 +328,29 @@ export async function runPipelineAsync(
   try {
     await updateJobStatus(db, jobIds.index, "running")
 
-    for (const chunk of chunks) {
-      const chunkId = `${documentId}-${chunk.index}`
-      await db.prepare(
-        "INSERT OR REPLACE INTO chunks (id, document_id, user_id, content, chunk_index, token_count) VALUES (?, ?, ?, ?, ?, ?)"
-      ).bind(chunkId, documentId, userId, chunk.content, chunk.index, chunk.tokenCount).run()
+    const indexWork = async (): Promise<void> => {
+      for (const chunk of chunks) {
+        const chunkId = `${documentId}-${chunk.index}`
+        await db.prepare(
+          "INSERT OR REPLACE INTO chunks (id, document_id, user_id, content, chunk_index, token_count) VALUES (?, ?, ?, ?, ?, ?)"
+        ).bind(chunkId, documentId, userId, chunk.content, chunk.index, chunk.tokenCount).run()
+      }
+
+      const records: VectorRecord[] = chunks.map((chunk, i) => ({
+        id: `${documentId}-${chunk.index}`,
+        vector: embedResult.embeddings[i].vector,
+        metadata: {
+          documentId,
+          userId: userId ?? "anonymous",
+          chunkIndex: chunk.index,
+          content: chunk.content,
+        },
+      }))
+
+      await vectorStoreService.index(records)
     }
 
-    const records: VectorRecord[] = chunks.map((chunk, i) => ({
-      id: `${documentId}-${chunk.index}`,
-      vector: embedResult.embeddings[i].vector,
-      metadata: {
-        documentId,
-        userId: userId ?? "anonymous",
-        chunkIndex: chunk.index,
-        content: chunk.content,
-      },
-    }))
-
-    await vectorStoreService.index(records)
+    await withTimeout(indexWork(), STAGE_TIMEOUT_MS.index, "index")
     await updateJobStatus(db, jobIds.index, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)

@@ -72,15 +72,19 @@ status.get("/", async (c) => {
   if (!auth) return c.json({ error: "Unauthorized." }, 401)
 
   const docs = await c.env.DB.prepare(
-    "SELECT id, name, mime_type, size, status, created_at FROM documents WHERE user_id = ? ORDER BY created_at DESC LIMIT 100"
+    `SELECT d.id, d.name, d.mime_type, d.size, d.status, d.created_at,
+       (SELECT COUNT(*) FROM chunks WHERE document_id = d.id) as chunk_count
+     FROM documents d
+     WHERE d.user_id = ?
+     ORDER BY d.created_at DESC LIMIT 100`
   ).bind(auth.userId).all<{
-    id: string; name: string; mime_type: string; size: number; status: string; created_at: string
+    id: string; name: string; mime_type: string; size: number; status: string; created_at: string; chunk_count: number
   }>()
 
   return c.json({
     documents: (docs.results ?? []).map((d) => ({
       documentId: d.id, fileName: d.name, mimeType: d.mime_type, fileSize: d.size,
-      status: d.status, createdAt: d.created_at,
+      status: d.status, chunks: d.chunk_count ?? 0, createdAt: d.created_at,
     })),
     total: docs.results?.length ?? 0,
   })

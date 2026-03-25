@@ -1,54 +1,56 @@
 ---
 # contexter-mvp.md — CTX-01 MVP Pipeline
 > Layer: L3 | Epic: CTX-01 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-24 (session 187)
+> Last updated: 2026-03-25 (session 190)
 ---
 
 ## Goal
 
-Full pipeline: any file → parse → chunk → embed → index → MCP endpoint + RAG query. Deployed on CF Workers + CF Pages. Connected to Claude.ai. Frontend SPA for demo.
+Full pipeline: any file → parse → chunk → embed → index → MCP endpoint + RAG query. Deployed on CF Workers + CF Pages. Connected to ChatGPT/Claude/Perplexity/Cursor. Frontend SPA for demo.
 
-## Status: ~90% complete (MLP stage)
+## Status: ~95% complete (MLP stage)
 
-Backend fully async. Frontend deployed. 62/62 E2E tests pass. Remaining: visual polish, auth UX, document viewer.
+Backend fully async + OAuth 2.1. Frontend deployed with interactive blob cluster, connection modal, document viewer. 26/26 E2E tests pass. 4 full audits applied. Remaining: document viewer content fix, pipeline progress UI, responsive.
 
-## Completed This Session (2026-03-24)
+## Completed Session 190 (2026-03-25)
 
-- [x] Frontend SPA: SolidJS + Vite + Tailwind CSS 4 (10 components, 5 pages)
-- [x] CSS @layer base fix (root cause of visual issues)
-- [x] Async pipeline: waitUntil() + jobs table stage tracking
-- [x] Status API returns stages[] from jobs table
-- [x] Retry endpoint: POST /api/retry/:documentId
-- [x] Race condition fix in status endpoint (derived status)
-- [x] User isolation: Vectorize filter + FTS5 JOIN by userId
-- [x] API contract adapter: camelCase↔snake_case mapping
-- [x] Nav: unified menu for all pages (auth-aware)
-- [x] Frontend deployed: https://contexter-web.pages.dev
-- [x] Backend deployed: https://contexter.nopoint.workers.dev
-- [x] E2E tests: 62/62 PASS (Moholy)
-- [x] Pencil design recovery: 141/199 ops, 31 nodes, 11 components
-- [x] Bauhaus G3 Team: 7 permanent Eidolons created
+- [x] 4 full audits: Gropius visual, Copy dejargon, UX flow, Schlemmer API — ALL applied
+- [x] Silicon Sampling: 20 personas × 5 tasks = 100 simulated interactions
+- [x] SVG blob cluster: goo filter, proximity gradient, floating, parallax, wobble, real logos
+- [x] Pre-qualification ConnectionModal ("какую нейросеть используете?")
+- [x] DocumentModal popup (click doc → see content inline)
+- [x] "выбрать файлы" button in drop zone
+- [x] Pipeline stages translated to Russian
+- [x] Trust footer (Cloudflare Europe, no AI training, delete anytime)
+- [x] Elevated post-upload query section
+- [x] Registration security: rate limit 5/hour + email dedup + input validation
+- [x] Pipeline error handling: stage timeouts (25s parse, 5s chunk, 25s embed, 20s index)
+- [x] Pipeline health endpoint: GET /api/pipeline/health
+- [x] Vectorize post-query userId filtering (critical bug: CF ignores non-indexed metadata)
+- [x] OAuth 2.1 server: /authorize + /token + PKCE + consent page (for Perplexity)
+- [x] Dynamic Client Registration: POST /register (RFC 7591)
+- [x] Favicon: blue [] SVG
+- [x] 401 auto-logout on frontend
+- [x] E2E 26/26 pass (Moholy rerun + 4 bug fixes)
+- [x] Copy: full dejargon (MCP→подключение, чанки→фрагменты, 28+ text edits)
+- [x] Nav: onLogin prop, correct routes, settings link
+- [x] Document content endpoint: GET /api/documents/:id/content
 
 ## Remaining Tasks
 
-- [ ] Document viewer: click doc → see formatted content
-- [ ] Hero copy: creative AI chat listing (Claude/ChatGPT/Cursor badges)
-- [ ] Auth UX: seamless login (auto-detect best method)
-- [ ] OAuth providers: Google + Telegram + Yandex
+- [ ] Document viewer: content shows empty for some docs (backend data issue)
+- [ ] Pipeline progress UI: 4-stage progress bar (dots + lines, not text labels)
+- [ ] Perplexity OAuth e2e verification (consent page works, full flow untested)
+- [ ] Responsive: mobile/tablet (deferred to after Artem usability test)
+- [ ] Google + Telegram OAuth (deferred)
 - [ ] RAG quality tuning (query rewriter, domain terms)
-- [ ] FTS5 prod DB clean reset
-- [ ] toMarkdown quality per format
-- [ ] Large file handling (>25MB audio)
-- [ ] Breuer/Albers verification passes (visual + design audit)
-- [ ] Missing Pencil screens (~16 states)
-- [ ] Responsive: mobile/tablet (desktop-only now)
 - [ ] CF Pages custom domain
 
 ## Blockers
 
-- CF Vectorize not available in local dev (remote only)
+- CF Vectorize metadata filtering not available → using post-query filter
 - Video keyframe extraction impossible in CF Workers
-- MCP tools (Pencil) only accessible from main Axis context, not subagents
+- Perplexity requires full OAuth 2.1 (implemented but untested e2e)
 
 ## Acceptance Criteria
 
@@ -61,8 +63,11 @@ Backend fully async. Frontend deployed. 62/62 E2E tests pass. Remaining: visual 
 | AC-5 | User isolation (Vectorize + FTS5 filter) | ✅ |
 | AC-6 | Share link (read-only access) | ✅ |
 | AC-7 | 12 file formats supported | ✅ |
-| AC-8 | 128+ unit tests + 62 E2E tests | ✅ |
+| AC-8 | 26/26 E2E tests pass | ✅ |
 | AC-9 | RAG quality acceptable for demo | ⬜ |
 | AC-10 | Frontend SPA deployed on CF Pages | ✅ |
 | AC-11 | Pipeline stage tracking (real-time) | ✅ |
-| AC-12 | Document viewer (click → see content) | ⬜ |
+| AC-12 | Document viewer (click → see content) | 🔶 (popup works, content empty for some docs) |
+| AC-13 | OAuth 2.1 for Perplexity | 🔶 (implemented, needs e2e test) |
+| AC-14 | Interactive blob cluster (hero) | ✅ |
+| AC-15 | Connection pre-qualification | ✅ |

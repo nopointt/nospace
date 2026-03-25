@@ -48,10 +48,10 @@ const TOOLS = [
 
 /**
  * MCP Streamable HTTP endpoint.
- * Handles JSON-RPC 2.0 messages per MCP spec.
+ * POST responses wrapped in SSE format per spec.
+ * Session ID generated on initialize.
  */
 mcpRemote.post("/", async (c) => {
-  // Resolve auth (token or share param in URL)
   const authCtx = await resolveAuth(c.env.DB, c.req.raw)
 
   let body: JsonRpcRequest | JsonRpcRequest[]
@@ -61,6 +61,10 @@ mcpRemote.post("/", async (c) => {
     return jsonRpcError(null, -32700, "Parse error")
   }
 
+  // Check Accept header — client may want JSON or SSE
+  const accept = c.req.header("Accept") ?? ""
+  const wantsSse = accept.includes("text/event-stream")
+
   // Handle batch requests
   if (Array.isArray(body)) {
     const responses = []
@@ -68,6 +72,7 @@ mcpRemote.post("/", async (c) => {
       const res = await handleRequest(req, c.env, authCtx)
       if (res) responses.push(res)
     }
+    if (wantsSse) return sseResponse(responses, null)
     return c.json(responses)
   }
 
@@ -76,17 +81,40 @@ mcpRemote.post("/", async (c) => {
   // Notifications (no id) don't get responses
   if (!response) return c.body(null, 202)
 
-  return c.json(response)
+  // Generate session ID on initialize
+  const sessionId = body.method === "initialize"
+    ? crypto.randomUUID().replace(/-/g, "").slice(0, 16)
+    : c.req.header("Mcp-Session-Id") ?? null
+
+  if (wantsSse) return sseResponse(response, sessionId)
+
+  // Plain JSON fallback (for simple clients like curl)
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "Cache-Control": "no-cache, no-transform",
+    "Access-Control-Allow-Origin": "*",
+  }
+  if (sessionId) headers["Mcp-Session-Id"] = sessionId
+  return new Response(JSON.stringify(response), { headers })
 })
 
-// Handle GET for SSE (required by spec, we return method not allowed for now)
+// GET — redirect OAuth authorization requests; otherwise 405
 mcpRemote.get("/", (c) => {
-  return c.text("SSE transport not implemented. Use POST.", 405)
+  const q = c.req.query()
+  // Perplexity and other OAuth clients hit /sse with OAuth params
+  if (q.client_id || q.response_type) {
+    const dest = new URL("https://contexter.nopoint.workers.dev/authorize")
+    for (const [k, v] of Object.entries(q)) {
+      dest.searchParams.set(k, v)
+    }
+    return c.redirect(dest.toString(), 302)
+  }
+  return c.text("Method Not Allowed", 405)
 })
 
-// Handle DELETE for session termination
+// DELETE — stateless server, no session termination needed
 mcpRemote.delete("/", (c) => {
-  return c.body(null, 200)
+  return c.text("Method Not Allowed", 405)
 })
 
 async function handleRequest(req: JsonRpcRequest, env: Env, authCtx: AuthContext | null): Promise<JsonRpcResponse | null> {
@@ -113,6 +141,9 @@ async function handleRequest(req: JsonRpcRequest, env: Env, authCtx: AuthContext
     case "tools/call":
       if (!authCtx) return makeError(req.id, -32600, "Unauthorized: provide ?token= or ?share= in the MCP server URL")
       return handleToolCall(req, env, authCtx)
+
+    case "client/register":
+      return handleClientRegister(req, env)
 
     case "ping":
       return makeResult(req.id, {})
@@ -197,11 +228,38 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
         })
     }
   } catch (e) {
+    // Sanitize error — don't leak internal API details
+    const raw = e instanceof Error ? e.message : String(e)
+    const sanitized = raw.includes("Jina API") ? "ошибка обработки запроса — попробуйте позже"
+      : raw.includes("Unauthorized") ? "ошибка авторизации — проверьте токен"
+      : `ошибка: ${raw.slice(0, 200)}`
     return makeResult(req.id, {
-      content: [{ type: "text", text: `Error: ${e instanceof Error ? e.message : String(e)}` }],
+      content: [{ type: "text", text: sanitized }],
       isError: true,
     })
   }
+}
+
+async function handleClientRegister(req: JsonRpcRequest, env: Env): Promise<JsonRpcResponse> {
+  const clientName = (req.params?.client_name as string | undefined) ?? "unknown"
+  const redirectUris = (req.params?.redirect_uris as string[] | undefined) ?? []
+
+  const clientId = `contexter-${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`
+  const clientSecret = crypto.randomUUID().replace(/-/g, "")
+
+  // Store in KV for 24h — stateless validation optional, but preserves the record
+  await env.KV.put(
+    `oauth_client:${clientId}`,
+    JSON.stringify({ clientId, clientSecret, clientName, redirectUris }),
+    { expirationTtl: 86400 }
+  )
+
+  return makeResult(req.id, {
+    client_id: clientId,
+    client_secret: clientSecret,
+    client_name: clientName,
+    redirect_uris: redirectUris,
+  })
 }
 
 // --- JSON-RPC helpers ---
@@ -228,9 +286,27 @@ function makeError(id: string | number | null | undefined, code: number, message
   return { jsonrpc: "2.0", id: id ?? null, error: { code, message } }
 }
 
-function jsonRpcError(id: string | number | null, code: number, message: string) {
-  return new Response(JSON.stringify({ jsonrpc: "2.0", id, error: { code, message } }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
+function sseResponse(data: JsonRpcResponse | JsonRpcResponse[], sessionId: string | null): Response {
+  const items = Array.isArray(data) ? data : [data]
+  const body = items.map((item) => `event: message\ndata: ${JSON.stringify(item)}\n\n`).join("")
+  const headers: Record<string, string> = {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache, no-transform",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Expose-Headers": "Mcp-Session-Id",
+  }
+  if (sessionId) headers["Mcp-Session-Id"] = sessionId
+  return new Response(body, { headers })
+}
+
+function jsonRpcError(id: string | number | null, code: number, message: string): Response {
+  const body = { jsonrpc: "2.0" as const, id, error: { code, message } }
+  return new Response(`event: message\ndata: ${JSON.stringify(body)}\n\n`, {
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache, no-transform",
+      "Access-Control-Allow-Origin": "*",
+    },
   })
 }
+

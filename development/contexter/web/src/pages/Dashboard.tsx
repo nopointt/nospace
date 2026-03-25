@@ -12,6 +12,7 @@ import Button from "../components/Button"
 import Badge from "../components/Badge"
 import Input from "../components/Input"
 import Toast, { showToast } from "../components/Toast"
+import DocumentModal from "../components/DocumentModal"
 import { listDocuments, query as queryApi, getDocumentStatus } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
 
@@ -97,8 +98,8 @@ const ConfirmDialog: Component<{
   onCancel: () => void
 }> = (props) => (
   <div class="fixed inset-0 z-[300] flex items-center justify-center bg-black/40">
-    <div class="bg-white border border-border-default p-6 max-w-[400px] w-full mx-4 flex flex-col gap-4">
-      <p class="font-mono text-sm text-text-primary">{props.message}</p>
+    <div class="bg-bg-canvas border border-border-default p-6 max-w-[400px] w-full mx-4 flex flex-col gap-4">
+      <p class="text-sm text-text-primary">{props.message}</p>
       <div class="flex items-center gap-3 justify-end">
         <Button variant="ghost" onClick={props.onCancel}>
           отмена
@@ -131,6 +132,9 @@ const Dashboard: Component = () => {
   const [queryLoading, setQueryLoading] = createSignal(false)
   const [queryResult, setQueryResult] = createSignal<QueryResult | null>(null)
   const [queryError, setQueryError] = createSignal<string | null>(null)
+
+  /* document modal */
+  const [viewDocId, setViewDocId] = createSignal<string | null>(null)
 
   /* delete */
   const [showDeleteConfirm, setShowDeleteConfirm] = createSignal(false)
@@ -191,13 +195,9 @@ const Dashboard: Component = () => {
     }
   })
 
-  /* select doc */
+  /* select doc — click: open modal */
   function selectDoc(doc: Document) {
-    if (selectedId() === doc.id) {
-      setSelectedId(null)
-    } else {
-      setSelectedId(doc.id)
-    }
+    setViewDocId(doc.id)
   }
 
   /* query */
@@ -261,9 +261,15 @@ const Dashboard: Component = () => {
 
   /* ── render ── */
   return (
-    <div class="min-h-screen bg-white font-mono">
+    <div class="min-h-screen bg-bg-canvas font-sans">
       <Nav variant="app" />
       <Toast />
+
+      {/* document modal */}
+      <DocumentModal
+        docId={viewDocId()}
+        onClose={() => setViewDocId(null)}
+      />
 
       {/* confirm dialog */}
       <Show when={showDeleteConfirm()}>
@@ -288,8 +294,7 @@ const Dashboard: Component = () => {
           {/* Stats Row — 4 cards */}
           <div class="flex" style={{ gap: "16px" }}>
             <StatCard value={documents().length} label="документы" />
-            <StatCard value={totalChunks()} label="чанки" />
-            <StatCard value={totalVectors()} label="векторы" />
+            <StatCard value={totalChunks()} label="фрагменты" />
             <StatCard value={totalQueries()} label="запросы" />
           </div>
 
@@ -305,7 +310,7 @@ const Dashboard: Component = () => {
             >
               <span class="flex-1" style={headerCellStyle}>документ</span>
               <span style={{ ...headerCellStyle, width: "80px" }}>тип</span>
-              <span style={{ ...headerCellStyle, width: "60px" }}>чанки</span>
+              <span style={{ ...headerCellStyle, width: "80px" }}>фрагменты</span>
               <span style={{ ...headerCellStyle, width: "100px" }}>статус</span>
               <span style={{ ...headerCellStyle, width: "80px" }}>дата</span>
             </div>
@@ -347,10 +352,10 @@ const Dashboard: Component = () => {
                 class="flex flex-col items-center justify-center gap-4"
                 style={{ padding: "48px 16px" }}
               >
-                <span class="font-mono text-sm text-text-primary">
+                <span class="text-sm text-text-primary">
                   документов пока нет
                 </span>
-                <span class="font-mono text-xs text-text-tertiary">
+                <span class="text-xs text-text-tertiary">
                   загрузите первый файл для начала работы
                 </span>
                 <A href="/">
@@ -414,9 +419,9 @@ const Dashboard: Component = () => {
             gap: "24px",
           }}
         >
-          {/* ЗАПРОС section */}
+          {/* ВОПРОС section */}
           <div class="flex flex-col" style={{ gap: "12px" }}>
-            <span style={sectionLabelStyle}>ЗАПРОС</span>
+            <span style={sectionLabelStyle}>ВОПРОС</span>
             <Input
               value={queryText()}
               onInput={setQueryText}
@@ -462,7 +467,7 @@ const Dashboard: Component = () => {
               )}
             </Show>
             <Show when={!queryLoading() && !queryError() && !queryResult()}>
-              <p style={{ "font-size": "12px", color: "#808080" }}>
+              <p style={{ "font-size": "12px", color: "var(--color-text-tertiary)" }}>
                 ответ появится здесь после запроса
               </p>
             </Show>
@@ -476,7 +481,7 @@ const Dashboard: Component = () => {
                 <Show
                   when={result().sources.length > 0}
                   fallback={
-                    <p style={{ "font-size": "10px", color: "#808080" }}>
+                    <p style={{ "font-size": "10px", color: "var(--color-text-tertiary)" }}>
                       нет источников
                     </p>
                   }
@@ -496,7 +501,6 @@ const Dashboard: Component = () => {
                           style={{
                             width: "6px",
                             height: "6px",
-                            "border-radius": "50%",
                             background: "#1E3EA0",
                           }}
                         />
@@ -510,59 +514,16 @@ const Dashboard: Component = () => {
               )}
             </Show>
             <Show when={!queryResult()}>
-              <p style={{ "font-size": "10px", color: "#808080" }}>
+              <p style={{ "font-size": "10px", color: "var(--color-text-tertiary)" }}>
                 источники появятся после запроса
               </p>
             </Show>
           </div>
 
-          {/* API section — dark code block */}
-          <div class="flex flex-col" style={{ gap: "8px" }}>
-            <span style={sectionLabelStyle}>API</span>
-            <div
-              style={{
-                background: "#0A0A0A",
-                padding: "16px",
-              }}
-            >
-              <span
-                style={{
-                  "font-size": "11px",
-                  "font-weight": "500",
-                  color: "#FAFAFA",
-                  display: "block",
-                }}
-              >
-                POST /api/query
-              </span>
-              <span
-                style={{
-                  "font-size": "10px",
-                  color: "#808080",
-                  display: "block",
-                  "margin-top": "4px",
-                }}
-              >
-                token: ctx_...
-              </span>
-            </div>
-          </div>
-
-          {/* MCP status row */}
-          <div class="flex items-center" style={{ gap: "8px" }}>
-            <span
-              style={{
-                width: "8px",
-                height: "8px",
-                "border-radius": "50%",
-                background: "#2E7D32",
-                "flex-shrink": "0",
-              }}
-            />
-            <span style={{ "font-size": "10px", color: "#0A0A0A" }}>
-              mcp подключен
-            </span>
-          </div>
+          {/* Developer link */}
+          <A href="/api" style={{ "font-size": "12px", color: "#1E3EA0" }}>
+            для разработчиков → /api
+          </A>
         </div>
       </div>
 
@@ -602,7 +563,7 @@ const StatCard: Component<{ value: number; label: string }> = (props) => (
       style={{
         "font-size": "10px",
         "font-weight": "500",
-        color: "#808080",
+        color: "var(--color-text-tertiary)",
       }}
     >
       {props.label}
@@ -615,7 +576,7 @@ const StatCard: Component<{ value: number; label: string }> = (props) => (
 const headerCellStyle = {
   "font-size": "10px",
   "font-weight": "500",
-  color: "#808080",
+  color: "var(--color-text-tertiary)",
   "text-transform": "uppercase" as const,
   "letter-spacing": "1px",
 }
@@ -623,7 +584,7 @@ const headerCellStyle = {
 const sectionLabelStyle = {
   "font-size": "10px",
   "font-weight": "500",
-  color: "#808080",
+  color: "var(--color-text-tertiary)",
   "letter-spacing": "1px",
 }
 

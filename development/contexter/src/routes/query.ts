@@ -25,7 +25,18 @@ query.post("/", async (c) => {
   const vectorStore = new VectorStoreService({ db: c.env.DB, vectorIndex: c.env.VECTOR_INDEX })
   await vectorStore.initialize()
 
-  const rag = new RagService({ ai: c.env.AI, embedder, vectorStore })
+  // Fetch document metadata for context enrichment
+  const docsResult = await c.env.DB.prepare(
+    `SELECT d.name, d.mime_type, d.status,
+       (SELECT COUNT(*) FROM chunks WHERE document_id = d.id) as chunk_count
+     FROM documents d WHERE d.user_id = ? ORDER BY d.created_at DESC LIMIT 50`
+  ).bind(auth.userId).all<{ name: string; mime_type: string; status: string; chunk_count: number }>()
+
+  const docsMeta = (docsResult.results ?? [])
+    .map((d) => `- ${d.name} (${d.mime_type}, ${d.status}, ${d.chunk_count} chunks)`)
+    .join("\n")
+
+  const rag = new RagService({ ai: c.env.AI, embedder, vectorStore, docsMeta })
 
   try {
     const result = await rag.query({

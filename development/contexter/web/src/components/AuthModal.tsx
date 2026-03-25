@@ -35,7 +35,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
         props.onClose()
       }, 1500)
     } catch (e) {
-      setError(e instanceof Error ? e.message : "ошибка регистрации")
+      setError(e instanceof Error ? e.message : "не удалось создать аккаунт — попробуйте ещё раз")
     } finally {
       setLoading(false)
     }
@@ -49,7 +49,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
           if (e.target === e.currentTarget) props.onClose()
         }}
       >
-        <div class="bg-white border border-border-default p-8 w-full max-w-sm flex flex-col gap-6 font-mono">
+        <div class="bg-bg-canvas border border-border-default p-8 w-full max-w-sm flex flex-col gap-6">
           <div class="flex flex-col gap-3">
             <Show
               when={step() === "form"}
@@ -63,7 +63,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
                 создайте аккаунт
               </h2>
               <p class="text-sm text-text-secondary">
-                чтобы сохранить загруженные файлы и дать доступ, создайте аккаунт
+                ваши файлы сохранятся, и нейросеть сможет их читать
               </p>
             </Show>
           </div>

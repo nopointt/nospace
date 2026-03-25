@@ -17,6 +17,7 @@ export interface RagServiceDeps {
   embedder: EmbedderService
   vectorStore: VectorStoreService
   config?: RagConfig
+  docsMeta?: string
 }
 
 export class RagService {
@@ -24,11 +25,13 @@ export class RagService {
   private embedder: EmbedderService
   private vectorStore: VectorStoreService
   private config: Required<RagConfig>
+  private docsMeta: string
 
   constructor(deps: RagServiceDeps) {
     this.ai = deps.ai
     this.embedder = deps.embedder
     this.vectorStore = deps.vectorStore
+    this.docsMeta = deps.docsMeta ?? ""
     this.config = {
       queryRewriteCount: deps.config?.queryRewriteCount ?? DEFAULT_QUERY_REWRITE_COUNT,
       maxContextTokens: deps.config?.maxContextTokens ?? DEFAULT_MAX_CONTEXT_TOKENS,
@@ -104,9 +107,15 @@ export class RagService {
     query: string,
     context: string
   ): Promise<{ answer: string; promptTokens: number; completionTokens: number }> {
-    if (!context || context.trim().length === 0) {
+    // Build full context: document metadata + search results
+    const metaSection = this.docsMeta
+      ? `\nDocuments in knowledge base:\n${this.docsMeta}\n`
+      : ""
+    const fullContext = `${metaSection}${context}`.trim()
+
+    if (!fullContext || fullContext.length === 0) {
       return {
-        answer: "I don't have enough information in the knowledge base to answer this question.",
+        answer: "В базе знаний пока нет документов. Загрузите файлы чтобы начать.",
         promptTokens: 0,
         completionTokens: 0,
       }
@@ -116,7 +125,7 @@ export class RagService {
       { role: "system" as const, content: this.config.systemPrompt },
       {
         role: "user" as const,
-        content: `Context:\n${context}\n\nQuestion: ${query}`,
+        content: `Context:\n${fullContext}\n\nQuestion: ${query}`,
       },
     ]
 

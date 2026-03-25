@@ -66,32 +66,60 @@ export class EmbedderService {
       truncate_dim: dimensions,
     }
 
-    const response = await fetch(this.apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.apiKey}`,
-      },
-      body: JSON.stringify(body),
-    })
+    // Max 3 retries with capped delays: 1s, 2s, 4s = 7s total backoff.
+    // CF Workers kill waitUntil() tasks at ~30s wall clock — 5 retries with
+    // delays up to 16s exceeded that budget and caused silent job freezes.
+    const maxRetries = 3
+    let lastError: string = ""
 
-    if (!response.ok) {
-      const error = await response.text()
-      throw new Error(`Jina API error ${response.status}: ${error}`)
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      // 10s per-request timeout prevents a single slow call from blocking the stage
+      const signal = AbortSignal.timeout(10_000)
+
+      let response: Response
+      try {
+        response = await fetch(this.apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.apiKey}`,
+          },
+          body: JSON.stringify(body),
+          signal,
+        })
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e)
+        throw new Error(`Jina API fetch failed: ${msg}`)
+      }
+
+      if (response.status === 429) {
+        lastError = await response.text()
+        // Cap delay at 4s so 3 retries stay well within the 30s worker limit
+        const delay = Math.min(1000 * Math.pow(2, attempt), 4_000)
+        await new Promise((r) => setTimeout(r, delay))
+        continue
+      }
+
+      if (!response.ok) {
+        const error = await response.text()
+        throw new Error(`Jina API error ${response.status}: ${error}`)
+      }
+
+      const json = (await response.json()) as JinaResponse
+
+      const embeddings: EmbeddingResult[] = json.data.map((item) => ({
+        vector: item.embedding,
+        dimensions: item.embedding.length,
+        tokenCount: item.tokens ?? 0,
+      }))
+
+      return {
+        embeddings,
+        totalTokens: json.usage?.total_tokens ?? embeddings.reduce((sum, e) => sum + e.tokenCount, 0),
+      }
     }
 
-    const json = (await response.json()) as JinaResponse
-
-    const embeddings: EmbeddingResult[] = json.data.map((item) => ({
-      vector: item.embedding,
-      dimensions: item.embedding.length,
-      tokenCount: item.tokens ?? 0,
-    }))
-
-    return {
-      embeddings,
-      totalTokens: json.usage?.total_tokens ?? embeddings.reduce((sum, e) => sum + e.tokenCount, 0),
-    }
+    throw new Error(`Jina API rate limit after ${maxRetries} retries: ${lastError}`)
   }
 }
 

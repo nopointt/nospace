@@ -34,9 +34,11 @@ retry.post("/:documentId", async (c) => {
 
   if (!doc) return c.json({ error: "Document not found." }, 404)
 
-  // Only allow retry on errored documents
-  if (doc.status !== "error") {
-    return c.json({ error: `Cannot retry: document status is "${doc.status}", expected "error".` }, 409)
+  // Allow retry on errored or stuck-processing documents.
+  // "processing" can mean a stuck job when the pipeline worker was killed without
+  // writing an error (e.g. CF wall-clock timeout before our stage timeout fired).
+  if (doc.status !== "error" && doc.status !== "processing") {
+    return c.json({ error: `Cannot retry: document status is "${doc.status}", expected "error" or "processing".` }, 409)
   }
 
   // Get all jobs for this document
@@ -62,11 +64,11 @@ retry.post("/:documentId", async (c) => {
     // No body or invalid JSON -- find first failed stage automatically
   }
 
-  // If no explicit stage, find the first failed one
+  // If no explicit stage, find the first failed or stuck-running stage
   if (!retryFromStage) {
-    const failedJob = jobs.find((j) => j.status === "error")
+    const failedJob = jobs.find((j) => j.status === "error") ?? jobs.find((j) => j.status === "running")
     if (!failedJob) {
-      return c.json({ error: "No failed stage found to retry." }, 409)
+      return c.json({ error: "No failed or stuck stage found to retry." }, 409)
     }
     retryFromStage = failedJob.type as StageType
   }

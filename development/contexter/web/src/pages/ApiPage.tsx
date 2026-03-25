@@ -17,7 +17,7 @@ const curlExamples = [
   -F "file=@document.pdf"`,
   },
   {
-    label: "семантический запрос",
+    label: "поиск по документам",
     code: `curl -X POST ${API_BASE}/api/query \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
   -H "Content-Type: application/json" \\
@@ -124,7 +124,7 @@ function Step(props: { num: string; title: string; children: any }) {
         {props.num}
       </span>
       <div class="flex flex-col gap-3 flex-1 min-w-0">
-        <h4 class="text-sm font-bold lowercase text-black">{props.title}</h4>
+        <h4 class="text-sm font-bold lowercase text-text-primary">{props.title}</h4>
         {props.children}
       </div>
     </div>
@@ -164,7 +164,7 @@ const ApiPage: Component = () => {
       refetchShares()
       showToast("ссылка создана", "success")
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "ошибка создания ссылки", "error")
+      showToast(e instanceof Error ? e.message : "не удалось создать ссылку — попробуйте ещё раз", "error")
     } finally {
       setCreatingShare(false)
     }
@@ -182,7 +182,7 @@ const ApiPage: Component = () => {
       showToast("токен создан", "success")
       refetchShares()
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "ошибка создания токена", "error")
+      showToast(e instanceof Error ? e.message : "не удалось создать ключ — попробуйте ещё раз", "error")
     } finally {
       setCreatingToken(false)
     }
@@ -200,7 +200,7 @@ const ApiPage: Component = () => {
       setConfirmRevoke(null)
       showToast("токен отозван", "success")
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "ошибка отзыва", "error")
+      showToast(e instanceof Error ? e.message : "не удалось отозвать доступ — попробуйте ещё раз", "error")
     } finally {
       setRevoking(null)
     }
@@ -218,15 +218,15 @@ const ApiPage: Component = () => {
   /* ── not authenticated ── */
   if (!isAuthenticated()) {
     return (
-      <div class="min-h-screen bg-bg-canvas font-mono">
+      <div class="min-h-screen bg-bg-canvas">
         <Nav variant="app" />
         <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-24">
           <div class="flex flex-col items-center gap-6 text-center">
             <p class="text-text-secondary text-sm">
-              войдите чтобы получить доступ к api
+              войдите, чтобы подключить нейросеть
             </p>
             <Button variant="primary" onClick={() => navigate("/upload")}>
-              начать
+              войти
             </Button>
           </div>
         </div>
@@ -236,24 +236,24 @@ const ApiPage: Component = () => {
   }
 
   return (
-    <div class="min-h-screen bg-bg-canvas font-mono">
+    <div class="min-h-screen bg-bg-canvas">
       <Nav variant="app" />
 
       <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-12">
         {/* ── page header ── */}
-        <h1 class="text-[24px] font-bold lowercase leading-[1.2] text-black mb-2">
-          api & подключение
+        <h1 class="text-[24px] font-bold lowercase leading-[1.2] text-text-primary mb-2">
+          подключение
         </h1>
         <p class="text-text-secondary text-xs mb-12">
-          эндпоинты, примеры и настройка mcp-клиентов
+          как подключить contexter к нейросети
         </p>
 
         {/* ══════════════════════════════════════════════
             section 1: api endpoints
            ══════════════════════════════════════════════ */}
         <section class="mb-16">
-          <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-black mb-2">
-            api эндпоинты
+          <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-text-primary mb-2">
+            для разработчиков
           </h2>
           <p class="text-text-tertiary text-xs mb-6">
             base url: <span class="text-text-primary">{API_BASE}</span>
@@ -278,19 +278,18 @@ const ApiPage: Component = () => {
             section 2: mcp connection
            ══════════════════════════════════════════════ */}
         <section class="mb-16">
-          <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-black mb-2">
-            mcp подключение
+          <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-text-primary mb-2">
+            как подключить нейросеть
           </h2>
           <p class="text-text-tertiary text-xs mb-8">
-            подключите contexter как mcp-сервер к claude desktop или другому
-            совместимому клиенту
+            добавьте contexter в Claude Desktop — и он начнёт отвечать по вашим файлам
           </p>
 
           <div class="flex flex-col gap-8">
             {/* step 1 */}
-            <Step num="1" title="скопируйте mcp url">
+            <Step num="1" title="скопируйте ссылку подключения">
               <CopyField
-                label="mcp url с токеном"
+                label="ваша ссылка"
                 value={mcpUrl()}
               />
             </Step>
@@ -303,9 +302,9 @@ const ApiPage: Component = () => {
             </Step>
 
             {/* step 3 */}
-            <Step num="3" title="добавьте сервер">
+            <Step num="3" title="добавьте подключение">
               <p class="text-text-secondary text-xs leading-relaxed mb-3">
-                добавьте следующий json в конфигурацию mcp-серверов:
+                вставьте этот код в файл настроек:
               </p>
               <CodeBlock
                 label="claude_desktop_config.json"
@@ -325,22 +324,21 @@ const ApiPage: Component = () => {
               <p class="text-text-secondary text-xs leading-relaxed">
                 в claude спросите:{" "}
                 <span class="text-text-primary">"какие документы загружены?"</span>{" "}
-                — должен вернуться список через mcp
+                — должен появиться список
               </p>
             </Step>
           </div>
 
           {/* alternative: direct streamable http */}
           <div class="mt-10 border border-border-subtle bg-bg-surface p-6">
-            <h3 class="text-sm font-bold lowercase text-black mb-2">
-              альтернатива: streamable http
+            <h3 class="text-sm font-bold lowercase text-text-primary mb-2">
+              другой способ подключения
             </h3>
             <p class="text-text-secondary text-xs leading-relaxed mb-4">
-              для claude.ai projects и других клиентов с поддержкой streamable
-              http — используйте url напрямую:
+              для Claude.ai и других нейросетей — вставьте ссылку напрямую:
             </p>
             <CopyField
-              label="streamable http url"
+              label="ссылка подключения"
               value={mcpUrl()}
             />
           </div>
@@ -353,32 +351,32 @@ const ApiPage: Component = () => {
             section 3: tokens & sharing
            ══════════════════════════════════════════════ */}
         <section>
-          <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-black mb-2">
-            токены и шеринг
+          <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-text-primary mb-2">
+            доступ и ссылки
           </h2>
           <p class="text-text-tertiary text-xs mb-8">
-            управление api-токенами и ссылками для совместного доступа
+            управление доступом к вашей базе знаний
           </p>
 
           {/* current token */}
           <div class="mb-8">
             <CopyField
-              label="ваш api токен"
+              label="ваш ключ доступа"
               value={auth()?.apiToken ?? ""}
             />
           </div>
 
           {/* create new token */}
           <div class="mb-10">
-            <h3 class="text-sm font-bold lowercase text-black mb-3">
-              создать токен
+            <h3 class="text-sm font-bold lowercase text-text-primary mb-3">
+              создать ключ доступа
             </h3>
             <Button
               variant="secondary"
               onClick={handleCreateToken}
               loading={creatingToken()}
             >
-              создать токен
+              создать ключ доступа
             </Button>
             <Show when={newToken()}>
               <div class="mt-4 border border-signal-warning bg-signal-warning/10 p-4">
@@ -392,8 +390,8 @@ const ApiPage: Component = () => {
 
           {/* create share link */}
           <div class="mb-10">
-            <h3 class="text-sm font-bold lowercase text-black mb-3">
-              создать ссылку для шеринга
+            <h3 class="text-sm font-bold lowercase text-text-primary mb-3">
+              поделиться базой знаний
             </h3>
             <div class="flex flex-col gap-4">
               {/* scope selector */}
@@ -419,7 +417,7 @@ const ApiPage: Component = () => {
                   выбранные
                 </button>
                 <span class="inline-flex items-center px-2.5 py-1 border border-border-default text-[10px] font-medium text-text-tertiary lowercase">
-                  read-only
+                  только чтение
                 </span>
               </div>
 
@@ -473,7 +471,7 @@ const ApiPage: Component = () => {
 
           {/* active shares list */}
           <div>
-            <h3 class="text-sm font-bold lowercase text-black mb-3">
+            <h3 class="text-sm font-bold lowercase text-text-primary mb-3">
               активные ссылки
             </h3>
             <Show

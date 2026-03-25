@@ -32,6 +32,37 @@ upload.post("/", async (c) => {
   if (!auth) return c.json({ error: "Unauthorized. Provide token via Bearer header or ?token= param." }, 401)
   if (auth.permission !== "read_write") return c.json({ error: "Write access required." }, 403)
 
+  // Guard: text upload via JSON body
+  const contentType = c.req.header("Content-Type") ?? ""
+  if (contentType.includes("application/json")) {
+    let body: { text?: string } = {}
+    try { body = await c.req.json() } catch {
+      return c.json({ error: "неверный JSON" }, 400)
+    }
+    if (!body.text || body.text.trim().length === 0) {
+      return c.json({ error: "поле text обязательно" }, 400)
+    }
+    // Handle text upload inline — create a virtual file
+    const text = body.text.trim()
+    const blob = new Blob([text], { type: "text/plain" })
+    const virtualFile = new File([blob], "pasted-text.txt", { type: "text/plain" })
+
+    const documentId = crypto.randomUUID().slice(0, 8)
+    const r2Key = `${auth.userId}/${documentId}/pasted-text.txt`
+    await c.env.STORAGE.put(r2Key, await virtualFile.arrayBuffer())
+    await c.env.DB.prepare(
+      "INSERT INTO documents (id, user_id, name, mime_type, size, r2_key, status) VALUES (?, ?, ?, ?, ?, ?, 'processing')"
+    ).bind(documentId, auth.userId, "pasted-text.txt", "text/plain", blob.size, r2Key).run()
+    const jobIds = await createPendingJobs(c.env.DB, documentId, auth.userId)
+    c.executionCtx.waitUntil(runPipelineAsync(documentId, { file: await virtualFile.arrayBuffer(), fileName: "pasted-text.txt", mimeType: "text/plain", fileSize: blob.size }, c.env, auth.userId, jobIds))
+    return c.json({ documentId, status: "processing" }, 202)
+  }
+
+  // Guard: must be multipart
+  if (!contentType.includes("multipart/form-data")) {
+    return c.json({ error: "загрузите файл через форму (multipart/form-data) или отправьте JSON с полем text" }, 400)
+  }
+
   const formData = await c.req.formData()
   const file = formData.get("file") as File | null
 
