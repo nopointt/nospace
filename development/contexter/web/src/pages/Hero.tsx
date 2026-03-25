@@ -143,7 +143,7 @@ const Hero: Component = () => {
   const [dropError, setDropError] = createSignal("")
   const [dragOver, setDragOver] = createSignal(false)
   const [connectionOpen, setConnectionOpen] = createSignal(false)
-  const [connectionClient, setConnectionClient] = createSignal<"chatgpt" | "claude-web" | "claude-desktop" | "perplexity" | "cursor">("chatgpt")
+  const [connectionClient, setConnectionClient] = createSignal<"chatgpt" | "claude-web" | "claude-desktop" | "perplexity" | "cursor" | "antigravity">("chatgpt")
   const [pendingAction, setPendingAction] = createSignal<(() => void) | null>(null)
   let fileInputRef: HTMLInputElement | undefined
   let pollTimer: ReturnType<typeof setInterval> | undefined
@@ -831,7 +831,7 @@ const Hero: Component = () => {
                 или настройте вручную:
               </span>
               <div class="flex items-center flex-wrap" style={{ gap: "8px" }}>
-                {([["chatgpt", "ChatGPT"], ["claude-web", "Claude.ai"], ["claude-desktop", "Claude Desktop"], ["perplexity", "Perplexity"], ["cursor", "Cursor"]] as const).map(([id, name]) => (
+                {([["chatgpt", "ChatGPT"], ["claude-web", "Claude.ai"], ["claude-desktop", "Claude Desktop"], ["perplexity", "Perplexity"], ["cursor", "Cursor"], ["antigravity", "Antigravity"]] as const).map(([id, name]) => (
                   <button
                     class="font-mono"
                     style={{

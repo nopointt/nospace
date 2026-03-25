@@ -4,7 +4,7 @@ import { getToken } from "../lib/store"
 
 // --- Types ---
 
-type ClientId = "chatgpt" | "claude-web" | "claude-desktop" | "perplexity" | "cursor"
+type ClientId = "chatgpt" | "claude-web" | "claude-desktop" | "perplexity" | "cursor" | "antigravity"
 
 interface ClientInfo {
   id: ClientId
@@ -19,7 +19,7 @@ interface ClientInfo {
 
 interface SelectionCard {
   /** Card id — "claude" opens sub-choice, others map directly to a ClientId */
-  id: "chatgpt" | "claude" | "perplexity" | "cursor" | "other"
+  id: "chatgpt" | "claude" | "perplexity" | "cursor" | "antigravity" | "other"
   label: string
   subtitle: string
   plan: string
@@ -59,6 +59,14 @@ const SELECTION_CARDS: SelectionCard[] = [
     plan: "бесплатно",
     iconBg: "#7C3AED",
     iconLabel: "↗",
+  },
+  {
+    id: "antigravity",
+    label: "Antigravity",
+    subtitle: "IDE от Google",
+    plan: "бесплатно",
+    iconBg: "#4285F4",
+    iconLabel: "A",
   },
   {
     id: "other",
@@ -170,6 +178,22 @@ function makeClients(token: string): ClientInfo[] {
         },
       }, null, 2),
       gotcha: "Cursor подключится автоматически",
+    },
+    {
+      id: "antigravity",
+      label: "Antigravity",
+      transport: "нативный",
+      steps: [
+        { action: "Manage MCP Servers", detail: "Откройте Antigravity → вверху чат-панели нажмите Manage MCP Servers → View raw config" },
+        { action: "Вставьте JSON в mcp_config.json", detail: "Файл откроется в редакторе. Вставьте блок ниже и сохраните" },
+        { action: "Перезапустите Antigravity", detail: "Закройте и откройте Antigravity. MCP-сервер появится в списке инструментов" },
+      ],
+      config: JSON.stringify({
+        mcpServers: {
+          contexter: { serverUrl: url },
+        },
+      }, null, 2),
+      gotcha: "используйте serverUrl (не url). Максимум 50 инструментов одновременно",
     },
   ]
 }
@@ -329,6 +353,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
     if (id === "claude-web" || id === "claude-desktop") return { bg: "#CC785C", label: "C" }
     if (id === "perplexity") return { bg: "#20808D", label: "P" }
     if (id === "cursor") return { bg: "#7C3AED", label: "↗" }
+    if (id === "antigravity") return { bg: "#4285F4", label: "A" }
     return { bg: "#333333", label: "?" }
   }
 

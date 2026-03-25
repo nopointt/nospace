@@ -1,14 +1,14 @@
 ---
 # contexter-mvp.md — CTX-01 MVP Pipeline
 > Layer: L3 | Epic: CTX-01 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-25 (session 190)
+> Last updated: 2026-03-25 (session 191 — Antigravity, pricing, 12 MCP tools, account dedup)
 ---
 
 ## Goal
 
 Full pipeline: any file → parse → chunk → embed → index → MCP endpoint + RAG query. Deployed on CF Workers + CF Pages. Connected to ChatGPT/Claude/Perplexity/Cursor. Frontend SPA for demo.
 
-## Status: ~95% complete (MLP stage)
+## Status: ~96% complete (MLP stage)
 
 Backend fully async + OAuth 2.1. Frontend deployed with interactive blob cluster, connection modal, document viewer. 26/26 E2E tests pass. 4 full audits applied. Remaining: document viewer content fix, pipeline progress UI, responsive.
 
@@ -44,6 +44,7 @@ Backend fully async + OAuth 2.1. Frontend deployed with interactive blob cluster
 - [ ] Responsive: mobile/tablet (deferred to after Artem usability test)
 - [ ] Google + Telegram OAuth (deferred)
 - [ ] RAG quality tuning (query rewriter, domain terms)
+- [ ] ConnectionModal popup: доработка UX (nopoint попросил вернуться позже)
 - [ ] CF Pages custom domain
 
 ## Blockers
@@ -51,6 +52,65 @@ Backend fully async + OAuth 2.1. Frontend deployed with interactive blob cluster
 - CF Vectorize metadata filtering not available → using post-query filter
 - Video keyframe extraction impossible in CF Workers
 - Perplexity requires full OAuth 2.1 (implemented but untested e2e)
+
+## Production Stack Decision (2026-03-25)
+
+**Target:** 10K users, 1K DAU, ~$117/мес
+**Выбран:** Вариант A — Hetzner CAX41 + API inference
+- Compute: Hetzner CAX41 (16 ARM vCPU, 32 GB) — $33/мес
+- Vector DB: Qdrant self-hosted (SQ) — решает Vectorize metadata bug
+- DB: PostgreSQL (вместо D1)
+- File storage: R2 или Hetzner Object Storage
+- Embeddings: **Jina v4** (primary), **Voyage multimodal-3** (fallback)
+- LLM: DeepInfra Llama 3.1 8B Turbo — $46/мес
+- Whisper: Groq Turbo — $30/мес
+- Parsing: self-hosted marker/docling
+- Frontend: CF Pages (бесплатно)
+
+## Pricing Model (2026-03-25)
+
+**Model:** Usage-based storage, credit system. n = $0.000422. Billing: LemonSqueeezy.
+**Guarantee:** >= 15% margin at any volume (monthly), >= 29% margin (annual).
+
+| Tier | Monthly $/GB | Annual $/GB | Discount |
+|---|---|---|---|
+| 0-1 GB | FREE | FREE | — |
+| 1-10 GB | $1.30 (3n) | $1.17 (2.7n) | 10% |
+| 10-50 GB | $0.86 (2n) | $0.73 (1.7n) | 15% |
+| 50-100 GB | $0.65 (1.5n) | $0.52 (1.2n) | 20% |
+| 100 GB-1 TB | $0.32 (0.75n) | $0.24 (0.56n) | 25% |
+| 1 TB+ | $0.17 (0.40n) | $0.11 (0.26n) | 35% |
+
+**User segments (10K users projection):**
+
+| Segment | Users | % | Avg GB | Bill/mo | Annual % |
+|---|---|---|---|---|---|
+| Free | 6,000 | 60% | 0.5 | $0 | 0% |
+| Small | 1,500 | 15% | 3.5 | $3.24 | 10% |
+| Starter | 1,000 | 10% | 7.5 | $8.43 | 20% |
+| Medium | 1,000 | 10% | 25 | $24.63 | 30% |
+| Large | 400 | 4% | 100 | $78.65 | 50% |
+| Enterprise | 100 | 1% | 500 | $208.29 | 80% |
+
+**Free tier policy:**
+- 100 free slots max (cap)
+- 12h inactivity -> slot released, account -> zero tier
+- Zero tier: data stored 7 days (read-only), then deleted
+- Return within 7 days: takes new slot (if available), data restored
+- Cost: 100 × $0.43 = $43/month (vs $2,567 uncapped)
+
+**Revenue:** MRR $82,662 | ARR $991,939 | Gross margin 77.6%
+
+**Research files:**
+- `docs/research/pricing-model.py` — unit economics calculation
+- `docs/research/pricing-floor.py` — margin floor analysis
+- `docs/research/pricing-final.py` — corrected cost model + annual/monthly
+- `docs/research/pricing-annual-tiers.py` — tier discounts
+- `docs/research/contexter-financial-model.md` — full P&L
+- `docs/research/rag-saas-pricing-competitive-analysis.md` — competitor research
+- `docs/research/rag-hosting-pricing-comparison-research.md` — infra comparison
+- `docs/research/contexter-inference-pricing-research.md` — LLM/embed pricing
+- `docs/research/vector-db-pricing-comparison-research.md` — vector DB comparison
 
 ## Acceptance Criteria
 

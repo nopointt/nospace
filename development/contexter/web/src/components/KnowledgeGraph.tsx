@@ -5,7 +5,7 @@ import { onMount, onCleanup, type Component } from "solid-js"
 interface BlobDef {
   id: string
   label: string
-  clientId: "chatgpt" | "claude-web" | "perplexity" | "cursor"
+  clientId: "chatgpt" | "claude-web" | "perplexity" | "cursor" | "antigravity"
   homeX: number
   homeY: number
   r: number
@@ -24,6 +24,9 @@ const LOGO_PERPLEXITY_PATH = `M22.3977 7.0896h-2.3106V.0676l-7.5094 6.3542V.1577
 // Cursor — simple-icons logomark (viewBox 0 0 24 24)
 const LOGO_CURSOR_PATH = `M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23`
 
+// Antigravity (Google IDE) — logomark (viewBox 0 0 24 24)
+const LOGO_ANTIGRAVITY_PATH = `m19.94,20.59c1.09.82,2.73.27,1.23-1.23-4.5-4.36-3.55-16.36-9.14-16.36S7.39,15,2.89,19.36c-1.64,1.64.14,2.05,1.23,1.23,4.23-2.86,3.95-7.91,7.91-7.91s3.68,5.05,7.91,7.91Z`
+
 // ChatGPT — single petal path (simple-icons, viewBox 0 0 2406 2406, center 1203 1203)
 // Rendered 6× with rotations 0/60/120/180/240/300° around center (1203,1203).
 // Normalization: translate(-1203,-1203) scale(0.01663) → ±~20 unit box.
@@ -33,9 +36,10 @@ const LOGO_CHATGPT_PETAL = `M1107.3 299.1c-197.999 0-373.9 127.3-435.2 315.3L650
 // Map clientId → logo path string (used for Claude/Perplexity/Cursor)
 // ChatGPT is rendered separately via <use> elements.
 const LOGO_PATHS: Record<string, string> = {
-  "claude-web": LOGO_CLAUDE_PATH,
-  "perplexity": LOGO_PERPLEXITY_PATH,
-  "cursor":     LOGO_CURSOR_PATH,
+  "claude-web":   LOGO_CLAUDE_PATH,
+  "perplexity":   LOGO_PERPLEXITY_PATH,
+  "cursor":       LOGO_CURSOR_PATH,
+  "antigravity":  LOGO_ANTIGRAVITY_PATH,
 }
 
 // Logo scale factor: for viewBox 0 0 24 24 logos centered at origin (±12 units).
@@ -50,7 +54,7 @@ interface BlobState {
 }
 
 interface Props {
-  onNodeClick: (clientId: "chatgpt" | "claude-web" | "claude-desktop" | "perplexity" | "cursor") => void
+  onNodeClick: (clientId: "chatgpt" | "claude-web" | "claude-desktop" | "perplexity" | "cursor" | "antigravity") => void
   connectedClients?: string[]
 }
 
@@ -68,6 +72,8 @@ const BLOBS: BlobDef[] = [
   { id: "perplexity", label: "perplexity", clientId: "perplexity", homeX: 240, homeY: 220, r: 48 },
   // D — Cursor
   { id: "cursor",     label: "cursor",     clientId: "cursor",     homeX: 360, homeY: 280, r: 40 },
+  // E — Antigravity
+  { id: "antigravity", label: "antigravity", clientId: "antigravity", homeX: 150, homeY: 290, r: 44 },
 ]
 
 // ── Spring physics (Bauhaus spec) ─────────────────────────────────────────
@@ -110,6 +116,8 @@ const FLOAT_PARAMS = [
   { ax: 10,  fx: (2 * Math.PI) / (_T * 0.7), px: 3.14,   ay: 5,   fy: (2 * Math.PI) / (_T * 1.5), py: 1.57 },
   // Blob 3 — Cursor (smallest): quick, playful, bigger amplitude relative to size
   { ax: 12,  fx: (2 * Math.PI) / (_T * 0.6), px: 4.19,   ay: 7,   fy: (2 * Math.PI) / (_T * 0.85), py: 0.52 },
+  // Blob 4 — Antigravity: steady, precise orbit — methodical, structured (IDE feel)
+  { ax: 7,   fx: (2 * Math.PI) / (_T * 1.0), px: 5.24,   ay: 8,   fy: (2 * Math.PI) / (_T * 1.1), py: 2.62 },
 ]
 
 // ── Parallax ──────────────────────────────────────────────────────────────
@@ -506,7 +514,7 @@ const KnowledgeGraph: Component<Props> = (props) => {
         width={VW}
         height={VH}
         style={{ display: "block", overflow: "visible" }}
-        aria-label="AI клиенты: ChatGPT, Claude, Perplexity, Cursor"
+        aria-label="AI клиенты: ChatGPT, Claude, Perplexity, Cursor, Antigravity"
       >
         <defs>
           {/* ChatGPT petal path — referenced 6× via <use> with rotation */}

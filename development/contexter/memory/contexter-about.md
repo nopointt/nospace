@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-24 (session 187 — frontend + async pipeline + production deploy)
+> Last updated: 2026-03-25 (session 191 — Antigravity MCP, pricing model, production stack)
 ---
 
 ## Identity
@@ -28,7 +28,7 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Transcription | Groq Whisper Large v3 API |
 | RAG answer | Workers AI / Groq / NIM (fallback chain) |
 | User auth | Custom token-based (register → apiToken). OAuth planned (Google/Telegram/Yandex) |
-| MCP server | Streamable HTTP (custom JSON-RPC on /sse) |
+| MCP server | Streamable HTTP (JSON-RPC on /sse, 12 tools) |
 | Document parsing | env.AI.toMarkdown() (free, CF native) |
 
 ## Key Paths
@@ -96,6 +96,14 @@ Swiss/Bauhaus. JetBrains Mono only. B&W (#0A0A0A / #FAFAFA) + blue (#1E3EA0). 0p
 Tokens inherited from Harkly structure, values adapted for cold palette.
 RAG-verified: 8 design decisions with Bauhaus citations.
 Pencil: `contexter-ui.pen` (31 recovered nodes, 11 reusable components). Recovery data: `design/contexter/recovery/` (4 files). Docs: `design/contexter/` (12 MD + 2 UX files).
+
+## Pricing Model
+
+Usage-based per-GB storage. Credit system: n = $0.000422. Monthly + Annual (with tier discounts).
+Billing: LemonSqueezy. Prepaid + metered usage.
+1 GB free. Margin >= 15% at any volume.
+Full model: `docs/research/contexter-financial-model.md`
+Python models: `docs/research/pricing-*.py`
 
 ## Active L3
 

@@ -1,7 +1,7 @@
 ---
 # contexter-roadmap.md — Contexter Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start
-> Last updated: 2026-03-24
+> Last updated: 2026-03-25
 ---
 
 ## Current Focus: MLP (Minimum Lovable Product)
@@ -74,12 +74,15 @@
 
 ---
 
-## Prod Roadmap (future)
+## Prod Roadmap
 
-| Phase | What | When |
+| Phase | What | Status |
 |---|---|---|
-| MLP | CF Workers + CF Pages, all formats, MCP, frontend SPA | **NOW — deployed** |
+| MLP | CF Workers + CF Pages, all formats, MCP, frontend SPA | **deployed** |
+| Pricing model | Usage-based per-GB, credit system (n=$0.000422), monthly+annual | **decided 2026-03-25** |
+| Production stack | Hetzner CAX41 + Qdrant + Postgres + DeepInfra + Groq | **decided 2026-03-25** |
+| Billing | LemonSqueezy integration, prepaid + usage | next |
 | Auth | OAuth (Google/Telegram/Yandex) | next sprint |
-| Benchmarks | Latency, cost per doc, cost per query, throughput | after auth |
-| Pricing | Usage-based, per-document or per-query | after benchmarks |
-| Prod | VPS (ffmpeg, yt-dlp, full video), Qdrant (2048 dims) | after pricing |
+| Migration | CF Workers -> Hetzner (Hono on Bun native) | after billing |
+| Benchmarks | Latency, cost per doc, cost per query, throughput | after migration |
+| Prod | VPS (ffmpeg, yt-dlp, full video), Qdrant (1024 dims SQ) | after benchmarks |
