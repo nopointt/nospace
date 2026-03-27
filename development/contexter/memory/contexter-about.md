@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-27 (session 193 — full Hetzner migration, 92-issue audit, 6 WP applied, BullMQ, video, D1 migrated)
+> Last updated: 2026-03-27 (session 194 — MLP complete, CTX-01+CTX-07 closed, all fixes deployed)
 ---
 
 ## Identity
@@ -132,9 +132,11 @@ PG tuned: shared_buffers=512MB, work_mem=32MB, random_page_cost=1.1, effective_i
 
 | Epic | File | Status |
 |---|---|---|
-| CTX-01 MVP Pipeline | [contexter-mvp.md](contexter-mvp.md) | 🔶 IN PROGRESS |
+| CTX-01 MVP Pipeline | [contexter-mvp.md](contexter-mvp.md) | ✅ MLP COMPLETE (2026-03-27) |
 | CTX-06 Production Migration | [contexter-migration.md](contexter-migration.md) | ✅ CLOSED |
-| **CTX-07 Production Hardening** | [contexter-production.md](contexter-production.md) | 🔶 IN PROGRESS |
+| CTX-07 Production Hardening | [contexter-production.md](contexter-production.md) | ✅ MLP COMPLETE (2026-03-27) |
+
+| **CTX-08 GTM Strategy** | [contexter-gtm.md](contexter-gtm.md) | 🔶 IN PROGRESS |
 
 ## Write Authority
 

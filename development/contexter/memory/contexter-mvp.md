@@ -1,16 +1,16 @@
 ---
 # contexter-mvp.md — CTX-01 MVP Pipeline
-> Layer: L3 | Epic: CTX-01 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-27 (session 193 — migrated to Hetzner)
+> Layer: L3 | Epic: CTX-01 | Status: ✅ MLP COMPLETE
+> Last updated: 2026-03-27 (session 194 — closed as MLP complete, remaining → post-MLP backlog in L2)
 ---
 
 ## Goal
 
 Full pipeline: any file → parse → chunk → embed → index → MCP endpoint + RAG query. Deployed on CF Workers + CF Pages. Connected to ChatGPT/Claude/Perplexity/Cursor. Frontend SPA for demo.
 
-## Status: ~96% complete (MLP stage) — now on Hetzner
+## Status: ✅ MLP COMPLETE — deployed on Hetzner
 
-Backend fully async + OAuth 2.1. Frontend deployed with interactive blob cluster, connection modal, document viewer. 26/26 E2E tests pass. 4 full audits applied. Remaining: document viewer content fix, pipeline progress UI, responsive.
+Backend fully async + OAuth 2.1. Frontend deployed on CF Pages. 27 docs migrated, all endpoints verified. Remaining items moved to post-MLP backlog (see L2 roadmap).
 
 ## Completed Session 190 (2026-03-25)
 
@@ -49,9 +49,9 @@ Backend fully async + OAuth 2.1. Frontend deployed with interactive blob cluster
 
 ## Blockers
 
-- CF Vectorize metadata filtering not available → using post-query filter
-- Video keyframe extraction impossible in CF Workers
-- Perplexity requires full OAuth 2.1 (implemented but untested e2e)
+- ~~CF Vectorize metadata filtering~~ → RESOLVED: pgvector native WHERE clause
+- ~~Video keyframe extraction impossible in CF Workers~~ → RESOLVED: ffmpeg on Hetzner
+- ~~Perplexity requires full OAuth 2.1~~ → IMPLEMENTED (e2e deferred to CTX-04)
 
 ## Production Stack Decision (2026-03-25)
 

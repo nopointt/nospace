@@ -31,7 +31,8 @@
           "fill": "$--text-tertiary",
           "content": "3 colors. pure gray. no warmth.",
           "fontFamily": "JetBrains Mono",
-          "fontSize": 14
+          "fontSize": 14,
+          "fontWeight": "normal"
         },
         {
           "type": "text",
@@ -807,7 +808,8 @@
           "fill": "$--text-tertiary",
           "content": "JetBrains Mono. one typeface. everywhere. neue typographie.",
           "fontFamily": "JetBrains Mono",
-          "fontSize": 14
+          "fontSize": 14,
+          "fontWeight": "normal"
         },
         {
           "type": "frame",
@@ -964,7 +966,8 @@
               "content": "upload any file. we parse it, chunk it, embed it, index it. you get an api endpoint with a rag knowledge base. connect to claude, chatgpt, or any mcp client.",
               "lineHeight": 1.5,
               "fontFamily": "JetBrains Mono",
-              "fontSize": 14
+              "fontSize": 14,
+              "fontWeight": "normal"
             }
           ]
         },
@@ -1088,7 +1091,8 @@
               "fill": "$--text-tertiary",
               "content": "uploaded 2026-03-21 · 521 kb · 10 chunks · 4542 tokens",
               "fontFamily": "JetBrains Mono",
-              "fontSize": 10
+              "fontSize": 10,
+              "fontWeight": "normal"
             }
           ]
         },
@@ -1118,7 +1122,8 @@
               "fill": "$--accent",
               "content": "curl -X POST /api/upload -F 'file=@doc.pdf'",
               "fontFamily": "JetBrains Mono",
-              "fontSize": 14
+              "fontSize": 14,
+              "fontWeight": "normal"
             }
           ]
         }
@@ -1154,7 +1159,8 @@
           "fill": "$--text-tertiary",
           "content": "4px atom. 12-step scale. 0–80px.",
           "fontFamily": "JetBrains Mono",
-          "fontSize": 14
+          "fontSize": 14,
+          "fontWeight": "normal"
         },
         {
           "type": "frame",
@@ -1668,7 +1674,8 @@
           "fill": "$--text-tertiary",
           "content": "con[text]er — JetBrains Mono 500, -4% tracking, 'text' in accent blue.",
           "fontFamily": "JetBrains Mono",
-          "fontSize": 14
+          "fontSize": 14,
+          "fontWeight": "normal"
         },
         {
           "type": "frame",
@@ -1969,7 +1976,8 @@
           "fill": "$--text-tertiary",
           "content": "reusable components. 0px corners. no shadows. mono everywhere.",
           "fontFamily": "JetBrains Mono",
-          "fontSize": 14
+          "fontSize": 14,
+          "fontWeight": "normal"
         },
         {
           "type": "frame",
@@ -5939,7 +5947,8 @@
               "content": "abcdefghijklmnopqrstuvwxyz\nABCDEFGHIJKLMNOPQRSTUVWXYZ\n0123456789 !@#$%^&*()_+-=[]{}|;':\",./<>?",
               "lineHeight": 1.4,
               "fontFamily": "JetBrains Mono",
-              "fontSize": 20
+              "fontSize": 20,
+              "fontWeight": "normal"
             }
           ]
         },
@@ -6084,9 +6093,13 @@
                   "ref": "EADi2",
                   "name": "navCta",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -6884,7 +6897,19 @@
                           "ref": "bzCAK",
                           "name": "dr1d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -6948,7 +6973,19 @@
                           "ref": "bzCAK",
                           "name": "dr2d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -7012,7 +7049,19 @@
                           "ref": "bzCAK",
                           "name": "dr3d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -7076,7 +7125,19 @@
                           "ref": "bzCAK",
                           "name": "dr4d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -7133,7 +7194,19 @@
                           "ref": "8DoN4",
                           "name": "dr5d",
                           "x": 752,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "I3Ix1": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "jo47b": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     }
@@ -7184,7 +7257,9 @@
                   "y": 69,
                   "descendants": {
                     "g8oY8": {
-                      "content": "как устроен пайплайн?"
+                      "content": "как устроен пайплайн?",
+                      "x": 16,
+                      "y": 11
                     }
                   }
                 },
@@ -7670,9 +7745,13 @@
                   "ref": "EADi2",
                   "name": "navCta",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -8134,9 +8213,13 @@
                   "ref": "EADi2",
                   "name": "navCta",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -8629,9 +8712,13 @@
                   "ref": "EADi2",
                   "name": "nrb1",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -8763,7 +8850,19 @@
                       "ref": "8DoN4",
                       "name": "fileBadge",
                       "x": 1200,
-                      "y": 23
+                      "y": 23,
+                      "width": "fit_content",
+                      "height": "fit_content",
+                      "descendants": {
+                        "I3Ix1": {
+                          "x": 10,
+                          "y": 7.5
+                        },
+                        "jo47b": {
+                          "x": 22,
+                          "y": 4
+                        }
+                      }
                     }
                   ]
                 },
@@ -9034,9 +9133,13 @@
                   "ref": "EADi2",
                   "name": "nrb1",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -9166,7 +9269,21 @@
                       "id": "btbNh",
                       "type": "ref",
                       "ref": "bzCAK",
-                      "name": "newBadge"
+                      "name": "newBadge",
+                      "width": "fit_content",
+                      "height": "fit_content",
+                      "x": 1230,
+                      "y": 23,
+                      "descendants": {
+                        "HbeK7": {
+                          "x": 10,
+                          "y": 7.5
+                        },
+                        "fNZz4": {
+                          "x": 22,
+                          "y": 4
+                        }
+                      }
                     }
                   ]
                 },
@@ -9406,9 +9523,13 @@
                           "type": "ref",
                           "ref": "EADi2",
                           "name": "succBtn1",
+                          "width": "fit_content",
+                          "height": "fit_content",
                           "descendants": {
                             "tORmI": {
-                              "content": "дашборд"
+                              "content": "дашборд",
+                              "x": 16,
+                              "y": 8
                             }
                           }
                         },
@@ -9417,7 +9538,15 @@
                           "type": "ref",
                           "ref": "mj0k3",
                           "name": "succBtn2",
-                          "x": 107
+                          "x": 107,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "xNaM3": {
+                              "x": 16,
+                              "y": 8
+                            }
+                          }
                         }
                       ]
                     }
@@ -9504,9 +9633,13 @@
                   "ref": "EADi2",
                   "name": "nrb1",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -9640,7 +9773,19 @@
                       "ref": "8DoN4",
                       "name": "fileBadge",
                       "x": 1200,
-                      "y": 23
+                      "y": 23,
+                      "width": "fit_content",
+                      "height": "fit_content",
+                      "descendants": {
+                        "I3Ix1": {
+                          "x": 10,
+                          "y": 7.5
+                        },
+                        "jo47b": {
+                          "x": 22,
+                          "y": 4
+                        }
+                      }
                     }
                   ]
                 },
@@ -9894,9 +10039,13 @@
                           "type": "ref",
                           "ref": "EADi2",
                           "name": "errRetry",
+                          "width": "fit_content",
+                          "height": "fit_content",
                           "descendants": {
                             "tORmI": {
-                              "content": "повторить"
+                              "content": "повторить",
+                              "x": 16,
+                              "y": 8
                             }
                           }
                         }
@@ -9978,9 +10127,13 @@
                   "ref": "EADi2",
                   "name": "navCta",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -10473,9 +10626,13 @@
                   "ref": "EADi2",
                   "name": "navCta",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -10968,9 +11125,13 @@
                   "ref": "EADi2",
                   "name": "navCta",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -11143,9 +11304,13 @@
                           "type": "ref",
                           "ref": "EADi2",
                           "name": "dupYes",
+                          "width": "fit_content",
+                          "height": "fit_content",
                           "descendants": {
                             "tORmI": {
-                              "content": "загрузить"
+                              "content": "загрузить",
+                              "x": 16,
+                              "y": 8
                             }
                           }
                         },
@@ -11154,7 +11319,15 @@
                           "type": "ref",
                           "ref": "mj0k3",
                           "name": "dupNo",
-                          "x": 120
+                          "x": 120,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "xNaM3": {
+                              "x": 16,
+                              "y": 8
+                            }
+                          }
                         }
                       ]
                     }
@@ -12137,9 +12310,13 @@
                       "name": "emptyBtn",
                       "x": 355,
                       "y": 362.5,
+                      "width": "fit_content",
+                      "height": "fit_content",
                       "descendants": {
                         "tORmI": {
-                          "content": "загрузить файл"
+                          "content": "загрузить файл",
+                          "x": 16,
+                          "y": 8
                         }
                       }
                     }
@@ -12802,7 +12979,19 @@
                           "ref": "bzCAK",
                           "name": "dr1d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -12866,7 +13055,19 @@
                           "ref": "bzCAK",
                           "name": "dr2d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -12930,7 +13131,19 @@
                           "ref": "bzCAK",
                           "name": "dr3d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -12994,7 +13207,19 @@
                           "ref": "bzCAK",
                           "name": "dr4d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -13051,7 +13276,19 @@
                           "ref": "8DoN4",
                           "name": "dr5d",
                           "x": 752,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "I3Ix1": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "jo47b": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     }
@@ -13350,7 +13587,15 @@
                   "ref": "X9sRS",
                   "name": "delBtn",
                   "x": 32,
-                  "y": 542
+                  "y": 542,
+                  "width": "fit_content",
+                  "height": "fit_content",
+                  "descendants": {
+                    "k0CVY": {
+                      "x": 16,
+                      "y": 8
+                    }
+                  }
                 }
               ]
             }
@@ -13772,7 +14017,19 @@
                           "ref": "bzCAK",
                           "name": "dr1d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -13836,7 +14093,19 @@
                           "ref": "bzCAK",
                           "name": "dr2d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -13900,7 +14169,19 @@
                           "ref": "bzCAK",
                           "name": "dr3d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -13964,7 +14245,19 @@
                           "ref": "bzCAK",
                           "name": "dr4d",
                           "x": 782,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -14021,7 +14314,19 @@
                           "ref": "8DoN4",
                           "name": "dr5d",
                           "x": 752,
-                          "y": 10
+                          "y": 10,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "I3Ix1": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "jo47b": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     }
@@ -14072,7 +14377,9 @@
                   "y": 69,
                   "descendants": {
                     "g8oY8": {
-                      "content": "как устроен пайплайн?"
+                      "content": "как устроен пайплайн?",
+                      "x": 16,
+                      "y": 11
                     }
                   }
                 },
@@ -14628,7 +14935,15 @@
                   "ref": "DkItz",
                   "name": "newTokBtn",
                   "x": 0,
-                  "y": 166
+                  "y": 166,
+                  "width": "fit_content",
+                  "height": "fit_content",
+                  "descendants": {
+                    "D4JGq": {
+                      "x": 16,
+                      "y": 8
+                    }
+                  }
                 },
                 {
                   "type": "text",
@@ -14715,7 +15030,15 @@
                   "ref": "DkItz",
                   "name": "shareNewBtn",
                   "x": 0,
-                  "y": 339
+                  "y": 339,
+                  "width": "fit_content",
+                  "height": "fit_content",
+                  "descendants": {
+                    "D4JGq": {
+                      "x": 16,
+                      "y": 8
+                    }
+                  }
                 }
               ]
             },
@@ -14777,7 +15100,19 @@
                           "type": "ref",
                           "ref": "bzCAK",
                           "name": "card1badge",
-                          "x": 378
+                          "x": 378,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "HbeK7": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "fNZz4": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -14800,7 +15135,15 @@
                       "ref": "DkItz",
                       "name": "card1btn",
                       "x": 20,
-                      "y": 129
+                      "y": 129,
+                      "width": "fit_content",
+                      "height": "fit_content",
+                      "descendants": {
+                        "D4JGq": {
+                          "x": 16,
+                          "y": 8
+                        }
+                      }
                     }
                   ]
                 },
@@ -14843,7 +15186,19 @@
                           "type": "ref",
                           "ref": "aOADT",
                           "name": "card2badge",
-                          "x": 366
+                          "x": 366,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "gCtUI": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "oPApB": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -14866,7 +15221,15 @@
                       "ref": "DkItz",
                       "name": "card2btn",
                       "x": 20,
-                      "y": 129
+                      "y": 129,
+                      "width": "fit_content",
+                      "height": "fit_content",
+                      "descendants": {
+                        "D4JGq": {
+                          "x": 16,
+                          "y": 8
+                        }
+                      }
                     }
                   ]
                 },
@@ -14909,7 +15272,19 @@
                           "type": "ref",
                           "ref": "aOADT",
                           "name": "card3badge",
-                          "x": 366
+                          "x": 366,
+                          "width": "fit_content",
+                          "height": "fit_content",
+                          "descendants": {
+                            "gCtUI": {
+                              "x": 10,
+                              "y": 7.5
+                            },
+                            "oPApB": {
+                              "x": 22,
+                              "y": 4
+                            }
+                          }
                         }
                       ]
                     },
@@ -14932,7 +15307,15 @@
                       "ref": "DkItz",
                       "name": "card3btn",
                       "x": 20,
-                      "y": 129
+                      "y": 129,
+                      "width": "fit_content",
+                      "height": "fit_content",
+                      "descendants": {
+                        "D4JGq": {
+                          "x": 16,
+                          "y": 8
+                        }
+                      }
                     }
                   ]
                 }
@@ -15381,7 +15764,15 @@
                   "ref": "X9sRS",
                   "name": "dangerBtn",
                   "x": 1209,
-                  "y": 17.5
+                  "y": 17.5,
+                  "width": "fit_content",
+                  "height": "fit_content",
+                  "descendants": {
+                    "k0CVY": {
+                      "x": 16,
+                      "y": 8
+                    }
+                  }
                 }
               ]
             }
@@ -15458,9 +15849,13 @@
                   "ref": "EADi2",
                   "name": "navCta",
                   "x": 141,
+                  "width": "fit_content",
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "get started"
+                      "content": "get started",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 }
@@ -15904,7 +16299,13 @@
                   "width": "fill_container",
                   "name": "modalInput",
                   "x": 40,
-                  "y": 193
+                  "y": 193,
+                  "descendants": {
+                    "g8oY8": {
+                      "x": 16,
+                      "y": 11
+                    }
+                  }
                 },
                 {
                   "id": "73K3K",
@@ -15914,9 +16315,12 @@
                   "name": "modalBtn",
                   "x": 40,
                   "y": 257,
+                  "height": "fit_content",
                   "descendants": {
                     "tORmI": {
-                      "content": "продолжить"
+                      "content": "продолжить",
+                      "x": 16,
+                      "y": 8
                     }
                   }
                 },
@@ -18330,6 +18734,1872 @@
                   "fontFamily": "Inter",
                   "fontSize": 12,
                   "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "4JOBc",
+      "x": 0,
+      "y": 90244,
+      "name": "CV · Page 1 · RU",
+      "width": 794,
+      "height": 1123,
+      "fill": "$--white",
+      "layout": "vertical",
+      "gap": 28,
+      "padding": [
+        56,
+        60
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "xzmdJ",
+          "name": "header",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "text",
+              "id": "GY7ru",
+              "name": "nameText",
+              "fill": "$--black",
+              "content": "ЖАСЛАН УТЕГЕНОВ",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 36,
+              "fontWeight": "700",
+              "letterSpacing": -1
+            },
+            {
+              "type": "text",
+              "id": "xWsCH",
+              "name": "titleText",
+              "fill": "$--text-tertiary",
+              "content": "Founder & Technical Lead · Contexter",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 14
+            },
+            {
+              "type": "frame",
+              "id": "WOiCt",
+              "name": "contactRow",
+              "width": "fill_container",
+              "gap": 16,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "5Srl3",
+                  "name": "phone",
+                  "fill": "$--text-secondary",
+                  "content": "+7 702 860 66 03",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                },
+                {
+                  "type": "text",
+                  "id": "eARzx",
+                  "name": "sep1",
+                  "fill": "$--text-tertiary",
+                  "content": "·",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "V5qGg",
+                  "name": "email",
+                  "fill": "$--text-secondary",
+                  "content": "nopointttt@gmail.com",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                },
+                {
+                  "type": "text",
+                  "id": "5xa5F",
+                  "name": "sep2",
+                  "fill": "$--text-tertiary",
+                  "content": "·",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "pYLwV",
+                  "name": "tg",
+                  "fill": "$--text-secondary",
+                  "content": "@nopointsovereign",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                },
+                {
+                  "type": "text",
+                  "id": "KwKDI",
+                  "name": "sep3",
+                  "fill": "$--text-tertiary",
+                  "content": "·",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "zPlwH",
+                  "name": "url",
+                  "fill": "$--accent",
+                  "content": "contexter-web.pages.dev",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "mMpEx",
+          "name": "divider",
+          "fill": "$--accent",
+          "width": "fill_container",
+          "height": 2
+        },
+        {
+          "type": "frame",
+          "id": "HpAgx",
+          "name": "summarySection",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "children": [
+            {
+              "type": "text",
+              "id": "IMHqF",
+              "name": "summaryLabel",
+              "fill": "$--accent",
+              "content": "РЕЗЮМЕ",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "XXAwZ",
+              "name": "summaryText",
+              "fill": "$--text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Технический фаундер-самоучка. Спроектировал и задеплоил Contexter — production RAG-as-a-Service платформу на Cloudflare edge network — за 7 дней. 11K строк кода, 12 API эндпоинтов, 12 MCP-инструментов, 12 форматов файлов. Продукт протестирован в Claude.ai (Anthropic) через MCP — целевые платформы: ChatGPT, Perplexity, Cursor, Antigravity. Ищу GTM-кофаундера для выхода на рынок. Таргет: рынок RAG $11B к 2030 (CAGR 49.1%).",
+              "lineHeight": 1.6,
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 12
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "TbGtv",
+          "name": "productSection",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "children": [
+            {
+              "type": "text",
+              "id": "Maowu",
+              "name": "productLabel",
+              "fill": "$--accent",
+              "content": "ПРОДУКТ: CONTEXTER",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "GzwSv",
+              "name": "productDesc",
+              "fill": "$--text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "AI-powered база знаний с простой загрузкой файлов и MCP-подключением к LLM-клиентам",
+              "lineHeight": 1.5,
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 12
+            },
+            {
+              "type": "frame",
+              "id": "7IE6g",
+              "name": "metricsGrid",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "b66TL",
+                  "name": "metricsCol1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nq416",
+                      "name": "m1",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "→ 11K LOC (TypeScript, SolidJS, Hono)",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    },
+                    {
+                      "type": "text",
+                      "id": "g6nU1",
+                      "name": "m2",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "→ 12 форматов: PDF, DOCX, audio, video, images",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    },
+                    {
+                      "type": "text",
+                      "id": "tQPxZ",
+                      "name": "m3",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "→ Hybrid search: vector + full-text + RRF fusion",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "QFjCM",
+                  "name": "metricsCol2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "EDY9D",
+                      "name": "m4",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "→ 12 MCP-инструментов (Claude.ai native)",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    },
+                    {
+                      "type": "text",
+                      "id": "WL2LX",
+                      "name": "m5",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "→ OAuth 2.1 + PKCE + share tokens",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    },
+                    {
+                      "type": "text",
+                      "id": "FfFZ3",
+                      "name": "m6",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "→ 300+ edge nodes, async pipeline + retry",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "KQqCN",
+              "name": "linksRow",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "NdjGf",
+                  "name": "link1",
+                  "fill": "$--accent",
+                  "content": "Live: contexter-web.pages.dev",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "ljxnG",
+                  "name": "link2",
+                  "fill": "$--accent",
+                  "content": "API: contexter.nopoint.workers.dev",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "c0baV",
+                  "name": "link3",
+                  "fill": "$--accent",
+                  "content": "GitHub: github.com/nopointt/contexter",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "IX2SR",
+          "name": "divider2",
+          "fill": "$--border-default",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "jxTIl",
+          "name": "skillsSection",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "children": [
+            {
+              "type": "text",
+              "id": "q2JjY",
+              "name": "skillsLabel",
+              "fill": "$--accent",
+              "content": "ТЕХНИЧЕСКИЙ СТЕК",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "PMufO",
+              "name": "skillsGrid",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "FCKMc",
+                  "name": "skillsCol1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "DIXHY",
+                      "name": "sk1label",
+                      "fill": "$--text-primary",
+                      "content": "AI / ML",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "F1HCV",
+                      "name": "sk1val",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "RAG, LLM orchestration, embeddings,\nsemantic search, MCP, agent systems",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10
+                    },
+                    {
+                      "type": "text",
+                      "id": "qvJ6q",
+                      "name": "sk2label",
+                      "fill": "$--text-primary",
+                      "content": "Backend",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ST1cn",
+                      "name": "sk2val",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "TypeScript, Hono, Python, Drizzle ORM,\nREST API, OAuth 2.1, async pipelines",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Yok2g",
+                  "name": "skillsCol2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "8uGRi",
+                      "name": "sk3label",
+                      "fill": "$--text-primary",
+                      "content": "Frontend",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "SZqPo",
+                      "name": "sk3val",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "SolidJS, Tailwind CSS 4, Vite,\ndesign systems, responsive, a11y",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10
+                    },
+                    {
+                      "type": "text",
+                      "id": "nuMKM",
+                      "name": "sk4label",
+                      "fill": "$--text-primary",
+                      "content": "Infrastructure",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "YrCrq",
+                      "name": "sk4val",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Cloudflare (Workers, D1, R2, Vectorize),\nDocker, NATS, PostgreSQL, Qdrant",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tehPl",
+                  "name": "skillsCol3",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "bQAxx",
+                      "name": "sk5label",
+                      "fill": "$--text-primary",
+                      "content": "Product",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "0Wngk",
+                      "name": "sk5val",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "JTBD, CJM, Custdev, OKR,\nunit economics, pricing models",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10
+                    },
+                    {
+                      "type": "text",
+                      "id": "tvyLe",
+                      "name": "sk6label",
+                      "fill": "$--text-primary",
+                      "content": "Design",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "zJ1vN",
+                      "name": "sk6val",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Bauhaus/Swiss, design tokens,\nPencil, Figma, brand identity",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "l80ye",
+      "x": 0,
+      "y": 91461,
+      "name": "CV · Page 2 · RU",
+      "width": 794,
+      "height": 1123,
+      "fill": "$--white",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        56,
+        60
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "BS1LU",
+          "name": "expSection",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "children": [
+            {
+              "type": "text",
+              "id": "5P9Xj",
+              "name": "expLabel",
+              "fill": "$--accent",
+              "content": "ОПЫТ РАБОТЫ",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "30gTq",
+              "name": "job1",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "zM0qP",
+                  "name": "job1header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "afvkr",
+                      "name": "job1title",
+                      "fill": "$--text-primary",
+                      "content": "CPO · Starteam",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "RanpS",
+                      "name": "job1date",
+                      "fill": "$--text-tertiary",
+                      "content": "2023 — 2024",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "vomgB",
+                  "name": "job1desc",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Продуктовая компания, БАДы и нутрицевтики. Команда 25 человек, 7 стран, 10+ продуктов.\n→ Построил продуктовый процесс с нуля: JTBD, CJM, unit economics, A/B тесты\n→ Управлял R&D, дизайном, маркетингом и логистикой параллельно\n→ Запустил производство в 3 странах (Казахстан, Россия, Индия)",
+                  "lineHeight": 1.6,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WGPhN",
+              "name": "job2",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "DjMVC",
+                  "name": "job2header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "edgX8",
+                      "name": "job2title",
+                      "fill": "$--text-primary",
+                      "content": "CPO · Choose Auto",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "hiRPx",
+                      "name": "job2date",
+                      "fill": "$--text-tertiary",
+                      "content": "2022",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "uRFpU",
+                  "name": "job2desc",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Сервис импорта авто из Кореи. Привлёк 5M RUB инвестиций.\n→ Продуктовая стратегия, unit economics, финансовая модель\n→ Полный цикл: от идеи до работающего сервиса",
+                  "lineHeight": 1.6,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "gTtzY",
+              "name": "job3",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "SA9zj",
+                  "name": "job3header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "dBoWM",
+                      "name": "job3title",
+                      "fill": "$--text-primary",
+                      "content": "Founder · Ocean Studio",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NyaFA",
+                      "name": "job3date",
+                      "fill": "$--text-tertiary",
+                      "content": "2019 — 2021",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "ICGby",
+                  "name": "job3desc",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Брендинг-агентство: веб-разработка, SMM, фирменный стиль.\n→ Полный цикл от брифа до сдачи. 20+ коммерческих проектов\n→ Tilda, кастомная верстка, лендинги, интернет-магазины",
+                  "lineHeight": 1.6,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "3e5zJ",
+              "name": "job4",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QJy8F",
+                  "name": "job4header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "FVdI1",
+                      "name": "job4title",
+                      "fill": "$--text-primary",
+                      "content": "Developer · AI Psychology Avatars",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "cAFQX",
+                      "name": "job4date",
+                      "fill": "$--text-tertiary",
+                      "content": "2025",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 11
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "hFaL9",
+                  "name": "job4desc",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "3 Telegram-бота с AI-аватарами психологов для клиентов из Москвы.\n→ LLM orchestration, prompt engineering, character systems",
+                  "lineHeight": 1.6,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "Go7sl",
+          "name": "divP2",
+          "fill": "$--border-default",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "ohO5h",
+          "name": "projSection",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "children": [
+            {
+              "type": "text",
+              "id": "pF90m",
+              "name": "projLabel",
+              "fill": "$--accent",
+              "content": "ДРУГИЕ ПРОЕКТЫ",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "yha0g",
+              "name": "projGrid",
+              "width": "fill_container",
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "dhwLW",
+                  "name": "proj1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "yAK41",
+                      "name": "proj1name",
+                      "fill": "$--text-primary",
+                      "content": "Harkly · активный проект",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "viXVE",
+                      "name": "proj1desc",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Data Intelligence Platform. Любые данные → структурированная БД → MCP → любая LLM + spatial canvas. Co-founder: Артём. SolidStart + Cloudflare (D1, R2, Vectorize, Queues). MCP-сервер, OAuth 2.1, AI extraction (instructor-js + Zod).",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZiyZJ",
+                  "name": "proj2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "eYRbb",
+                      "name": "proj2name",
+                      "fill": "$--text-primary",
+                      "content": "Thelos · активный проект",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Hx8pz",
+                      "name": "proj2desc",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Sovereign Spatial OS — персональная операционная система с multi-agent архитектурой. Tauri + SolidJS + Python + NATS + LangGraph. 11 Docker-сервисов, 20+ AI-агентов с конституционным управлением, 5-уровневая система памяти.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "1ncvt",
+          "name": "divP3",
+          "fill": "$--border-default",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "amB7K",
+          "name": "whySection",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "children": [
+            {
+              "type": "text",
+              "id": "idMZY",
+              "name": "whyLabel",
+              "fill": "$--accent",
+              "content": "ЗАЧЕМ AI'PRENEURS",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "HEwzs",
+              "name": "whyText",
+              "fill": "$--text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Contexter задеплоен и работает. Финансовая модель рассчитана. Техническая часть готова. Мне нужен GTM-кофаундер с опытом в дистрибуции и маркетинге — человек, который умеет продавать и масштабировать. AI'preneurs — идеальная среда для формирования такой команды. Мой продукт соответствует национальной стратегии Казахстана: 2026 — Год цифровизации и искусственного интеллекта.",
+              "lineHeight": 1.6,
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 11
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "6BKqv",
+          "name": "divP4",
+          "fill": "$--border-default",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "OEeRw",
+          "name": "bottomRow",
+          "width": "fill_container",
+          "gap": 40,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ebGHW",
+              "name": "eduBlock",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "z8HYK",
+                  "name": "eduLabel",
+                  "fill": "$--accent",
+                  "content": "ОБРАЗОВАНИЕ",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 12,
+                  "fontWeight": "600",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "qODSl",
+                  "name": "eduText",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Среднее образование, 11 классов.\nСамоучка: Google, документация,\nopen source, AI-assisted development.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "r7urx",
+              "name": "langBlock",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "VIFTM",
+                  "name": "langLabel",
+                  "fill": "$--accent",
+                  "content": "ЯЗЫКИ",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 12,
+                  "fontWeight": "600",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "GlVpU",
+                  "name": "langText",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Казахский — родной\nРусский — в совершенстве\nАнглийский — разговорный, рабочий",
+                  "lineHeight": 1.5,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "evftU",
+      "x": 900,
+      "y": 90238,
+      "name": "CV · 1 Page · RU",
+      "width": 794,
+      "height": 1123,
+      "fill": "$--white",
+      "layout": "vertical",
+      "gap": 14,
+      "padding": [
+        40,
+        48
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "49SQV",
+          "name": "hdr",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "MF8Nl",
+              "name": "nm",
+              "fill": "$--black",
+              "content": "ЖАСЛАН УТЕГЕНОВ",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 32,
+              "fontWeight": "700",
+              "letterSpacing": -1
+            },
+            {
+              "type": "text",
+              "id": "qMrJp",
+              "name": "ttl",
+              "fill": "$--text-tertiary",
+              "content": "Founder & Technical Lead · Contexter",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 12
+            },
+            {
+              "type": "frame",
+              "id": "Oj2jQ",
+              "name": "cRow",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "QWady",
+                  "name": "c1",
+                  "fill": "$--text-secondary",
+                  "content": "+7 702 860 66 03  ·  nopointttt@gmail.com  ·  @nopointsovereign  ·  contexter-web.pages.dev",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 9
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "dn73X",
+          "name": "dv1",
+          "fill": "$--accent",
+          "width": "fill_container",
+          "height": 2
+        },
+        {
+          "type": "frame",
+          "id": "lwaTX",
+          "name": "sumSec",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "cLYjm",
+              "name": "sumLbl",
+              "fill": "$--accent",
+              "content": "РЕЗЮМЕ",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 10,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "7JgOv",
+              "name": "sumTxt",
+              "fill": "$--text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Технический фаундер-самоучка. Спроектировал и задеплоил Contexter — production RAG-as-a-Service платформу на Cloudflare edge network — за 7 дней. 11K строк кода, 12 API эндпоинтов, 12 MCP-инструментов, 12 форматов файлов. Продукт протестирован в Claude.ai (Anthropic) через MCP — целевые платформы: ChatGPT, Perplexity, Cursor, Antigravity. Ищу GTM-кофаундера для выхода на рынок. Таргет: рынок RAG $11B к 2030 (CAGR 49.1%).",
+              "lineHeight": 1.55,
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 10
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "uiuhf",
+          "name": "prdSec",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "VXD4X",
+              "name": "prdLbl",
+              "fill": "$--accent",
+              "content": "ПРОДУКТ: CONTEXTER",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 10,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "cGnUT",
+              "name": "prdDesc",
+              "fill": "$--text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "AI-powered база знаний с простой загрузкой файлов и MCP-подключением к LLM-клиентам",
+              "lineHeight": 1.5,
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 10
+            },
+            {
+              "type": "frame",
+              "id": "7P36q",
+              "name": "mg",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "gjDxY",
+                  "name": "mc1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "PLZl4",
+                      "name": "mv1",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "→ 11K LOC (TypeScript, SolidJS, Hono)\n→ 12 форматов: PDF, DOCX, audio, video, images\n→ Hybrid search: vector + full-text + RRF fusion",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "f6WY4",
+                  "name": "mc2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "3KM8F",
+                      "name": "mv2",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "→ 12 MCP-инструментов (Claude.ai native)\n→ OAuth 2.1 + PKCE + share tokens\n→ 300+ edge nodes, async pipeline + retry",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "1WUWx",
+              "name": "lnks",
+              "fill": "$--accent",
+              "content": "Live: contexter-web.pages.dev  ·  API: contexter.nopoint.workers.dev  ·  GitHub: github.com/nopointt/contexter",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 9,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "c7Q1h",
+          "name": "dv2",
+          "fill": "$--border-default",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "XPKOt",
+          "name": "skSec",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "pcEHw",
+              "name": "skLbl",
+              "fill": "$--accent",
+              "content": "ТЕХНИЧЕСКИЙ СТЕК",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 10,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "CosbC",
+              "name": "skGrid",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "5qijN",
+                  "name": "skC1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LUwcg",
+                      "name": "skV1",
+                      "fill": "$--text-primary",
+                      "content": "AI / ML",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "GrarO",
+                      "name": "skD1",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "RAG, LLM orchestration, embeddings,\nsemantic search, MCP, agents",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "bOSm0",
+                      "name": "skV2",
+                      "fill": "$--text-primary",
+                      "content": "Backend",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "G5wJf",
+                      "name": "skD2",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "TypeScript, Hono, Python, Drizzle,\nREST API, OAuth 2.1, async pipelines",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 8
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FNQAg",
+                  "name": "skC2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "3lPeP",
+                      "name": "skV3",
+                      "fill": "$--text-primary",
+                      "content": "Frontend",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "8Wk8c",
+                      "name": "skD3",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "SolidJS, Tailwind CSS 4, Vite,\ndesign systems, responsive",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "r37ES",
+                      "name": "skV4",
+                      "fill": "$--text-primary",
+                      "content": "Infrastructure",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "RKRYr",
+                      "name": "skD4",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Cloudflare (Workers, D1, R2, Vectorize),\nDocker, NATS, PostgreSQL, Qdrant",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 8
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bPl3A",
+                  "name": "skC3",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "3XPHc",
+                      "name": "skV5",
+                      "fill": "$--text-primary",
+                      "content": "Product",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AHLkL",
+                      "name": "skD5",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "JTBD, CJM, Custdev, OKR,\nunit economics, pricing models",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "uFWO0",
+                      "name": "skV6",
+                      "fill": "$--text-primary",
+                      "content": "Design",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "oZLFN",
+                      "name": "skD6",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Bauhaus/Swiss, design tokens,\nPencil, Figma, brand identity",
+                      "lineHeight": 1.5,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 8
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "i5x3D",
+          "name": "dv3",
+          "fill": "$--border-default",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "WOUT9",
+          "name": "exSec",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "text",
+              "id": "t1Haw",
+              "name": "exLbl",
+              "fill": "$--accent",
+              "content": "ОПЫТ РАБОТЫ",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 10,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "FoIRD",
+              "name": "j1",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EqI5y",
+                  "name": "j1h",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ODlzm",
+                      "name": "j1t",
+                      "fill": "$--text-primary",
+                      "content": "CPO · Starteam",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AZre9",
+                      "name": "j1d",
+                      "fill": "$--text-tertiary",
+                      "content": "2023–2024",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Z3d80",
+                  "name": "j1desc",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Команда 25 чел., 7 стран, 10+ продуктов. Продуктовый процесс с нуля: JTBD, CJM, unit economics. Производство в 3 странах.",
+                  "lineHeight": 1.45,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 9
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ePLyS",
+              "name": "j2",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "7tY6b",
+                  "name": "j2h",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Fqq4l",
+                      "name": "j2t",
+                      "fill": "$--text-primary",
+                      "content": "CPO · Choose Auto",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "KUY20",
+                      "name": "j2d",
+                      "fill": "$--text-tertiary",
+                      "content": "2022",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "VHVA6",
+                  "name": "j2desc",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Сервис импорта авто из Кореи. Привлёк 5M RUB инвестиций. Полный цикл: от идеи до работающего сервиса.",
+                  "lineHeight": 1.45,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 9
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "2c503",
+              "name": "j3",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BXf3E",
+                  "name": "j3h",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "wDgtM",
+                      "name": "j3t",
+                      "fill": "$--text-primary",
+                      "content": "Founder · Ocean Studio",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "iQBID",
+                      "name": "j3d",
+                      "fill": "$--text-tertiary",
+                      "content": "2019–2021",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "ayeCU",
+                  "name": "j3desc",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Брендинг-агентство. 20+ коммерческих проектов: веб, SMM, фирменный стиль, лендинги.",
+                  "lineHeight": 1.45,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 9
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "edxRR",
+              "name": "j4",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "wSNwO",
+                  "name": "j4h",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nfwNd",
+                      "name": "j4t",
+                      "fill": "$--text-primary",
+                      "content": "Developer · AI Psychology Avatars",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "F3g3d",
+                      "name": "j4d",
+                      "fill": "$--text-tertiary",
+                      "content": "2025",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 9
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "zyIbI",
+                  "name": "j4desc",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "3 Telegram-бота с AI-аватарами психологов. LLM orchestration, prompt engineering.",
+                  "lineHeight": 1.45,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 9
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "JTEw7",
+          "name": "dv4",
+          "fill": "$--border-default",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "4z92O",
+          "name": "prSec",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "8a8J6",
+              "name": "prLbl",
+              "fill": "$--accent",
+              "content": "ПРОЕКТЫ · АКТИВНЫЕ",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 10,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "xj8xF",
+              "name": "prGrid",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "CzFgF",
+                  "name": "pr1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fTPls",
+                      "name": "pr1n",
+                      "fill": "$--text-primary",
+                      "content": "Harkly",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "uoNwy",
+                      "name": "pr1d",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Data Intelligence Platform. Любые данные → структурированная БД → MCP → LLM + spatial canvas. Co-founder: Артём. SolidStart + CF.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 8
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "1Z3D6",
+                  "name": "pr2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "lnkZG",
+                      "name": "pr2n",
+                      "fill": "$--text-primary",
+                      "content": "Thelos",
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "m5rV0",
+                      "name": "pr2d",
+                      "fill": "$--text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Sovereign Spatial OS. Multi-agent desktop: Tauri + SolidJS + Python + NATS + LangGraph. 20+ AI-агентов, конституционное управление.",
+                      "lineHeight": 1.45,
+                      "fontFamily": "JetBrains Mono",
+                      "fontSize": 8
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "6LW4n",
+          "name": "dv5",
+          "fill": "$--border-default",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "eiugl",
+          "name": "whSec",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "i2uTb",
+              "name": "whLbl",
+              "fill": "$--accent",
+              "content": "ЗАЧЕМ AI'PRENEURS",
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 10,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "T50Oz",
+              "name": "whTxt",
+              "fill": "$--text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Contexter задеплоен и работает. Финансовая модель рассчитана. Техническая часть готова. Ищу GTM-кофаундера с опытом в дистрибуции — AI'preneurs идеальная среда для формирования команды.",
+              "lineHeight": 1.45,
+              "fontFamily": "JetBrains Mono",
+              "fontSize": 9
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "rkYpV",
+          "name": "dv6",
+          "fill": "$--border-default",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "Kv9OW",
+          "name": "btRow",
+          "width": "fill_container",
+          "gap": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "28hK5",
+              "name": "edB",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "tdyP7",
+                  "name": "edL",
+                  "fill": "$--accent",
+                  "content": "ОБРАЗОВАНИЕ",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 10,
+                  "fontWeight": "600",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "9gehR",
+                  "name": "edV",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Среднее, 11 классов. Самоучка: Google,\nдокументация, open source, AI-dev.",
+                  "lineHeight": 1.45,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 9
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qQL6h",
+              "name": "lnB",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "QW5AH",
+                  "name": "lnL",
+                  "fill": "$--accent",
+                  "content": "ЯЗЫКИ",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 10,
+                  "fontWeight": "600",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "Rlqr9",
+                  "name": "lnV",
+                  "fill": "$--text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Казахский — родной\nРусский — в совершенстве\nАнглийский — разговорный, рабочий",
+                  "lineHeight": 1.45,
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 9
                 }
               ]
             }

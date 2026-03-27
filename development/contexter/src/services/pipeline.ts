@@ -213,10 +213,19 @@ export async function runPipelineAsync(
 ): Promise<void> {
   const { parserService, chunkerService, embedderService, vectorStoreService } = createServices(env, sql)
 
+  const MAX_DECOMPRESSED_BYTES = 50 * 1024 * 1024
+
   let parseResult: ParseResult
   try {
     await updateJobStatus(sql, jobIds.parse, "running")
     parseResult = await withTimeout(parserService.parse(input), STAGE_TIMEOUT_MS.parse, "parse")
+    // NEW-007: zip bomb protection — reject documents whose decompressed content exceeds 50MB
+    if (parseResult.content.length > MAX_DECOMPRESSED_BYTES) {
+      const msg = "decompressed content exceeds 50MB limit"
+      await updateJobStatus(sql, jobIds.parse, "error", 0, msg)
+      await updateDocumentStatus(sql, documentId, "failed", msg)
+      return
+    }
     await updateJobStatus(sql, jobIds.parse, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)

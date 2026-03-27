@@ -1,6 +1,7 @@
 import { Route, Navigate } from "@solidjs/router"
 import { lazy } from "solid-js"
 
+const Landing = lazy(() => import("./pages/Landing"))
 const Hero = lazy(() => import("./pages/Hero"))
 const Dashboard = lazy(() => import("./pages/Dashboard"))
 const DocumentViewer = lazy(() => import("./pages/DocumentViewer"))
@@ -10,10 +11,11 @@ const Settings = lazy(() => import("./pages/Settings"))
 export default function App() {
   return (
     <>
-      <Route path="/" component={Hero} />
+      <Route path="/" component={Landing} />
+      <Route path="/app" component={Hero} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/documents/:id" component={DocumentViewer} />
-      <Route path="/upload" component={() => <Navigate href="/" />} />
+      <Route path="/upload" component={() => <Navigate href="/app" />} />
       <Route path="/api" component={ApiPage} />
       <Route path="/settings" component={Settings} />
     </>

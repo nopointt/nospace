@@ -21,7 +21,8 @@ function formatSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-function formatDateFull(iso: string): string {
+function formatDateFull(iso: string | null | undefined): string {
+  if (!iso) return "—"
   const d = new Date(iso)
   const dd = String(d.getDate()).padStart(2, "0")
   const mm = String(d.getMonth() + 1).padStart(2, "0")

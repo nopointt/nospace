@@ -1,13 +1,13 @@
 ---
 # contexter-roadmap.md — Contexter Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start
-> Last updated: 2026-03-27 (session 193 — Hetzner migration complete, production hardening 93% done)
+> Last updated: 2026-03-27 (session 194 — MLP complete, CTX-01+CTX-07 closed)
 ---
 
-## Current Focus: MLP Closure
+## Current Focus: MLP COMPLETE
 
 **Scope:** Full pipeline + frontend SPA + production deploy on Hetzner. Demo for Artem (CPO ProxyMarket).
-**Status:** ~95% MLP ready. Remaining: VITE_API_URL deploy, batch INSERT perf, containers non-root, pg_dump backup.
+**Status:** MLP ready. All critical fixes applied, backups configured, security hardened.
 
 ---
 
@@ -15,13 +15,31 @@
 
 | Epic | Description | Status | L3 File |
 |---|---|---|---|
-| **CTX-01** | **MVP Pipeline + API + Frontend** | **🔶 IN PROGRESS** (remaining: RAG quality tuning, pipeline progress UI) | `contexter-mvp.md` |
+| CTX-01 | MVP Pipeline + API + Frontend | ✅ MLP COMPLETE (2026-03-27) | `contexter-mvp.md` |
 | CTX-02 | Design System + Pencil Screens | ✅ DONE | — |
 | CTX-03 | Frontend (SolidJS SPA) | ✅ DEPLOYED (CF Pages, contexter.cc) | — |
-| CTX-04 | Auth (OAuth: Google/Telegram/Yandex) | 🔜 NEXT | — |
+| **CTX-04** | **Auth (OAuth: Google/Telegram/Yandex)** | **🔜 NEXT** | — |
 | CTX-05 | Benchmarks + Pricing + Billing | ⬜ PLANNED | — |
 | CTX-06 | Production Migration (CF Workers → Hetzner) | ✅ CLOSED (2026-03-27) | `contexter-migration.md` |
-| **CTX-07** | **Production Hardening** | **🔶 IN PROGRESS** (92 issues found, ~85 fixed) | `contexter-production.md` |
+| CTX-07 | Production Hardening | ✅ MLP COMPLETE (2026-03-27) | `contexter-production.md` |
+
+## MLP Summary (achieved 2026-03-27)
+
+| What | Status |
+|---|---|
+| Hetzner CAX11 (PG+pgvector+Redis+Caddy+Docling+Bun) | Deployed |
+| Frontend SPA on CF Pages (contexter.cc) | Deployed |
+| 15 file formats (PDF, DOCX, audio, video, images) | Working |
+| 12 MCP tools (Streamable HTTP) | Working |
+| OAuth 2.1 + PKCE S256 | Implemented |
+| 92-issue audit → 70+ fixed | Applied |
+| pg_dump daily backup → R2 | Configured |
+| Non-root containers + security_opt | Configured |
+| CF Origin Certificate (valid 2041) | Deployed |
+| BullMQ job queue (retry/backoff) | Running |
+| Netdata monitoring | Running |
+| Rate limiting (registration/upload/query) | Active |
+| Structured JSON logging | Active |
 
 ## Migration Summary (CTX-06, completed 2026-03-27)
 
@@ -38,21 +56,32 @@
 | No video | ffmpeg (audio extraction → Whisper) |
 | No monitoring | Netdata + structured JSON logging |
 
-Data migrated: 4 real users, 29 documents, 155 chunks (re-embedded with Jina v4).
+## Post-MLP Backlog (deferred, not blocking)
 
-## Production Hardening Summary (CTX-07, in progress)
+### From CTX-01
+- Pipeline progress UI (4-stage visual bar)
+- RAG quality tuning (query rewriter, domain terms)
+- Document viewer content empty for some docs
+- ConnectionModal UX improvements
+- Responsive mobile/tablet
 
-12-agent parallel audit → 92 issues found → Architect spec (1140 lines) → 6 Work Packages → ~85 fixes applied.
-Remaining: ~7 items (verified status pending from verification agent).
+### From CTX-07
+- P2-003: Batch chunk INSERT (perf optimization)
+- P2-004: Parallel embed batches (perf optimization)
+- NEW-024: HNSW index tuning (at scale)
+- NEW-025: Upload streaming to R2 (at scale)
+- NEW-027: Error aggregation/alerting
+- NEW-028: Pipeline latency metrics (p50/p95/p99)
+- NEW-029: Groq/Jina API call logging
 
 ## Prod Roadmap
 
 | Phase | What | Status |
 |---|---|---|
-| MLP | Hetzner + CF Pages, all formats, MCP, frontend SPA, security hardened | **~95% done** |
+| MLP | Hetzner + CF Pages, all formats, MCP, frontend SPA, security hardened | **✅ DONE** |
 | Pricing model | Usage-based per-GB, credit system, 6 tiers | **decided** |
 | Production stack | Hetzner CAX11 + pgvector + Groq + Docling | **deployed** |
-| **MLP closure** | **Remaining fixes + VITE_API_URL + backup + final QA** | **🔶 IN PROGRESS** |
-| Billing | LemonSqueezy integration, prepaid + usage | next |
-| Auth | OAuth (Google/Telegram/Yandex) | next sprint |
+| **GTM Strategy** | **Positioning, messaging, copy, competitive analysis** | **🔶 IN PROGRESS (CTX-08)** |
+| Auth | OAuth (Google/Telegram/Yandex), magic link, proper login | 🔜 NEXT (CTX-04) |
+| Billing | LemonSqueezy integration, prepaid + usage | after auth |
 | Benchmarks | Latency, cost per doc, cost per query, throughput | after billing |

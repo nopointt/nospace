@@ -180,13 +180,31 @@ upload.post("/", async (c) => {
   // Create 4 pending job rows (parse, chunk, embed, index)
   const jobIds = await createPendingJobs(sql, documentId, auth.userId)
 
-  // Enqueue pipeline job — response returns immediately
+  // NEW-014: Enqueue pipeline job — if both BullMQ and direct fallback fail, rollback document row
+  let enqueued = false
   try {
     const queue = getPipelineQueue(process.env.REDIS_URL ?? "redis://localhost:6379")
     await queue.add("process", { documentId, userId: auth.userId, fileName: safeFileName, mimeType, fileSize: file.size, r2Key, jobIds })
+    enqueued = true
   } catch (qErr) {
     console.error("BullMQ enqueue failed, falling back to direct run:", qErr instanceof Error ? qErr.message : String(qErr))
-    runPipelineAsync(documentId, { file: buffer, fileName: safeFileName, mimeType, fileSize: file.size }, env, sql, auth.userId, jobIds).catch(console.error)
+    try {
+      runPipelineAsync(documentId, { file: buffer, fileName: safeFileName, mimeType, fileSize: file.size }, env, sql, auth.userId, jobIds)
+        .catch(console.error)
+      enqueued = true
+    } catch (directErr) {
+      console.error("Direct pipeline fallback also failed:", directErr instanceof Error ? directErr.message : String(directErr))
+    }
+  }
+
+  if (!enqueued) {
+    try {
+      await sql`DELETE FROM documents WHERE id = ${documentId}`
+      console.error(`Rolled back document ${documentId} — both enqueue paths failed`)
+    } catch (rollbackErr) {
+      console.error("Rollback failed for document:", documentId, rollbackErr instanceof Error ? rollbackErr.message : String(rollbackErr))
+    }
+    return c.json({ error: "Failed to start processing pipeline. Please retry." }, 503)
   }
 
   return c.json({

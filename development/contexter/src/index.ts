@@ -82,7 +82,7 @@ app.use("*", async (c, next) => {
     ts: new Date().toISOString(),
     rid: requestId,
     method: c.req.method,
-    path: c.req.path,
+    path: new URL(c.req.url).pathname,
     status: c.res.status,
     ms: duration,
   }))

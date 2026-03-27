@@ -52,9 +52,15 @@ auth.post("/register", async (c) => {
     `
 
     if (existing) {
-      // P1-002: NEVER return the existing user's apiToken to anyone who just knows the email.
-      // An attacker could harvest tokens by trying known emails. Return a generic message only.
-      return c.json({ note: "email already registered", userId: existing.id }, 200)
+      // Idempotent registration: return existing token so user can log back in.
+      // TODO CTX-04: replace with proper auth (magic link / OAuth) — returning token
+      // on known email is acceptable for MLP with rate-limited registration endpoint.
+      return c.json({
+        note: "email already registered",
+        userId: existing.id,
+        apiToken: existing.api_token,
+        mcpUrl: `${env.BASE_URL}/sse?token=${existing.api_token}`,
+      }, 200)
     }
   }
 

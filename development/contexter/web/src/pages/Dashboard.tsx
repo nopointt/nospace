@@ -123,6 +123,7 @@ const Dashboard: Component = () => {
   const [totalVectors, setTotalVectors] = createSignal(0)
   const [totalQueries, setTotalQueries] = createSignal(0)
   const [loading, setLoading] = createSignal(true)
+  const [loadError, setLoadError] = createSignal(false)
   const [selectedId, setSelectedId] = createSignal<string | null>(null)
   const [selectedDetail, setSelectedDetail] = createSignal<DocumentDetail | null>(null)
   const [detailLoading, setDetailLoading] = createSignal(false)
@@ -153,12 +154,14 @@ const Dashboard: Component = () => {
     const token = getToken()
     if (!token) return
     setLoading(true)
+    setLoadError(false)
     try {
       const res = await listDocuments(token)
       setDocuments(res.documents)
       setTotalChunks(res.totalChunks)
       setTotalVectors(res.totalChunks)
     } catch (e) {
+      setLoadError(true)
       showToast("не удалось загрузить документы.", "error")
     } finally {
       setLoading(false)
@@ -340,8 +343,34 @@ const Dashboard: Component = () => {
               </For>
             </Show>
 
+            {/* Error state */}
+            <Show when={!loading() && loadError()}>
+              <div
+                class="flex flex-col items-start"
+                style={{ padding: "32px 16px", gap: "12px" }}
+              >
+                <p style={{ "font-size": "13px", color: "#D32F2F" }}>
+                  не удалось загрузить документы
+                </p>
+                <button
+                  onClick={loadDocuments}
+                  style={{
+                    "font-size": "12px",
+                    color: "#1E3EA0",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "0",
+                    "text-decoration": "underline",
+                  }}
+                >
+                  повторить
+                </button>
+              </div>
+            </Show>
+
             {/* Empty state */}
-            <Show when={!loading() && documents().length === 0}>
+            <Show when={!loading() && !loadError() && documents().length === 0}>
               <div
                 class="flex flex-col items-center justify-center gap-4"
                 style={{ padding: "48px 16px" }}
