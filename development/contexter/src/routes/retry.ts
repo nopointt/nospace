@@ -1,10 +1,15 @@
 import { Hono } from "hono"
+import type { Sql } from "postgres"
 import type { Env } from "../types/env"
+import type Redis from "ioredis"
 import { resolveAuth, canAccessDocument } from "../services/auth"
 import { resumePipelineFromStage } from "../services/pipeline"
 import type { StageType } from "../services/pipeline"
+import { getPipelineQueue } from "../services/queue"
 
-export const retry = new Hono<{ Bindings: Env }>()
+type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
+
+export const retry = new Hono<AppEnv>()
 
 const VALID_STAGES: readonly string[] = ["parse", "chunk", "embed", "index"]
 
@@ -20,7 +25,9 @@ interface JobRow {
  * Optionally accepts { stage: "embed" } to force retry from a specific stage.
  */
 retry.post("/:documentId", async (c) => {
-  const auth = await resolveAuth(c.env.DB, c.req.raw)
+  const sql = c.get("sql")
+  const env = c.get("env")
+  const auth = await resolveAuth(sql, c.req.raw)
   if (!auth) return c.json({ error: "Unauthorized." }, 401)
   if (auth.permission !== "read_write") return c.json({ error: "Write access required." }, 403)
 
@@ -28,25 +35,25 @@ retry.post("/:documentId", async (c) => {
   if (!canAccessDocument(auth, documentId)) return c.json({ error: "Access denied." }, 403)
 
   // Verify document exists and belongs to user
-  const doc = await c.env.DB.prepare(
-    "SELECT id, status FROM documents WHERE id = ? AND user_id = ?"
-  ).bind(documentId, auth.userId).first<{ id: string; status: string }>()
+  const [doc] = await sql<{ id: string; status: string; name: string; mime_type: string; size: number; r2_key: string }[]>`
+    SELECT id, status, name, mime_type, size, r2_key FROM documents WHERE id = ${documentId} AND user_id = ${auth.userId}
+  `
 
   if (!doc) return c.json({ error: "Document not found." }, 404)
 
   // Allow retry on errored or stuck-processing documents.
   // "processing" can mean a stuck job when the pipeline worker was killed without
-  // writing an error (e.g. CF wall-clock timeout before our stage timeout fired).
+  // writing an error (e.g. timeout before our stage timeout fired).
   if (doc.status !== "error" && doc.status !== "processing") {
     return c.json({ error: `Cannot retry: document status is "${doc.status}", expected "error" or "processing".` }, 409)
   }
 
   // Get all jobs for this document
-  const jobsResult = await c.env.DB.prepare(
-    "SELECT id, type, status FROM jobs WHERE document_id = ? ORDER BY CASE type WHEN 'parse' THEN 1 WHEN 'chunk' THEN 2 WHEN 'embed' THEN 3 WHEN 'index' THEN 4 ELSE 5 END"
-  ).bind(documentId).all<JobRow>()
+  const jobs = await sql<JobRow[]>`
+    SELECT id, type, status FROM jobs WHERE document_id = ${documentId}
+    ORDER BY CASE type WHEN 'parse' THEN 1 WHEN 'chunk' THEN 2 WHEN 'embed' THEN 3 WHEN 'index' THEN 4 ELSE 5 END
+  `
 
-  const jobs = jobsResult.results ?? []
   if (jobs.length === 0) {
     return c.json({ error: "No job records found for this document." }, 404)
   }
@@ -84,22 +91,38 @@ retry.post("/:documentId", async (c) => {
     if (!jobIds[stageType]) {
       const jobId = `${documentId}-${stageType}`
       jobIds[stageType] = jobId
-      await c.env.DB.prepare(
-        "INSERT OR REPLACE INTO jobs (id, document_id, user_id, type, status, progress, created_at, updated_at) VALUES (?, ?, ?, ?, 'pending', 0, datetime('now'), datetime('now'))"
-      ).bind(jobId, documentId, auth.userId, stageType).run()
+      await sql`
+        INSERT INTO jobs (id, document_id, user_id, type, status, progress, created_at, updated_at)
+        VALUES (${jobId}, ${documentId}, ${auth.userId}, ${stageType}, 'pending', 0, NOW(), NOW())
+        ON CONFLICT (id) DO UPDATE SET status = 'pending', progress = 0, updated_at = NOW()
+      `
     }
   }
 
-  // Run retry in background
-  c.executionCtx.waitUntil(
+  // Enqueue retry job
+  try {
+    const queue = getPipelineQueue(process.env.REDIS_URL ?? "redis://localhost:6379")
+    await queue.add("process", {
+      documentId,
+      userId: auth.userId,
+      fileName: doc.name,
+      mimeType: doc.mime_type,
+      fileSize: doc.size,
+      r2Key: doc.r2_key,
+      fromStage: retryFromStage,
+      jobIds: jobIds as Record<StageType, string>,
+    })
+  } catch (qErr) {
+    console.error("BullMQ enqueue failed, falling back to direct run:", qErr instanceof Error ? qErr.message : String(qErr))
     resumePipelineFromStage(
       documentId,
       retryFromStage,
-      c.env,
+      env,
+      sql,
       auth.userId,
       jobIds as Record<StageType, string>
-    )
-  )
+    ).catch(console.error)
+  }
 
   return c.json({
     documentId,

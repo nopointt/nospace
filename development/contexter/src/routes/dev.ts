@@ -1,11 +1,25 @@
 import { Hono } from "hono"
+import type { Sql } from "postgres"
 import type { Env } from "../types/env"
+import type Redis from "ioredis"
 import { runPipeline } from "../services/pipeline"
 import { RagService } from "../services/rag"
 import { EmbedderService } from "../services/embedder"
 import { VectorStoreService } from "../services/vectorstore"
+import { LlmService } from "../services/llm"
 
-export const dev = new Hono<{ Bindings: Env }>()
+type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
+
+export const dev = new Hono<AppEnv>()
+
+// P1-001: block all /dev routes in production — only allow in development environment
+dev.use("*", async (c, next) => {
+  const env = c.get("env")
+  if (env.ENVIRONMENT !== "development") {
+    return c.json({ error: "Not Found" }, 404)
+  }
+  await next()
+})
 
 // --- Dev UI page ---
 dev.get("/", (c) => {
@@ -14,6 +28,8 @@ dev.get("/", (c) => {
 
 // --- Pipeline: upload + process ---
 dev.post("/pipeline", async (c) => {
+  const sql = c.get("sql")
+  const env = c.get("env")
   const formData = await c.req.formData()
   const file = formData.get("file") as File | null
 
@@ -21,7 +37,7 @@ dev.post("/pipeline", async (c) => {
     return c.json({ error: "No file provided" }, 400)
   }
 
-  const documentId = crypto.randomUUID().slice(0, 8)
+  const documentId = crypto.randomUUID().slice(0, 16)
   const buffer = await file.arrayBuffer()
 
   const result = await runPipeline(
@@ -32,7 +48,8 @@ dev.post("/pipeline", async (c) => {
       mimeType: (file.type && file.type !== "application/octet-stream") ? file.type : guessMimeType(file.name),
       fileSize: file.size,
     },
-    c.env
+    env,
+    sql
   )
 
   return c.json(result)
@@ -40,19 +57,19 @@ dev.post("/pipeline", async (c) => {
 
 // --- RAG query ---
 dev.post("/query", async (c) => {
+  const sql = c.get("sql")
+  const env = c.get("env")
   const body = await c.req.json<{ query: string; topK?: number }>()
 
   if (!body.query) {
     return c.json({ error: "No query provided" }, 400)
   }
 
-  const embedder = new EmbedderService(c.env.JINA_API_URL, c.env.JINA_API_KEY)
-  const vectorStore = new VectorStoreService({
-    db: c.env.DB,
-    vectorIndex: c.env.VECTOR_INDEX,
-  })
+  const embedder = new EmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
+  const vectorStore = new VectorStoreService({ sql })
+  const llm = new LlmService(env.GROQ_API_KEY)
   const rag = new RagService({
-    ai: c.env.AI,
+    llm,
     embedder,
     vectorStore,
   })
@@ -72,19 +89,22 @@ dev.post("/query", async (c) => {
 
 // --- Debug env ---
 dev.get("/debug-env", (c) => {
+  const env = c.get("env")
   return c.json({
-    hasJinaKey: !!c.env.JINA_API_KEY,
-    jinaKeyPrefix: c.env.JINA_API_KEY?.slice(0, 10) ?? "MISSING",
-    jinaKeyLength: c.env.JINA_API_KEY?.length ?? 0,
-    jinaUrl: c.env.JINA_API_URL,
-    hasGroqKey: !!c.env.GROQ_API_KEY,
+    hasJinaKey: !!env.JINA_API_KEY,
+    jinaKeyPrefix: env.JINA_API_KEY?.slice(0, 10) ?? "MISSING",
+    jinaKeyLength: env.JINA_API_KEY?.length ?? 0,
+    jinaUrl: env.JINA_API_URL,
+    hasGroqKey: !!env.GROQ_API_KEY,
   })
 })
 
 // --- State: counts ---
 dev.get("/state", async (c) => {
-  const docs = await c.env.DB.prepare("SELECT COUNT(*) as count FROM documents").first<{ count: number }>()
-  const chunks = await c.env.DB.prepare("SELECT COUNT(*) as count FROM chunks").first<{ count: number }>()
+  const sql = c.get("sql")
+  // P1-008: COUNT(*) returns bigint — cast to int
+  const [docs] = await sql<{ count: number }[]>`SELECT COUNT(*)::int as count FROM documents`
+  const [chunks] = await sql<{ count: number }[]>`SELECT COUNT(*)::int as count FROM chunks`
 
   return c.json({
     documents: docs?.count ?? 0,

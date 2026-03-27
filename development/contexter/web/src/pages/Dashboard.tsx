@@ -13,7 +13,7 @@ import Badge from "../components/Badge"
 import Input from "../components/Input"
 import Toast, { showToast } from "../components/Toast"
 import DocumentModal from "../components/DocumentModal"
-import { listDocuments, query as queryApi, getDocumentStatus } from "../lib/api"
+import { listDocuments, query as queryApi, getDocumentStatus, deleteDocument } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
 
 /* ── types ── */
@@ -240,24 +240,18 @@ const Dashboard: Component = () => {
 
     setDeleting(true)
     try {
-      await fetch(
-        `${import.meta.env.VITE_API_URL || "https://contexter.nopoint.workers.dev"}/api/status/${id}`,
-        { method: "DELETE", headers: { Authorization: `Bearer ${token}` } },
-      )
+      await deleteDocument(id, token)
       setShowDeleteConfirm(false)
       setSelectedId(null)
       setSelectedDetail(null)
       showToast("документ удален.", "success")
       await loadDocuments()
-    } catch {
-      showToast("не удалось удалить документ.", "error")
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : "не удалось удалить документ.", "error")
     } finally {
       setDeleting(false)
     }
   }
-
-  /* derived */
-  const apiBaseUrl = () => import.meta.env.VITE_API_URL || "https://contexter.nopoint.workers.dev"
 
   /* ── render ── */
   return (
@@ -284,7 +278,7 @@ const Dashboard: Component = () => {
       <div
         class="flex"
         style={{
-          padding: "32px 64px",
+          padding: "32px max(16px, min(64px, 5vw))",
           gap: "32px",
           "min-height": "calc(100vh - 56px)",
         }}

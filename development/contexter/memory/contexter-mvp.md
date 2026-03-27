@@ -1,14 +1,14 @@
 ---
 # contexter-mvp.md — CTX-01 MVP Pipeline
 > Layer: L3 | Epic: CTX-01 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-25 (session 191 — Antigravity, pricing, 12 MCP tools, account dedup)
+> Last updated: 2026-03-27 (session 193 — migrated to Hetzner)
 ---
 
 ## Goal
 
 Full pipeline: any file → parse → chunk → embed → index → MCP endpoint + RAG query. Deployed on CF Workers + CF Pages. Connected to ChatGPT/Claude/Perplexity/Cursor. Frontend SPA for demo.
 
-## Status: ~96% complete (MLP stage)
+## Status: ~96% complete (MLP stage) — now on Hetzner
 
 Backend fully async + OAuth 2.1. Frontend deployed with interactive blob cluster, connection modal, document viewer. 26/26 E2E tests pass. 4 full audits applied. Remaining: document viewer content fix, pipeline progress UI, responsive.
 

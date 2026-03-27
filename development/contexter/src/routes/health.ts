@@ -1,49 +1,60 @@
 import { Hono } from "hono"
+import type { Sql } from "postgres"
 import type { Env } from "../types/env"
+import type Redis from "ioredis"
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
 
-export const health = new Hono<{ Bindings: Env }>()
+type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
+
+export const health = new Hono<AppEnv>()
 
 health.get("/", async (c) => {
+  const sql = c.get("sql")
+  const env = c.get("env")
+  const redis = c.get("redis")
+
   const checks: Record<string, string> = {
     api: "ok",
-    d1: "unknown",
-    r2: "unknown",
-    kv: "unknown",
-    ai: "unknown",
-    vectorize: "unknown",
+    postgres: "unknown",
+    s3: "unknown",
+    redis: "unknown",
+    groq: "unknown",
   }
 
   try {
-    await c.env.DB.prepare("SELECT 1").first()
-    checks.d1 = "ok"
+    await sql`SELECT 1`
+    checks.postgres = "ok"
+  } catch {
+    checks.postgres = "error"
+  }
+
+  // P0-002: Test write permission, not just head (which succeeds with read-only token)
+  try {
+    const testKey = "__health_write_test__"
+    await env.storage.send(new PutObjectCommand({
+      Bucket: env.storageBucket,
+      Key: testKey,
+      Body: Buffer.from("health-check"),
+      ContentType: "text/plain",
+    }))
+    await env.storage.send(new DeleteObjectCommand({ Bucket: env.storageBucket, Key: testKey }))
+    checks.s3 = "ok"
   } catch (e) {
-    checks.d1 = "error"
+    const msg = e instanceof Error ? e.message : String(e)
+    checks.s3 = msg.includes("AccessDenied") || msg.includes("403") ? "write-failed" : "error"
   }
 
   try {
-    await c.env.STORAGE.head("__health_check__")
-    checks.r2 = "ok"
-  } catch (e) {
-    checks.r2 = "ok" // head returns null for missing key, not an error
+    await redis.ping()
+    checks.redis = "ok"
+  } catch {
+    checks.redis = "error"
   }
 
   try {
-    await c.env.KV.get("__health_check__")
-    checks.kv = "ok"
-  } catch (e) {
-    checks.kv = "error"
-  }
-
-  try {
-    checks.ai = c.env.AI ? "ok" : "missing"
-  } catch (e) {
-    checks.ai = "error"
-  }
-
-  try {
-    checks.vectorize = c.env.VECTOR_INDEX ? "ok" : "missing"
-  } catch (e) {
-    checks.vectorize = "error"
+    checks.groq = env.GROQ_API_KEY ? "ok" : "missing"
+  } catch {
+    checks.groq = "error"
   }
 
   const allOk = Object.values(checks).every((v) => v === "ok")

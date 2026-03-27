@@ -1,12 +1,13 @@
 ---
 # contexter-roadmap.md — Contexter Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start
-> Last updated: 2026-03-25
+> Last updated: 2026-03-27 (session 193 — Hetzner migration complete, production hardening 93% done)
 ---
 
-## Current Focus: MLP (Minimum Lovable Product)
+## Current Focus: MLP Closure
 
-**Scope:** Full pipeline + frontend SPA + production deploy. Demo for Artem (CPO ProxyMarket).
+**Scope:** Full pipeline + frontend SPA + production deploy on Hetzner. Demo for Artem (CPO ProxyMarket).
+**Status:** ~95% MLP ready. Remaining: VITE_API_URL deploy, batch INSERT perf, containers non-root, pg_dump backup.
 
 ---
 
@@ -14,75 +15,44 @@
 
 | Epic | Description | Status | L3 File |
 |---|---|---|---|
-| **CTX-01** | **MVP Pipeline + API + Frontend** | **🔶 IN PROGRESS** | `contexter-mvp.md` |
-| CTX-02 | Design System + Pencil Screens | ✅ DONE (12 docs + 31 recovered nodes) | — |
-| **CTX-03** | **Frontend (SolidJS SPA)** | **✅ DEPLOYED** | — |
+| **CTX-01** | **MVP Pipeline + API + Frontend** | **🔶 IN PROGRESS** (remaining: RAG quality tuning, pipeline progress UI) | `contexter-mvp.md` |
+| CTX-02 | Design System + Pencil Screens | ✅ DONE | — |
+| CTX-03 | Frontend (SolidJS SPA) | ✅ DEPLOYED (CF Pages, contexter.cc) | — |
 | CTX-04 | Auth (OAuth: Google/Telegram/Yandex) | 🔜 NEXT | — |
-| CTX-05 | Benchmarks + Pricing | ⬜ PLANNED | — |
-| CTX-06 | Production (VPS, ffmpeg, full video) | ⬜ PLANNED | — |
+| CTX-05 | Benchmarks + Pricing + Billing | ⬜ PLANNED | — |
+| CTX-06 | Production Migration (CF Workers → Hetzner) | ✅ CLOSED (2026-03-27) | `contexter-migration.md` |
+| **CTX-07** | **Production Hardening** | **🔶 IN PROGRESS** (92 issues found, ~85 fixed) | `contexter-production.md` |
 
-## CTX-01 Sub-Tasks
+## Migration Summary (CTX-06, completed 2026-03-27)
 
-| Task | Status |
+| From | To |
 |---|---|
-| Scaffold (Hono + D1 + R2 + KV + Vectorize + AI) | ✅ DONE |
-| Parsers (toMarkdown, audio, youtube, pdf-visual) | ✅ DONE |
-| Chunking (semantic, table, timestamp) | ✅ DONE |
-| Embedding (Jina v4, batch, query) | ✅ DONE |
-| Vector Store (Vectorize + FTS5 + RRF) | ✅ DONE |
-| MCP Gateway (tools, routing) | ✅ DONE |
-| RAG Query (rewrite → search → context → LLM) | ✅ DONE |
-| Pipeline integration | ✅ DONE |
-| Dev UI | ✅ DONE |
-| Deploy to CF Workers | ✅ DONE |
-| MCP remote endpoint (/sse) | ✅ DONE |
-| Claude.ai Connector — verified | ✅ DONE |
-| User isolation (Vectorize + FTS5) | ✅ DONE |
-| API endpoints (upload, query, status, auth, retry) | ✅ DONE |
-| 128 unit tests + 62 E2E tests | ✅ DONE |
-| Async pipeline (waitUntil + jobs table) | ✅ DONE |
-| Stage tracking (real-time status API) | ✅ DONE |
-| RAG quality tuning | ⬜ TODO |
+| CF Workers | Bun on Hetzner CAX11 (€4.72/mo) |
+| D1 (SQLite) | PostgreSQL 16 + pgvector 0.8.2 |
+| FTS5 | tsvector + GIN |
+| CF Vectorize | pgvector HNSW |
+| CF KV | Redis 7 (BullMQ queue) |
+| Workers AI toMarkdown | Docling (IBM) |
+| Workers AI LLM | Groq Llama 3.1 8B |
+| waitUntil() | BullMQ (retry/backoff/dead letter) |
+| No video | ffmpeg (audio extraction → Whisper) |
+| No monitoring | Netdata + structured JSON logging |
 
-## CTX-02 Sub-Tasks
+Data migrated: 4 real users, 29 documents, 155 chunks (re-embedded with Jina v4).
 
-| Task | Status |
-|---|---|
-| Design system MD docs (12 files) | ✅ DONE |
-| Pencil recovery (141/199 ops, 31 nodes, 11 components) | ✅ DONE |
-| Design audit criteria (51 criteria) | ✅ DONE |
-| Atomic actions map (10 flows, 45 states, 174 actions) | ✅ DONE |
-| Stage 1 responsive research (6 reports, 300+ sources) | ✅ DONE |
-| Missing Pencil screens (~16 states) | ⬜ TODO |
-| Responsive: mobile/tablet | ⬜ TODO |
+## Production Hardening Summary (CTX-07, in progress)
 
-## CTX-03 Sub-Tasks
-
-| Task | Status |
-|---|---|
-| Scaffold (SolidJS + Vite + Tailwind CSS 4) | ✅ DONE |
-| Design tokens (@theme, 26 variables) | ✅ DONE |
-| 10 components (Button, Input, Badge, Pipeline, etc.) | ✅ DONE |
-| 5 pages (Hero, Dashboard, ApiPage, Settings, Upload) | ✅ DONE |
-| API integration (lib/api.ts, lib/store.ts) | ✅ DONE |
-| CSS @layer fix | ✅ DONE |
-| Deploy to CF Pages (contexter-web.pages.dev) | ✅ DONE |
-| Document viewer (click → see content) | ⬜ TODO |
-| Hero copy (AI chat badges) | ⬜ TODO |
-| Seamless auth UX | ⬜ TODO |
-| Breuer/Albers verification | ⬜ TODO |
-
----
+12-agent parallel audit → 92 issues found → Architect spec (1140 lines) → 6 Work Packages → ~85 fixes applied.
+Remaining: ~7 items (verified status pending from verification agent).
 
 ## Prod Roadmap
 
 | Phase | What | Status |
 |---|---|---|
-| MLP | CF Workers + CF Pages, all formats, MCP, frontend SPA | **deployed** |
-| Pricing model | Usage-based per-GB, credit system (n=$0.000422), monthly+annual | **decided 2026-03-25** |
-| Production stack | Hetzner CAX41 + Qdrant + Postgres + DeepInfra + Groq | **decided 2026-03-25** |
+| MLP | Hetzner + CF Pages, all formats, MCP, frontend SPA, security hardened | **~95% done** |
+| Pricing model | Usage-based per-GB, credit system, 6 tiers | **decided** |
+| Production stack | Hetzner CAX11 + pgvector + Groq + Docling | **deployed** |
+| **MLP closure** | **Remaining fixes + VITE_API_URL + backup + final QA** | **🔶 IN PROGRESS** |
 | Billing | LemonSqueezy integration, prepaid + usage | next |
 | Auth | OAuth (Google/Telegram/Yandex) | next sprint |
-| Migration | CF Workers -> Hetzner (Hono on Bun native) | after billing |
-| Benchmarks | Latency, cost per doc, cost per query, throughput | after migration |
-| Prod | VPS (ffmpeg, yt-dlp, full video), Qdrant (1024 dims SQ) | after benchmarks |
+| Benchmarks | Latency, cost per doc, cost per query, throughput | after billing |

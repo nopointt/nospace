@@ -91,7 +91,7 @@ const DocumentViewer: Component = () => {
 
       <div
         class="flex flex-col"
-        style={{ padding: "32px 64px", gap: "24px", "max-width": "900px" }}
+        style={{ padding: "32px max(16px, min(64px, 5vw))", gap: "24px", "max-width": "900px" }}
       >
         {/* ── Back link ── */}
         <button

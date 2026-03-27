@@ -1,13 +1,13 @@
 import type { Parser, ParserInput, ParseResult } from "./types"
-import { ToMarkdownParser } from "./tomarkdown"
+import { DoclingParser, TextParser } from "./docling"
 import { AudioParser } from "./audio"
+import { VideoParser } from "./video"
 import { YouTubeParser } from "./youtube"
-import { PdfVisualParser } from "./pdf-visual"
 
 export type { Parser, ParserInput, ParseResult, ParseMetadata } from "./types"
 
 export interface ParserServiceConfig {
-  ai: Ai
+  doclingUrl: string
   groqApiUrl: string
   groqApiKey: string
 }
@@ -17,10 +17,11 @@ export class ParserService {
 
   constructor(config: ParserServiceConfig) {
     this.parsers = [
-      new ToMarkdownParser(config.ai),
+      new DoclingParser(config.doclingUrl),
+      new TextParser(),
       new AudioParser(config.groqApiUrl, config.groqApiKey),
+      new VideoParser(config.groqApiUrl, config.groqApiKey),
       new YouTubeParser(),
-      new PdfVisualParser(config.ai),
     ]
   }
 

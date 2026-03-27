@@ -1,14 +1,13 @@
+import type { Sql } from "postgres"
+
 /**
  * Auth service: resolves API tokens and share tokens to user context.
- * Token flow:
- *   - API token (Bearer header or ?token= param) → full access to own data
- *   - Share token (?share= param) → scoped read access to shared data
  */
 
 export interface AuthContext {
   userId: string
   permission: "read" | "read_write"
-  scope: "all" | string[] // "all" or array of document IDs
+  scope: "all" | string[]
   isOwner: boolean
 }
 
@@ -19,96 +18,73 @@ export interface AuthContext {
  * 3. ?token=TOKEN → user API token (full access, for MCP URLs)
  */
 export async function resolveAuth(
-  db: D1Database,
+  sql: Sql,
   request: Request
 ): Promise<AuthContext | null> {
   const url = new URL(request.url)
 
-  // 1. Share token
   const shareToken = url.searchParams.get("share")
-  if (shareToken) {
-    return resolveShareToken(db, shareToken)
-  }
+  if (shareToken) return resolveShareToken(sql, shareToken)
 
-  // 2. Bearer token
   const authHeader = request.headers.get("Authorization")
   if (authHeader?.startsWith("Bearer ")) {
-    const token = authHeader.slice(7)
-    return resolveApiToken(db, token)
+    return resolveApiToken(sql, authHeader.slice(7))
   }
 
-  // 3. Query param token
   const queryToken = url.searchParams.get("token")
-  if (queryToken) {
-    return resolveApiToken(db, queryToken)
-  }
+  if (queryToken) return resolveApiToken(sql, queryToken)
 
   return null
 }
 
-async function resolveApiToken(
-  db: D1Database,
-  token: string
-): Promise<AuthContext | null> {
-  const user = await db
-    .prepare("SELECT id FROM users WHERE api_token = ?")
-    .bind(token)
-    .first<{ id: string }>()
-
-  if (!user) return null
+async function resolveApiToken(sql: Sql, token: string): Promise<AuthContext | null> {
+  const [row] = await sql`SELECT id FROM users WHERE api_token = ${token}`
+  if (!row) return null
 
   return {
-    userId: user.id,
+    userId: row.id as string,
     permission: "read_write",
     scope: "all",
     isOwner: true,
   }
 }
 
-async function resolveShareToken(
-  db: D1Database,
-  token: string
-): Promise<AuthContext | null> {
-  const share = await db
-    .prepare(
-      "SELECT owner_id, scope, permission, expires_at FROM shares WHERE share_token = ?"
-    )
-    .bind(token)
-    .first<{
-      owner_id: string
-      scope: string
-      permission: string
-      expires_at: string | null
-    }>()
-
+async function resolveShareToken(sql: Sql, token: string): Promise<AuthContext | null> {
+  const [share] = await sql`
+    SELECT owner_id, scope, permission, expires_at
+    FROM shares WHERE share_token = ${token}
+  `
   if (!share) return null
 
-  // Check expiry
-  if (share.expires_at && new Date(share.expires_at) < new Date()) {
-    return null
+  // P1-013: postgres.js returns Date objects, not strings — handle both
+  if (share.expires_at) {
+    const expiresAt = share.expires_at instanceof Date
+      ? share.expires_at
+      : new Date(share.expires_at as string)
+    if (expiresAt < new Date()) return null
   }
 
-  const scope = share.scope === "all" ? "all" as const : JSON.parse(share.scope) as string[]
+  // P2-016: wrap JSON.parse in try/catch — malformed scope should not crash
+  let scope: "all" | string[]
+  try {
+    scope = share.scope === "all" ? "all" as const : JSON.parse(share.scope as string) as string[]
+  } catch {
+    scope = "all"
+  }
 
   return {
-    userId: share.owner_id,
+    userId: share.owner_id as string,
     permission: share.permission as "read" | "read_write",
     scope,
     isOwner: false,
   }
 }
 
-/**
- * Check if a document ID is accessible under current auth scope.
- */
 export function canAccessDocument(auth: AuthContext, documentId: string): boolean {
   if (auth.scope === "all") return true
   return auth.scope.includes(documentId)
 }
 
-/**
- * Generate a random API token.
- */
 export function generateToken(): string {
   const bytes = new Uint8Array(32)
   crypto.getRandomValues(bytes)

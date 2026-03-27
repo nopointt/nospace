@@ -3,10 +3,8 @@ import { useNavigate } from "@solidjs/router"
 import Nav from "../components/Nav"
 import Button from "../components/Button"
 import Toast, { showToast } from "../components/Toast"
-import { listDocuments } from "../lib/api"
+import { listDocuments, API_BASE } from "../lib/api"
 import { auth, getToken, isAuthenticated, setAuth } from "../lib/store"
-
-const API_BASE = "https://contexter.nopoint.workers.dev"
 
 /* ── progress bar ── */
 function ProgressBar(props: { value: number; max: number }) {

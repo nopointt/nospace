@@ -1,6 +1,7 @@
 import { createSignal, createEffect, Show, For, type Component } from "solid-js"
 import { showToast } from "./Toast"
 import { getToken } from "../lib/store"
+import { API_BASE } from "../lib/api"
 
 // --- Types ---
 
@@ -102,8 +103,6 @@ const CLAUDE_SUB_CHOICES: ClaudeSubChoice[] = [
 ]
 
 // --- Data ---
-
-const API_BASE = "https://contexter.nopoint.workers.dev"
 
 function makeClients(token: string): ClientInfo[] {
   const url = `${API_BASE}/sse?token=${token}`
@@ -369,7 +368,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
         <div
           class="flex flex-col"
           style={{
-            width: "560px",
+            width: "min(560px, 95vw)",
             "max-height": "80vh",
             background: "#141414",
             border: "1px solid #333333",

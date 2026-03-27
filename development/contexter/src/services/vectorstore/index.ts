@@ -1,3 +1,4 @@
+import type { Sql } from "postgres"
 import type { VectorRecord, SearchResult, HybridSearchResult, SearchOptions } from "./types"
 import { DEFAULT_TOP_K, DEFAULT_SCORE_THRESHOLD } from "./types"
 import { VectorService } from "./vector"
@@ -10,8 +11,7 @@ export { FtsService } from "./fts"
 export { VectorService } from "./vector"
 
 export interface VectorStoreConfig {
-  db: D1Database
-  vectorIndex: VectorizeIndex
+  sql: Sql
 }
 
 export class VectorStoreService {
@@ -19,28 +19,27 @@ export class VectorStoreService {
   private fts: FtsService
 
   constructor(config: VectorStoreConfig) {
-    this.vector = new VectorService(config.vectorIndex)
-    this.fts = new FtsService(config.db)
+    this.vector = new VectorService(config.sql)
+    this.fts = new FtsService(config.sql)
   }
 
   /**
-   * Initialize FTS5 tables and triggers.
+   * No-op: PG handles FTS via generated column + GIN index.
    */
   async initialize(): Promise<void> {
     await this.fts.initialize()
   }
 
   /**
-   * Index chunks: insert into both Vectorize and FTS5.
+   * Index chunks: update embeddings in pgvector.
+   * FTS is auto-populated via generated tsvector column.
    */
   async index(records: VectorRecord[]): Promise<void> {
-    // Insert into Vectorize only.
-    // FTS5 is populated by D1 trigger on chunks table insert (done by pipeline).
-    await this.vector.insert(records)
+    await this.vector.upsertEmbeddings(records)
   }
 
   /**
-   * Hybrid search: vector + FTS5 → Reciprocal Rank Fusion.
+   * Hybrid search: pgvector cosine + tsvector → Reciprocal Rank Fusion.
    */
   async search(
     queryVector: number[],
@@ -49,43 +48,27 @@ export class VectorStoreService {
   ): Promise<HybridSearchResult[]> {
     const topK = options.topK ?? DEFAULT_TOP_K
     const threshold = options.scoreThreshold ?? DEFAULT_SCORE_THRESHOLD
-
     const userId = options.userId
 
-    // Run both searches in parallel — filtered by userId
     const [vectorResults, ftsResults] = await Promise.all([
       this.vector.search(queryVector, topK * 2, userId),
       this.fts.search(queryText, topK * 2, userId),
     ])
 
-    // Fuse results
     const fused = reciprocalRankFusion(vectorResults, ftsResults, topK)
-
-    // Apply score threshold
     return fused.filter((r) => r.score >= threshold)
   }
 
-  /**
-   * Vector-only search (when FTS not applicable).
-   */
   async searchVector(queryVector: number[], topK: number = DEFAULT_TOP_K): Promise<SearchResult[]> {
     return this.vector.search(queryVector, topK)
   }
 
-  /**
-   * FTS-only search (keyword search).
-   */
   async searchFts(queryText: string, topK: number = DEFAULT_TOP_K): Promise<SearchResult[]> {
     return this.fts.search(queryText, topK)
   }
 
-  /**
-   * Delete all indexed data for a document.
-   */
-  async deleteByDocument(documentId: string, chunkIds: string[]): Promise<void> {
-    await Promise.all([
-      this.vector.deleteByIds(chunkIds),
-      this.fts.deleteByDocument(documentId),
-    ])
+  async deleteByDocument(_documentId: string, chunkIds: string[]): Promise<void> {
+    await this.vector.deleteByIds(chunkIds)
+    // FTS entries auto-deleted via CASCADE on chunks table
   }
 }

@@ -22,6 +22,7 @@ import {
   getDocumentStatus,
   listDocuments,
   query as queryApi,
+  API_BASE,
 } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
 
@@ -57,8 +58,6 @@ const SUPPORTED_EXTENSIONS = new Set([
 const STAGE_NAMES = ["parse", "chunk", "embed", "index"] as const
 const YOUTUBE_REGEX = /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)/
 const URL_REGEX = /^https?:\/\/.+/
-const API_BASE = "https://contexter.nopoint.workers.dev"
-
 const MCP_CONFIG = (t: string) => `{
   "contexter": {
     "command": "npx",

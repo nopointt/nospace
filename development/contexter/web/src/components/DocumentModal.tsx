@@ -96,7 +96,7 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
         <div
           class="flex flex-col"
           style={{
-            width: "720px",
+            width: "min(720px, 95vw)",
             "max-height": "80vh",
             background: "#FAFAFA",
             border: "1px solid #E5E5E5",

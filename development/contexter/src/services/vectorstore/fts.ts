@@ -1,125 +1,83 @@
-import type { SearchResult, VectorMetadata } from "./types"
+import type { Sql } from "postgres"
+import type { SearchResult } from "./types"
 
 /**
- * FTS5 full-text search service on D1.
- * Uses SQLite FTS5 virtual table with BM25 ranking.
+ * Full-text search service on PostgreSQL with tsvector + GIN index.
+ * Replaces SQLite FTS5. tsvector column is auto-generated via GENERATED ALWAYS AS.
  */
 export class FtsService {
-  private db: D1Database
+  private sql: Sql
 
-  constructor(db: D1Database) {
-    this.db = db
+  constructor(sql: Sql) {
+    this.sql = sql
   }
 
   /**
-   * Initialize FTS5 virtual table and sync trigger.
-   * Call once during setup / migration.
+   * No initialization needed — tsvector column and GIN index created by migration.
    */
   async initialize(): Promise<void> {
-    await this.db.batch([
-      this.db.prepare(`
-        CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
-          id UNINDEXED,
-          document_id UNINDEXED,
-          content,
-          chunk_index UNINDEXED,
-          content='chunks',
-          tokenize='unicode61'
-        )
-      `),
-      this.db.prepare(`
-        CREATE TRIGGER IF NOT EXISTS chunks_fts_insert AFTER INSERT ON chunks
-        BEGIN
-          INSERT INTO chunks_fts(id, document_id, content, chunk_index)
-          VALUES (new.id, new.document_id, new.content, new.chunk_index);
-        END
-      `),
-      this.db.prepare(`
-        CREATE TRIGGER IF NOT EXISTS chunks_fts_delete AFTER DELETE ON chunks
-        BEGIN
-          INSERT INTO chunks_fts(chunks_fts, id, document_id, content, chunk_index)
-          VALUES ('delete', old.id, old.document_id, old.content, old.chunk_index);
-        END
-      `),
-    ])
+    // No-op: PG tsvector is GENERATED ALWAYS AS, GIN index in migration
   }
 
   /**
-   * Insert a chunk into FTS index manually (for cases where trigger doesn't fire).
+   * No manual insert needed — tsvector auto-populated on chunk INSERT.
    */
-  async insert(id: string, documentId: string, content: string, chunkIndex: number): Promise<void> {
-    await this.db
-      .prepare(
-        "INSERT INTO chunks_fts(id, document_id, content, chunk_index) VALUES (?, ?, ?, ?)"
-      )
-      .bind(id, documentId, content, chunkIndex)
-      .run()
+  async insert(_id: string, _documentId: string, _content: string, _chunkIndex: number): Promise<void> {
+    // No-op: tsvector generated column updates automatically
   }
 
   /**
-   * Search FTS5 index using BM25 ranking.
+   * Search using PostgreSQL tsvector with ts_rank ranking.
+   * Native userId filtering via WHERE clause.
    */
   async search(query: string, topK: number = 10, userId?: string): Promise<SearchResult[]> {
     const sanitized = sanitizeFtsQuery(query)
     if (!sanitized) return []
 
-    const sql = userId
-      ? `SELECT f.id, f.document_id, f.content, f.chunk_index, f.rank
-         FROM chunks_fts f
-         JOIN chunks c ON c.id = f.id
-         WHERE chunks_fts MATCH ? AND c.user_id = ?
-         ORDER BY f.rank
-         LIMIT ?`
-      : `SELECT id, document_id, content, chunk_index, rank
-         FROM chunks_fts
-         WHERE chunks_fts MATCH ?
-         ORDER BY rank
-         LIMIT ?`
+    const rows = userId
+      ? await this.sql`
+          SELECT id, document_id, content, chunk_index,
+            ts_rank(tsv, plainto_tsquery('simple', ${sanitized})) as score
+          FROM chunks
+          WHERE tsv @@ plainto_tsquery('simple', ${sanitized}) AND user_id = ${userId}
+          ORDER BY score DESC
+          LIMIT ${topK}
+        `
+      : await this.sql`
+          SELECT id, document_id, content, chunk_index,
+            ts_rank(tsv, plainto_tsquery('simple', ${sanitized})) as score
+          FROM chunks
+          WHERE tsv @@ plainto_tsquery('simple', ${sanitized})
+          ORDER BY score DESC
+          LIMIT ${topK}
+        `
 
-    const results = userId
-      ? await this.db.prepare(sql).bind(sanitized, userId, topK).all<FtsRow>()
-      : await this.db.prepare(sql).bind(sanitized, topK).all<FtsRow>()
-
-    return (results.results ?? []).map((row) => ({
-      id: row.id,
-      score: -row.rank, // FTS5 rank is negative (lower = better), invert for consistency
+    return rows.map((row) => ({
+      id: row.id as string,
+      score: Number(row.score),
       metadata: {
-        documentId: row.document_id,
-        chunkIndex: row.chunk_index,
-        content: row.content,
+        documentId: row.document_id as string,
+        chunkIndex: row.chunk_index as number,
+        content: row.content as string,
       },
     }))
   }
 
   /**
-   * Delete all FTS entries for a document.
+   * No explicit delete needed — chunks table CASCADE handles it.
    */
-  async deleteByDocument(documentId: string): Promise<void> {
-    await this.db
-      .prepare(
-        "INSERT INTO chunks_fts(chunks_fts, id, document_id, content, chunk_index) SELECT 'delete', id, document_id, content, chunk_index FROM chunks_fts WHERE document_id = ?"
-      )
-      .bind(documentId)
-      .run()
+  async deleteByDocument(_documentId: string): Promise<void> {
+    // No-op: tsvector entries deleted when chunk rows are deleted via CASCADE
   }
 }
 
-interface FtsRow {
-  id: string
-  document_id: string
-  content: string
-  chunk_index: number
-  rank: number
-}
-
 /**
- * Sanitize user query for FTS5 MATCH syntax.
- * Strips special FTS operators to prevent injection.
+ * Sanitize user query for PostgreSQL plainto_tsquery.
+ * P4-001: Use Unicode Letter class to support CJK/Arabic/Hebrew and all scripts.
  */
 function sanitizeFtsQuery(query: string): string {
   return query
-    .replace(/[^\w\s\u0400-\u04FF\u00C0-\u024F]/g, " ") // keep word chars, cyrillic, latin extended
-    .replace(/\b(AND|OR|NOT|NEAR)\b/gi, "") // remove FTS operators
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
     .replace(/\s+/g, " ")
     .trim()
 }

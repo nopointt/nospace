@@ -9,15 +9,20 @@
  */
 
 import { Hono } from "hono"
+import type { Sql } from "postgres"
 import type { Env } from "../types/env"
+import type Redis from "ioredis"
+import type { Context } from "hono"
 
-export const oauth = new Hono<{ Bindings: Env }>()
+type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
 
-const BASE = "https://contexter.nopoint.workers.dev"
+export const oauth = new Hono<AppEnv>()
 
 // --- GET /authorize --- show consent form -----------------------------------
 
 oauth.get("/authorize", async (c) => {
+  const redis = c.get("redis")
+  const env = c.get("env")
   const q = c.req.query()
   const clientId = q.client_id ?? ""
   const redirectUri = q.redirect_uri ?? ""
@@ -30,7 +35,15 @@ oauth.get("/authorize", async (c) => {
     return c.text("invalid_request: missing required OAuth params", 400)
   }
 
-  const clientRaw = await c.env.KV.get(`oauth_client:${clientId}`)
+  // P1-004: PKCE is required — reject authorization requests without code_challenge
+  if (!codeChallenge) {
+    return c.text("invalid_request: code_challenge is required (PKCE S256 mandatory)", 400)
+  }
+  if (codeChallengeMethod !== "S256") {
+    return c.text("invalid_request: code_challenge_method must be S256", 400)
+  }
+
+  const clientRaw = await redis.get(`oauth_client:${clientId}`)
   if (!clientRaw) {
     return c.text("invalid_client: unknown client_id", 400)
   }
@@ -41,7 +54,7 @@ oauth.get("/authorize", async (c) => {
     return c.text("invalid_request: redirect_uri not registered", 400)
   }
 
-  return c.html(consentPage({
+  return c.html(consentPage(env.BASE_URL, {
     clientName: clientData.clientName,
     clientId,
     redirectUri,
@@ -54,6 +67,10 @@ oauth.get("/authorize", async (c) => {
 // --- POST /authorize --- validate token, generate code, redirect ------------
 
 oauth.post("/authorize", async (c) => {
+  const sql = c.get("sql")
+  const redis = c.get("redis")
+  const env = c.get("env")
+
   let form: Record<string, string>
   try {
     const fd = await c.req.formData()
@@ -68,7 +85,7 @@ oauth.post("/authorize", async (c) => {
     return c.text("invalid_request: missing required fields", 400)
   }
 
-  const clientRaw = await c.env.KV.get(`oauth_client:${client_id}`)
+  const clientRaw = await redis.get(`oauth_client:${client_id}`)
   if (!clientRaw) {
     return c.text("invalid_client: unknown client_id", 400)
   }
@@ -78,26 +95,27 @@ oauth.post("/authorize", async (c) => {
     return c.text("invalid_request: redirect_uri mismatch", 400)
   }
 
-  // Validate user token against D1
-  const user = await c.env.DB.prepare(
-    "SELECT id, api_token FROM users WHERE api_token = ?"
-  ).bind(token).first<{ id: string; api_token: string }>()
+  // Validate user token against DB
+  const [user] = await sql<{ id: string; api_token: string }[]>`
+    SELECT id, api_token FROM users WHERE api_token = ${token}
+  `
 
   if (!user) {
-    return c.html(consentPage({
+    return c.html(consentPage(env.BASE_URL, {
       clientName: clientData.clientName,
       clientId: client_id,
       redirectUri: redirect_uri,
-      state,
-      codeChallenge: code_challenge,
-      codeChallengeMethod: code_challenge_method,
+      state: state ?? "",
+      codeChallenge: code_challenge ?? "",
+      codeChallengeMethod: code_challenge_method ?? "S256",
       error: "Токен не найден. Проверьте и попробуйте снова.",
     }), 400)
   }
 
   // Generate authorization code — one-time, 5min TTL
+  // P2-014: store only userId, NOT apiToken — fetch from DB at exchange time
   const code = crypto.randomUUID().replace(/-/g, "")
-  await c.env.KV.put(
+  await redis.set(
     `oauth:code:${code}`,
     JSON.stringify({
       clientId: client_id,
@@ -105,9 +123,9 @@ oauth.post("/authorize", async (c) => {
       codeChallenge: code_challenge ?? "",
       codeChallengeMethod: code_challenge_method ?? "S256",
       userId: user.id,
-      apiToken: user.api_token,
     }),
-    { expirationTtl: 300 }
+    "EX",
+    300
   )
 
   const dest = new URL(redirect_uri)
@@ -120,6 +138,9 @@ oauth.post("/authorize", async (c) => {
 // --- POST /token --- PKCE exchange ------------------------------------------
 
 oauth.post("/token", async (c) => {
+  const sql = c.get("sql")
+  const redis = c.get("redis")
+
   let params: Record<string, string>
   const ct = c.req.header("Content-Type") ?? ""
 
@@ -127,30 +148,30 @@ oauth.post("/token", async (c) => {
     try {
       params = await c.req.json() as Record<string, string>
     } catch {
-      return tokenError("invalid_request", "malformed JSON body")
+      return tokenError(c, "invalid_request", "malformed JSON body")
     }
   } else {
     try {
       const fd = await c.req.formData()
       params = Object.fromEntries(fd.entries()) as Record<string, string>
     } catch {
-      return tokenError("invalid_request", "malformed form body")
+      return tokenError(c, "invalid_request", "malformed form body")
     }
   }
 
   const { grant_type, code, redirect_uri, client_id, code_verifier } = params
 
   if (grant_type !== "authorization_code") {
-    return tokenError("unsupported_grant_type", "only authorization_code supported")
+    return tokenError(c, "unsupported_grant_type", "only authorization_code supported")
   }
 
   if (!code || !redirect_uri || !client_id) {
-    return tokenError("invalid_request", "missing required params")
+    return tokenError(c, "invalid_request", "missing required params")
   }
 
-  const codeRaw = await c.env.KV.get(`oauth:code:${code}`)
+  const codeRaw = await redis.get(`oauth:code:${code}`)
   if (!codeRaw) {
-    return tokenError("invalid_grant", "code not found or expired")
+    return tokenError(c, "invalid_grant", "code not found or expired")
   }
 
   const codeData = JSON.parse(codeRaw) as {
@@ -159,32 +180,40 @@ oauth.post("/token", async (c) => {
     codeChallenge: string
     codeChallengeMethod: string
     userId: string
-    apiToken: string
   }
 
   // One-time use — delete before any further checks
-  await c.env.KV.delete(`oauth:code:${code}`)
+  await redis.del(`oauth:code:${code}`)
 
   if (codeData.clientId !== client_id) {
-    return tokenError("invalid_client", "client_id mismatch")
+    return tokenError(c, "invalid_client", "client_id mismatch")
   }
   if (codeData.redirectUri !== redirect_uri) {
-    return tokenError("invalid_grant", "redirect_uri mismatch")
+    return tokenError(c, "invalid_grant", "redirect_uri mismatch")
   }
 
   // PKCE verification (required when code_challenge was stored)
   if (codeData.codeChallenge) {
     if (!code_verifier) {
-      return tokenError("invalid_request", "code_verifier required")
+      return tokenError(c, "invalid_request", "code_verifier required")
     }
     const valid = await verifyPkce(code_verifier, codeData.codeChallenge, codeData.codeChallengeMethod)
     if (!valid) {
-      return tokenError("invalid_grant", "code_verifier does not match code_challenge")
+      return tokenError(c, "invalid_grant", "code_verifier does not match code_challenge")
     }
   }
 
-  return Response.json({
-    access_token: codeData.apiToken,
+  // P2-014: fetch token from DB instead of storing it in Redis code payload
+  const [user] = await sql<{ api_token: string }[]>`
+    SELECT api_token FROM users WHERE id = ${codeData.userId}
+  `
+  if (!user) {
+    return tokenError(c, "invalid_grant", "user not found")
+  }
+
+  // P1-009: use c.json() so CORS headers from Hono middleware are included
+  return c.json({
+    access_token: user.api_token,
     token_type: "Bearer",
     expires_in: 86400,
   })
@@ -192,13 +221,15 @@ oauth.post("/token", async (c) => {
 
 // --- PKCE S256 verification --------------------------------------------------
 
+// P1-004: reject any method other than S256 — plain is forbidden by OAuth 2.1 (RFC 9700)
 async function verifyPkce(
   verifier: string,
   challenge: string,
   method: string
 ): Promise<boolean> {
   if (method !== "S256") {
-    return verifier === challenge
+    // Reject plain and any other method — S256 is required
+    return false
   }
 
   const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier))
@@ -212,8 +243,9 @@ async function verifyPkce(
 
 // --- Helpers -----------------------------------------------------------------
 
-function tokenError(error: string, description: string): Response {
-  return Response.json({ error, error_description: description }, { status: 400 })
+// P1-009: use Hono context method so CORS middleware headers are included
+function tokenError(c: Context<AppEnv>, error: string, description: string) {
+  return c.json({ error, error_description: description }, 400)
 }
 
 interface ConsentPageParams {
@@ -226,7 +258,7 @@ interface ConsentPageParams {
   error?: string
 }
 
-function consentPage(p: ConsentPageParams): string {
+function consentPage(baseUrl: string, p: ConsentPageParams): string {
   const errorHtml = p.error
     ? `<p class="error">${escHtml(p.error)}</p>`
     : ""
@@ -260,7 +292,7 @@ button:hover{background:#163080}
   <h1>Разрешить доступ</h1>
   <p class="sub"><span class="client">${escHtml(p.clientName)}</span> запрашивает доступ к вашей базе знаний.</p>
   ${errorHtml}
-  <form method="POST" action="${BASE}/authorize">
+  <form method="POST" action="${baseUrl}/authorize">
     <input type="hidden" name="client_id" value="${escHtml(p.clientId)}">
     <input type="hidden" name="redirect_uri" value="${escHtml(p.redirectUri)}">
     <input type="hidden" name="state" value="${escHtml(p.state)}">

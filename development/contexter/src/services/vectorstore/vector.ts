@@ -1,75 +1,73 @@
-import type { VectorRecord, SearchResult, VectorMetadata } from "./types"
+import type { Sql } from "postgres"
+import type { VectorRecord, SearchResult } from "./types"
 
 /**
- * Vector search service on Cloudflare Vectorize.
+ * Vector search service on PostgreSQL with pgvector.
+ * Replaces Cloudflare Vectorize — native userId filtering, no metadata size limits.
  */
 export class VectorService {
-  private index: VectorizeIndex
+  private sql: Sql
 
-  constructor(index: VectorizeIndex) {
-    this.index = index
+  constructor(sql: Sql) {
+    this.sql = sql
   }
 
   /**
-   * Insert vectors into the index.
-   * Batches automatically (Vectorize limit: 1000 per call).
+   * Update embedding for a chunk (chunk row must already exist).
+   * Batch via unnest to avoid N+1 round-trips.
    */
-  async insert(records: VectorRecord[]): Promise<void> {
-    const BATCH_SIZE = 1000
-    for (let i = 0; i < records.length; i += BATCH_SIZE) {
-      const batch = records.slice(i, i + BATCH_SIZE)
-      const vectors = batch.map((r) => ({
-        id: r.id,
-        values: r.vector,
-        metadata: {
-          documentId: r.metadata.documentId,
-          userId: r.metadata.userId ?? "",
-          chunkIndex: r.metadata.chunkIndex,
-          content: r.metadata.content.slice(0, 1000), // Vectorize metadata size limit
-        },
-      }))
-      await this.index.insert(vectors)
-    }
+  async upsertEmbeddings(records: VectorRecord[]): Promise<void> {
+    if (records.length === 0) return
+    const ids = records.map((r) => r.id)
+    const vectors = records.map((r) => `[${r.vector.join(",")}]`)
+    await this.sql`
+      UPDATE chunks SET embedding = v.vec::vector
+      FROM unnest(${this.sql.array(ids)}::text[], ${this.sql.array(vectors)}::text[]) AS v(id, vec)
+      WHERE chunks.id = v.id
+    `
   }
 
   /**
-   * Search by vector similarity.
-   * Note: Vectorize metadata filtering requires a metadata index to be created first.
-   * Until `create-metadata-index` propagates for userId, we fetch topK*4 results
-   * and filter post-query by userId from the returned metadata.
+   * Search by vector cosine similarity.
+   * Native userId filtering via WHERE clause — no post-query hack needed.
    */
   async search(queryVector: number[], topK: number = 10, userId?: string): Promise<SearchResult[]> {
-    const queryOpts: VectorizeQueryOptions = {
-      // Fetch extra results to compensate for post-query userId filtering
-      topK: userId ? topK * 4 : topK,
-      returnValues: false,
-      returnMetadata: "all",
-    }
-    const results = await this.index.query(queryVector, queryOpts)
+    const vectorStr = `[${queryVector.join(",")}]`
 
-    const matches = results.matches ?? []
+    const rows = userId
+      ? await this.sql`
+          SELECT id, document_id, content, chunk_index,
+            1 - (embedding <=> ${vectorStr}::vector) as score
+          FROM chunks
+          WHERE user_id = ${userId} AND embedding IS NOT NULL
+          ORDER BY embedding <=> ${vectorStr}::vector
+          LIMIT ${topK}
+        `
+      : await this.sql`
+          SELECT id, document_id, content, chunk_index,
+            1 - (embedding <=> ${vectorStr}::vector) as score
+          FROM chunks
+          WHERE embedding IS NOT NULL
+          ORDER BY embedding <=> ${vectorStr}::vector
+          LIMIT ${topK}
+        `
 
-    // Post-query userId filter using metadata (works without a Vectorize metadata index)
-    const filtered = userId
-      ? matches.filter((m) => (m.metadata?.userId as string | undefined) === userId)
-      : matches
-
-    return filtered.slice(0, topK).map((match) => ({
-      id: match.id,
-      score: match.score ?? 0,
+    return rows.map((row) => ({
+      id: row.id as string,
+      score: Number(row.score),
       metadata: {
-        documentId: (match.metadata?.documentId as string) ?? "",
-        chunkIndex: (match.metadata?.chunkIndex as number) ?? 0,
-        content: (match.metadata?.content as string) ?? "",
+        documentId: row.document_id as string,
+        chunkIndex: row.chunk_index as number,
+        content: row.content as string,
       },
     }))
   }
 
   /**
-   * Delete vectors by IDs.
+   * Delete embeddings by setting to NULL (chunk rows deleted via CASCADE).
    */
   async deleteByIds(ids: string[]): Promise<void> {
     if (ids.length === 0) return
-    await this.index.deleteByIds(ids)
+    await this.sql`UPDATE chunks SET embedding = NULL WHERE id = ANY(${ids})`
   }
 }

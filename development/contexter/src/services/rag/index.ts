@@ -7,13 +7,14 @@ import {
 import type { EmbedderService } from "../embedder"
 import type { VectorStoreService } from "../vectorstore"
 import type { HybridSearchResult } from "../vectorstore/types"
+import type { LlmService } from "../llm"
 import { rewriteQuery } from "./rewriter"
 import { buildContext } from "./context"
 
 export type { RagQuery, RagAnswer, RagConfig, RagSource } from "./types"
 
 export interface RagServiceDeps {
-  ai: Ai
+  llm: LlmService
   embedder: EmbedderService
   vectorStore: VectorStoreService
   config?: RagConfig
@@ -21,14 +22,14 @@ export interface RagServiceDeps {
 }
 
 export class RagService {
-  private ai: Ai
+  private llm: LlmService
   private embedder: EmbedderService
   private vectorStore: VectorStoreService
   private config: Required<RagConfig>
   private docsMeta: string
 
   constructor(deps: RagServiceDeps) {
-    this.ai = deps.ai
+    this.llm = deps.llm
     this.embedder = deps.embedder
     this.vectorStore = deps.vectorStore
     this.docsMeta = deps.docsMeta ?? ""
@@ -40,20 +41,13 @@ export class RagService {
   }
 
   async query(input: RagQuery): Promise<RagAnswer> {
-    // 1. Rewrite query to N variants
-    const queryVariants = await rewriteQuery(
-      input.query,
-      this.config.queryRewriteCount,
-      this.ai
-    )
+    const queryVariants = await rewriteQuery(input.query, this.config.queryRewriteCount, this.llm)
 
-    // 2. Embed all query variants
     const queryEmbeddings = await this.embedder.embedBatch(
       queryVariants,
       { task: "retrieval.query" }
     )
 
-    // 3. Search with each variant, merge results
     const allResults: HybridSearchResult[] = []
     const seenIds = new Set<string>()
 
@@ -76,20 +70,10 @@ export class RagService {
       }
     }
 
-    // Sort by score descending
     allResults.sort((a, b) => b.score - a.score)
 
-    // 4. Build context from top results
-    const { context, sources } = buildContext(
-      allResults,
-      this.config.maxContextTokens
-    )
-
-    // 5. Generate answer with LLM
-    const { answer, promptTokens, completionTokens } = await this.generateAnswer(
-      input.query,
-      context
-    )
+    const { context, sources } = buildContext(allResults, this.config.maxContextTokens)
+    const { answer, promptTokens, completionTokens } = await this.generateAnswer(input.query, context)
 
     return {
       answer,
@@ -107,7 +91,6 @@ export class RagService {
     query: string,
     context: string
   ): Promise<{ answer: string; promptTokens: number; completionTokens: number }> {
-    // Build full context: document metadata + search results
     const metaSection = this.docsMeta
       ? `\nDocuments in knowledge base:\n${this.docsMeta}\n`
       : ""
@@ -121,31 +104,15 @@ export class RagService {
       }
     }
 
-    const messages = [
-      { role: "system" as const, content: this.config.systemPrompt },
-      {
-        role: "user" as const,
-        content: `Context:\n${fullContext}\n\nQuestion: ${query}`,
-      },
-    ]
+    const result = await this.llm.chat([
+      { role: "system", content: this.config.systemPrompt },
+      { role: "user", content: `Context:\n${fullContext}\n\nQuestion: ${query}` },
+    ], 1024)
 
-    const response = await this.ai.run("@cf/meta/llama-3.1-8b-instruct", {
-      messages,
-      max_tokens: 1024,
-    }) as AiResponse
-
-    const answer = response?.response || ""
-    const promptTokens = estimateTokens(this.config.systemPrompt + context + query)
-    const completionTokens = estimateTokens(answer)
-
-    return { answer, promptTokens, completionTokens }
+    return {
+      answer: result.response,
+      promptTokens: result.promptTokens,
+      completionTokens: result.completionTokens,
+    }
   }
-}
-
-interface AiResponse {
-  response?: string
-}
-
-function estimateTokens(text: string): number {
-  return text.split(/\s+/).filter((w) => w.length > 0).length
 }

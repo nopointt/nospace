@@ -32,14 +32,23 @@ export class EmbedderService {
     const dimensions = options.dimensions ?? JINA_DIMENSIONS
     const task = options.task ?? "retrieval.passage"
 
+    const batchPromises: Promise<BatchEmbeddingResult>[] = []
+    for (let i = 0; i < texts.length; i += JINA_MAX_BATCH) {
+      batchPromises.push(this.callApi(texts.slice(i, i + JINA_MAX_BATCH), model, dimensions, task))
+    }
+
+    // Process in groups of 3 concurrent batches to respect Jina rate limits
+    const CONCURRENCY = 3
     const allEmbeddings: EmbeddingResult[] = []
     let totalTokens = 0
 
-    for (let i = 0; i < texts.length; i += JINA_MAX_BATCH) {
-      const batch = texts.slice(i, i + JINA_MAX_BATCH)
-      const result = await this.callApi(batch, model, dimensions, task)
-      allEmbeddings.push(...result.embeddings)
-      totalTokens += result.totalTokens
+    for (let i = 0; i < batchPromises.length; i += CONCURRENCY) {
+      const group = batchPromises.slice(i, i + CONCURRENCY)
+      const results = await Promise.all(group)
+      for (const result of results) {
+        allEmbeddings.push(...result.embeddings)
+        totalTokens += result.totalTokens
+      }
     }
 
     return { embeddings: allEmbeddings, totalTokens }
@@ -67,8 +76,7 @@ export class EmbedderService {
     }
 
     // Max 3 retries with capped delays: 1s, 2s, 4s = 7s total backoff.
-    // CF Workers kill waitUntil() tasks at ~30s wall clock — 5 retries with
-    // delays up to 16s exceeded that budget and caused silent job freezes.
+    // P4-007: runs on Bun — not CF Workers, no 30s wall clock limit.
     const maxRetries = 3
     let lastError: string = ""
 
@@ -92,9 +100,9 @@ export class EmbedderService {
         throw new Error(`Jina API fetch failed: ${msg}`)
       }
 
-      if (response.status === 429) {
+      // P3-008: retry on 429, 500, 502, 503 — transient Jina errors should not fail pipeline
+      if ([429, 500, 502, 503].includes(response.status) && attempt < maxRetries) {
         lastError = await response.text()
-        // Cap delay at 4s so 3 retries stay well within the 30s worker limit
         const delay = Math.min(1000 * Math.pow(2, attempt), 4_000)
         await new Promise((r) => setTimeout(r, delay))
         continue

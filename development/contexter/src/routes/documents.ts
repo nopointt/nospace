@@ -1,8 +1,12 @@
 import { Hono } from "hono"
+import type { Sql } from "postgres"
 import type { Env } from "../types/env"
+import type Redis from "ioredis"
 import { resolveAuth, canAccessDocument } from "../services/auth"
 
-export const documents = new Hono<{ Bindings: Env }>()
+type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
+
+export const documents = new Hono<AppEnv>()
 
 interface ChunkRow {
   chunk_index: number
@@ -11,39 +15,50 @@ interface ChunkRow {
 }
 
 /**
+ * DELETE /api/documents
+ * P2-002: Frontend Settings page calls this to delete all data.
+ */
+documents.delete("/", async (c) => {
+  const sql = c.get("sql")
+  const auth = await resolveAuth(sql, c.req.raw)
+  if (!auth) return c.json({ error: "Unauthorized." }, 401)
+
+  const result = await sql`DELETE FROM documents WHERE user_id = ${auth.userId}`
+  return c.json({ success: true, deleted: result.count })
+})
+
+/**
  * GET /api/documents/:documentId/content
  * Returns document metadata + all chunks ordered by chunk_index.
  * Auth required (Bearer token or ?token= param).
  */
 documents.get("/:documentId/content", async (c) => {
-  const auth = await resolveAuth(c.env.DB, c.req.raw)
+  const sql = c.get("sql")
+  const auth = await resolveAuth(sql, c.req.raw)
   if (!auth) return c.json({ error: "Unauthorized." }, 401)
 
   const documentId = c.req.param("documentId")
   if (!canAccessDocument(auth, documentId)) return c.json({ error: "Access denied." }, 403)
 
-  const doc = await c.env.DB.prepare(
-    "SELECT id, name, mime_type, size, status, created_at FROM documents WHERE id = ? AND user_id = ?"
-  )
-    .bind(documentId, auth.userId)
-    .first<{
-      id: string
-      name: string
-      mime_type: string
-      size: number
-      status: string
-      created_at: string
-    }>()
+  const [doc] = await sql<{
+    id: string
+    name: string
+    mime_type: string
+    size: number
+    status: string
+    created_at: string
+  }[]>`
+    SELECT id, name, mime_type, size, status, created_at
+    FROM documents WHERE id = ${documentId} AND user_id = ${auth.userId}
+  `
 
   if (!doc) return c.json({ error: "Document not found." }, 404)
 
-  const chunksResult = await c.env.DB.prepare(
-    "SELECT chunk_index, content, token_count FROM chunks WHERE document_id = ? AND user_id = ? ORDER BY chunk_index ASC"
-  )
-    .bind(documentId, auth.userId)
-    .all<ChunkRow>()
-
-  const chunks = (chunksResult.results ?? []).map((row: ChunkRow) => ({
+  const chunks = (await sql<ChunkRow[]>`
+    SELECT chunk_index, content, token_count
+    FROM chunks WHERE document_id = ${documentId} AND user_id = ${auth.userId}
+    ORDER BY chunk_index ASC
+  `).map((row: ChunkRow) => ({
     index: row.chunk_index,
     content: row.content,
     tokenCount: row.token_count ?? null,

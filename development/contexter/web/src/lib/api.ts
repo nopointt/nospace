@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || "https://contexter.nopoint.workers.dev"
+export const API_BASE = import.meta.env.VITE_API_URL || "https://api.contexter.cc"
 
 interface ApiOptions {
   method?: string
@@ -33,7 +33,9 @@ async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
 
   if (!res.ok) {
     const text = await res.text()
-    throw new Error(text || `HTTP ${res.status}`)
+    let message = text
+    try { const json = JSON.parse(text); message = json.error || json.message || text } catch {}
+    throw new Error(message || `Error ${res.status}`)
   }
 
   return res.json()
@@ -205,6 +207,13 @@ export function listShares(token: string) {
 export function revokeShare(shareId: string, token: string) {
   return api<{ success: boolean }>(
     `/api/auth/shares/${shareId}`,
+    { method: "DELETE", token },
+  )
+}
+
+export function deleteDocument(documentId: string, token: string) {
+  return api<{ success: boolean }>(
+    `/api/status/${documentId}`,
     { method: "DELETE", token },
   )
 }

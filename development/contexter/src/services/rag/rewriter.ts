@@ -1,3 +1,5 @@
+import type { LlmService } from "../llm"
+
 /**
  * Query rewriter: generates N alternative phrasings of the user query
  * to improve recall in hybrid search.
@@ -5,7 +7,7 @@
 export async function rewriteQuery(
   query: string,
   count: number,
-  ai: Ai
+  llm: LlmService
 ): Promise<string[]> {
   if (count <= 0) return [query]
 
@@ -17,13 +19,9 @@ export async function rewriteQuery(
 
 Query: "${query}"`
 
-  const response = await ai.run("@cf/meta/llama-3.1-8b-instruct", {
-    messages: [{ role: "user", content: prompt }],
-    max_tokens: 256,
-  }) as { response?: string }
+  const result = await llm.chat([{ role: "user", content: prompt }], 256)
 
-  const text = response?.response || ""
-  const variants = text
+  const variants = result.response
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0 && line.length < 500)

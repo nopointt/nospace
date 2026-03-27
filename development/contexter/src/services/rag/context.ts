@@ -39,8 +39,9 @@ export function buildContext(
 }
 
 /**
- * Simple token estimation: ~1 token per word.
+ * Token estimation: ~1.3 tokens per word (English average).
+ * P4-005: previous multiplier of 1.0 undercounted by ~30%, risking context overflow.
  */
 function estimateTokens(text: string): number {
-  return text.split(/\s+/).filter((w) => w.length > 0).length
+  return Math.ceil(text.split(/\s+/).filter((w) => w.length > 0).length * 1.3)
 }

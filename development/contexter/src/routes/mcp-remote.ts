@@ -1,12 +1,19 @@
 import { Hono } from "hono"
+import type { Sql } from "postgres"
 import type { Env } from "../types/env"
+import type Redis from "ioredis"
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
 import { RagService } from "../services/rag"
 import { EmbedderService } from "../services/embedder"
 import { VectorStoreService } from "../services/vectorstore"
+import { LlmService } from "../services/llm"
 import { resolveAuth, type AuthContext } from "../services/auth"
 import { runPipelineAsync, createPendingJobs } from "../services/pipeline"
+import { getPipelineQueue } from "../services/queue"
 
-export const mcpRemote = new Hono<{ Bindings: Env }>()
+type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
+
+export const mcpRemote = new Hono<AppEnv>()
 
 const SERVER_INFO = {
   name: "contexter",
@@ -154,7 +161,16 @@ const TOOLS = [
  * Session ID generated on initialize.
  */
 mcpRemote.post("/", async (c) => {
-  const authCtx = await resolveAuth(c.env.DB, c.req.raw)
+  const sql = c.get("sql")
+  const env = c.get("env")
+  const redis = c.get("redis")
+  const authCtx = await resolveAuth(sql, c.req.raw)
+
+  // P2-017 / P1-005: extract real client IP for rate limiting
+  const clientIp = c.req.header("CF-Connecting-IP")
+    ?? c.req.header("X-Real-IP")
+    ?? c.req.header("X-Forwarded-For")?.split(",")[0]?.trim()
+    ?? "unknown"
 
   let body: JsonRpcRequest | JsonRpcRequest[]
   try {
@@ -167,18 +183,21 @@ mcpRemote.post("/", async (c) => {
   const accept = c.req.header("Accept") ?? ""
   const wantsSse = accept.includes("text/event-stream")
 
+  // P3-006: extract request origin for CORS header in SSE responses
+  const requestOrigin = c.req.header("Origin") ?? undefined
+
   // Handle batch requests
   if (Array.isArray(body)) {
     const responses = []
     for (const req of body) {
-      const res = await handleRequest(req, c.env, authCtx, c.executionCtx)
+      const res = await handleRequest(req, sql, env, redis, authCtx, clientIp)
       if (res) responses.push(res)
     }
-    if (wantsSse) return sseResponse(responses, null)
+    if (wantsSse) return sseResponse(responses, null, requestOrigin)
     return c.json(responses)
   }
 
-  const response = await handleRequest(body, c.env, authCtx, c.executionCtx)
+  const response = await handleRequest(body, sql, env, redis, authCtx, clientIp)
 
   // Notifications (no id) don't get responses
   if (!response) return c.body(null, 202)
@@ -188,24 +207,27 @@ mcpRemote.post("/", async (c) => {
     ? crypto.randomUUID().replace(/-/g, "").slice(0, 16)
     : c.req.header("Mcp-Session-Id") ?? null
 
-  if (wantsSse) return sseResponse(response, sessionId)
+  if (wantsSse) return sseResponse(response, sessionId, requestOrigin)
 
   // Plain JSON fallback (for simple clients like curl)
+  // P3-006: only set ACAO for known browser origins
+  const allowOrigin = requestOrigin && SSE_CORS_ORIGINS.includes(requestOrigin) ? requestOrigin : undefined
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     "Cache-Control": "no-cache, no-transform",
-    "Access-Control-Allow-Origin": "*",
   }
+  if (allowOrigin) headers["Access-Control-Allow-Origin"] = allowOrigin
   if (sessionId) headers["Mcp-Session-Id"] = sessionId
   return new Response(JSON.stringify(response), { headers })
 })
 
 // GET — redirect OAuth authorization requests; otherwise 405
 mcpRemote.get("/", (c) => {
+  const env = c.get("env")
   const q = c.req.query()
   // Perplexity and other OAuth clients hit /sse with OAuth params
   if (q.client_id || q.response_type) {
-    const dest = new URL("https://contexter.nopoint.workers.dev/authorize")
+    const dest = new URL(`${env.BASE_URL}/authorize`)
     for (const [k, v] of Object.entries(q)) {
       dest.searchParams.set(k, v)
     }
@@ -219,7 +241,14 @@ mcpRemote.delete("/", (c) => {
   return c.text("Method Not Allowed", 405)
 })
 
-async function handleRequest(req: JsonRpcRequest, env: Env, authCtx: AuthContext | null, execCtx: ExecutionContext): Promise<JsonRpcResponse | null> {
+async function handleRequest(
+  req: JsonRpcRequest,
+  sql: Sql,
+  env: Env,
+  redis: Redis,
+  authCtx: AuthContext | null,
+  clientIp: string = "unknown"
+): Promise<JsonRpcResponse | null> {
   if (req.jsonrpc !== "2.0") {
     return makeError(req.id, -32600, "Invalid Request: jsonrpc must be '2.0'")
   }
@@ -242,10 +271,10 @@ async function handleRequest(req: JsonRpcRequest, env: Env, authCtx: AuthContext
 
     case "tools/call":
       if (!authCtx) return makeError(req.id, -32600, "Unauthorized: provide ?token= or ?share= in the MCP server URL")
-      return handleToolCall(req, env, authCtx, execCtx)
+      return handleToolCall(req, sql, env, redis, authCtx)
 
     case "client/register":
-      return handleClientRegister(req, env)
+      return handleClientRegister(req, redis, clientIp)
 
     case "ping":
       return makeResult(req.id, {})
@@ -255,28 +284,72 @@ async function handleRequest(req: JsonRpcRequest, env: Env, authCtx: AuthContext
   }
 }
 
-async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContext, execCtx: ExecutionContext): Promise<JsonRpcResponse> {
+async function handleToolCall(
+  req: JsonRpcRequest,
+  sql: Sql,
+  env: Env,
+  redis: Redis,
+  authCtx: AuthContext
+): Promise<JsonRpcResponse> {
   const toolName = req.params?.name as string
   const args = (req.params?.arguments ?? {}) as Record<string, unknown>
 
   try {
     switch (toolName) {
       case "search_knowledge": {
-        const embedder = new EmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
-        const vectorStore = new VectorStoreService({ db: env.DB, vectorIndex: env.VECTOR_INDEX })
-        await vectorStore.initialize()
-        const rag = new RagService({ ai: env.AI, embedder, vectorStore })
+        // Enforce query length limit — 2000 chars max
+        const rawQuery = (args.query as string) ?? ""
+        if (rawQuery.length > 2000) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "Query exceeds 2000 character limit." }],
+            isError: true,
+          })
+        }
+        if (!rawQuery.trim()) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "Query is required." }],
+            isError: true,
+          })
+        }
 
+        // NEW-005: per-user rate limit — max 60 queries per minute
+        const queryRateKey = `rate:query:${authCtx.userId}`
+        try {
+          const count = await redis.incr(queryRateKey)
+          if (count === 1) await redis.expire(queryRateKey, 60)
+          if (count > 60) {
+            return makeResult(req.id, {
+              content: [{ type: "text", text: "Query rate limit exceeded. Maximum 60 queries per minute." }],
+              isError: true,
+            })
+          }
+        } catch (e) {
+          console.error("Redis rate limit check failed for search_knowledge:", e instanceof Error ? e.message : String(e))
+        }
+
+        const embedder = new EmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
+        const vectorStore = new VectorStoreService({ sql })
+        await vectorStore.initialize()
+        const llm = new LlmService(env.GROQ_API_KEY)
+        const rag = new RagService({ llm, embedder, vectorStore })
+
+        // P1-003: pass userId to scope search to this user's documents only
         const result = await rag.query({
-          query: args.query as string,
+          query: rawQuery,
           topK: Math.min((args.topK as number) ?? 5, 20),
           scoreThreshold: 0,
+          userId: authCtx.userId,
         })
 
+        // Filter sources by share scope (if using share token with limited scope)
+        const filteredSources = authCtx.scope === "all"
+          ? result.sources
+          : result.sources.filter((s) => (authCtx.scope as string[]).includes(s.documentId))
+
         let text = `**Answer:** ${result.answer}\n\n`
-        if (result.sources.length > 0) {
-          text += `**Sources (${result.sources.length}):**\n`
-          for (const src of result.sources) {
+        if (filteredSources.length > 0) {
+          text += `**Sources (${filteredSources.length}):**\n`
+          for (const src of filteredSources) {
             text += `- [${src.documentId}] ${src.content.slice(0, 200)}\n`
           }
         }
@@ -287,11 +360,12 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
       }
 
       case "list_documents": {
-        const docs = await env.DB.prepare(
-          "SELECT id, name, mime_type, size, status, created_at FROM documents WHERE user_id = ? ORDER BY created_at DESC LIMIT 100"
-        ).bind(authCtx.userId).all<{ id: string; name: string; mime_type: string; size: number; status: string; created_at: string }>()
+        const docs = await sql<{ id: string; name: string; mime_type: string; size: number; status: string; created_at: string }[]>`
+          SELECT id, name, mime_type, size, status, created_at
+          FROM documents WHERE user_id = ${authCtx.userId} ORDER BY created_at DESC LIMIT 100
+        `
 
-        const list = (docs.results ?? [])
+        const list = docs
           .map((d) => `- **${d.name}** (${d.mime_type}, ${(d.size / 1024).toFixed(1)} KB) — ${d.status} — ID: ${d.id}`)
           .join("\n")
 
@@ -301,9 +375,10 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
       }
 
       case "get_document": {
-        const doc = await env.DB.prepare(
-          "SELECT id, name, mime_type, size, status, error_message, created_at FROM documents WHERE id = ? AND user_id = ?"
-        ).bind(args.documentId as string, authCtx.userId).first<{ id: string; name: string; mime_type: string; size: number; status: string; error_message: string | null; created_at: string }>()
+        const [doc] = await sql<{ id: string; name: string; mime_type: string; size: number; status: string; error_message: string | null; created_at: string }[]>`
+          SELECT id, name, mime_type, size, status, error_message, created_at
+          FROM documents WHERE id = ${args.documentId as string} AND user_id = ${authCtx.userId}
+        `
 
         if (!doc) {
           return makeResult(req.id, {
@@ -312,9 +387,10 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const chunks = await env.DB.prepare(
-          "SELECT COUNT(*) as count FROM chunks WHERE document_id = ?"
-        ).bind(doc.id).first<{ count: number }>()
+        // P1-008: COUNT(*) returns bigint — cast to int
+        const [chunks] = await sql<{ count: number }[]>`
+          SELECT COUNT(*)::int as count FROM chunks WHERE document_id = ${doc.id}
+        `
 
         const text = `**${doc.name}**\n- Type: ${doc.mime_type}\n- Size: ${(doc.size / 1024).toFixed(1)} KB\n- Status: ${doc.status}\n- Chunks: ${chunks?.count ?? 0}\n- Created: ${doc.created_at}${doc.error_message ? `\n- Error: ${doc.error_message}` : ""}`
 
@@ -330,6 +406,15 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
             isError: true,
           })
         }
+
+        // NEW-004: per-user upload rate limit — max 20 uploads per hour
+        if (await checkUploadRateLimit(redis, authCtx.userId)) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "Upload rate limit exceeded. Maximum 20 uploads per hour." }],
+            isError: true,
+          })
+        }
+
         const content = (args.content as string ?? "").trim()
         if (!content) {
           return makeResult(req.id, {
@@ -338,20 +423,35 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const title = (args.title as string ?? "").trim() || `context-${new Date().toISOString().slice(0, 16).replace("T", "-")}.txt`
+        // NEW-011: sanitize title before using in R2 key
+        const rawTitle = (args.title as string ?? "").trim() || `context-${new Date().toISOString().slice(0, 16).replace("T", "-")}.txt`
+        const title = sanitizeFileName(rawTitle)
         const blob = new Blob([content], { type: "text/plain" })
         const buffer = await blob.arrayBuffer()
 
-        const documentId = crypto.randomUUID().slice(0, 8)
+        // P3-013: use 16-char documentId
+        const documentId = crypto.randomUUID().slice(0, 16)
         const r2Key = `${authCtx.userId}/${documentId}/${title}`
 
-        await env.STORAGE.put(r2Key, buffer)
-        await env.DB.prepare(
-          "INSERT INTO documents (id, user_id, name, mime_type, size, r2_key, status) VALUES (?, ?, ?, ?, ?, ?, 'processing')"
-        ).bind(documentId, authCtx.userId, title, "text/plain", blob.size, r2Key).run()
+        await env.storage.send(new PutObjectCommand({
+          Bucket: env.storageBucket,
+          Key: r2Key,
+          Body: Buffer.from(buffer),
+          ContentType: "text/plain",
+        }))
+        await sql`
+          INSERT INTO documents (id, user_id, name, mime_type, size, r2_key, status)
+          VALUES (${documentId}, ${authCtx.userId}, ${title}, ${"text/plain"}, ${blob.size}, ${r2Key}, 'processing')
+        `
 
-        const jobIds = await createPendingJobs(env.DB, documentId, authCtx.userId)
-        execCtx.waitUntil(runPipelineAsync(documentId, { file: buffer, fileName: title, mimeType: "text/plain", fileSize: blob.size }, env, authCtx.userId, jobIds))
+        const jobIds = await createPendingJobs(sql, documentId, authCtx.userId)
+        try {
+          const queue = getPipelineQueue(process.env.REDIS_URL ?? "redis://localhost:6379")
+          await queue.add("process", { documentId, userId: authCtx.userId, fileName: title, mimeType: "text/plain", fileSize: blob.size, r2Key, jobIds })
+        } catch (qErr) {
+          console.error("BullMQ enqueue failed, falling back to direct run:", qErr instanceof Error ? qErr.message : String(qErr))
+          runPipelineAsync(documentId, { file: buffer, fileName: title, mimeType: "text/plain", fileSize: blob.size }, env, sql, authCtx.userId, jobIds).catch(console.error)
+        }
 
         return makeResult(req.id, {
           content: [{ type: "text", text: `Added "${title}" to knowledge base (${(blob.size / 1024).toFixed(1)} KB). Document ID: ${documentId}. Processing started — content will be searchable shortly.` }],
@@ -365,7 +465,18 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
             isError: true,
           })
         }
-        const fileName = (args.fileName as string ?? "").trim()
+
+        // NEW-004: per-user upload rate limit — max 20 uploads per hour
+        if (await checkUploadRateLimit(redis, authCtx.userId)) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "Upload rate limit exceeded. Maximum 20 uploads per hour." }],
+            isError: true,
+          })
+        }
+
+        // NEW-011: sanitize fileName before using in R2 key
+        const rawFileName = (args.fileName as string ?? "").trim()
+        const fileName = sanitizeFileName(rawFileName)
         const contentBase64 = (args.contentBase64 as string ?? "").trim()
 
         if (!fileName) {
@@ -407,6 +518,7 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           csv: "text/csv", json: "application/json", txt: "text/plain", md: "text/markdown",
           png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", svg: "image/svg+xml",
           mp3: "audio/mpeg", wav: "audio/wav", m4a: "audio/x-m4a", ogg: "audio/ogg",
+          mp4: "video/mp4", mov: "video/quicktime", webm: "video/webm",
         }
 
         const ext = fileName.split(".").pop()?.toLowerCase() ?? ""
@@ -418,18 +530,30 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const documentId = crypto.randomUUID().slice(0, 8)
+        // P3-013: use 16-char documentId
+        const documentId = crypto.randomUUID().slice(0, 16)
         const r2Key = `${authCtx.userId}/${documentId}/${fileName}`
 
-        await env.STORAGE.put(r2Key, buffer, {
-          customMetadata: { fileName, mimeType, documentId, userId: authCtx.userId },
-        })
-        await env.DB.prepare(
-          "INSERT INTO documents (id, user_id, name, mime_type, size, r2_key, status) VALUES (?, ?, ?, ?, ?, ?, 'processing')"
-        ).bind(documentId, authCtx.userId, fileName, mimeType, buffer.byteLength, r2Key, "processing").run()
+        await env.storage.send(new PutObjectCommand({
+          Bucket: env.storageBucket,
+          Key: r2Key,
+          Body: Buffer.from(buffer),
+          ContentType: mimeType,
+          Metadata: { fileName, mimeType, documentId, userId: authCtx.userId },
+        }))
+        await sql`
+          INSERT INTO documents (id, user_id, name, mime_type, size, r2_key, status)
+          VALUES (${documentId}, ${authCtx.userId}, ${fileName}, ${mimeType}, ${buffer.byteLength}, ${r2Key}, 'processing')
+        `
 
-        const jobIds = await createPendingJobs(env.DB, documentId, authCtx.userId)
-        execCtx.waitUntil(runPipelineAsync(documentId, { file: buffer, fileName, mimeType, fileSize: buffer.byteLength }, env, authCtx.userId, jobIds))
+        const jobIds = await createPendingJobs(sql, documentId, authCtx.userId)
+        try {
+          const queue = getPipelineQueue(process.env.REDIS_URL ?? "redis://localhost:6379")
+          await queue.add("process", { documentId, userId: authCtx.userId, fileName, mimeType, fileSize: buffer.byteLength, r2Key, jobIds })
+        } catch (qErr) {
+          console.error("BullMQ enqueue failed, falling back to direct run:", qErr instanceof Error ? qErr.message : String(qErr))
+          runPipelineAsync(documentId, { file: buffer, fileName, mimeType, fileSize: buffer.byteLength }, env, sql, authCtx.userId, jobIds).catch(console.error)
+        }
 
         return makeResult(req.id, {
           content: [{ type: "text", text: `Uploaded "${fileName}" (${(buffer.byteLength / 1024).toFixed(1)} KB, ${mimeType}). Document ID: ${documentId}. Pipeline started — content will be searchable shortly.` }],
@@ -451,9 +575,9 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const doc = await env.DB.prepare(
-          "SELECT id, name, r2_key FROM documents WHERE id = ? AND user_id = ?"
-        ).bind(docId, authCtx.userId).first<{ id: string; name: string; r2_key: string }>()
+        const [doc] = await sql<{ id: string; name: string; r2_key: string }[]>`
+          SELECT id, name, r2_key FROM documents WHERE id = ${docId} AND user_id = ${authCtx.userId}
+        `
 
         if (!doc) {
           return makeResult(req.id, {
@@ -462,16 +586,23 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        // Delete from R2, Vectorize, D1 (chunks cascade, jobs cascade)
-        await env.STORAGE.delete(doc.r2_key)
-        const chunkIds = await env.DB.prepare(
-          "SELECT id FROM chunks WHERE document_id = ?"
-        ).bind(docId).all<{ id: string }>()
-        const vectorIds = (chunkIds.results ?? []).map((c) => c.id)
-        if (vectorIds.length > 0) {
-          await env.VECTOR_INDEX.deleteByIds(vectorIds)
+        // Delete from S3
+        await env.storage.send(new DeleteObjectCommand({
+          Bucket: env.storageBucket,
+          Key: doc.r2_key,
+        }))
+
+        // Null out embeddings for all chunks (replaces VECTOR_INDEX.deleteByIds)
+        const chunkIds = (await sql<{ id: string }[]>`
+          SELECT id FROM chunks WHERE document_id = ${docId}
+        `).map((c) => c.id)
+
+        if (chunkIds.length > 0) {
+          await sql`UPDATE chunks SET embedding = NULL WHERE id = ANY(${chunkIds})`
         }
-        await env.DB.prepare("DELETE FROM documents WHERE id = ?").bind(docId).run()
+
+        // Delete document row (chunks and jobs cascade)
+        await sql`DELETE FROM documents WHERE id = ${docId}`
 
         return makeResult(req.id, {
           content: [{ type: "text", text: `Deleted "${doc.name}" (${docId}). File, chunks, and embeddings removed.` }],
@@ -487,9 +618,9 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const doc = await env.DB.prepare(
-          "SELECT id, name, status FROM documents WHERE id = ? AND user_id = ?"
-        ).bind(docId, authCtx.userId).first<{ id: string; name: string; status: string }>()
+        const [doc] = await sql<{ id: string; name: string; status: string }[]>`
+          SELECT id, name, status FROM documents WHERE id = ${docId} AND user_id = ${authCtx.userId}
+        `
 
         if (!doc) {
           return makeResult(req.id, {
@@ -504,12 +635,12 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const chunks = await env.DB.prepare(
-          "SELECT content, chunk_index, token_count FROM chunks WHERE document_id = ? ORDER BY chunk_index"
-        ).bind(docId).all<{ content: string; chunk_index: number; token_count: number | null }>()
+        const chunks = await sql<{ content: string; chunk_index: number; token_count: number | null }[]>`
+          SELECT content, chunk_index, token_count FROM chunks WHERE document_id = ${docId} ORDER BY chunk_index
+        `
 
-        const fullText = (chunks.results ?? []).map((c) => c.content).join("\n\n")
-        const chunkCount = chunks.results?.length ?? 0
+        const fullText = chunks.map((c) => c.content).join("\n\n")
+        const chunkCount = chunks.length
 
         return makeResult(req.id, {
           content: [{ type: "text", text: `**${doc.name}** (${chunkCount} chunks)\n\n${fullText}` }],
@@ -526,9 +657,9 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const doc = await env.DB.prepare(
-          "SELECT id, name, status FROM documents WHERE id = ? AND user_id = ?"
-        ).bind(docId, authCtx.userId).first<{ id: string; name: string; status: string }>()
+        const [doc] = await sql<{ id: string; name: string; status: string }[]>`
+          SELECT id, name, status FROM documents WHERE id = ${docId} AND user_id = ${authCtx.userId}
+        `
 
         if (!doc) {
           return makeResult(req.id, {
@@ -538,20 +669,18 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
         }
 
         // Get all chunks for this document
-        const chunks = await env.DB.prepare(
-          "SELECT content FROM chunks WHERE document_id = ? ORDER BY chunk_index"
-        ).bind(docId).all<{ content: string }>()
+        const chunks = await sql<{ content: string }[]>`
+          SELECT content FROM chunks WHERE document_id = ${docId} ORDER BY chunk_index
+        `
 
-        const context = (chunks.results ?? []).map((c, i) => `[${i + 1}] ${c.content}`).join("\n\n")
+        const context = chunks.map((c, i) => `[${i + 1}] ${c.content}`).join("\n\n")
 
         // Ask LLM with document context
-        const answer = await env.AI.run("@cf/meta/llama-3.1-8b-instruct" as any, {
-          messages: [
-            { role: "system", content: `Answer the question using ONLY the provided document context. Document: "${doc.name}". If the answer is not in the context, say so. Answer in the user's language.` },
-            { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` },
-          ],
-          max_tokens: 1024,
-        }) as { response?: string }
+        const llm = new LlmService(env.GROQ_API_KEY)
+        const answer = await llm.chat([
+          { role: "system", content: `Answer the question using ONLY the provided document context. Document: "${doc.name}". If the answer is not in the context, say so. Answer in the user's language.` },
+          { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` },
+        ], 1024)
 
         return makeResult(req.id, {
           content: [{ type: "text", text: `**${doc.name}** — ${question}\n\n${answer.response ?? "No answer generated."}` }],
@@ -559,21 +688,22 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
       }
 
       case "get_stats": {
-        const docs = await env.DB.prepare(
-          "SELECT status, COUNT(*) as cnt FROM documents WHERE user_id = ? GROUP BY status"
-        ).bind(authCtx.userId).all<{ status: string; cnt: number }>()
+        // P1-008: COUNT(*) returns bigint — cast to int
+        const docsByStatus = await sql<{ status: string; cnt: number }[]>`
+          SELECT status, COUNT(*)::int as cnt FROM documents WHERE user_id = ${authCtx.userId} GROUP BY status
+        `
 
-        const chunkCount = await env.DB.prepare(
-          "SELECT COUNT(*) as cnt FROM chunks WHERE user_id = ?"
-        ).bind(authCtx.userId).first<{ cnt: number }>()
+        const [chunkCount] = await sql<{ cnt: number }[]>`
+          SELECT COUNT(*)::int as cnt FROM chunks WHERE user_id = ${authCtx.userId}
+        `
 
-        const totalSize = await env.DB.prepare(
-          "SELECT COALESCE(SUM(size), 0) as total FROM documents WHERE user_id = ?"
-        ).bind(authCtx.userId).first<{ total: number }>()
+        const [totalSize] = await sql<{ total: number }[]>`
+          SELECT COALESCE(SUM(size), 0) as total FROM documents WHERE user_id = ${authCtx.userId}
+        `
 
         const statusMap: Record<string, number> = {}
         let totalDocs = 0
-        for (const row of (docs.results ?? [])) {
+        for (const row of docsByStatus) {
           statusMap[row.status] = row.cnt
           totalDocs += row.cnt
         }
@@ -601,17 +731,19 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
 
         const permission = (args.permission as string) === "read_write" ? "read_write" : "read"
         const expiresInHours = args.expiresInHours as number | undefined
-        const shareId = crypto.randomUUID().slice(0, 8)
+        // P3-013: use 16-char IDs
+        const shareId = crypto.randomUUID().slice(0, 16)
         const shareToken = crypto.randomUUID().replace(/-/g, "").slice(0, 32) + crypto.randomUUID().replace(/-/g, "").slice(0, 32)
         const expiresAt = expiresInHours
           ? new Date(Date.now() + expiresInHours * 3600_000).toISOString()
           : null
 
-        await env.DB.prepare(
-          "INSERT INTO shares (id, owner_id, share_token, scope, permission, expires_at) VALUES (?, ?, ?, 'all', ?, ?)"
-        ).bind(shareId, authCtx.userId, shareToken, permission, expiresAt).run()
+        await sql`
+          INSERT INTO shares (id, owner_id, share_token, scope, permission, expires_at)
+          VALUES (${shareId}, ${authCtx.userId}, ${shareToken}, 'all', ${permission}, ${expiresAt})
+        `
 
-        const shareUrl = `https://contexter.nopoint.workers.dev/sse?share=${shareToken}`
+        const shareUrl = `${env.BASE_URL}/sse?share=${shareToken}`
 
         return makeResult(req.id, {
           content: [{ type: "text", text: `**Share link created**\n- URL: ${shareUrl}\n- Permission: ${permission}\n- Expires: ${expiresAt ?? "never"}\n\nAnyone with this URL can connect via MCP and ${permission === "read_write" ? "search + upload" : "search only"}.` }],
@@ -627,9 +759,9 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const doc = await env.DB.prepare(
-          "SELECT id, name, status FROM documents WHERE id = ? AND user_id = ?"
-        ).bind(docId, authCtx.userId).first<{ id: string; name: string; status: string }>()
+        const [doc] = await sql<{ id: string; name: string; status: string }[]>`
+          SELECT id, name, status FROM documents WHERE id = ${docId} AND user_id = ${authCtx.userId}
+        `
 
         if (!doc) {
           return makeResult(req.id, {
@@ -643,21 +775,19 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const chunks = await env.DB.prepare(
-          "SELECT content FROM chunks WHERE document_id = ? ORDER BY chunk_index"
-        ).bind(docId).all<{ content: string }>()
+        const chunks = await sql<{ content: string }[]>`
+          SELECT content FROM chunks WHERE document_id = ${docId} ORDER BY chunk_index
+        `
 
-        const fullText = (chunks.results ?? []).map((c) => c.content).join("\n\n")
+        const fullText = chunks.map((c) => c.content).join("\n\n")
         // Truncate to ~6000 tokens for LLM context
         const truncated = fullText.slice(0, 24000)
 
-        const summary = await env.AI.run("@cf/meta/llama-3.1-8b-instruct" as any, {
-          messages: [
-            { role: "system", content: "Create a concise summary of the document. Include key points, main topics, and important details. Answer in the same language as the document." },
-            { role: "user", content: truncated },
-          ],
-          max_tokens: 1024,
-        }) as { response?: string }
+        const llm = new LlmService(env.GROQ_API_KEY)
+        const summary = await llm.chat([
+          { role: "system", content: "Create a concise summary of the document. Include key points, main topics, and important details. Answer in the same language as the document." },
+          { role: "user", content: truncated },
+        ], 1024)
 
         return makeResult(req.id, {
           content: [{ type: "text", text: `**Summary: ${doc.name}**\n\n${summary.response ?? "Could not generate summary."}` }],
@@ -680,9 +810,9 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        const doc = await env.DB.prepare(
-          "SELECT id, name FROM documents WHERE id = ? AND user_id = ?"
-        ).bind(docId, authCtx.userId).first<{ id: string; name: string }>()
+        const [doc] = await sql<{ id: string; name: string }[]>`
+          SELECT id, name FROM documents WHERE id = ${docId} AND user_id = ${authCtx.userId}
+        `
 
         if (!doc) {
           return makeResult(req.id, {
@@ -691,9 +821,9 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
           })
         }
 
-        await env.DB.prepare(
-          "UPDATE documents SET name = ?, updated_at = datetime('now') WHERE id = ?"
-        ).bind(newName, docId).run()
+        await sql`
+          UPDATE documents SET name = ${newName}, updated_at = NOW() WHERE id = ${docId}
+        `
 
         return makeResult(req.id, {
           content: [{ type: "text", text: `Renamed "${doc.name}" to "${newName}"` }],
@@ -719,26 +849,94 @@ async function handleToolCall(req: JsonRpcRequest, env: Env, authCtx: AuthContex
   }
 }
 
-async function handleClientRegister(req: JsonRpcRequest, env: Env): Promise<JsonRpcResponse> {
+// P2-018 + P1-005: validate redirect_uris (HTTPS only) and rate-limit client registration
+async function handleClientRegister(req: JsonRpcRequest, redis: Redis, clientIp: string): Promise<JsonRpcResponse> {
+  // P1-005: rate limit — max 10 client registrations per IP per hour
+  const rateLimitKey = `rate:client_reg:${clientIp}`
+  try {
+    const count = await redis.incr(rateLimitKey)
+    if (count === 1) await redis.expire(rateLimitKey, 3600)
+    if (count > 10) {
+      return makeError(req.id, -32000, "rate_limit_exceeded: too many client registrations from this IP")
+    }
+  } catch (e) {
+    console.error("Redis rate limit check failed for client/register:", e instanceof Error ? e.message : String(e))
+  }
+
   const clientName = (req.params?.client_name as string | undefined) ?? "unknown"
-  const redirectUris = (req.params?.redirect_uris as string[] | undefined) ?? []
+  const redirectUrisRaw = (req.params?.redirect_uris as string[] | undefined) ?? []
+
+  // P2-018: validate redirect_uris — only HTTPS allowed (localhost for dev tools)
+  for (const uri of redirectUrisRaw) {
+    try {
+      const parsed = new URL(uri)
+      if (parsed.protocol !== "https:" && parsed.hostname !== "localhost" && parsed.hostname !== "127.0.0.1") {
+        return makeError(req.id, -32602, `invalid_redirect_uri: only HTTPS redirect URIs allowed: ${uri}`)
+      }
+    } catch {
+      return makeError(req.id, -32602, `invalid_redirect_uri: invalid URI: ${uri}`)
+    }
+  }
 
   const clientId = `contexter-${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`
   const clientSecret = crypto.randomUUID().replace(/-/g, "")
 
-  // Store in KV for 24h — stateless validation optional, but preserves the record
-  await env.KV.put(
-    `oauth_client:${clientId}`,
-    JSON.stringify({ clientId, clientSecret, clientName, redirectUris }),
-    { expirationTtl: 86400 }
-  )
+  // Store in Redis for 24h
+  try {
+    await redis.set(
+      `oauth_client:${clientId}`,
+      JSON.stringify({ clientId, clientSecret, clientName, redirectUris: redirectUrisRaw }),
+      "EX",
+      86400
+    )
+  } catch (e) {
+    console.error("Redis set failed for client/register:", e instanceof Error ? e.message : String(e))
+    return makeError(req.id, -32000, "server_error: failed to register client")
+  }
 
   return makeResult(req.id, {
     client_id: clientId,
     client_secret: clientSecret,
     client_name: clientName,
-    redirect_uris: redirectUris,
+    redirect_uris: redirectUrisRaw,
   })
+}
+
+// --- Security helpers ---
+
+/**
+ * NEW-011: Sanitize file names used in R2 storage keys.
+ * Strips path traversal sequences and replaces / \ with -.
+ * Prevents key collisions and path traversal in S3 keys.
+ */
+function sanitizeFileName(name: string): string {
+  // Remove path traversal sequences
+  let safe = name.replace(/\.\.[/\\]/g, "").replace(/^[/\\]+/, "")
+  // Replace directory separators
+  safe = safe.replace(/[/\\]/g, "-")
+  // Strip null bytes and control characters
+  safe = safe.replace(/[\x00-\x1f\x7f]/g, "")
+  // Trim whitespace
+  safe = safe.trim()
+  // Fallback if name becomes empty
+  if (!safe) safe = "untitled"
+  return safe
+}
+
+/**
+ * NEW-004: Apply per-user upload rate limit (max 20 uploads per hour).
+ * Returns true if the request should be blocked.
+ */
+async function checkUploadRateLimit(redis: Redis, userId: string): Promise<boolean> {
+  const key = `rate:upload:${userId}`
+  try {
+    const count = await redis.incr(key)
+    if (count === 1) await redis.expire(key, 3600)
+    return count > 20
+  } catch (e) {
+    console.error("Redis upload rate limit check failed, allowing upload:", e instanceof Error ? e.message : String(e))
+    return false // fail-open
+  }
 }
 
 // --- JSON-RPC helpers ---
@@ -765,15 +963,25 @@ function makeError(id: string | number | null | undefined, code: number, message
   return { jsonrpc: "2.0", id: id ?? null, error: { code, message } }
 }
 
-function sseResponse(data: JsonRpcResponse | JsonRpcResponse[], sessionId: string | null): Response {
+// P3-006: MCP SSE endpoints serve non-browser MCP clients — they connect via token in query params,
+// not via browser cross-origin requests. Restricting to specific origins would break MCP clients
+// (Claude Desktop, Perplexity, etc.) that connect directly. We keep the SSE CORS origin as the
+// configured domain list but note that MCP tool clients are not browser-origin requests.
+// For the plain JSON fallback path (curl, direct clients) we also restrict.
+const SSE_CORS_ORIGINS = ["https://contexter.cc", "https://www.contexter.cc"]
+
+function sseResponse(data: JsonRpcResponse | JsonRpcResponse[], sessionId: string | null, requestOrigin?: string): Response {
   const items = Array.isArray(data) ? data : [data]
   const body = items.map((item) => `event: message\ndata: ${JSON.stringify(item)}\n\n`).join("")
+  // Allow the request origin if it's in the allowlist, otherwise omit ACAO header
+  // MCP clients (non-browser) don't send Origin headers so this doesn't affect them
+  const allowOrigin = requestOrigin && SSE_CORS_ORIGINS.includes(requestOrigin) ? requestOrigin : undefined
   const headers: Record<string, string> = {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache, no-transform",
-    "Access-Control-Allow-Origin": "*",
     "Access-Control-Expose-Headers": "Mcp-Session-Id",
   }
+  if (allowOrigin) headers["Access-Control-Allow-Origin"] = allowOrigin
   if (sessionId) headers["Mcp-Session-Id"] = sessionId
   return new Response(body, { headers })
 }
@@ -784,8 +992,6 @@ function jsonRpcError(id: string | number | null, code: number, message: string)
     headers: {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache, no-transform",
-      "Access-Control-Allow-Origin": "*",
     },
   })
 }
-

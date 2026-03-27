@@ -1,8 +1,12 @@
 import { Hono } from "hono"
+import type { Sql } from "postgres"
 import type { Env } from "../types/env"
+import type Redis from "ioredis"
 import { generateToken, resolveAuth } from "../services/auth"
 
-export const auth = new Hono<{ Bindings: Env }>()
+type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
+
+export const auth = new Hono<AppEnv>()
 
 /**
  * POST /api/auth/register
@@ -13,7 +17,11 @@ export const auth = new Hono<{ Bindings: Env }>()
  * Rate limited: max 5 registrations per IP per hour.
  */
 auth.post("/register", async (c) => {
-  // Fix 4: return 400 on malformed JSON instead of silently swallowing the error
+  const sql = c.get("sql")
+  const env = c.get("env")
+  const redis = c.get("redis")
+
+  // Return 400 on malformed JSON instead of silently swallowing the error
   let body: { name?: string; email?: string } = {}
   const contentType = c.req.header("Content-Type") ?? ""
   if (contentType.includes("application/json")) {
@@ -24,7 +32,7 @@ auth.post("/register", async (c) => {
     }
   }
 
-  // Fix 1: require at least email OR name — no anonymous registrations
+  // Require at least email OR name — no anonymous registrations
   const name = typeof body.name === "string" ? body.name.trim() : ""
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : ""
   if (!name && !email) {
@@ -36,46 +44,57 @@ auth.post("/register", async (c) => {
     return c.json({ error: "некорректный формат email" }, 400)
   }
 
-  // Fix 2: email deduplication — return existing token if email already registered.
+  // Email deduplication — return existing token if email already registered.
   // Check BEFORE rate limit to not penalize repeated registrations with the same email.
   if (email) {
-    const existing = await c.env.DB.prepare(
-      "SELECT id, api_token FROM users WHERE email = ?"
-    ).bind(email).first<{ id: string; api_token: string }>()
+    const [existing] = await sql<{ id: string; api_token: string }[]>`
+      SELECT id, api_token FROM users WHERE email = ${email}
+    `
 
     if (existing) {
-      return c.json({
-        userId: existing.id,
-        apiToken: existing.api_token,
-        mcpUrl: `https://contexter.nopoint.workers.dev/sse?token=${existing.api_token}`,
-        apiBase: "https://contexter.nopoint.workers.dev/api",
-        instructions: "Use the apiToken as Bearer token or ?token= param for all API calls. Add mcpUrl as a Connector in Claude Desktop/Web.",
-        note: "email already registered — returning existing account",
-      }, 200)
+      // P1-002: NEVER return the existing user's apiToken to anyone who just knows the email.
+      // An attacker could harvest tokens by trying known emails. Return a generic message only.
+      return c.json({ note: "email already registered", userId: existing.id }, 200)
     }
   }
 
-  // Fix 3: max 5 new registrations per IP per hour (only incremented for truly new users)
-  const ip = c.req.header("CF-Connecting-IP") ?? "unknown"
+  // Max 5 new registrations per IP per hour (only incremented for truly new users)
+  // P2-008: wrap Redis in try/catch — fail-open if Redis is down
+  // P2-017: use CF-Connecting-IP first — X-Forwarded-For is trivially spoofable
+  const ip = c.req.header("CF-Connecting-IP")
+    ?? c.req.header("X-Real-IP")
+    ?? c.req.header("X-Forwarded-For")?.split(",")[0]?.trim()
+    ?? "unknown"
   const rateKey = `reg:${ip}`
-  const count = await c.env.KV.get(rateKey)
-  if (count && parseInt(count) >= 5) {
+  let isRateLimited = false
+  try {
+    const count = await redis.get(rateKey)
+    if (count && parseInt(count) >= 5) {
+      isRateLimited = true
+    } else {
+      await redis.set(rateKey, String((parseInt(count ?? "0")) + 1), "EX", 3600)
+    }
+  } catch (e) {
+    console.error("Redis rate limit check failed, allowing registration:", e instanceof Error ? e.message : String(e))
+  }
+  if (isRateLimited) {
     return c.json({ error: "слишком много регистраций — попробуйте позже" }, 429)
   }
-  await c.env.KV.put(rateKey, String((parseInt(count ?? "0")) + 1), { expirationTtl: 3600 })
 
-  const userId = crypto.randomUUID().slice(0, 8)
+  // P3-013: use 16-char ID for ~2^64 space — 8-char was only ~4 billion values
+  const userId = crypto.randomUUID().slice(0, 16)
   const apiToken = generateToken()
 
-  await c.env.DB.prepare(
-    "INSERT INTO users (id, api_token, name, email) VALUES (?, ?, ?, ?)"
-  ).bind(userId, apiToken, name || null, email || null).run()
+  await sql`
+    INSERT INTO users (id, api_token, name, email)
+    VALUES (${userId}, ${apiToken}, ${name || null}, ${email || null})
+  `
 
   return c.json({
     userId,
     apiToken,
-    mcpUrl: `https://contexter.nopoint.workers.dev/sse?token=${apiToken}`,
-    apiBase: "https://contexter.nopoint.workers.dev/api",
+    mcpUrl: `${env.BASE_URL}/sse?token=${apiToken}`,
+    apiBase: `${env.BASE_URL}/api`,
     instructions: "Use the apiToken as Bearer token or ?token= param for all API calls. Add mcpUrl as a Connector in Claude Desktop/Web.",
   }, 201)
 })
@@ -86,14 +105,17 @@ auth.post("/register", async (c) => {
  * Body: { scope?: "all" | string[], permission?: "read" | "read_write", expiresInHours?: number }
  */
 auth.post("/share", async (c) => {
-  const authCtx = await resolveAuth(c.env.DB, c.req.raw)
+  const sql = c.get("sql")
+  const env = c.get("env")
+  const authCtx = await resolveAuth(sql, c.req.raw)
   if (!authCtx) return c.json({ error: "Unauthorized." }, 401)
   if (!authCtx.isOwner) return c.json({ error: "Only owners can create shares." }, 403)
 
   let body: { scope?: "all" | string[]; permission?: "read" | "read_write"; expiresInHours?: number } = {}
   try { body = await c.req.json() } catch { /* defaults */ }
 
-  const shareId = crypto.randomUUID().slice(0, 8)
+  // P3-013: use 16-char ID — share IDs are URL-exposed and brute-forceable at 8 chars
+  const shareId = crypto.randomUUID().slice(0, 16)
   const shareToken = generateToken()
   const scope = body.scope ?? "all"
   const permission = body.permission ?? "read"
@@ -101,18 +123,21 @@ auth.post("/share", async (c) => {
     ? new Date(Date.now() + body.expiresInHours * 3600_000).toISOString()
     : null
 
-  await c.env.DB.prepare(
-    "INSERT INTO shares (id, owner_id, share_token, scope, permission, expires_at) VALUES (?, ?, ?, ?, ?, ?)"
-  ).bind(
-    shareId, authCtx.userId, shareToken,
-    typeof scope === "string" ? scope : JSON.stringify(scope),
-    permission, expiresAt
-  ).run()
+  await sql`
+    INSERT INTO shares (id, owner_id, share_token, scope, permission, expires_at)
+    VALUES (
+      ${shareId}, ${authCtx.userId}, ${shareToken},
+      ${typeof scope === "string" ? scope : JSON.stringify(scope)},
+      ${permission}, ${expiresAt}
+    )
+  `
 
+  // P2-010: include shareUrl alias — frontend types expect it
   return c.json({
     shareId,
     shareToken,
-    mcpUrl: `https://contexter.nopoint.workers.dev/sse?share=${shareToken}`,
+    shareUrl: `${env.BASE_URL}/sse?share=${shareToken}`,
+    mcpUrl: `${env.BASE_URL}/sse?share=${shareToken}`,
     permission,
     scope,
     expiresAt,
@@ -124,25 +149,39 @@ auth.post("/share", async (c) => {
  * List all your active shares.
  */
 auth.get("/shares", async (c) => {
-  const authCtx = await resolveAuth(c.env.DB, c.req.raw)
+  const sql = c.get("sql")
+  const env = c.get("env")
+  const authCtx = await resolveAuth(sql, c.req.raw)
   if (!authCtx) return c.json({ error: "Unauthorized." }, 401)
 
-  const shares = await c.env.DB.prepare(
-    "SELECT id, share_token, scope, permission, expires_at, created_at FROM shares WHERE owner_id = ? ORDER BY created_at DESC"
-  ).bind(authCtx.userId).all<{
+  const shares = await sql<{
     id: string; share_token: string; scope: string; permission: string;
     expires_at: string | null; created_at: string
-  }>()
+  }[]>`
+    SELECT id, share_token, scope, permission, expires_at, created_at
+    FROM shares WHERE owner_id = ${authCtx.userId} ORDER BY created_at DESC
+  `
 
+  // P0-004: return snake_case fields matching frontend types
+  // P2-016: wrap JSON.parse in try/catch for malformed scope
   return c.json({
-    shares: (shares.results ?? []).map((s) => ({
-      shareId: s.id,
-      mcpUrl: `https://contexter.nopoint.workers.dev/sse?share=${s.share_token}`,
-      scope: s.scope === "all" ? "all" : JSON.parse(s.scope),
-      permission: s.permission,
-      expiresAt: s.expires_at,
-      createdAt: s.created_at,
-    })),
+    shares: shares.map((s) => {
+      let parsedScope: "all" | string[]
+      try {
+        parsedScope = s.scope === "all" ? "all" : JSON.parse(s.scope)
+      } catch {
+        parsedScope = "all"
+      }
+      return {
+        id: s.id,
+        share_token: s.share_token,
+        mcpUrl: `${env.BASE_URL}/sse?share=${s.share_token}`,
+        scope: parsedScope,
+        permission: s.permission,
+        expires_at: s.expires_at,
+        created_at: s.created_at,
+      }
+    }),
   })
 })
 
@@ -151,17 +190,20 @@ auth.get("/shares", async (c) => {
  * Revoke a share.
  */
 auth.delete("/shares/:shareId", async (c) => {
-  const authCtx = await resolveAuth(c.env.DB, c.req.raw)
+  const sql = c.get("sql")
+  const authCtx = await resolveAuth(sql, c.req.raw)
   if (!authCtx) return c.json({ error: "Unauthorized." }, 401)
 
   const shareId = c.req.param("shareId")
-  const result = await c.env.DB.prepare(
-    "DELETE FROM shares WHERE id = ? AND owner_id = ?"
-  ).bind(shareId, authCtx.userId).run()
+  const result = await sql`
+    DELETE FROM shares WHERE id = ${shareId} AND owner_id = ${authCtx.userId}
+    RETURNING id
+  `
 
-  if (!result.meta.changes || result.meta.changes === 0) {
+  if (result.length === 0) {
     return c.json({ error: "ссылка не найдена" }, 404)
   }
 
-  return c.json({ deleted: shareId })
+  // P2-011: frontend expects { success: boolean }
+  return c.json({ success: true, deleted: shareId })
 })

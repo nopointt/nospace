@@ -17,11 +17,17 @@ const AuthModal: Component<AuthModalProps> = (props) => {
   const [error, setError] = createSignal("")
   const [step, setStep] = createSignal<"form" | "done">("form")
 
+  const [found, setFound] = createSignal(false)
+
   const handleSubmit = async () => {
+    if (!email().trim()) {
+      setError("укажите email")
+      return
+    }
     setError("")
     setLoading(true)
     try {
-      const result = await register(name() || undefined, email() || undefined)
+      const result = await register(name() || undefined, email())
       setAuth({
         userId: result.userId,
         apiToken: result.apiToken,
@@ -29,13 +35,19 @@ const AuthModal: Component<AuthModalProps> = (props) => {
         name: name(),
         email: email(),
       })
+      setFound(!!(result as any).note)
       setStep("done")
       setTimeout(() => {
         props.onSuccess()
         props.onClose()
       }, 1500)
     } catch (e) {
-      setError(e instanceof Error ? e.message : "не удалось создать аккаунт — попробуйте ещё раз")
+      const msg = e instanceof Error ? e.message : ""
+      if (msg.includes("{")) {
+        setError("не удалось создать аккаунт — попробуйте ещё раз")
+      } else {
+        setError(msg || "не удалось создать аккаунт — попробуйте ещё раз")
+      }
     } finally {
       setLoading(false)
     }
@@ -55,7 +67,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
               when={step() === "form"}
               fallback={
                 <p class="text-sm text-signal-success">
-                  аккаунт создан. перенаправление...
+                  {found() ? "аккаунт найден. перенаправление..." : "аккаунт создан. перенаправление..."}
                 </p>
               }
             >
@@ -71,7 +83,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
           <Show when={step() === "form"}>
             <div class="flex flex-col gap-4">
               <Input
-                placeholder="email (необязательно)"
+                placeholder="email"
                 type="email"
                 value={email()}
                 onInput={setEmail}

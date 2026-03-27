@@ -3,10 +3,8 @@ import { useNavigate } from "@solidjs/router"
 import Nav from "../components/Nav"
 import Button from "../components/Button"
 import Toast, { showToast } from "../components/Toast"
-import { createShare, listShares, revokeShare, listDocuments } from "../lib/api"
+import { createShare, listShares, revokeShare, listDocuments, API_BASE } from "../lib/api"
 import { auth, getToken, isAuthenticated } from "../lib/store"
-
-const API_BASE = "https://contexter.nopoint.workers.dev"
 
 /* ── curl examples ── */
 const curlExamples = [
@@ -37,7 +35,7 @@ const mcpConfigJson = `{
     "args": [
       "-y",
       "@anthropic-ai/mcp-remote",
-      "https://contexter.nopoint.workers.dev/sse?token=YOUR_TOKEN"
+      "${API_BASE}/sse?token=YOUR_TOKEN"
     ]
   }
 }`
