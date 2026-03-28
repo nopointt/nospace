@@ -285,3 +285,22 @@ CTX-01+CTX-07 closed (MLP COMPLETE). CTX-08 GTM created. Full competitive resear
 - Implement Phase 1 quick wins
 - Telegram Login (deferred)
 - Card payments (blocked — no KYB)
+<!-- ENTRY:2026-03-28:CLOSE:201:contexter:contexter-gtm [AXIS] -->
+## 2026-03-28 — session 201 CLOSE [Axis]
+
+**Decisions:**
+- Pre-implementation spec review: Opus reviewed all 10 specs against full source code
+- 2 CRITICAL + 5 HIGH issues found and fixed in specs
+- 4-wave implementation plan (19 G3 pairs)
+- Wave 1E (F-011) completed: structure-aware chunking + late chunking
+
+**Files changed:**
+- `specs/spec-review.md` — created
+- 4 spec files fixed (chunking, confidence-nli, query-enhance, infra)
+- 5 source files modified by Wave 1E (chunker + embedder + pipeline)
+
+**Completed:**
+- Spec review, spec fixes, F-011 implementation
+
+**Opened:**
+- Wave 1A/B/C/D relaunch needed (permissions), Waves 2-4 pending

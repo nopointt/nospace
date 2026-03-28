@@ -153,7 +153,9 @@ export async function runPipeline(
   try {
     stages[2].status = "running"
     const start = Date.now()
-    embedResult = await embedderService.embedBatch(chunks.map((c) => c.content))
+    embedResult = await embedderService.embedBatch(chunks.map((c) => c.content), {
+      lateChunking: true,
+    })
     stages[2].status = "done"
     stages[2].durationMs = Date.now() - start
     stages[2].data = {
@@ -253,7 +255,9 @@ export async function runPipelineAsync(
   try {
     await updateJobStatus(sql, jobIds.embed, "running")
     embedResult = await withTimeout(
-      embedderService.embedBatch(chunks.map((c) => c.content)),
+      embedderService.embedBatch(chunks.map((c) => c.content), {
+        lateChunking: true,
+      }),
       STAGE_TIMEOUT_MS.embed, "embed"
     )
     await updateJobStatus(sql, jobIds.embed, "done", 100)
@@ -369,7 +373,9 @@ export async function resumePipelineFromStage(
   let embedResult: BatchEmbeddingResult
   try {
     if (startIndex <= 2) await updateJobStatus(sql, jobIds.embed, "running")
-    embedResult = await embedderService.embedBatch(chunks.map((c) => c.content))
+    embedResult = await embedderService.embedBatch(chunks.map((c) => c.content), {
+      lateChunking: true,
+    })
     if (startIndex <= 2) await updateJobStatus(sql, jobIds.embed, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)

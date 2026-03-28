@@ -2,10 +2,72 @@ import type { Chunk, ChunkerOptions } from "./types"
 import { DEFAULT_MAX_TOKENS, DEFAULT_OVERLAP } from "./types"
 import { countTokens, tokenize } from "./tokenizer"
 
+const HEADING_REGEX = /^(#{1,6})\s+(.+)$/m
+
+interface HeadingEvent {
+  offset: number
+  path: string
+}
+
+/**
+ * Scan all lines in text and build a sorted array of heading change events.
+ * Each event records the character offset at which a new heading path becomes active.
+ */
+function buildHeadingEvents(text: string): HeadingEvent[] {
+  const events: HeadingEvent[] = []
+  const headingLevels = new Map<number, string>()
+  const lineRegex = /^.*$/gm
+  let match: RegExpExecArray | null
+
+  while ((match = lineRegex.exec(text)) !== null) {
+    const line = match[0]
+    const headingMatch = HEADING_REGEX.exec(line)
+    if (headingMatch) {
+      const level = headingMatch[1].length
+      const headingText = headingMatch[2].trim()
+
+      headingLevels.set(level, headingText)
+
+      // Reset all child levels whenever a parent heading changes
+      for (const key of Array.from(headingLevels.keys())) {
+        if (key > level) {
+          headingLevels.delete(key)
+        }
+      }
+
+      const path = Array.from(
+        new Map([...headingLevels.entries()].sort((a, b) => a[0] - b[0])).values()
+      ).join(" > ")
+
+      events.push({ offset: match.index, path })
+    }
+  }
+
+  return events
+}
+
+/**
+ * Return the active heading path for a paragraph at the given character offset.
+ * Picks the latest heading event whose offset is <= paraOffset.
+ * Returns undefined when no heading precedes the paragraph.
+ */
+function getActiveHeading(events: HeadingEvent[], paraOffset: number): string | undefined {
+  let active: string | undefined
+  for (const event of events) {
+    if (event.offset <= paraOffset) {
+      active = event.path
+    } else {
+      break
+    }
+  }
+  return active
+}
+
 /**
  * Semantic chunker: splits markdown/text by paragraph boundaries,
  * then groups paragraphs into chunks up to maxTokens.
  * Overlap re-includes trailing tokens from previous chunk.
+ * Heading-aware: attaches the active sectionHeading to each chunk.
  */
 export function chunkSemantic(text: string, options: ChunkerOptions = {}): Chunk[] {
   const maxTokens = options.maxTokens ?? DEFAULT_MAX_TOKENS
@@ -13,49 +75,55 @@ export function chunkSemantic(text: string, options: ChunkerOptions = {}): Chunk
 
   if (!text || text.trim().length === 0) return []
 
+  const headingEvents = buildHeadingEvents(text)
   const paragraphs = splitParagraphs(text)
   const chunks: Chunk[] = []
   let currentParts: string[] = []
   let currentTokenCount = 0
   let chunkStartOffset = 0
-  let runningOffset = 0
+  let chunkSectionHeading: string | undefined
 
   for (const para of paragraphs) {
     const paraTokens = countTokens(para.text)
+    const paraHeading = getActiveHeading(headingEvents, para.offset)
 
     // Single paragraph exceeds maxTokens — force-split by token window
     if (paraTokens > maxTokens) {
       // Flush current buffer first
       if (currentParts.length > 0) {
-        chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset))
+        chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset, chunkSectionHeading))
         const overlapText = getOverlapText(currentParts.join("\n\n"), overlap)
         currentParts = overlapText ? [overlapText] : []
         currentTokenCount = countTokens(currentParts.join("\n\n"))
         chunkStartOffset = para.offset - (overlapText?.length ?? 0)
+        chunkSectionHeading = paraHeading
       }
 
       // Split large paragraph by token windows
       const subChunks = splitByTokenWindow(para.text, maxTokens, overlap, para.offset)
       for (const sub of subChunks) {
-        chunks.push(buildChunk(sub.text, chunks.length, sub.offset))
+        chunks.push(buildChunk(sub.text, chunks.length, sub.offset, paraHeading))
       }
       currentParts = []
       currentTokenCount = 0
       chunkStartOffset = para.offset + para.text.length
+      chunkSectionHeading = undefined
       continue
     }
 
     // Adding this paragraph would exceed limit — flush
     if (currentTokenCount + paraTokens > maxTokens && currentParts.length > 0) {
-      chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset))
+      chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset, chunkSectionHeading))
       const overlapText = getOverlapText(currentParts.join("\n\n"), overlap)
       currentParts = overlapText ? [overlapText] : []
       currentTokenCount = countTokens(currentParts.join("\n\n"))
       chunkStartOffset = para.offset - (overlapText?.length ?? 0)
+      chunkSectionHeading = paraHeading
     }
 
     if (currentParts.length === 0) {
       chunkStartOffset = para.offset
+      chunkSectionHeading = paraHeading
     }
     currentParts.push(para.text)
     currentTokenCount += paraTokens
@@ -63,20 +131,20 @@ export function chunkSemantic(text: string, options: ChunkerOptions = {}): Chunk
 
   // Flush remainder
   if (currentParts.length > 0) {
-    chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset))
+    chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset, chunkSectionHeading))
   }
 
   return chunks
 }
 
-function buildChunk(content: string, index: number, startOffset: number): Chunk {
+function buildChunk(content: string, index: number, startOffset: number, sectionHeading?: string): Chunk {
   return {
     content,
     index,
     tokenCount: countTokens(content),
     startOffset,
     endOffset: startOffset + content.length,
-    metadata: { type: "semantic" },
+    metadata: { type: "semantic", sectionHeading },
   }
 }
 

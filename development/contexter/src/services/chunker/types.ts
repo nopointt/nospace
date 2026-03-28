@@ -13,6 +13,7 @@ export interface ChunkMetadata {
   sheet?: string
   startTime?: number
   endTime?: number
+  sectionHeading?: string  // heading path at the point this chunk starts (e.g. "Installation > Linux")
 }
 
 export interface ChunkerOptions {

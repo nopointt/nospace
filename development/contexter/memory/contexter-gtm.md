@@ -1,7 +1,7 @@
 ---
 # contexter-gtm.md — CTX-08 GTM Strategy & Positioning
 > Layer: L3 | Epic: CTX-08 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-28 (session 198 — billing + auth + 19 deep research studies)
+> Last updated: 2026-03-28 (session 201 — spec review, F-011 implemented)
 ---
 
 ## Goal
@@ -70,8 +70,11 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - [x] 19 deep research studies (covering 32 features)
 - [x] SOTA audit (rag-sota-2026-research.md)
 - [x] Competitor sentiment analysis
-- [ ] Write implementation plan from research
-- [ ] Implement Phase 1 (bug fix + quick wins)
+- [x] Write implementation plan from research
+- [x] Spec review (Opus): 2 CRITICAL + 5 HIGH fixed, all 10 specs ready for G3
+- [x] F-011 structure-aware chunking implemented (Wave 1E)
+- [ ] Implement remaining Wave 1 (F-001–F-005, F-008, F-010, F-013, F-022, F-023)
+- [ ] Implement Wave 2–4 (F-006, F-007, F-009, F-012–F-033)
 
 ### Phase 6: Iteration (open)
 - [ ] Landing page copy/design iterations based on feedback

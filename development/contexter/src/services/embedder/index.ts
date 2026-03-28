@@ -34,7 +34,7 @@ export class EmbedderService {
 
     const batchPromises: Promise<BatchEmbeddingResult>[] = []
     for (let i = 0; i < texts.length; i += JINA_MAX_BATCH) {
-      batchPromises.push(this.callApi(texts.slice(i, i + JINA_MAX_BATCH), model, dimensions, task))
+      batchPromises.push(this.callApi(texts.slice(i, i + JINA_MAX_BATCH), model, dimensions, task, options))
     }
 
     // Process in groups of 3 concurrent batches to respect Jina rate limits
@@ -65,14 +65,18 @@ export class EmbedderService {
     texts: string[],
     model: string,
     dimensions: number,
-    task: string
+    task: string,
+    options: EmbedderOptions = {}
   ): Promise<BatchEmbeddingResult> {
-    const body = {
+    const body: Record<string, unknown> = {
       model,
       input: texts.map((text) => ({ text })),
       dimensions,
       task,
       truncate_dim: dimensions,
+    }
+    if (options.lateChunking) {
+      body.late_chunking = true
     }
 
     // Max 3 retries with capped delays: 1s, 2s, 4s = 7s total backoff.
