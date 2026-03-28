@@ -75,6 +75,7 @@ metrics.get("/", async (c) => {
       computed_at: new Date().toISOString(),
     })
   } catch (e) {
-    return c.json({ error: e instanceof Error ? e.message : String(e) }, 500)
+    console.error("metrics handler error:", e instanceof Error ? e.message : String(e))
+    return c.json({ error: "Internal server error" }, 500)
   }
 })

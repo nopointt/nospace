@@ -34,20 +34,31 @@ export class FtsService {
     const sanitized = sanitizeFtsQuery(query)
     if (!sanitized) return []
 
+    // websearch_to_tsquery supports "phrase search", OR, -exclusion at no extra cost.
+    // ts_rank normalization flag 1 divides rank by 1 + log(doc_length) — normalizes for
+    // document length so short chunks don't get unfairly penalized.
+    // Combined english || russian query: both configs applied, results union-merged by PG.
     const rows = userId
       ? await this.sql`
           SELECT id, document_id, content, chunk_index,
-            ts_rank(tsv, plainto_tsquery('simple', ${sanitized})) as score
+            ts_rank(tsv,
+              websearch_to_tsquery('english', ${sanitized}) || websearch_to_tsquery('russian', ${sanitized}),
+              1
+            ) as score
           FROM chunks
-          WHERE tsv @@ plainto_tsquery('simple', ${sanitized}) AND user_id = ${userId}
+          WHERE tsv @@ (websearch_to_tsquery('english', ${sanitized}) || websearch_to_tsquery('russian', ${sanitized}))
+            AND user_id = ${userId}
           ORDER BY score DESC
           LIMIT ${topK}
         `
       : await this.sql`
           SELECT id, document_id, content, chunk_index,
-            ts_rank(tsv, plainto_tsquery('simple', ${sanitized})) as score
+            ts_rank(tsv,
+              websearch_to_tsquery('english', ${sanitized}) || websearch_to_tsquery('russian', ${sanitized}),
+              1
+            ) as score
           FROM chunks
-          WHERE tsv @@ plainto_tsquery('simple', ${sanitized})
+          WHERE tsv @@ (websearch_to_tsquery('english', ${sanitized}) || websearch_to_tsquery('russian', ${sanitized}))
           ORDER BY score DESC
           LIMIT ${topK}
         `
@@ -72,12 +83,15 @@ export class FtsService {
 }
 
 /**
- * Sanitize user query for PostgreSQL plainto_tsquery.
+ * Sanitize user query for PostgreSQL websearch_to_tsquery.
  * P4-001: Use Unicode Letter class to support CJK/Arabic/Hebrew and all scripts.
+ * Preserves websearch_to_tsquery operators: double-quoted phrases, minus exclusion,
+ * pipe OR, and parentheses for grouping.
  */
 function sanitizeFtsQuery(query: string): string {
+  // Preserve websearch_to_tsquery operators: quotes, minus, pipe, parens
   return query
-    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/[^\p{L}\p{N}\s"'\-|()]/gu, " ")
     .replace(/\s+/g, " ")
     .trim()
 }

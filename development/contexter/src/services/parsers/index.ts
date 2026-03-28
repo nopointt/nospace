@@ -26,17 +26,19 @@ export class ParserService {
   }
 
   async parse(input: ParserInput): Promise<ParseResult> {
-    const parser = this.parsers.find((p) => p.formats.includes(input.mimeType))
+    const baseMime = input.mimeType.split(";")[0].trim()
+    const parser = this.parsers.find((p) => p.formats.includes(baseMime))
 
     if (!parser) {
-      throw new Error(`No parser found for MIME type: ${input.mimeType}`)
+      throw new Error(`No parser found for MIME type: ${baseMime}`)
     }
 
-    return parser.parse(input)
+    return parser.parse({ ...input, mimeType: baseMime })
   }
 
   supports(mimeType: string): boolean {
-    return this.parsers.some((p) => p.formats.includes(mimeType))
+    const baseMime = mimeType.split(";")[0].trim()
+    return this.parsers.some((p) => p.formats.includes(baseMime))
   }
 
   supportedFormats(): string[] {

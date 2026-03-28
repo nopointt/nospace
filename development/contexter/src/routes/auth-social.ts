@@ -113,7 +113,8 @@ authSocial.get("/telegram-redirect", async (c) => {
   const url = new URL(c.req.url)
   const q = Object.fromEntries(url.searchParams.entries())
 
-  console.log(JSON.stringify({ event: "telegram_redirect_params", params: q }))
+  const { hash: _redacted, ...safeParams } = q
+  console.log(JSON.stringify({ event: "telegram_redirect_params", params: safeParams }))
 
   if (!q.id || !q.hash || !q.auth_date) {
     console.error("Telegram redirect missing params:", Object.keys(q))

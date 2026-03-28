@@ -54,7 +54,9 @@ export async function createInvoice(
 export function verifyIpnSignature(body: Record<string, unknown>, signature: string, ipnSecret: string): boolean {
   const sorted = JSON.stringify(body, Object.keys(body).sort())
   const hmac = crypto.createHmac("sha512", ipnSecret).update(sorted).digest("hex")
-  return hmac === signature
+  try {
+    return crypto.timingSafeEqual(Buffer.from(hmac, "hex"), Buffer.from(signature, "hex"))
+  } catch { return false }
 }
 
 // --- DB operations ---

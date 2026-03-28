@@ -73,21 +73,35 @@ billing.post("/subscribe", async (c) => {
   const tierDef = TIERS[tier]
 
   // Create NOWPayments invoice
-  const { invoiceId, invoiceUrl } = await createInvoice(apiKey, {
-    tier,
-    userId: auth.userId,
-    subscriptionId: sub.id as string,
-  })
+  let invoiceId: string
+  let invoiceUrl: string
+  try {
+    const invoice = await createInvoice(apiKey, {
+      tier,
+      userId: auth.userId,
+      subscriptionId: sub.id as string,
+    })
+    invoiceId = invoice.invoiceId
+    invoiceUrl = invoice.invoiceUrl
+  } catch (e) {
+    console.error("createInvoice failed:", e instanceof Error ? e.message : String(e))
+    return c.json({ error: "Failed to create payment invoice. Please try again later." }, 502)
+  }
 
-  // Record payment
-  await createPaymentRecord(sql, {
-    userId: auth.userId,
-    subscriptionId: sub.id as string,
-    tier,
-    amountUsd: tierDef.priceUsd,
-    invoiceId,
-    invoiceUrl,
-  })
+  // Record payment — failure here is recoverable (invoice exists, record can be replayed)
+  try {
+    await createPaymentRecord(sql, {
+      userId: auth.userId,
+      subscriptionId: sub.id as string,
+      tier,
+      amountUsd: tierDef.priceUsd,
+      invoiceId,
+      invoiceUrl,
+    })
+  } catch (e) {
+    console.error("createPaymentRecord failed — invoice created but record missing. invoiceId:", invoiceId, e instanceof Error ? e.message : String(e))
+    // Invoice exists — return it so user can still pay; record can be recovered from webhook
+  }
 
   return c.json({
     invoiceId,

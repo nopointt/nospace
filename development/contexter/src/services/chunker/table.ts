@@ -1,5 +1,5 @@
 import type { Chunk } from "./types"
-import { countTokens } from "./tokenizer"
+import { countTokensSync } from "./tokenizer"
 
 /**
  * Table chunker: splits markdown tables by rows.
@@ -17,7 +17,7 @@ export function chunkTable(text: string, maxTokens: number = 500): Chunk[] {
       chunks.push({
         content: part.text.trim(),
         index: chunks.length,
-        tokenCount: countTokens(part.text),
+        tokenCount: countTokensSync(part.text),
         startOffset: part.offset,
         endOffset: part.offset + part.text.length,
         metadata: { type: "row" },
@@ -34,14 +34,14 @@ export function chunkTable(text: string, maxTokens: number = 500): Chunk[] {
     const header = lines[0]
     const separator = lines[1]
     const headerBlock = `${header}\n${separator}`
-    const headerTokens = countTokens(headerBlock)
+    const headerTokens = countTokensSync(headerBlock)
     const dataRows = lines.slice(2)
 
     let currentRows: string[] = []
     let currentTokens = headerTokens
 
     for (const row of dataRows) {
-      const rowTokens = countTokens(row)
+      const rowTokens = countTokensSync(row)
 
       if (currentTokens + rowTokens > maxTokens && currentRows.length > 0) {
         chunks.push({

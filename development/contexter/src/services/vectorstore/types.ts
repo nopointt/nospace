@@ -33,11 +33,11 @@ export interface SearchResult {
   metadata: VectorMetadata
 }
 
-/** Result from hybrid search after Reciprocal Rank Fusion. */
+/** Result from hybrid search after Convex Combination fusion. */
 export interface HybridSearchResult {
   /** Chunk identifier. */
   id: string
-  /** Fused RRF score. Higher is more relevant. */
+  /** Fused CC score in [0, 1]. Higher is more relevant. */
   score: number
   /** Which retrieval path(s) returned this chunk. */
   source: "vector" | "fts" | "both"
@@ -49,7 +49,7 @@ export interface HybridSearchResult {
 export interface SearchOptions {
   /** Maximum number of results to return. Defaults to {@link DEFAULT_TOP_K}. */
   topK?: number
-  /** Minimum fused score to include in results. Defaults to {@link DEFAULT_SCORE_THRESHOLD}. */
+  /** Minimum CC score threshold. CC scores are in [0, 1]. Defaults to 0 — use topK to control result count. */
   scoreThreshold?: number
   /** Restrict results to chunks owned by this user. */
   userId?: string
@@ -66,7 +66,21 @@ export interface ParentRow {
 
 /** Default number of results returned when `topK` is not specified. */
 export const DEFAULT_TOP_K = 10
-/** Default minimum score threshold for hybrid search results. */
-export const DEFAULT_SCORE_THRESHOLD = 0.3
-/** Rank constant used in Reciprocal Rank Fusion (larger = smoother ranking). */
+// CC scores are in [0, 1]. Set to 0 — topK controls the cutoff, not score.
+export const DEFAULT_SCORE_THRESHOLD = 0
+/**
+ * @deprecated Legacy RRF rank constant — ONLY used by confidence.ts for legacy RRF normalization mode.
+ * CC fusion (the current default) does not use this value.
+ * Retained for backward compatibility when FUSION_MODE env var is "rrf".
+ */
 export const RRF_K = 60
+
+// F-007: Convex Combination fusion alpha constants
+/** Default weight for vector channel in CC fusion (0 = FTS-only, 1 = vector-only). */
+export const FUSION_ALPHA = 0.5
+/** Alpha for short keyword queries — favor FTS. */
+export const FUSION_ALPHA_KEYWORD = 0.3
+/** Alpha for long semantic queries — favor vector. */
+export const FUSION_ALPHA_SEMANTIC = 0.7
+/** Alpha for code/API queries — strongly favor FTS. */
+export const FUSION_ALPHA_CODE = 0.2

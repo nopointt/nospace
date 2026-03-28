@@ -30,45 +30,50 @@ feedbackRouter.post("/", zValidator("json", feedbackSchema), async (c) => {
   const auth = await resolveAuth(sql, c.req.raw)
   if (!auth) return c.json({ error: "Unauthorized." }, 401)
 
-  const body = c.req.valid("json")
-  const feedbackId = randomUUID()
+  try {
+    const body = c.req.valid("json")
+    const feedbackId = randomUUID()
 
-  await sql`
-    INSERT INTO feedback (id, query_id, user_id, query_text, answer_text, rating, chunk_ids, source)
-    VALUES (
-      ${feedbackId},
-      ${body.query_id},
-      ${auth.userId},
-      ${body.query_text},
-      ${body.answer_text},
-      ${body.rating},
-      ${body.chunk_ids},
-      'explicit'
-    )
-  `
+    await sql`
+      INSERT INTO feedback (id, query_id, user_id, query_text, answer_text, rating, chunk_ids, source)
+      VALUES (
+        ${feedbackId},
+        ${body.query_id},
+        ${auth.userId},
+        ${body.query_text},
+        ${body.answer_text},
+        ${body.rating},
+        ${body.chunk_ids},
+        'explicit'
+      )
+    `
 
-  // Update chunk counters and recalculate feedback_score.
-  // Security: only update chunks belonging to this user — prevents cross-user score manipulation.
-  // Beta-Binomial formula: score = 0.5 + (pos + 1) / (pos + neg + 2)
-  // SQL evaluates SET expressions using pre-UPDATE row values, so +2 / +3 offsets account
-  // for the counter increment applied in the same statement.
-  if (body.rating === 1) {
-    await sql`
-      UPDATE chunks
-      SET
-        feedback_pos = feedback_pos + 1,
-        feedback_score = 0.5 + (feedback_pos + 2) / (feedback_pos + feedback_neg + 3)
-      WHERE id = ANY(${body.chunk_ids}::text[]) AND user_id = ${auth.userId}
-    `
-  } else {
-    await sql`
-      UPDATE chunks
-      SET
-        feedback_neg = feedback_neg + 1,
-        feedback_score = 0.5 + (feedback_pos + 1) / (feedback_pos + feedback_neg + 3)
-      WHERE id = ANY(${body.chunk_ids}::text[]) AND user_id = ${auth.userId}
-    `
+    // Update chunk counters and recalculate feedback_score.
+    // Security: only update chunks belonging to this user — prevents cross-user score manipulation.
+    // Beta-Binomial formula: score = 0.5 + (pos + 1) / (pos + neg + 2)
+    // SQL evaluates SET expressions using pre-UPDATE row values, so +2 / +3 offsets account
+    // for the counter increment applied in the same statement.
+    if (body.rating === 1) {
+      await sql`
+        UPDATE chunks
+        SET
+          feedback_pos = feedback_pos + 1,
+          feedback_score = 0.5 + (feedback_pos + 2) / (feedback_pos + feedback_neg + 3)
+        WHERE id = ANY(${body.chunk_ids}::text[]) AND user_id = ${auth.userId}
+      `
+    } else {
+      await sql`
+        UPDATE chunks
+        SET
+          feedback_neg = feedback_neg + 1,
+          feedback_score = 0.5 + (feedback_pos + 1) / (feedback_pos + feedback_neg + 3)
+        WHERE id = ANY(${body.chunk_ids}::text[]) AND user_id = ${auth.userId}
+      `
+    }
+
+    return c.json({ ok: true, feedback_id: feedbackId }, 201)
+  } catch (e) {
+    console.error("feedback handler error:", e instanceof Error ? e.message : String(e))
+    return c.json({ error: "Internal server error" }, 500)
   }
-
-  return c.json({ ok: true, feedback_id: feedbackId }, 201)
 })

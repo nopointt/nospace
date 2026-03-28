@@ -110,6 +110,7 @@ const groqWhisperRetry = retry(handleAll, {
 
 const groqWhisperBulkhead = bulkhead(1, 3)
 
+// TODO: wire groqWhisperPolicy into src/services/parsers/audio.ts and src/services/parsers/video.ts
 export const groqWhisperPolicy = wrap(groqWhisperBulkhead, groqWhisperRetry, groqWhisperBreaker)
 
 // -------------------------------------------------------------------
@@ -131,6 +132,7 @@ const doclingRetry = retry(handleAll, {
 
 const doclingBulkhead = bulkhead(1, 3)
 
+// TODO: wire doclingPolicy into src/services/parsers/docling.ts
 export const doclingPolicy = wrap(doclingBulkhead, doclingRetry, doclingBreaker)
 
 // -------------------------------------------------------------------

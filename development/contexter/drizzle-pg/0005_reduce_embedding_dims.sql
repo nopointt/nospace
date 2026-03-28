@@ -10,7 +10,7 @@ UPDATE "chunks" SET "embedding" = NULL;
 --> statement-breakpoint
 
 -- Alter column type from vector(1024) to vector(512)
-ALTER TABLE "chunks" ALTER COLUMN "embedding" TYPE vector(512) USING NULL;
+ALTER TABLE "chunks" ALTER COLUMN "embedding" TYPE vector(512);
 --> statement-breakpoint
 
 -- Rebuild HNSW index for 512d cosine similarity

@@ -86,6 +86,15 @@ export class LlmService {
         setGroqLlmFallback(true)
         try {
           return await this.chatWithFallback(this.fallback, messages, maxTokens)
+        } catch (fallbackErr) {
+          setGroqLlmFallback(false)
+          const fbMsg = fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr)
+          console.error(`LLM fallback also failed: ${fbMsg.slice(0, 100)}`)
+          return {
+            response: extractContextPassthrough(messages),
+            promptTokens: 0,
+            completionTokens: 0,
+          }
         } finally {
           setGroqLlmFallback(false)
         }
@@ -96,7 +105,7 @@ export class LlmService {
 
   async *chatStream(
     messages: LlmMessage[],
-    maxTokens: number = 1024
+    maxTokens: number = 1536
   ): AsyncGenerator<string> {
     try {
       yield* this.chatStreamWithProvider(this.primary, messages, maxTokens)
@@ -106,6 +115,11 @@ export class LlmService {
         setGroqLlmFallback(true)
         try {
           yield* this.chatStreamWithProvider(this.fallback, messages, maxTokens)
+        } catch (fallbackErr) {
+          setGroqLlmFallback(false)
+          console.error("LLM stream: both providers failed, yielding context passthrough")
+          yield extractContextPassthrough(messages)
+          return
         } finally {
           setGroqLlmFallback(false)
         }
@@ -114,6 +128,9 @@ export class LlmService {
       }
     }
   }
+
+  // NOTE: Stream-iteration errors bypass circuit breaker tracking — the breaker wraps
+  // generator creation, not consumption. A sustained stream failure may not open the circuit.
 
   private async chatWithProvider(
     config: Required<LlmProviderConfig>,
@@ -266,6 +283,16 @@ async function* fetchChatStream(
 // ---------------------------------------------------------------------------
 // Eligibility: only fall back on upstream errors (5xx, 429)
 // ---------------------------------------------------------------------------
+
+function extractContextPassthrough(messages: LlmMessage[]): string {
+  const userMsg = messages.find((m) => m.role === "user")
+  if (!userMsg) return "LLM unavailable."
+  const contextMatch = userMsg.content.match(/Context:\n([\s\S]*?)\n\nQuestion:/)
+  if (contextMatch?.[1]) {
+    return `Here are the relevant passages:\n\n${contextMatch[1].trim()}`
+  }
+  return "LLM unavailable. Please try again later."
+}
 
 function isFallbackEligible(err: unknown): boolean {
   if (!(err instanceof Error)) return false

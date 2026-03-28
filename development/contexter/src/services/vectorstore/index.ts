@@ -3,10 +3,12 @@ import type { VectorRecord, SearchResult, HybridSearchResult, SearchOptions, Par
 import { DEFAULT_TOP_K, DEFAULT_SCORE_THRESHOLD } from "./types"
 import { VectorService } from "./vector"
 import { FtsService } from "./fts"
-import { reciprocalRankFusion } from "./hybrid"
+import { convexCombinationFusion } from "./hybrid"
 
 export type { VectorRecord, SearchResult, HybridSearchResult, SearchOptions, ParentRow }
-export { reciprocalRankFusion } from "./hybrid"
+export { convexCombinationFusion } from "./hybrid"
+export { classifyQuery } from "./classifier"
+export type { ClassifierResult, QueryType } from "./classifier"
 export { FtsService } from "./fts"
 export { VectorService } from "./vector"
 
@@ -20,7 +22,7 @@ export interface VectorStoreConfig {
  * Unified entry point for hybrid vector + full-text search over indexed chunks.
  *
  * Internally delegates to {@link VectorService} (pgvector) and {@link FtsService}
- * (tsvector), then merges results with Reciprocal Rank Fusion.
+ * (tsvector), then merges results with Convex Combination Fusion (CC).
  */
 export class VectorStoreService {
   private vector: VectorService
@@ -51,12 +53,14 @@ export class VectorStoreService {
   }
 
   /**
-   * Hybrid search: pgvector cosine + tsvector → Reciprocal Rank Fusion.
+   * Hybrid search: pgvector cosine + tsvector → Convex Combination fusion.
+   * @param alpha - F-021 adaptive alpha override. Undefined → CC uses FUSION_ALPHA default (0.5).
    */
   async search(
     queryVector: number[],
     queryText: string,
-    options: SearchOptions = {}
+    options: SearchOptions = {},
+    alpha?: number
   ): Promise<HybridSearchResult[]> {
     const topK = options.topK ?? DEFAULT_TOP_K
     const threshold = options.scoreThreshold ?? DEFAULT_SCORE_THRESHOLD
@@ -67,7 +71,7 @@ export class VectorStoreService {
       this.fts.search(queryText, topK * 2, userId),
     ])
 
-    const fused = reciprocalRankFusion(vectorResults, ftsResults, topK)
+    const fused = convexCombinationFusion(vectorResults, ftsResults, topK, alpha)
 
     // F-030: apply feedback_score multiplier from chunks table
     if (fused.length > 0) {
@@ -77,11 +81,8 @@ export class VectorStoreService {
       `
       const scoreMap = new Map(feedbackRows.map((r) => [r.id, Number(r.feedback_score)]))
 
-      for (const result of fused) {
-        const fs = scoreMap.get(result.id) ?? 1.0
-        result.score = result.score * fs
-      }
-      fused.sort((a, b) => b.score - a.score)
+      const adjusted = fused.map(r => ({ ...r, score: r.score * (scoreMap.get(r.id) ?? 1.0) }))
+      return adjusted.sort((a, b) => b.score - a.score).filter(r => r.score >= threshold)
     }
 
     return fused.filter((r) => r.score >= threshold)
@@ -123,6 +124,10 @@ export class VectorStoreService {
    */
   async fetchParentsForChildren(childIds: string[], childScores: number[]): Promise<ParentRow[]> {
     if (childIds.length === 0) return []
+
+    if (childIds.length !== childScores.length) {
+      throw new Error(`fetchParentsForChildren: length mismatch — ids=${childIds.length} scores=${childScores.length}`)
+    }
 
     const rows = await this.sql<{
       parent_id: string

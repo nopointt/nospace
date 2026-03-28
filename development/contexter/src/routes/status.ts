@@ -82,6 +82,7 @@ status.delete("/:documentId", async (c) => {
   const sql = c.get("sql")
   const auth = await resolveAuth(sql, c.req.raw)
   if (!auth) return c.json({ error: "Unauthorized." }, 401)
+  if (!auth.isOwner) return c.json({ error: "Forbidden." }, 403)
 
   const { documentId } = c.req.param()
   const result = await sql`

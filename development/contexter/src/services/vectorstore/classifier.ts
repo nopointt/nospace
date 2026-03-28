@@ -26,9 +26,9 @@ const CODE_PATTERNS = [
   /::/,                // namespace separator (C++, Rust, PHP)
   /->/,                // pointer/method arrow
   /=>/,                // fat arrow / lambda
-  /\([^)]*\)/,         // function call parens
+  /\w+\s*\([^)]*\)/,   // function call parens (require identifier before parens)
   /\{[^}]*\}/,         // object/block braces
-  /\[[^\]]*\]/,        // array brackets
+  /\w+\[[\w\d:,]+\]/,  // array brackets (require identifier before brackets)
   /^\$/,               // shell variable prefix
   /import\s+/i,        // import statement
   /function\s+\w/i,    // function keyword
@@ -53,6 +53,11 @@ export function classifyQuery(query: string): ClassifierResult {
   const trimmed = query.trim()
   const words = trimmed.split(/\s+/).filter((w) => w.length > 0)
   const wordCount = words.length
+
+  if (wordCount === 0) {
+    return { queryType: "default", alpha: FUSION_ALPHA, wordCount: 0 }
+  }
+
   const lowerWords = new Set(words.map((w) => w.toLowerCase()))
 
   // Rule 1: CODE — check patterns against original query (preserve case for symbols)

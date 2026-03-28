@@ -1,6 +1,6 @@
 import type { Chunk, ChunkerOptions } from "./types"
 import { DEFAULT_MAX_TOKENS, DEFAULT_OVERLAP } from "./types"
-import { countTokens, tokenize } from "./tokenizer"
+import { countTokensSync, tokenize } from "./tokenizer"
 
 const HEADING_REGEX = /^(#{1,6})\s+(.+)$/m
 
@@ -84,7 +84,7 @@ export function chunkSemantic(text: string, options: ChunkerOptions = {}): Chunk
   let chunkSectionHeading: string | undefined
 
   for (const para of paragraphs) {
-    const paraTokens = countTokens(para.text)
+    const paraTokens = countTokensSync(para.text)
     const paraHeading = getActiveHeading(headingEvents, para.offset)
 
     // Single paragraph exceeds maxTokens — force-split by token window
@@ -94,7 +94,7 @@ export function chunkSemantic(text: string, options: ChunkerOptions = {}): Chunk
         chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset, chunkSectionHeading))
         const overlapText = getOverlapText(currentParts.join("\n\n"), overlap)
         currentParts = overlapText ? [overlapText] : []
-        currentTokenCount = countTokens(currentParts.join("\n\n"))
+        currentTokenCount = countTokensSync(currentParts.join("\n\n"))
         chunkStartOffset = para.offset - (overlapText?.length ?? 0)
         chunkSectionHeading = paraHeading
       }
@@ -116,7 +116,7 @@ export function chunkSemantic(text: string, options: ChunkerOptions = {}): Chunk
       chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset, chunkSectionHeading))
       const overlapText = getOverlapText(currentParts.join("\n\n"), overlap)
       currentParts = overlapText ? [overlapText] : []
-      currentTokenCount = countTokens(currentParts.join("\n\n"))
+      currentTokenCount = countTokensSync(currentParts.join("\n\n"))
       chunkStartOffset = para.offset - (overlapText?.length ?? 0)
       chunkSectionHeading = paraHeading
     }
@@ -141,7 +141,7 @@ function buildChunk(content: string, index: number, startOffset: number, section
   return {
     content,
     index,
-    tokenCount: countTokens(content),
+    tokenCount: countTokensSync(content),
     startOffset,
     endOffset: startOffset + content.length,
     metadata: { type: "semantic", sectionHeading },
@@ -169,10 +169,12 @@ function splitParagraphs(text: string): Paragraph[] {
 
 function getOverlapText(text: string, overlapTokens: number): string | null {
   if (overlapTokens <= 0) return null
-  const tokens = tokenize(text)
-  if (tokens.length <= overlapTokens) return null
-  const start = tokens[tokens.length - overlapTokens].start
-  return text.slice(start)
+  // Use BPE token count (countTokensSync) instead of word count for accurate overlap measurement.
+  // Approximate char offset: proportion of tokens from the end.
+  const totalBpeTokens = countTokensSync(text)
+  if (totalBpeTokens <= overlapTokens) return null
+  const overlapChars = Math.floor(text.length * (overlapTokens / Math.max(totalBpeTokens, 1)))
+  return text.slice(text.length - overlapChars)
 }
 
 function splitByTokenWindow(

@@ -1,5 +1,6 @@
 import { Queue, Worker, type Job } from "bullmq"
 import type { Sql } from "postgres"
+import { runDriftCheck } from "../services/evaluation/drift"
 
 // F-013: maintenance queue — separate from "pipeline" to avoid concurrency interference
 
@@ -36,10 +37,23 @@ export function startMaintenanceWorker(redisUrl: string, sql: Sql): Worker {
     console.error("Failed to schedule daily-retention job:", err instanceof Error ? err.message : String(err))
   )
 
+  // F-033: Schedule weekly drift check at Monday 03:00 UTC
+  queue.add(
+    "drift-check",
+    {},
+    { repeat: { pattern: "0 3 * * 1" }, jobId: "weekly-drift-check-cron" }
+  ).catch((err) =>
+    console.error("Failed to schedule drift-check job:", err instanceof Error ? err.message : String(err))
+  )
+
   const worker = new Worker<Record<string, never>>(
     MAINTENANCE_QUEUE_NAME,
-    async (_job: Job) => {
-      await runDailyRetention(sql)
+    async (job: Job) => {
+      if (job.name === "drift-check") {
+        await runDriftCheck(sql)
+      } else {
+        await runDailyRetention(sql)
+      }
     },
     {
       connection: { url: redisUrl },

@@ -1,5 +1,6 @@
 import type { EmbeddingResult, BatchEmbeddingResult, EmbedderOptions } from "./types"
 import { JINA_MODEL, JINA_DIMENSIONS, JINA_MAX_BATCH } from "./types"
+import { jinaRateLimiter } from "../resilience"
 
 export type { EmbeddingResult, BatchEmbeddingResult, EmbedderOptions }
 
@@ -17,7 +18,9 @@ export class EmbedderService {
    */
   async embed(text: string, options: EmbedderOptions = {}): Promise<EmbeddingResult> {
     const result = await this.embedBatch([text], options)
-    return result.embeddings[0]
+    const first = result.embeddings[0]
+    if (!first) throw new Error("EmbedderService.embed: empty response from Jina API")
+    return first
   }
 
   /**
@@ -85,6 +88,11 @@ export class EmbedderService {
     let lastError: string = ""
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
+      // Respect shared backoff state — if another request already hit 429, wait it out
+      if (jinaRateLimiter.isBackingOff()) {
+        await new Promise((r) => setTimeout(r, jinaRateLimiter.remainingMs()))
+      }
+
       // 10s per-request timeout prevents a single slow call from blocking the stage
       const signal = AbortSignal.timeout(10_000)
 
@@ -105,8 +113,14 @@ export class EmbedderService {
       }
 
       // P3-008: retry on 429, 500, 502, 503 — transient Jina errors should not fail pipeline
-      if ([429, 500, 502, 503].includes(response.status) && attempt < maxRetries) {
+      if ([429, 500, 502, 503].includes(response.status) && attempt < maxRetries - 1) {
         lastError = await response.text()
+        if (response.status === 429) {
+          // Parse Retry-After (seconds) and broadcast to all concurrent callers
+          const retryAfterSec = Number(response.headers.get("Retry-After") ?? "5")
+          const retryAfterMs = Number.isFinite(retryAfterSec) ? retryAfterSec * 1000 : 5_000
+          jinaRateLimiter.setBackoff(retryAfterMs)
+        }
         const delay = Math.min(1000 * Math.pow(2, attempt), 4_000)
         await new Promise((r) => setTimeout(r, delay))
         continue

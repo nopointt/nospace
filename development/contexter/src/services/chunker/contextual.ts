@@ -85,13 +85,15 @@ async function callGroqForPrefix(
   groqApiKey: string,
   model: string
 ): Promise<string> {
+  // Truncate to ~3000 tokens (approx 12000 chars at ~4 chars/token) to stay within context limits
+  const truncDoc = documentText.slice(0, 12000)
   const body = {
     model,
     messages: [
       {
         role: "user",
         content:
-          `<document>\n${documentText}\n</document>\n\n` +
+          `<document>\n${truncDoc}\n</document>\n\n` +
           `<chunk>\n${chunkContent}\n</chunk>\n\n` +
           `Write a short context (2-3 sentences) that situates this chunk within the document. ` +
           `Include: document type, main topic, and any entities or timeframes referenced in the chunk. ` +

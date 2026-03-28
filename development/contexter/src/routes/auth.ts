@@ -44,23 +44,13 @@ auth.post("/register", async (c) => {
     return c.json({ error: "некорректный формат email" }, 400)
   }
 
-  // Email deduplication — return existing token if email already registered.
-  // Check BEFORE rate limit to not penalize repeated registrations with the same email.
+  // Email deduplication — reject if already registered (CTX-04: proper auth later)
   if (email) {
-    const [existing] = await sql<{ id: string; api_token: string }[]>`
-      SELECT id, api_token FROM users WHERE email = ${email}
+    const [existing] = await sql<{ id: string }[]>`
+      SELECT id FROM users WHERE email = ${email}
     `
-
     if (existing) {
-      // Idempotent registration: return existing token so user can log back in.
-      // TODO CTX-04: replace with proper auth (magic link / OAuth) — returning token
-      // on known email is acceptable for MLP with rate-limited registration endpoint.
-      return c.json({
-        note: "email already registered",
-        userId: existing.id,
-        apiToken: existing.api_token,
-        mcpUrl: `${env.BASE_URL}/sse?token=${existing.api_token}`,
-      }, 200)
+      return c.json({ error: "Email already registered." }, 409)
     }
   }
 

@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-28 (session 204 — RAG quality 22/33 features, new services/routes)
+> Last updated: 2026-03-28 (session 205 — 32/33 RAG features, CC fusion, NLI sidecar, 78/102 review fixes)
 ---
 
 ## Identity

@@ -2,6 +2,10 @@ import type { Sql } from "postgres"
 
 // F-028: Semantic dedup — find a near-duplicate canonical chunk for a given embedding.
 // "Canonical" means duplicate_of IS NULL — avoids chains of duplicates pointing to duplicates.
+// Note: the pgvector HNSW index on the embedding column is GLOBAL (not per-user).
+// User scoping is applied as a post-filter via WHERE user_id = ${userId}.
+// This means the ANN search visits all users' embeddings before filtering — acceptable at
+// current scale but may require a per-user partial index for large multi-tenant deployments.
 
 /**
  * Query pgvector for the closest existing chunk (same user, canonical only).

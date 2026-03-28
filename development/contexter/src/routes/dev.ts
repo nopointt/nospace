@@ -83,7 +83,7 @@ dev.post("/query", async (c) => {
     return c.json(result)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
-    return c.json({ error: msg, answer: "", sources: [], queryVariants: [], tokenUsage: { embeddingTokens: 0, llmPromptTokens: 0, llmCompletionTokens: 0 } }, 200)
+    return c.json({ error: msg, answer: "", sources: [], queryVariants: [], tokenUsage: { embeddingTokens: 0, llmPromptTokens: 0, llmCompletionTokens: 0 } }, 500)
   }
 })
 

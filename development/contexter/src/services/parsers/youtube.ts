@@ -94,6 +94,21 @@ async function fetchTranscript(
     tracks.find((t) => t.languageCode === "ru") ||
     tracks[0]
 
+  // SSRF guard — only allow YouTube/Google CDN hostnames for caption track URLs
+  let captionHostname: string
+  try {
+    captionHostname = new URL(track.baseUrl).hostname
+  } catch {
+    throw new Error("Invalid caption track URL")
+  }
+  const ALLOWED_CAPTION_HOSTS = ["www.youtube.com", "youtube.com", "googlevideo.com", "www.google.com", "google.com"]
+  const isAllowedHost = ALLOWED_CAPTION_HOSTS.some(
+    (h) => captionHostname === h || captionHostname.endsWith(`.${h}`)
+  )
+  if (!isAllowedHost) {
+    throw new Error("Caption track URL has disallowed hostname")
+  }
+
   const captionResponse = await fetch(track.baseUrl + "&fmt=json3")
   if (!captionResponse.ok) {
     throw new Error(`Failed to fetch caption track: ${captionResponse.status}`)

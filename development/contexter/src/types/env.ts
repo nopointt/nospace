@@ -9,6 +9,7 @@ export interface Env {
   JINA_API_KEY: string
   GROQ_API_KEY: string
   JINA_API_URL: string
+  /** Used for Whisper transcription only. Do not use for LLM chat — use GROQ_LLM_URL. */
   GROQ_API_URL: string
   GROQ_LLM_MODEL: string
   DOCLING_URL: string
@@ -22,4 +23,7 @@ export interface Env {
   // F-015: model split — optional, defaults applied in LlmService
   GROQ_REWRITE_MODEL?: string
   GROQ_ANSWER_MODEL?: string
+  // F-025: NLI sidecar
+  NLI_SIDECAR_URL?: string
+  NLI_ENABLED?: string
 }

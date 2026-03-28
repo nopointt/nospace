@@ -1,6 +1,7 @@
 import type { HybridSearchResult } from "../vectorstore/types"
 import type { RagSource } from "./types"
 import { DEFAULT_MAX_CONTEXT_TOKENS, MMR_MAX_CHUNKS_PER_DOCUMENT } from "./types"
+import { countTokensSync } from "../chunker/tokenizer"
 
 /**
  * Build context string from search results using document-level diversity cap.
@@ -55,10 +56,8 @@ export function buildContext(
 }
 
 /**
- * Token estimation: ~1.3 tokens per word (English average).
- * P4-005: previous multiplier of 1.0 undercounted by ~30%.
- * F-002 (BPE tokenizer) will replace this when implemented.
+ * Token estimation using BPE cl100k_base if loaded, conservative fallback otherwise.
  */
 function estimateTokens(text: string): number {
-  return Math.ceil(text.split(/\s+/).filter((w) => w.length > 0).length * 1.3)
+  return countTokensSync(text)
 }

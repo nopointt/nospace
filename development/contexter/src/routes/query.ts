@@ -177,6 +177,7 @@ query.post("/", async (c) => {
       citations: result.citations,
       queryVariants: result.queryVariants,
       usage: result.tokenUsage,
+      confidence: result.confidence,
     })
 
     // F-013: fire-and-forget — must not block response
@@ -187,7 +188,8 @@ query.post("/", async (c) => {
 
     return response
   } catch (e) {
-    return c.json({ error: e instanceof Error ? e.message : String(e) }, 500)
+    console.error("query handler error:", e instanceof Error ? e.message : String(e))
+    return c.json({ error: "Internal server error." }, 500)
   }
 })
 
@@ -243,15 +245,15 @@ query.post("/stream", async (c) => {
   // F-017: pass sql so RagService can resolve child→parent chunks
   const rag = new RagService({ llm: llmRewrite, llmAnswer, embedder, vectorStore, reranker, docsMeta, sql })
 
-  // Build SSE stream
+  // Build SSE stream with proper event: field and cancel support
+  const state = { cancelled: false }
   const stream = new ReadableStream({
     async start(controller) {
-      const encode = (event: object) => {
-        const payload = `data: ${JSON.stringify(event)}\n\n`
+      const encode = (event: { type: string } & Record<string, unknown>) => {
+        if (state.cancelled) return
+        const payload = `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`
         controller.enqueue(new TextEncoder().encode(payload))
       }
-
-      let sourcesForEnrich: import("../services/rag").RagSource[] = []
 
       try {
         for await (const event of rag.queryStream({
@@ -260,24 +262,24 @@ query.post("/stream", async (c) => {
           topK: parsed.topK,
           scoreThreshold: 0,
         })) {
+          if (state.cancelled) break
           if (event.type === "sources") {
-            sourcesForEnrich = event.sources
-            // Enrich source names before sending to client
             const enriched = await enrichSources(sql, event.sources, auth.scope)
-            encode({ type: "sources", sources: enriched, embeddingTokens: event.embeddingTokens })
+            encode({ type: "sources", sources: enriched, queryVariants: event.queryVariants, embeddingTokens: event.embeddingTokens })
           } else {
-            encode(event)
+            encode(event as { type: string } & Record<string, unknown>)
           }
         }
       } catch (err) {
-        encode({ type: "error", message: err instanceof Error ? err.message : String(err) })
+        console.error("SSE stream error:", err instanceof Error ? err.message : String(err))
+        encode({ type: "error", message: "Internal server error." })
         encode({ type: "done", llmPromptTokens: 0, llmCompletionTokens: 0, embeddingTokens: 0 })
       }
 
-      // Suppress unused variable warning — sourcesForEnrich used above
-      void sourcesForEnrich
-
-      controller.close()
+      if (!state.cancelled) controller.close()
+    },
+    cancel() {
+      state.cancelled = true
     },
   })
 

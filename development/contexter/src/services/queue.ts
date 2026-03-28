@@ -24,7 +24,7 @@ const RETRY_OPTS = {
   attempts: 3,
   backoff: {
     type: "exponential" as const,
-    delay: 60_000, // 1min, 5min, 15min
+    delay: 60_000, // 1min, 2min, 4min
   },
 }
 

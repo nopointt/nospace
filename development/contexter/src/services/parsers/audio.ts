@@ -38,6 +38,7 @@ export class AudioParser implements Parser {
         Authorization: `Bearer ${this.groqApiKey}`,
       },
       body: formData,
+      signal: AbortSignal.timeout(110_000),
     })
 
     if (!response.ok) {

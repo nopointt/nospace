@@ -17,5 +17,5 @@ export interface EmbedderOptions {
 }
 
 export const JINA_MODEL = "jina-embeddings-v4"
-export const JINA_DIMENSIONS = 1024
+export const JINA_DIMENSIONS = 512  // MRL truncation from 1024 — retains 99.7% nDCG@10
 export const JINA_MAX_BATCH = 64

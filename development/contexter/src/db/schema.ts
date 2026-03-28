@@ -4,10 +4,10 @@ import {
 } from "drizzle-orm/pg-core"
 import type { AnyPgColumn } from "drizzle-orm/pg-core"
 
-// pgvector custom type — 1024 dimensions (Jina v4)
+// pgvector custom type — 512 dimensions (Jina v4, MRL truncated from 1024)
 export const vector = customType<{ data: number[]; driverData: string }>({
   dataType() {
-    return "vector(1024)"
+    return "vector(512)"
   },
   fromDriver(value: string): number[] {
     return value.slice(1, -1).split(",").map(Number)
@@ -145,6 +145,30 @@ export const evalMetricsDailyAgg = pgTable("eval_metrics_daily_agg", {
 }, (table) => [
   uniqueIndex("eval_metrics_daily_agg_date_user_idx").on(table.aggDate, table.userId),
 ])
+
+// F-033: embedding drift detection tables
+export const evalDriftChecks = pgTable("eval_drift_checks", {
+  id: text("id").primaryKey(),
+  checkedAt: timestamp("checked_at", { withTimezone: true }).notNull().defaultNow(),
+  sampleSize: integer("sample_size").notNull(),
+  mmdScore: real("mmd_score").notNull(),
+  mmdThreshold: real("mmd_threshold").notNull().default(0.05),
+  driftDetected: boolean("drift_detected").notNull().default(false),
+  projectionDims: smallint("projection_dims").notNull().default(32),
+  notes: text("notes"),
+}, (table) => [
+  index("eval_drift_checks_checked_at_idx").on(table.checkedAt),
+])
+
+export const evalDriftBaseline = pgTable("eval_drift_baseline", {
+  id: text("id").primaryKey(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  sampleSize: integer("sample_size").notNull(),
+  projectionDims: smallint("projection_dims").notNull().default(32),
+  projections: jsonb("projections").notNull(),
+  projectionMatrix: jsonb("projection_matrix"),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+})
 
 // F-030: explicit user feedback on query-answer pairs
 export const feedback = pgTable("feedback", {

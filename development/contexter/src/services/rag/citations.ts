@@ -12,6 +12,33 @@ export interface CitationMapping {
   chunkId: string
   /** The source document ID */
   documentId: string
+  // F-025: NLI verification fields — undefined when NLI unavailable
+  nliScore?: number       // [0,1] factual consistency probability
+  nliVerified?: boolean   // true = nliScore >= NLI_THRESHOLD (0.5)
+}
+
+/**
+ * F-025: Split answer text into individual verifiable claims (sentences).
+ * Strips citation markers [N] before splitting — they are not factual content.
+ * Filters fragments shorter than 10 characters.
+ */
+export function splitIntoClaims(text: string): string[] {
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.replace(/\[(\d+)\]/g, "").trim())
+    .filter((s) => s.length > 10)
+}
+
+/**
+ * F-025: Extract the sentence containing [N] from the answer text.
+ * Returns the sentence with citation markers stripped, or empty string if not found.
+ */
+export function extractSentenceAroundCitation(answer: string, citationNumber: number): string {
+  const sentences = answer.split(/(?<=[.!?])\s+/)
+  const marker = `[${citationNumber}]`
+  const sentence = sentences.find((s) => s.includes(marker))
+  if (!sentence) return ""
+  return sentence.replace(/\[(\d+)\]/g, "").trim()
 }
 
 /**

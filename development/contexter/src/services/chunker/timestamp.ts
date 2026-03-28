@@ -1,5 +1,5 @@
 import type { Chunk } from "./types"
-import { countTokens } from "./tokenizer"
+import { countTokensSync } from "./tokenizer"
 
 /**
  * Timestamp chunker: splits transcription text by time boundaries.
@@ -19,7 +19,7 @@ export function chunkTimestamp(text: string, maxTokens: number = 500): Chunk[] {
   let currentTokens = 0
 
   for (const segment of segments) {
-    const segTokens = countTokens(segment.text)
+    const segTokens = countTokensSync(segment.text)
 
     if (currentTokens + segTokens > maxTokens && currentSegments.length > 0) {
       chunks.push(buildTimestampChunk(currentSegments, chunks.length))
@@ -50,7 +50,7 @@ function buildTimestampChunk(segments: TimestampedSegment[], index: number): Chu
   return {
     content,
     index,
-    tokenCount: countTokens(content),
+    tokenCount: countTokensSync(content),
     startOffset: segments[0].offset,
     endOffset: segments[segments.length - 1].offset + segments[segments.length - 1].text.length,
     metadata: {
@@ -107,7 +107,7 @@ function chunkByDuration(text: string, maxTokens: number): Chunk[] {
   let offset = 0
 
   for (const sentence of sentences) {
-    const sentTokens = countTokens(sentence)
+    const sentTokens = countTokensSync(sentence)
 
     if (currentTokens + sentTokens > maxTokens && currentSentences.length > 0) {
       const content = currentSentences.join(" ")

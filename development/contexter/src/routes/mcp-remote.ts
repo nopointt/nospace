@@ -10,6 +10,8 @@ import { LlmService } from "../services/llm"
 import { resolveAuth, type AuthContext } from "../services/auth"
 import { runPipelineAsync, createPendingJobs } from "../services/pipeline"
 import { getPipelineQueue } from "../services/queue"
+import { fileTypeFromBuffer } from "file-type"
+import { getOrCreateSubscription, getUserStorageUsed } from "../services/billing"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
 
@@ -267,6 +269,7 @@ async function handleRequest(
       return null // notification, no response
 
     case "tools/list":
+      if (!authCtx) return makeError(req.id, -32600, "Authentication required")
       return makeResult(req.id, { tools: TOOLS })
 
     case "tools/call":
@@ -415,10 +418,30 @@ async function handleToolCall(
           })
         }
 
+        // Storage limit check — enforce tier limits
+        const ctxSub = await getOrCreateSubscription(sql, authCtx.userId)
+        if (ctxSub) {
+          const storageUsed = await getUserStorageUsed(sql, authCtx.userId)
+          const storageLimit = Number(ctxSub.storage_limit_bytes ?? 1073741824)
+          if (storageUsed >= storageLimit) {
+            return makeResult(req.id, {
+              content: [{ type: "text", text: `Storage limit reached (${(storageUsed / 1024 / 1024).toFixed(1)} MB / ${(storageLimit / 1024 / 1024).toFixed(1)} MB). Upgrade your plan to add more content.` }],
+              isError: true,
+            })
+          }
+        }
+
         const content = (args.content as string ?? "").trim()
         if (!content) {
           return makeResult(req.id, {
             content: [{ type: "text", text: "content is required and must not be empty" }],
+            isError: true,
+          })
+        }
+
+        if (content.length > 10 * 1024 * 1024) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "content exceeds 10 MB limit" }],
             isError: true,
           })
         }
@@ -474,6 +497,19 @@ async function handleToolCall(
           })
         }
 
+        // Storage limit check — enforce tier limits
+        const uploadSub = await getOrCreateSubscription(sql, authCtx.userId)
+        if (uploadSub) {
+          const storageUsed = await getUserStorageUsed(sql, authCtx.userId)
+          const storageLimit = Number(uploadSub.storage_limit_bytes ?? 1073741824)
+          if (storageUsed >= storageLimit) {
+            return makeResult(req.id, {
+              content: [{ type: "text", text: `Storage limit reached (${(storageUsed / 1024 / 1024).toFixed(1)} MB / ${(storageLimit / 1024 / 1024).toFixed(1)} MB). Upgrade your plan to upload more files.` }],
+              isError: true,
+            })
+          }
+        }
+
         // NEW-011: sanitize fileName before using in R2 key
         const rawFileName = (args.fileName as string ?? "").trim()
         const fileName = sanitizeFileName(rawFileName)
@@ -510,6 +546,27 @@ async function handleToolCall(
             content: [{ type: "text", text: "File exceeds 100 MB limit" }],
             isError: true,
           })
+        }
+
+        // Magic byte validation — detect actual file type from binary content
+        const uint8 = new Uint8Array(buffer)
+        const detectedType = await fileTypeFromBuffer(uint8)
+        if (detectedType) {
+          const ALLOWED_BINARY_MIMES = new Set([
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "image/png", "image/jpeg", "image/webp",
+            "audio/mpeg", "audio/wav", "audio/x-m4a", "audio/ogg",
+            "video/mp4", "video/quicktime", "video/webm",
+          ])
+          if (!ALLOWED_BINARY_MIMES.has(detectedType.mime)) {
+            return makeResult(req.id, {
+              content: [{ type: "text", text: `File content validation failed. Detected format: ${detectedType.mime} is not supported.` }],
+              isError: true,
+            })
+          }
         }
 
         const MIME_MAP: Record<string, string> = {
@@ -802,10 +859,18 @@ async function handleToolCall(
           })
         }
         const docId = args.documentId as string
-        const newName = (args.newName as string ?? "").trim()
-        if (!docId || !newName) {
+        const rawNewName = (args.newName as string ?? "").trim()
+        if (!docId || !rawNewName) {
           return makeResult(req.id, {
             content: [{ type: "text", text: "documentId and newName are required" }],
+            isError: true,
+          })
+        }
+
+        const newName = sanitizeFileName(rawNewName)
+        if (newName.length > 255) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "newName exceeds 255 character limit" }],
             isError: true,
           })
         }

@@ -372,3 +372,20 @@ CTX-01+CTX-07 closed (MLP COMPLETE). CTX-08 GTM created. Full competitive resear
 - 22 of 33 features fully verified PASS; 4 implemented but unverified (F-012/014/015/016); 7 not started (F-018/019/025/026/027/029/033)
 - Migration sequence 0000-0010 complete and gap-free
 - Next session: start with Schlemmer G2, then Mies K + Mies M in parallel
+<!-- ENTRY:2026-03-28:CLOSE:205:contexter:contexter-gtm [AXIS] -->
+## 2026-03-28 — session 205 CLOSE [Axis]
+
+**Decisions:**
+- CC fusion replaces RRF, BPE tokenizer, FTS multilingual, embeddings 1024→512
+- 5-domain professional review (102 findings), 78 fixed, all CRITICAL/HIGH closed
+- NLI sidecar (HHEM-2.1-Open) created, drift detection with persistent projection matrix
+
+**Completed:**
+- 32/33 RAG features implemented
+- 78/102 review findings fixed
+- Full security hardening pass
+
+**Opened:**
+- ~12 MEDIUM/LOW fixes remaining
+- Deploy to production (migrations + re-embed + NLI sidecar)
+- F-029 BM25 (blocked: PG 17+)

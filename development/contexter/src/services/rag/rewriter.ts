@@ -3,6 +3,7 @@ import type { LlmService } from "../llm"
 /**
  * Query rewriter: generates N alternative phrasings of the user query
  * to improve recall in hybrid search.
+ * Returns [originalQuery, ...variants] — array length is count + 1.
  */
 export async function rewriteQuery(
   query: string,

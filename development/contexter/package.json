@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "deploy": "wrangler deploy && bun run evaluation/canary.ts --api-url ${API_URL:-https://contexter.nopoint.workers.dev} --token ${EVAL_TOKEN:-}",
+    "canary": "bun run evaluation/canary.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "wrangler d1 migrations apply contexter-db --local"
   },
@@ -25,6 +26,7 @@
     "bullmq": "^5.71.1",
     "drizzle-orm": "^0.45.1",
     "file-type": "^22.0.0",
+    "gpt-tokenizer": "^3.4.0",
     "hono": "^4.12.8",
     "ioredis": "^5.10.1",
     "postgres": "^3.4.8",

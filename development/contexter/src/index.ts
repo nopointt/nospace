@@ -52,6 +52,9 @@ const sql = postgres(process.env.DATABASE_URL!, {
 })
 
 const redis = new Redis(process.env.REDIS_URL ?? "redis://localhost:6379")
+redis.on("error", (err) => {
+  console.error(JSON.stringify({ event: "redis_error", error: err.message }))
+})
 
 const storage = new S3Client({
   region: "auto",
@@ -78,6 +81,11 @@ const env: Env = {
 
 type AppEnv = { Variables: { sql: typeof sql; env: Env; redis: typeof redis; requestId: string } }
 const app = new Hono<AppEnv>()
+
+app.onError((err, c) => {
+  console.error(JSON.stringify({ event: "unhandled_error", error: err.message, stack: err.stack }))
+  return c.json({ error: "Internal server error." }, 500)
+})
 
 // --- Observability: request logging (P3-010) ---
 app.use("*", async (c, next) => {
@@ -258,6 +266,7 @@ process.on("SIGTERM", async () => {
   if (maintenanceWorker) await shutdownMaintenanceQueue(maintenanceWorker)
   if (feedbackDecayWorker) await feedbackDecayWorker.close()
   if (llmEvalWorker) await shutdownLlmEvalQueue(llmEvalWorker)
+  await redis.quit()
   await sql.end()
   process.exit(0)
 })
