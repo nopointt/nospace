@@ -32,8 +32,8 @@ const SELECTION_CARDS: SelectionCard[] = [
   {
     id: "chatgpt",
     label: "ChatGPT",
-    subtitle: "самый популярный ии-чат",
-    plan: "нужен Plus, Pro, Team или Enterprise план",
+    subtitle: "Самый популярный ИИ-чат",
+    plan: "Нужен Plus, Pro, Team или Enterprise план",
     iconBg: "#10A37F",
     iconLabel: "G",
   },
@@ -41,23 +41,23 @@ const SELECTION_CARDS: SelectionCard[] = [
     id: "claude",
     label: "Claude",
     subtitle: "от Anthropic",
-    plan: "нужен Pro, Team или Enterprise план (или бесплатно через Desktop)",
+    plan: "Нужен Pro, Team или Enterprise план (или бесплатно через Desktop)",
     iconBg: "#CC785C",
     iconLabel: "C",
   },
   {
     id: "perplexity",
     label: "Perplexity",
-    subtitle: "поиск с ИИ",
-    plan: "нужен платный план",
+    subtitle: "Поиск с ИИ",
+    plan: "Нужен платный план",
     iconBg: "#20808D",
     iconLabel: "P",
   },
   {
     id: "cursor",
     label: "Cursor",
-    subtitle: "редактор кода",
-    plan: "бесплатно",
+    subtitle: "Редактор кода",
+    plan: "Бесплатно",
     iconBg: "#7C3AED",
     iconLabel: "↗",
   },
@@ -65,15 +65,15 @@ const SELECTION_CARDS: SelectionCard[] = [
     id: "antigravity",
     label: "Antigravity",
     subtitle: "IDE от Google",
-    plan: "бесплатно",
+    plan: "Бесплатно",
     iconBg: "#4285F4",
     iconLabel: "A",
   },
   {
     id: "other",
-    label: "другой клиент",
-    subtitle: "любая программа с поддержкой MCP",
-    plan: "зависит от клиента",
+    label: "Другой клиент",
+    subtitle: "Любая программа с поддержкой MCP",
+    plan: "Зависит от клиента",
     iconBg: "#333333",
     iconLabel: "…",
   },
@@ -91,14 +91,14 @@ const CLAUDE_SUB_CHOICES: ClaudeSubChoice[] = [
   {
     id: "claude-web",
     label: "Claude.ai",
-    detail: "в браузере",
-    plan: "нужен Pro, Team или Enterprise план",
+    detail: "В браузере",
+    plan: "Нужен Pro, Team или Enterprise план",
   },
   {
     id: "claude-desktop",
     label: "Claude Desktop",
-    detail: "приложение",
-    plan: "бесплатно, нужен Node.js",
+    detail: "Приложение",
+    plan: "Бесплатно, нужен Node.js",
   },
 ]
 
@@ -148,7 +148,7 @@ function makeClients(token: string): ClientInfo[] {
           },
         },
       }, null, 2),
-      gotcha: "нужна программа Node.js — скачайте на nodejs.org",
+      gotcha: "Нужна программа Node.js — скачайте на nodejs.org",
     },
     {
       id: "perplexity",
@@ -160,7 +160,7 @@ function makeClients(token: string): ClientInfo[] {
         { action: "Спросите что-нибудь", detail: "В новом чате Perplexity спросите по вашим документам" },
       ],
       config: null,
-      gotcha: "работает на платном плане Perplexity. бесплатный план — только для Mac",
+      gotcha: "Работает на платном плане Perplexity. Бесплатный план — только для Mac",
     },
     {
       id: "cursor",
@@ -168,7 +168,7 @@ function makeClients(token: string): ClientInfo[] {
       transport: "нативный",
       steps: [
         { action: "Settings → MCP → Add new", detail: "Cursor Settings (Ctrl+Shift+J) → вкладка MCP → Add new MCP server" },
-        { action: "тип подключения: через ссылку", detail: "или создайте файл ~/.cursor/mcp.json — вставьте JSON ниже" },
+        { action: "Тип подключения: через ссылку", detail: "Или создайте файл ~/.cursor/mcp.json — вставьте JSON ниже" },
         { action: "Откройте чат (Ctrl+L)", detail: "Индикатор MCP-серверов появится в чате. Спросите по документам" },
       ],
       config: JSON.stringify({
@@ -192,7 +192,7 @@ function makeClients(token: string): ClientInfo[] {
           contexter: { serverUrl: url },
         },
       }, null, 2),
-      gotcha: "используйте serverUrl (не url). Максимум 50 инструментов одновременно",
+      gotcha: "Используйте serverUrl (не url). Максимум 50 инструментов одновременно",
     },
   ]
 }
@@ -202,9 +202,9 @@ function makeClients(token: string): ClientInfo[] {
 async function copyToClipboard(text: string) {
   try {
     await navigator.clipboard.writeText(text)
-    showToast("скопировано", "success")
+    showToast("Скопировано", "success")
   } catch {
-    showToast("не удалось скопировать", "error")
+    showToast("Не удалось скопировать", "error")
   }
 }
 
@@ -226,7 +226,7 @@ const UrlField: Component<{ url: string }> = (props) => (
         "border-left": "1px solid #333333", background: "transparent", cursor: "pointer",
       }}
     >
-      скопировать
+      Скопировать
     </button>
   </div>
 )
@@ -341,9 +341,9 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
 
   // Header title varies by screen
   const headerTitle = () => {
-    if (isOnSelect()) return "подключение"
+    if (isOnSelect()) return "Подключение"
     if (isOnClaudeSub()) return "Claude"
-    return "подключение"
+    return "Подключение"
   }
 
   // Icon lookup for tab rendering
@@ -422,7 +422,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
           <Show when={isOnSelect()}>
             <div class="flex-1 overflow-y-auto" style={{ padding: "20px 24px 24px" }}>
               <p style={{ "font-size": "13px", color: "#808080", "margin-bottom": "16px", "line-height": "1.4" }}>
-                какую нейросеть вы используете?
+                Какую нейросеть вы используете?
               </p>
               <div class="flex flex-col" style={{ gap: "8px" }}>
                 <For each={SELECTION_CARDS}>
@@ -496,7 +496,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
           <Show when={isOnClaudeSub()}>
             <div class="flex-1 overflow-y-auto" style={{ padding: "20px 24px 24px" }}>
               <p style={{ "font-size": "13px", color: "#808080", "margin-bottom": "16px", "line-height": "1.4" }}>
-                выберите способ использования Claude
+                Выберите способ использования Claude
               </p>
               <div class="flex flex-col" style={{ gap: "8px" }}>
                 <For each={CLAUDE_SUB_CHOICES}>
@@ -621,7 +621,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                       cursor: "pointer", transition: "all 80ms",
                     }}
                   >
-                    {copied() ? "скопировано" : "скопировать"}
+                    {copied() ? "Скопировано" : "Скопировать"}
                   </button>
                 </div>
               </Show>
@@ -630,7 +630,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
               <Show when={activeTab() === "chatgpt" || activeTab() === "claude-web" || activeTab() === "perplexity"}>
                 <div style={{ background: "#0A0A0A", border: "1px solid #333333", padding: "16px", "margin-bottom": "16px" }}>
                   <span style={{ "font-size": "11px", color: "#808080", "text-transform": "uppercase", "letter-spacing": "0.08em", display: "block", "margin-bottom": "8px" }}>
-                    ссылка для подключения
+                    Ссылка для подключения
                   </span>
                   <span class="font-mono" style={{ "font-size": "12px", color: "#CCCCCC", "word-break": "break-all" }}>
                     {mcpUrl()}
@@ -654,7 +654,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                 <div class="flex items-center" style={{ gap: "8px" }}>
                   <span style={{ width: "8px", height: "8px", background: "#333333", "flex-shrink": "0" }} />
                   <span style={{ "font-size": "12px", color: "#808080" }}>
-                    спросите: «какие документы загружены?»
+                    Спросите: «Какие документы загружены?»
                   </span>
                 </div>
               </div>

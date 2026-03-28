@@ -82,7 +82,7 @@ export class VectorStoreService {
       const scoreMap = new Map(feedbackRows.map((r) => [r.id, Number(r.feedback_score)]))
 
       const adjusted = fused.map(r => ({ ...r, score: r.score * (scoreMap.get(r.id) ?? 1.0) }))
-      return adjusted.sort((a, b) => b.score - a.score).filter(r => r.score >= threshold)
+      return adjusted.toSorted((a, b) => b.score - a.score).filter(r => r.score >= threshold)
     }
 
     return fused.filter((r) => r.score >= threshold)

@@ -76,10 +76,10 @@ const DropZone: Component<DropZoneProps> = (props) => {
     >
       <Upload class={`w-6 h-6 ${isDragOver() ? "text-accent scale-110" : "text-text-tertiary"} transition-all duration-[80ms]`} />
       <span class="font-mono text-sm text-text-tertiary">
-        перетащите файл сюда или нажмите для выбора
+        Перетащите файл сюда или нажмите для выбора
       </span>
       <span class="font-mono text-[10px] text-text-disabled">
-        pdf, docx, xlsx, pptx, csv, json, txt, md, изображения, аудио, видео, youtube url
+        PDF, DOCX, XLSX, PPTX, CSV, JSON, TXT, MD, изображения, аудио, видео, YouTube URL
       </span>
       {props.error && (
         <span class="font-mono text-[10px] text-signal-error mt-1">{props.error}</span>

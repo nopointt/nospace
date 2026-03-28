@@ -74,7 +74,7 @@ const DocumentViewer: Component = () => {
       try {
         return await getDocumentContent(id, token)
       } catch (e) {
-        showToast("не удалось загрузить документ.", "error")
+        showToast("Не удалось загрузить документ.", "error")
         throw e
       }
     },
@@ -111,7 +111,7 @@ const DocumentViewer: Component = () => {
           class="hover:text-text-primary transition-colors duration-[80ms]"
         >
           <span style={{ "font-size": "14px", "line-height": "1" }}>←</span>
-          все документы
+          Все документы
         </button>
 
         {/* ── Loading state ── */}
@@ -134,7 +134,7 @@ const DocumentViewer: Component = () => {
             style={{ gap: "12px", "padding-top": "48px" }}
           >
             <p style={{ "font-size": "14px", color: "#D32F2F" }}>
-              не удалось загрузить документ
+              Не удалось загрузить документ
             </p>
             <button
               onClick={() => navigate("/dashboard")}
@@ -147,7 +147,7 @@ const DocumentViewer: Component = () => {
                 padding: "0",
               }}
             >
-              вернуться к списку
+              Вернуться к списку
             </button>
           </div>
         </Show>
@@ -199,7 +199,7 @@ const DocumentViewer: Component = () => {
                     style={{ padding: "48px 0", gap: "8px" }}
                   >
                     <p style={{ "font-size": "13px", color: "var(--color-text-tertiary)" }}>
-                      документ ещё обрабатывается — фрагменты недоступны
+                      Документ ещё обрабатывается — фрагменты недоступны
                     </p>
                   </div>
                 }

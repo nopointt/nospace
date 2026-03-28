@@ -25,7 +25,7 @@ function DataTable<T>(props: DataTableProps<T>): JSX.Element {
         fallback={
           <div class="flex flex-col items-center justify-center gap-4 py-16">
             <span class="font-mono text-sm text-text-tertiary">
-              {props.emptyMessage ?? "документов пока нет."}
+              {props.emptyMessage ?? "Документов пока нет."}
             </span>
             {props.emptyAction}
           </div>

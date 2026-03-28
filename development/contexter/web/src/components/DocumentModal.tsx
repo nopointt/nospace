@@ -78,8 +78,8 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
     () => props.docId,
     async (docId) => {
       const token = getToken()
-      if (!token) throw new Error("не авторизован")
-      if (!docId) throw new Error("нет ID документа")
+      if (!token) throw new Error("Не авторизован")
+      if (!docId) throw new Error("Нет ID документа")
       return await getDocumentContent(docId, token)
     },
   )
@@ -128,7 +128,7 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
 
               <Show when={doc.error && !doc.loading}>
                 <p style={{ "font-size": "14px", color: "#D32F2F" }}>
-                  не удалось загрузить документ
+                  Не удалось загрузить документ
                 </p>
               </Show>
 
@@ -163,7 +163,7 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
 
               <Show when={doc.error && !doc.loading}>
                 <p style={{ "font-size": "13px", color: "#D32F2F", margin: "0" }}>
-                  не удалось загрузить документ
+                  Не удалось загрузить документ
                 </p>
               </Show>
             </div>
@@ -232,7 +232,7 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
                           margin: "0",
                         }}
                       >
-                        документ ещё обрабатывается — фрагменты недоступны
+                        Документ ещё обрабатывается — фрагменты недоступны
                       </p>
                     </div>
                   }

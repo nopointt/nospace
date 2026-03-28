@@ -10,6 +10,7 @@ import type { LlmProviderConfig } from "../services/llm"
 import { RerankerService } from "../services/reranker"
 import { resolveAuth } from "../services/auth"
 import { computeProxyMetrics, logProxyMetrics } from "../services/evaluation/proxy"
+import { shouldSample, getLlmEvalQueue } from "../services/evaluation/llm-eval"
 
 const GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 const DEEPINFRA_BASE_URL = "https://api.deepinfra.com/v1/openai"
@@ -185,6 +186,14 @@ query.post("/", async (c) => {
     logProxyMetrics(sql, metrics).catch((err) =>
       console.error("eval_metrics write failed", err instanceof Error ? err.message : String(err))
     )
+
+    // F-031: sampled LLM evaluation — fire-and-forget enqueue
+    const evalSamplingRate = parseInt(env.EVAL_SAMPLING_RATE ?? "10", 10)
+    if (result.context && shouldSample(queryId, evalSamplingRate)) {
+      getLlmEvalQueue(env.REDIS_URL ?? "redis://localhost:6379")
+        .add("llm-eval", { queryId, query: parsed.query, answer: result.answer, context: result.context })
+        .catch((err) => console.error("llm-eval enqueue failed", err instanceof Error ? err.message : String(err)))
+    }
 
     return response
   } catch (e) {

@@ -1,7 +1,7 @@
 ---
 # contexter-gtm.md — CTX-08 GTM Strategy & Positioning
 > Layer: L3 | Epic: CTX-08 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-28 (session e329bace — RAG quality 32/33 features, all except F-029 BM25)
+> Last updated: 2026-03-28 (session 206 — all fixes deployed, 32/33 features live, F-029 BM25 deferred PG17)
 ---
 
 ## Goal
@@ -86,10 +86,10 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - [x] NLI Python sidecar (Docker) ✅ session e329bace
 - [ ] F-029 BM25 conditional (blocked: PG 17+)
 - [x] F-033 drift detection + canary queries ✅ session e329bace
-- [ ] F-031 query.ts sampling enqueue (collision-blocked)
-- [ ] vectorstore/index.ts:80-84 immutability fix (F-030 MEDIUM)
-- [ ] Build + deploy dist/index.js
-- [ ] Fix JINA_DIMENSIONS stale comment in types.ts (1024 → 512)
+- [x] F-031 query.ts sampling enqueue ✅ session 206
+- [x] vectorstore/index.ts immutability fix (.toSorted) ✅ session 206
+- [x] Build + deploy to Hetzner ✅ session 206
+- [x] Fix JINA_DIMENSIONS stale comment + L1 dims (1024→512) ✅ session 206
 
 ### Phase 6: Iteration (open)
 - [ ] Landing page copy/design iterations based on feedback

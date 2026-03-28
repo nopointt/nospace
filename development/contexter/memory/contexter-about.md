@@ -21,7 +21,7 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Server | Hetzner CAX11 (2 ARM vCPU, 4GB RAM, Helsinki) |
 | Metadata DB | PostgreSQL 16 + pgvector 0.8.2 |
 | Full-text search | PostgreSQL tsvector + GIN index |
-| Vector store | pgvector (1024 dims, cosine, HNSW index) |
+| Vector store | pgvector (512 dims MRL, cosine, HNSW index) |
 | File storage | CF R2 (S3 API from Hetzner) |
 | Cache/sessions | Redis 7 (with password, BullMQ queue) |
 | Embeddings | Jina v4 API (truncate_dim=1024) |

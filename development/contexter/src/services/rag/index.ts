@@ -191,6 +191,7 @@ export class RagService {
       retrievalLatencyMs,
       generationLatencyMs,
       embeddingL2NormMean,
+      context,
       confidence,
       faithfulnessScore: wholeFaithfulness,
     }

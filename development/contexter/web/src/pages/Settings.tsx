@@ -76,11 +76,11 @@ const Settings: Component = () => {
         const text = await res.text()
         throw new Error(text || `HTTP ${res.status}`)
       }
-      showToast("все данные удалены", "success")
+      showToast("Все данные удалены", "success")
       setShowDeleteConfirm(false)
       navigate("/dashboard")
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "не удалось удалить — попробуйте ещё раз", "error")
+      showToast(e instanceof Error ? e.message : "Не удалось удалить — попробуйте ещё раз", "error")
     } finally {
       setDeleting(false)
     }
@@ -117,10 +117,10 @@ const Settings: Component = () => {
         <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-24">
           <div class="flex flex-col items-center gap-6 text-center">
             <p class="text-text-secondary text-sm">
-              войдите, чтобы управлять настройками
+              Войдите, чтобы управлять настройками
             </p>
             <Button variant="primary" onClick={() => navigate("/upload")}>
-              войти
+              Войти
             </Button>
           </div>
         </div>
@@ -135,11 +135,11 @@ const Settings: Component = () => {
 
       <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-12">
         {/* ── page header ── */}
-        <h1 class="text-[24px] font-bold lowercase leading-[1.2] text-text-primary mb-2">
-          настройки
+        <h1 class="text-[24px] font-bold leading-[1.2] text-text-primary mb-2">
+          Настройки
         </h1>
         <p class="text-text-secondary text-xs mb-12">
-          профиль, лимиты и управление данными
+          Профиль, лимиты и управление данными
         </p>
 
         {/* ══════════════════════════════════════════════
@@ -147,11 +147,11 @@ const Settings: Component = () => {
            ══════════════════════════════════════════════ */}
         <section class="mb-16">
           <div class="flex items-baseline justify-between mb-6">
-            <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-text-primary">
-              профиль
+            <h2 class="text-[20px] font-medium leading-[1.2] text-text-primary">
+              Профиль
             </h2>
             <span class="text-xs text-text-tertiary">
-              последний вход: {lastLogin()}
+              Последний вход: {lastLogin()}
             </span>
           </div>
           <div class="flex flex-col gap-2">
@@ -183,19 +183,19 @@ const Settings: Component = () => {
         <section class="mb-16">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <UsageCard
-              label="документы"
+              label="Документы"
               value={docCount()}
               max={50}
               loading={docsData.loading}
             />
             <UsageCard
-              label="фрагменты"
+              label="Фрагменты"
               value={chunkCount()}
               max={500}
               loading={docsData.loading}
             />
             <UsageCard
-              label="запросы"
+              label="Запросы"
               value={0}
               max={100}
             />
@@ -214,18 +214,18 @@ const Settings: Component = () => {
             <div class="flex flex-col gap-3">
               <div class="flex items-start justify-between gap-4">
                 <div class="flex flex-col gap-1">
-                  <h3 class="text-sm font-bold lowercase text-text-primary">
-                    удалить все данные
+                  <h3 class="text-sm font-bold text-text-primary">
+                    Удалить все данные
                   </h3>
                   <p class="text-xs text-text-secondary">
-                    удалит все файлы и базу знаний. это нельзя отменить.
+                    Удалит все файлы и базу знаний. Это нельзя отменить.
                   </p>
                 </div>
                 <Button
                   variant="danger"
                   onClick={() => setShowDeleteConfirm(true)}
                 >
-                  удалить
+                  Удалить
                 </Button>
               </div>
 
@@ -233,7 +233,7 @@ const Settings: Component = () => {
               <Show when={showDeleteConfirm()}>
                 <div class="border border-signal-error bg-signal-error/5 p-4 flex flex-col gap-4">
                   <p class="text-xs text-text-primary font-bold">
-                    удалить все файлы и базу знаний? это нельзя отменить.
+                    Удалить все файлы и базу знаний? Это нельзя отменить.
                   </p>
                   <div class="flex items-center gap-3">
                     <Button
@@ -241,13 +241,13 @@ const Settings: Component = () => {
                       onClick={handleDeleteAll}
                       loading={deleting()}
                     >
-                      подтвердить удаление
+                      Подтвердить удаление
                     </Button>
                     <Button
                       variant="ghost"
                       onClick={() => setShowDeleteConfirm(false)}
                     >
-                      отмена
+                      Отмена
                     </Button>
                   </div>
                 </div>
@@ -260,15 +260,15 @@ const Settings: Component = () => {
             {/* logout */}
             <div class="flex items-start justify-between gap-4">
               <div class="flex flex-col gap-1">
-                <h3 class="text-sm font-bold lowercase text-text-primary">
-                  выйти
+                <h3 class="text-sm font-bold text-text-primary">
+                  Выйти
                 </h3>
                 <p class="text-xs text-text-secondary">
-                  сессия завершится на этом устройстве
+                  Сессия завершится на этом устройстве
                 </p>
               </div>
               <Button variant="ghost" onClick={handleLogout}>
-                выйти
+                Выйти
               </Button>
             </div>
           </div>

@@ -9,20 +9,20 @@ import { auth, getToken, isAuthenticated } from "../lib/store"
 /* ── curl examples ── */
 const curlExamples = [
   {
-    label: "загрузить документ",
+    label: "Загрузить документ",
     code: `curl -X POST ${API_BASE}/api/upload \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
   -F "file=@document.pdf"`,
   },
   {
-    label: "поиск по документам",
+    label: "Поиск по документам",
     code: `curl -X POST ${API_BASE}/api/query \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '{"query": "ваш вопрос"}'`,
   },
   {
-    label: "статус документа",
+    label: "Статус документа",
     code: `curl ${API_BASE}/api/status/DOCUMENT_ID \\
   -H "Authorization: Bearer YOUR_TOKEN"`,
   },
@@ -50,7 +50,7 @@ function CodeBlock(props: { code: string; label?: string }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      showToast("не удалось скопировать", "error")
+      showToast("Не удалось скопировать", "error")
     }
   }
 
@@ -69,9 +69,9 @@ function CodeBlock(props: { code: string; label?: string }) {
         </pre>
         <button
           onClick={handleCopy}
-          class="absolute top-2 right-2 px-2.5 py-1 font-mono text-[10px] text-text-tertiary hover:text-text-primary border border-border-subtle bg-bg-surface hover:bg-bg-elevated transition-colors duration-[80ms] lowercase"
+          class="absolute top-2 right-2 px-2.5 py-1 font-mono text-[10px] text-text-tertiary hover:text-text-primary border border-border-subtle bg-bg-surface hover:bg-bg-elevated transition-colors duration-[80ms]"
         >
-          {copied() ? "скопировано \u2713" : "скопировать"}
+          {copied() ? "Скопировано \u2713" : "Скопировать"}
         </button>
       </div>
     </div>
@@ -88,7 +88,7 @@ function CopyField(props: { value: string; label?: string }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      showToast("не удалось скопировать", "error")
+      showToast("Не удалось скопировать", "error")
     }
   }
 
@@ -105,9 +105,9 @@ function CopyField(props: { value: string; label?: string }) {
         </span>
         <button
           onClick={handleCopy}
-          class="shrink-0 px-4 py-2.5 font-mono text-[10px] text-text-tertiary hover:text-text-primary border-l border-border-default hover:bg-bg-elevated transition-colors duration-[80ms] lowercase"
+          class="shrink-0 px-4 py-2.5 font-mono text-[10px] text-text-tertiary hover:text-text-primary border-l border-border-default hover:bg-bg-elevated transition-colors duration-[80ms]"
         >
-          {copied() ? "скопировано \u2713" : "скопировать"}
+          {copied() ? "Скопировано \u2713" : "Скопировать"}
         </button>
       </div>
     </div>
@@ -122,7 +122,7 @@ function Step(props: { num: string; title: string; children: any }) {
         {props.num}
       </span>
       <div class="flex flex-col gap-3 flex-1 min-w-0">
-        <h4 class="text-sm font-bold lowercase text-text-primary">{props.title}</h4>
+        <h4 class="text-sm font-bold text-text-primary">{props.title}</h4>
         {props.children}
       </div>
     </div>
@@ -160,9 +160,9 @@ const ApiPage: Component = () => {
       const result = await createShare(token(), scope as any)
       setNewShareToken(result.shareToken)
       refetchShares()
-      showToast("ссылка создана", "success")
+      showToast("Ссылка создана", "success")
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "не удалось создать ссылку — попробуйте ещё раз", "error")
+      showToast(e instanceof Error ? e.message : "Не удалось создать ссылку — попробуйте ещё раз", "error")
     } finally {
       setCreatingShare(false)
     }
@@ -177,10 +177,10 @@ const ApiPage: Component = () => {
     try {
       const result = await createShare(token(), "all", "read_write")
       setNewToken(result.shareToken)
-      showToast("токен создан", "success")
+      showToast("Токен создан", "success")
       refetchShares()
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "не удалось создать ключ — попробуйте ещё раз", "error")
+      showToast(e instanceof Error ? e.message : "Не удалось создать ключ — попробуйте ещё раз", "error")
     } finally {
       setCreatingToken(false)
     }
@@ -196,9 +196,9 @@ const ApiPage: Component = () => {
       await revokeShare(shareId, token())
       refetchShares()
       setConfirmRevoke(null)
-      showToast("токен отозван", "success")
+      showToast("Токен отозван", "success")
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "не удалось отозвать доступ — попробуйте ещё раз", "error")
+      showToast(e instanceof Error ? e.message : "Не удалось отозвать доступ — попробуйте ещё раз", "error")
     } finally {
       setRevoking(null)
     }
@@ -221,10 +221,10 @@ const ApiPage: Component = () => {
         <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-24">
           <div class="flex flex-col items-center gap-6 text-center">
             <p class="text-text-secondary text-sm">
-              войдите, чтобы подключить нейросеть
+              Войдите, чтобы подключить нейросеть
             </p>
             <Button variant="primary" onClick={() => navigate("/upload")}>
-              войти
+              Войти
             </Button>
           </div>
         </div>
@@ -239,19 +239,19 @@ const ApiPage: Component = () => {
 
       <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-12">
         {/* ── page header ── */}
-        <h1 class="text-[24px] font-bold lowercase leading-[1.2] text-text-primary mb-2">
-          подключение
+        <h1 class="text-[24px] font-bold leading-[1.2] text-text-primary mb-2">
+          Подключение
         </h1>
         <p class="text-text-secondary text-xs mb-12">
-          как подключить contexter к нейросети
+          Как подключить Contexter к нейросети
         </p>
 
         {/* ══════════════════════════════════════════════
             section 1: api endpoints
            ══════════════════════════════════════════════ */}
         <section class="mb-16">
-          <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-text-primary mb-2">
-            для разработчиков
+          <h2 class="text-[20px] font-medium leading-[1.2] text-text-primary mb-2">
+            Для разработчиков
           </h2>
           <p class="text-text-tertiary text-xs mb-6">
             base url: <span class="text-text-primary">{API_BASE}</span>
@@ -276,33 +276,33 @@ const ApiPage: Component = () => {
             section 2: mcp connection
            ══════════════════════════════════════════════ */}
         <section class="mb-16">
-          <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-text-primary mb-2">
-            как подключить нейросеть
+          <h2 class="text-[20px] font-medium leading-[1.2] text-text-primary mb-2">
+            Как подключить нейросеть
           </h2>
           <p class="text-text-tertiary text-xs mb-8">
-            добавьте contexter в Claude Desktop — и он начнёт отвечать по вашим файлам
+            Добавьте Contexter в Claude Desktop — и он начнёт отвечать по вашим файлам
           </p>
 
           <div class="flex flex-col gap-8">
             {/* step 1 */}
-            <Step num="1" title="скопируйте ссылку подключения">
+            <Step num="1" title="Скопируйте ссылку подключения">
               <CopyField
-                label="ваша ссылка"
+                label="Ваша ссылка"
                 value={mcpUrl()}
               />
             </Step>
 
             {/* step 2 */}
-            <Step num="2" title="откройте настройки claude desktop">
+            <Step num="2" title="Откройте настройки Claude Desktop">
               <p class="text-text-secondary text-xs leading-relaxed">
                 settings &rarr; developer &rarr; mcp servers &rarr; add
               </p>
             </Step>
 
             {/* step 3 */}
-            <Step num="3" title="добавьте подключение">
+            <Step num="3" title="Добавьте подключение">
               <p class="text-text-secondary text-xs leading-relaxed mb-3">
-                вставьте этот код в файл настроек:
+                Вставьте этот код в файл настроек:
               </p>
               <CodeBlock
                 label="claude_desktop_config.json"
@@ -311,17 +311,17 @@ const ApiPage: Component = () => {
             </Step>
 
             {/* step 4 */}
-            <Step num="4" title="перезапустите claude desktop">
+            <Step num="4" title="Перезапустите Claude Desktop">
               <p class="text-text-secondary text-xs leading-relaxed">
-                закройте и откройте claude desktop чтобы применить изменения
+                Закройте и откройте Claude Desktop, чтобы применить изменения
               </p>
             </Step>
 
             {/* step 5 */}
-            <Step num="5" title="проверьте подключение">
+            <Step num="5" title="Проверьте подключение">
               <p class="text-text-secondary text-xs leading-relaxed">
-                в claude спросите:{" "}
-                <span class="text-text-primary">"какие документы загружены?"</span>{" "}
+                В Claude спросите:{" "}
+                <span class="text-text-primary">"Какие документы загружены?"</span>{" "}
                 — должен появиться список
               </p>
             </Step>
@@ -329,14 +329,14 @@ const ApiPage: Component = () => {
 
           {/* alternative: direct streamable http */}
           <div class="mt-10 border border-border-subtle bg-bg-surface p-6">
-            <h3 class="text-sm font-bold lowercase text-text-primary mb-2">
-              другой способ подключения
+            <h3 class="text-sm font-bold text-text-primary mb-2">
+              Другой способ подключения
             </h3>
             <p class="text-text-secondary text-xs leading-relaxed mb-4">
-              для Claude.ai и других нейросетей — вставьте ссылку напрямую:
+              Для Claude.ai и других нейросетей — вставьте ссылку напрямую:
             </p>
             <CopyField
-              label="ссылка подключения"
+              label="Ссылка подключения"
               value={mcpUrl()}
             />
           </div>
@@ -349,37 +349,37 @@ const ApiPage: Component = () => {
             section 3: tokens & sharing
            ══════════════════════════════════════════════ */}
         <section>
-          <h2 class="text-[20px] font-medium leading-[1.2] lowercase text-text-primary mb-2">
-            доступ и ссылки
+          <h2 class="text-[20px] font-medium leading-[1.2] text-text-primary mb-2">
+            Доступ и ссылки
           </h2>
           <p class="text-text-tertiary text-xs mb-8">
-            управление доступом к вашей базе знаний
+            Управление доступом к вашей базе знаний
           </p>
 
           {/* current token */}
           <div class="mb-8">
             <CopyField
-              label="ваш ключ доступа"
+              label="Ваш ключ доступа"
               value={auth()?.apiToken ?? ""}
             />
           </div>
 
           {/* create new token */}
           <div class="mb-10">
-            <h3 class="text-sm font-bold lowercase text-text-primary mb-3">
-              создать ключ доступа
+            <h3 class="text-sm font-bold text-text-primary mb-3">
+              Создать ключ доступа
             </h3>
             <Button
               variant="secondary"
               onClick={handleCreateToken}
               loading={creatingToken()}
             >
-              создать ключ доступа
+              Создать ключ доступа
             </Button>
             <Show when={newToken()}>
               <div class="mt-4 border border-signal-warning bg-signal-warning/10 p-4">
                 <p class="text-xs font-bold text-text-primary mb-2">
-                  сохраните токен, он больше не будет показан
+                  Сохраните токен, он больше не будет показан
                 </p>
                 <CopyField value={newToken()!} />
               </div>
@@ -388,34 +388,34 @@ const ApiPage: Component = () => {
 
           {/* create share link */}
           <div class="mb-10">
-            <h3 class="text-sm font-bold lowercase text-text-primary mb-3">
-              поделиться базой знаний
+            <h3 class="text-sm font-bold text-text-primary mb-3">
+              Поделиться базой знаний
             </h3>
             <div class="flex flex-col gap-4">
               {/* scope selector */}
               <div class="flex items-center gap-4">
                 <button
                   onClick={() => setShareScope("all")}
-                  class={`px-3 py-1.5 font-mono text-xs lowercase border transition-colors duration-[80ms] ${
+                  class={`px-3 py-1.5 font-mono text-xs border transition-colors duration-[80ms] ${
                     shareScope() === "all"
                       ? "border-accent text-accent"
                       : "border-border-default text-text-tertiary hover:text-text-primary"
                   }`}
                 >
-                  все документы
+                  Все документы
                 </button>
                 <button
                   onClick={() => setShareScope("selected")}
-                  class={`px-3 py-1.5 font-mono text-xs lowercase border transition-colors duration-[80ms] ${
+                  class={`px-3 py-1.5 font-mono text-xs border transition-colors duration-[80ms] ${
                     shareScope() === "selected"
                       ? "border-accent text-accent"
                       : "border-border-default text-text-tertiary hover:text-text-primary"
                   }`}
                 >
-                  выбранные
+                  Выбранные
                 </button>
-                <span class="inline-flex items-center px-2.5 py-1 border border-border-default text-[10px] font-medium text-text-tertiary lowercase">
-                  только чтение
+                <span class="inline-flex items-center px-2.5 py-1 border border-border-default text-[10px] font-medium text-text-tertiary">
+                  Только чтение
                 </span>
               </div>
 
@@ -425,7 +425,7 @@ const ApiPage: Component = () => {
                   <Show
                     when={documents() && documents()!.length > 0}
                     fallback={
-                      <span class="text-xs text-text-tertiary">нет документов</span>
+                      <span class="text-xs text-text-tertiary">Нет документов</span>
                     }
                   >
                     <For each={documents()}>
@@ -452,7 +452,7 @@ const ApiPage: Component = () => {
                   loading={creatingShare()}
                   disabled={shareScope() === "selected" && selectedDocs().length === 0}
                 >
-                  создать ссылку
+                  Создать ссылку
                 </Button>
               </div>
             </div>
@@ -460,7 +460,7 @@ const ApiPage: Component = () => {
             <Show when={newShareToken()}>
               <div class="mt-4 border border-signal-warning bg-signal-warning/10 p-4">
                 <p class="text-xs font-bold text-text-primary mb-2">
-                  сохраните токен, он больше не будет показан
+                  Сохраните токен, он больше не будет показан
                 </p>
                 <CopyField value={newShareToken()!} />
               </div>
@@ -469,13 +469,13 @@ const ApiPage: Component = () => {
 
           {/* active shares list */}
           <div>
-            <h3 class="text-sm font-bold lowercase text-text-primary mb-3">
-              активные ссылки
+            <h3 class="text-sm font-bold text-text-primary mb-3">
+              Активные ссылки
             </h3>
             <Show
               when={shares() && shares()!.length > 0}
               fallback={
-                <p class="text-xs text-text-tertiary">нет активных ссылок</p>
+                <p class="text-xs text-text-tertiary">Нет активных ссылок</p>
               }
             >
               <div class="flex flex-col gap-0 border border-border-subtle">
@@ -487,7 +487,7 @@ const ApiPage: Component = () => {
                           {share.share_token.slice(0, 12)}...
                         </span>
                         <span class="text-[10px] text-text-tertiary">
-                          {share.scope === "all" ? "все документы" : "выборочно"}
+                          {share.scope === "all" ? "Все документы" : "Выборочно"}
                         </span>
                         <span class="text-[10px] text-text-tertiary">
                           {new Date(share.created_at).toLocaleDateString("ru-RU")}
@@ -498,9 +498,9 @@ const ApiPage: Component = () => {
                         fallback={
                           <button
                             onClick={() => setConfirmRevoke(share.id)}
-                            class="text-[10px] font-mono text-signal-error hover:underline lowercase"
+                            class="text-[10px] font-mono text-signal-error hover:underline"
                           >
-                            отозвать
+                            Отозвать
                           </button>
                         }
                       >
@@ -508,15 +508,15 @@ const ApiPage: Component = () => {
                           <button
                             onClick={() => handleRevoke(share.id)}
                             disabled={revoking() === share.id}
-                            class="text-[10px] font-mono text-signal-error font-bold hover:underline lowercase disabled:opacity-40"
+                            class="text-[10px] font-mono text-signal-error font-bold hover:underline disabled:opacity-40"
                           >
-                            {revoking() === share.id ? "..." : "подтвердить"}
+                            {revoking() === share.id ? "..." : "Подтвердить"}
                           </button>
                           <button
                             onClick={() => setConfirmRevoke(null)}
-                            class="text-[10px] font-mono text-text-tertiary hover:text-text-primary lowercase"
+                            class="text-[10px] font-mono text-text-tertiary hover:text-text-primary"
                           >
-                            отмена
+                            Отмена
                           </button>
                         </div>
                       </Show>

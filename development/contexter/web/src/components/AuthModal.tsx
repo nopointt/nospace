@@ -21,7 +21,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
 
   const handleEmailSubmit = async () => {
     if (!email().trim()) {
-      setError("укажите email")
+      setError("Укажите email")
       return
     }
     setError("")
@@ -44,9 +44,9 @@ const AuthModal: Component<AuthModalProps> = (props) => {
     } catch (e) {
       const msg = e instanceof Error ? e.message : ""
       if (msg.includes("{")) {
-        setError("не удалось создать аккаунт — попробуйте ещё раз")
+        setError("Не удалось создать аккаунт — попробуйте ещё раз")
       } else {
-        setError(msg || "не удалось создать аккаунт — попробуйте ещё раз")
+        setError(msg || "Не удалось создать аккаунт — попробуйте ещё раз")
       }
     } finally {
       setLoading(false)
@@ -86,7 +86,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
           {/* Done state */}
           <Show when={step() === "done"}>
             <p class="text-sm text-signal-success">
-              {found() ? "аккаунт найден. перенаправление..." : "аккаунт создан. перенаправление..."}
+              {found() ? "Аккаунт найден. Перенаправление..." : "Аккаунт создан. Перенаправление..."}
             </p>
           </Show>
 
@@ -97,7 +97,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
                 Войти
               </h2>
               <p class="text-sm text-text-secondary">
-                ваши файлы сохранятся, и нейросеть сможет их читать
+                Ваши файлы сохранятся, и нейросеть сможет их читать
               </p>
             </div>
 
@@ -127,7 +127,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
                 onClick={() => setStep("email")}
                 class="w-full px-4 py-2.5 text-sm text-text-secondary hover:text-black transition-colors"
               >
-                войти через email
+                Войти через email
               </button>
             </div>
           </Show>
@@ -139,23 +139,23 @@ const AuthModal: Component<AuthModalProps> = (props) => {
                 onClick={() => setStep("social")}
                 class="text-xs text-text-secondary hover:text-black self-start"
               >
-                ← назад
+                ← Назад
               </button>
               <h2 class="text-[20px] font-medium text-black leading-[1.2]">
-                создайте аккаунт
+                Создайте аккаунт
               </h2>
             </div>
 
             <div class="flex flex-col gap-4">
               <Input
-                placeholder="email"
+                placeholder="Email"
                 type="email"
                 value={email()}
                 onInput={setEmail}
                 error={error()}
               />
               <Input
-                placeholder="имя (необязательно)"
+                placeholder="Имя (необязательно)"
                 value={name()}
                 onInput={setName}
               />
@@ -167,7 +167,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
               loading={loading()}
               class="w-full"
             >
-              продолжить
+              Продолжить
             </Button>
           </Show>
         </div>

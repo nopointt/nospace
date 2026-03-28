@@ -102,10 +102,10 @@ const ConfirmDialog: Component<{
       <p class="text-sm text-text-primary">{props.message}</p>
       <div class="flex items-center gap-3 justify-end">
         <Button variant="ghost" onClick={props.onCancel}>
-          отмена
+          Отмена
         </Button>
         <Button variant="danger" onClick={props.onConfirm}>
-          удалить
+          Удалить
         </Button>
       </div>
     </div>
@@ -162,7 +162,7 @@ const Dashboard: Component = () => {
       setTotalVectors(res.totalChunks)
     } catch (e) {
       setLoadError(true)
-      showToast("не удалось загрузить документы.", "error")
+      showToast("Не удалось загрузить документы.", "error")
     } finally {
       setLoading(false)
     }
@@ -192,7 +192,7 @@ const Dashboard: Component = () => {
         stages: res.stages,
       })
     } catch {
-      showToast("не удалось загрузить детали документа.", "error")
+      showToast("Не удалось загрузить детали документа.", "error")
     } finally {
       setDetailLoading(false)
     }
@@ -218,12 +218,12 @@ const Dashboard: Component = () => {
       const res = await queryApi(q, token)
       setTotalQueries((prev) => prev + 1)
       if (res.sources.length === 0 && !res.answer) {
-        setQueryError("по вашему запросу ничего не найдено.")
+        setQueryError("По вашему запросу ничего не найдено.")
       } else {
         setQueryResult({ answer: res.answer, sources: res.sources })
       }
     } catch {
-      setQueryError("не удалось получить ответ. повторите запрос.")
+      setQueryError("Не удалось получить ответ. Повторите запрос.")
     } finally {
       setQueryLoading(false)
     }
@@ -247,10 +247,10 @@ const Dashboard: Component = () => {
       setShowDeleteConfirm(false)
       setSelectedId(null)
       setSelectedDetail(null)
-      showToast("документ удален.", "success")
+      showToast("Документ удалён.", "success")
       await loadDocuments()
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "не удалось удалить документ.", "error")
+      showToast(e instanceof Error ? e.message : "Не удалось удалить документ.", "error")
     } finally {
       setDeleting(false)
     }
@@ -271,7 +271,7 @@ const Dashboard: Component = () => {
       {/* confirm dialog */}
       <Show when={showDeleteConfirm()}>
         <ConfirmDialog
-          message="удалить документ? это действие необратимо."
+          message="Удалить документ? Это действие необратимо."
           onConfirm={handleDelete}
           onCancel={() => setShowDeleteConfirm(false)}
         />
@@ -290,9 +290,9 @@ const Dashboard: Component = () => {
         <div class="flex-1 flex flex-col" style={{ gap: "24px" }}>
           {/* Stats Row — 4 cards */}
           <div class="flex" style={{ gap: "16px" }}>
-            <StatCard value={documents().length} label="документы" />
-            <StatCard value={totalChunks()} label="фрагменты" />
-            <StatCard value={totalQueries()} label="запросы" />
+            <StatCard value={documents().length} label="Документы" />
+            <StatCard value={totalChunks()} label="Фрагменты" />
+            <StatCard value={totalQueries()} label="Запросы" />
           </div>
 
           {/* Documents Table */}
@@ -305,11 +305,11 @@ const Dashboard: Component = () => {
                 padding: "10px 16px",
               }}
             >
-              <span class="flex-1" style={headerCellStyle}>документ</span>
-              <span style={{ ...headerCellStyle, width: "80px" }}>тип</span>
-              <span style={{ ...headerCellStyle, width: "80px" }}>фрагменты</span>
-              <span style={{ ...headerCellStyle, width: "100px" }}>статус</span>
-              <span style={{ ...headerCellStyle, width: "80px" }}>дата</span>
+              <span class="flex-1" style={headerCellStyle}>Документ</span>
+              <span style={{ ...headerCellStyle, width: "80px" }}>Тип</span>
+              <span style={{ ...headerCellStyle, width: "80px" }}>Фрагменты</span>
+              <span style={{ ...headerCellStyle, width: "100px" }}>Статус</span>
+              <span style={{ ...headerCellStyle, width: "80px" }}>Дата</span>
             </div>
 
             {/* Loading skeleton */}
@@ -350,7 +350,7 @@ const Dashboard: Component = () => {
                 style={{ padding: "32px 16px", gap: "12px" }}
               >
                 <p style={{ "font-size": "13px", color: "#D32F2F" }}>
-                  не удалось загрузить документы
+                  Не удалось загрузить документы
                 </p>
                 <button
                   onClick={loadDocuments}
@@ -364,7 +364,7 @@ const Dashboard: Component = () => {
                     "text-decoration": "underline",
                   }}
                 >
-                  повторить
+                  Повторить
                 </button>
               </div>
             </Show>
@@ -376,13 +376,13 @@ const Dashboard: Component = () => {
                 style={{ padding: "48px 16px" }}
               >
                 <span class="text-sm text-text-primary">
-                  документов пока нет
+                  Документов пока нет
                 </span>
                 <span class="text-xs text-text-tertiary">
-                  загрузите первый файл для начала работы
+                  Загрузите первый файл для начала работы
                 </span>
                 <A href="/">
-                  <Button variant="primary">загрузить файл</Button>
+                  <Button variant="primary">Загрузить файл</Button>
                 </A>
               </div>
             </Show>
@@ -449,7 +449,7 @@ const Dashboard: Component = () => {
               value={queryText()}
               onInput={setQueryText}
               onKeyDown={handleQueryKeyDown}
-              placeholder="задайте вопрос по документам..."
+              placeholder="Задайте вопрос по документам..."
               disabled={queryLoading()}
             />
             <Button
@@ -458,7 +458,7 @@ const Dashboard: Component = () => {
               loading={queryLoading()}
               onClick={handleQuery}
             >
-              спросить
+              Спросить
             </Button>
           </div>
 
@@ -491,7 +491,7 @@ const Dashboard: Component = () => {
             </Show>
             <Show when={!queryLoading() && !queryError() && !queryResult()}>
               <p style={{ "font-size": "12px", color: "var(--color-text-tertiary)" }}>
-                ответ появится здесь после запроса
+                Ответ появится здесь после запроса
               </p>
             </Show>
           </div>
@@ -505,7 +505,7 @@ const Dashboard: Component = () => {
                   when={result().sources.length > 0}
                   fallback={
                     <p style={{ "font-size": "10px", color: "var(--color-text-tertiary)" }}>
-                      нет источников
+                      Нет источников
                     </p>
                   }
                 >
@@ -538,14 +538,14 @@ const Dashboard: Component = () => {
             </Show>
             <Show when={!queryResult()}>
               <p style={{ "font-size": "10px", color: "var(--color-text-tertiary)" }}>
-                источники появятся после запроса
+                Источники появятся после запроса
               </p>
             </Show>
           </div>
 
           {/* Developer link */}
           <A href="/api" style={{ "font-size": "12px", color: "#1E3EA0" }}>
-            для разработчиков → /api
+            Для разработчиков → /api
           </A>
         </div>
       </div>

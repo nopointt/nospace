@@ -114,8 +114,8 @@ function updateEntry(entries: readonly FileEntry[], id: string, patch: Partial<F
 }
 
 async function copyText(text: string) {
-  try { await navigator.clipboard.writeText(text); showToast("скопировано", "success") }
-  catch { showToast("не удалось скопировать", "error") }
+  try { await navigator.clipboard.writeText(text); showToast("Скопировано", "success") }
+  catch { showToast("Не удалось скопировать", "error") }
 }
 
 // --- Component ---
@@ -203,8 +203,8 @@ const Hero: Component = () => {
 
   // Validation
   function validateFile(file: File): string | null {
-    if (file.size === 0) return `${file.name}: пустой файл`
-    if (file.size > MAX_FILE_SIZE) return `${file.name}: файл больше 100MB`
+    if (file.size === 0) return `${file.name}: Пустой файл`
+    if (file.size > MAX_FILE_SIZE) return `${file.name}: Файл больше 100MB`
     const ext = getExtension(file.name)
     if (ext && !SUPPORTED_EXTENSIONS.has(ext)) return `${file.name}: .${ext} не поддерживается`
     return null
@@ -227,7 +227,7 @@ const Hero: Component = () => {
       }))
     } catch (e) {
       setFiles((prev) => updateEntry(prev, entry.id, {
-        status: "error", error: e instanceof Error ? e.message : "ошибка загрузки",
+        status: "error", error: e instanceof Error ? e.message : "Ошибка загрузки",
       }))
     }
   }
@@ -244,7 +244,7 @@ const Hero: Component = () => {
       }))
     } catch (e) {
       setFiles((prev) => updateEntry(prev, entry.id, {
-        status: "error", error: e instanceof Error ? e.message : "ошибка загрузки",
+        status: "error", error: e instanceof Error ? e.message : "Ошибка загрузки",
       }))
     }
   }
@@ -257,7 +257,7 @@ const Hero: Component = () => {
       for (const file of incoming) {
         const err = validateFile(file)
         if (err) { errors.push(err); continue }
-        if (isDuplicate(file) && !window.confirm(`"${file.name}" уже загружен. повторно?`)) continue
+        if (isDuplicate(file) && !window.confirm(`"${file.name}" уже загружен. Повторно?`)) continue
         newEntries.push({
           id: generateId(), name: file.name, size: file.size,
           mimeType: file.type || "application/octet-stream",
@@ -268,7 +268,7 @@ const Hero: Component = () => {
       if (errors.length > 0) { setDropError(errors.join("; ")); showToast(errors[0], "error") }
       if (newEntries.length === 0) return
       setFiles((prev) => [...prev, ...newEntries])
-      if (newEntries.length > 1) showToast(`${newEntries.length} файлов добавлено`, "info")
+      if (newEntries.length > 1) showToast(`${newEntries.length} файлов добавлено`, "success")
       if (!selectedId()) setSelectedId(newEntries[0].id)
       for (const entry of newEntries) {
         const file = incoming.find((f) => f.name === entry.name && f.size === entry.size)
@@ -333,7 +333,7 @@ const Hero: Component = () => {
             stages.some((s) => s.status === "running")
           setFiles((prev) => updateEntry(prev, entry.id, {
             status: allDone ? "ready" : hasError ? "error" : isStuck ? "error" : "processing",
-            stages, error: errStage?.error ?? (isStuck ? "обработка заняла слишком долго" : null),
+            stages, error: errStage?.error ?? (isStuck ? "Обработка заняла слишком долго" : null),
             name: data.name || entry.name, mimeType: data.mime_type || entry.mimeType, size: data.size || entry.size,
           }))
         } catch {}
@@ -354,7 +354,7 @@ const Hero: Component = () => {
     if (!t) return
     setQLoading(true); setQResult(null)
     try { setQResult(await queryApi(q, t)) }
-    catch { showToast("ошибка запроса", "error") }
+    catch { showToast("Ошибка запроса", "error") }
     finally { setQLoading(false) }
   }
 
@@ -430,10 +430,10 @@ const Hero: Component = () => {
         </svg>
 
         <span style={{ "font-size": "18px", "font-weight": "500", color: "#FAFAFA", "margin-top": "24px", "text-align": "center" }}>
-          перетащите файлы или вставьте текст
+          Перетащите файлы или вставьте текст
         </span>
         <span style={{ "font-size": "14px", color: "#999999", "margin-top": "12px", "text-align": "center" }}>
-          pdf · docx · xlsx · аудио · youtube · изображения · или просто текст
+          PDF · DOCX · XLSX · Аудио · YouTube · Изображения · или просто текст
         </span>
 
         <button
@@ -446,7 +446,7 @@ const Hero: Component = () => {
           onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#1E3EA0"; e.currentTarget.style.color = "#FFFFFF" }}
           onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#333333"; e.currentTarget.style.color = "#CCCCCC" }}
         >
-          выбрать файлы
+          Выбрать файлы
         </button>
 
         {dropError() && (
@@ -483,7 +483,7 @@ const Hero: Component = () => {
                     <div class="flex items-center justify-between gap-4 p-3 border border-signal-error bg-bg-canvas">
                       <span class="text-xs text-signal-error">{entry.error}</span>
                       <Show when={entry.documentId}>
-                        <Button variant="ghost" onClick={() => handleRetry(entry.id)}>повторить</Button>
+                        <Button variant="ghost" onClick={() => handleRetry(entry.id)}>Повторить</Button>
                       </Show>
                     </div>
                   </Show>
@@ -502,7 +502,7 @@ const Hero: Component = () => {
           </h2>
           <Show when={isAuthenticated() && landingDocs().length > 5}>
             <A href="/dashboard" style={{ "font-size": "12px", color: "#1E3EA0" }}>
-              все документы →
+              Все документы →
             </A>
           </Show>
         </div>
@@ -512,7 +512,7 @@ const Hero: Component = () => {
           fallback={
             <div class="flex flex-col items-center gap-4" style={{ padding: "48px 0" }}>
               <span style={{ "font-size": "14px", color: "#999999" }}>
-                {isAuthenticated() ? "загрузите первый файл чтобы создать базу знаний" : "войдите чтобы увидеть ваши документы"}
+                {isAuthenticated() ? "Загрузите первый файл, чтобы создать базу знаний" : "Войдите, чтобы увидеть ваши документы"}
               </span>
             </div>
           }
@@ -560,7 +560,7 @@ const Hero: Component = () => {
                 value={qText()}
                 onInput={(e) => setQText(e.currentTarget.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") handleQuery() }}
-                placeholder="задайте вопрос по документам..."
+                placeholder="Задайте вопрос по документам..."
                 disabled={qLoading()}
                 class="flex-1 px-4 py-3 text-sm border border-border-default bg-bg-canvas text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-accent"
               />
@@ -569,7 +569,7 @@ const Hero: Component = () => {
                 disabled={!qText().trim() || qLoading()}
                 loading={qLoading()}
                 onClick={handleQuery}
-              >спросить</Button>
+              >Спросить</Button>
             </div>
             <Show when={qResult()}>
               {(r) => (
@@ -601,13 +601,13 @@ const Hero: Component = () => {
           <div class="flex-1 flex flex-col" style={{ gap: "20px" }}>
             <h2 style={{ "font-size": "24px", "font-weight": "700", color: "#0A0A0A", "letter-spacing": "-0.5px" }}>Подключение</h2>
             <p style={{ "font-size": "15px", color: "#666666", "line-height": "1.6" }}>
-              откройте ChatGPT, Claude или Cursor — и спросите по вашим файлам
+              Откройте ChatGPT, Claude или Cursor — и спросите по вашим файлам
             </p>
             <div class="flex flex-col" style={{ gap: "16px" }}>
               {([
-                ["1", "скопируйте ссылку подключения", "нажмите «скопировать» справа"],
-                ["2", "вставьте в настройки нейросети", "нажмите на нужную нейросеть ниже — покажем куда"],
-                ["3", "спросите что-нибудь", "«какие документы загружены?»"],
+                ["1", "Скопируйте ссылку подключения", "Нажмите «скопировать» справа"],
+                ["2", "Вставьте в настройки нейросети", "Нажмите на нужную нейросеть ниже — покажем куда"],
+                ["3", "Спросите что-нибудь", "«Какие документы загружены?»"],
               ] as const).map(([num, title, desc]) => (
                 <div class="flex" style={{ gap: "12px" }}>
                   <span style={{ "font-size": "14px", "font-weight": "700", color: "#1E3EA0", width: "20px", "flex-shrink": "0" }}>{num}</span>
@@ -624,7 +624,7 @@ const Hero: Component = () => {
             {/* MCP URL card */}
             <div class="flex flex-col" style={{ gap: "8px" }}>
               <span style={{ "font-size": "11px", color: "#666666", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
-                ссылка подключения
+                Ссылка подключения
               </span>
               <div class="flex items-center" style={{ border: "2px solid #1E3EA0", padding: "12px 16px", gap: "12px" }}>
                 <span class="font-mono flex-1 truncate" style={{ "font-size": "12px", color: "#1E3EA0" }}>{mcpUrl()}</span>
@@ -634,14 +634,14 @@ const Hero: Component = () => {
                     padding: "6px 16px", "font-size": "12px", "font-weight": "600", color: "#FAFAFA",
                     background: "#1E3EA0", border: "none", cursor: "pointer", "white-space": "nowrap",
                   }}
-                >скопировать</button>
+                >Скопировать</button>
               </div>
             </div>
 
             {/* Client buttons */}
             <div class="flex flex-col" style={{ gap: "8px" }}>
               <span style={{ "font-size": "11px", color: "#666666", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
-                инструкция для
+                Инструкция для
               </span>
               <div class="flex items-center flex-wrap" style={{ gap: "8px" }}>
                 {([["chatgpt", "ChatGPT"], ["claude-web", "Claude.ai"], ["claude-desktop", "Claude Desktop"], ["perplexity", "Perplexity"], ["cursor", "Cursor"]] as const).map(([id, name]) => (
@@ -667,13 +667,13 @@ const Hero: Component = () => {
       <footer style={{ "border-top": "1px solid #E5E5E5", padding: "20px 64px", "margin-top": "auto" }}>
         <div class="flex items-center flex-wrap" style={{ gap: "32px" }}>
           <span style={{ "font-size": "12px", color: "#666666" }}>
-            ваши файлы хранятся на серверах в Европе
+            Ваши файлы хранятся на серверах в Европе
           </span>
           <span style={{ "font-size": "12px", color: "#666666" }}>
-            данные не используются для обучения ИИ
+            Данные не используются для обучения ИИ
           </span>
           <span style={{ "font-size": "12px", color: "#666666" }}>
-            вы можете удалить все файлы в любой момент
+            Вы можете удалить все файлы в любой момент
           </span>
           <span style={{ flex: "1" }} />
           <span style={{ "font-size": "12px", color: "#999999" }}>
