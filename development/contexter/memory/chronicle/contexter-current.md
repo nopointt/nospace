@@ -260,3 +260,28 @@ Full Hetzner migration + production hardening session. CAX11 €4.72/mo. 63 CF b
 ## 2026-03-28 — сессия 195 CLOSE [Axis]
 
 CTX-01+CTX-07 closed (MLP COMPLETE). CTX-08 GTM created. Full competitive research (14 files, 6 deep dives). Product brief written. Landing page designed in Pencil + implemented in SolidJS + deployed to contexter.cc. Positioning: "One memory. Every AI." Non-tech audience. Key competitor: Supermemory. pg_dump backup cron + 8 production fixes deployed.
+<!-- ENTRY:2026-03-28:CLOSE:198:contexter:contexter-gtm [AXIS] -->
+## 2026-03-28 — сессия 198 CLOSE [Axis]
+
+**Decisions:**
+- NOWPayments for crypto billing (LS blocked without KYB)
+- Invoice-based subscriptions, flat tiers ($9/$29/$79)
+- Google OAuth (Telegram deferred)
+- 6-layer deep research framework created
+- 19 deep research studies completed for 32 planned features
+- Remizov ODE: no RAG breakthrough (honest assessment)
+- Critical RRF threshold bug found (0.3 vs max ~0.033)
+
+**Completed:**
+- Billing: NOWPayments setup + backend + webhook + deploy
+- Auth: Google OAuth full flow in production
+- Email: nopoint@contexter.cc (CF Email Routing)
+- UI: App page restructure (5 sections)
+- Research: 19/19 deep research studies, SOTA audit, competitor sentiment
+
+**Opened:**
+- Write implementation plan (prioritize 32 features into phases)
+- Fix critical RRF threshold bug (immediate)
+- Implement Phase 1 quick wins
+- Telegram Login (deferred)
+- Card payments (blocked — no KYB)

@@ -1,7 +1,7 @@
 ---
 # contexter-gtm.md — CTX-08 GTM Strategy & Positioning
 > Layer: L3 | Epic: CTX-08 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-28 (session 195 — Phase 0-3 complete, landing deployed to prod)
+> Last updated: 2026-03-28 (session 198 — billing + auth + 19 deep research studies)
 ---
 
 ## Goal
@@ -57,9 +57,24 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - [x] Deployed to contexter-landing.pages.dev (test)
 - [x] Deployed to contexter.cc (prod, / → Landing, /app → Hero)
 
-### Phase 4: Iteration (open)
+### Phase 4: Billing + Auth (session 198)
+- [x] NOWPayments crypto billing (flat tiers $9/$29/$79)
+- [x] Google OAuth login
+- [x] CF Email Routing (nopoint@contexter.cc)
+- [x] App page restructure (5 sections)
+- [ ] Telegram Login (deferred — widget domain issue)
+- [ ] Card payments (blocked — no KYB)
+
+### Phase 5: RAG Quality Deep Research (session 198)
+- [x] Deep research framework (6 layers)
+- [x] 19 deep research studies (covering 32 features)
+- [x] SOTA audit (rag-sota-2026-research.md)
+- [x] Competitor sentiment analysis
+- [ ] Write implementation plan from research
+- [ ] Implement Phase 1 (bug fix + quick wins)
+
+### Phase 6: Iteration (open)
 - [ ] Landing page copy/design iterations based on feedback
-- [ ] Pricing tiers finalization
 - [ ] Product video (deferred)
 - [ ] Testimonials collection (Artem demo + early users)
 - [ ] A/B testing hero variants

@@ -17,6 +17,9 @@ import { retry } from "./routes/retry"
 import { dev } from "./routes/dev"
 import { pipeline } from "./routes/pipeline"
 import { oauth } from "./routes/oauth"
+import { billing } from "./routes/billing"
+import { webhooks } from "./routes/webhooks"
+import { authSocial } from "./routes/auth-social"
 
 // P3-015: validate required env vars at startup — fail fast with clear message
 const REQUIRED_ENV = [
@@ -197,8 +200,11 @@ app.route("/api/documents", documents)
 // P1-010: /mcp route removed (legacy CF Workers scaffold)
 app.route("/sse", mcpRemote)
 app.route("/api/auth", auth)
+app.route("/api/auth", authSocial)
 app.route("/api/retry", retry)
 app.route("/api/pipeline", pipeline)
+app.route("/api/billing", billing)
+app.route("/webhooks", webhooks)
 app.route("/dev", dev)
 app.route("/", oauth)
 

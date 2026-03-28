@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-27 (session 194 — MLP complete, CTX-01+CTX-07 closed, all fixes deployed)
+> Last updated: 2026-03-28 (session 198 — billing, auth, deep research)
 ---
 
 ## Identity
@@ -105,6 +105,11 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | R2 S3 credentials | `~/.tLOS/r2-credentials` |
 | CF Global API Key | `~/.tLOS/cf-global-key` |
 | CF API Token (limited) | `~/.tLOS/cf-api-token` |
+| NOWPayments API Key | `~/.tLOS/nowpayments-api-key` |
+| NOWPayments IPN Secret | `~/.tLOS/nowpayments-ipn-secret` |
+| Google OAuth Client ID | `~/.tLOS/google-client-id` |
+| Google OAuth Client Secret | `~/.tLOS/google-client-secret` |
+| Telegram Bot Token | `~/.tLOS/telegram-bot-token` (@contexterrbot) |
 | Server .env (all secrets) | `/opt/contexter/.env` (chmod 600) |
 
 ## Pipeline
@@ -120,9 +125,9 @@ Job queue: BullMQ (Redis) → 3 retries, 1/5/15 min backoff, dead letter after 3
 
 PDF, DOCX, XLSX, PPTX, ODS, CSV, JSON, TXT, MD, HTML, Images (PNG/JPG/WebP/SVG), Audio (MP3/WAV/M4A/OGG), Video (MP4/MOV/WebM → audio extraction), YouTube URL (subtitles)
 
-## PG Schema (5 tables)
+## PG Schema (7 tables)
 
-users, documents, chunks (+ embedding vector(1024) + tsv tsvector GENERATED), jobs, shares
+users (+ telegram_id, google_id, avatar_url), documents, chunks, jobs, shares, subscriptions, payments
 
 15 indexes: PK + unique + btree (user_id, document_id, status) + GIN (tsv) + HNSW (embedding cosine)
 

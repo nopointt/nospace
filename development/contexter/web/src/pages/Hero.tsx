@@ -15,7 +15,6 @@ import AuthModal from "../components/AuthModal"
 import ConnectionModal from "../components/ConnectionModal"
 import DocumentModal from "../components/DocumentModal"
 import Toast, { showToast } from "../components/Toast"
-import KnowledgeGraph from "../components/KnowledgeGraph"
 import {
   uploadFile,
   uploadText,
@@ -58,16 +57,6 @@ const SUPPORTED_EXTENSIONS = new Set([
 const STAGE_NAMES = ["parse", "chunk", "embed", "index"] as const
 const YOUTUBE_REGEX = /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)/
 const URL_REGEX = /^https?:\/\/.+/
-const MCP_CONFIG = (t: string) => `{
-  "contexter": {
-    "command": "npx",
-    "args": [
-      "-y",
-      "@anthropic-ai/mcp-remote",
-      "${API_BASE}/sse?token=${t}"
-    ]
-  }
-}`
 
 // --- Helpers ---
 
@@ -158,7 +147,7 @@ const Hero: Component = () => {
     answer: string; sources: { content: string; document_name: string; score: number }[]
   } | null>(null)
 
-  // Load docs for dashboard + resume polling for processing docs
+  // Load docs + resume polling
   createEffect(async () => {
     if (!isAuthenticated()) return
     const t = getToken()
@@ -167,16 +156,16 @@ const Hero: Component = () => {
       const res = await listDocuments(t)
       setLandingDocs(res.documents)
       setLandingChunks(res.totalChunks)
-      // Resume polling for docs still processing
       const processing = res.documents.filter((d: any) => d.status === "processing")
       if (processing.length > 0) {
         const existing = files()
         for (const doc of processing) {
           if (!existing.some((f) => f.documentId === doc.id)) {
             setFiles((prev) => [...prev, {
-              id: doc.id, file: null as any, name: doc.name, mimeType: doc.mime_type,
-              size: doc.size, status: "processing" as const, progress: 0,
-              documentId: doc.id, stages: null, error: null,
+              id: doc.id, name: doc.name, mimeType: doc.mime_type,
+              size: doc.size, status: "processing" as const,
+              documentId: doc.id, stages: makeInitialStages(),
+              preview: null, error: null, stats: null,
             }])
           }
         }
@@ -306,9 +295,6 @@ const Hero: Component = () => {
       }
       setFiles((prev) => [...prev, entry])
       setSelectedId(entry.id)
-      if (isYT) showToast("youtube url добавлен", "info")
-      else if (isUrl) showToast("url добавлен", "info")
-      else showToast(`текст вставлен · ${trimmed.length} символов`, "success")
       processTextUpload(trimmed, entry)
     }
     if (!requireAuth(action)) return
@@ -342,13 +328,12 @@ const Hero: Component = () => {
           const allDone = stages.every((s) => s.status === "done")
           const hasError = stages.some((s) => s.status === "error")
           const errStage = stages.find((s) => s.status === "error")
-          // Detect stuck pipeline: processing for over 5 min with no stage progress
           const isStuck = !allDone && !hasError && data.created_at &&
             (Date.now() - new Date(data.created_at).getTime()) > 5 * 60 * 1000 &&
             stages.some((s) => s.status === "running")
           setFiles((prev) => updateEntry(prev, entry.id, {
             status: allDone ? "ready" : hasError ? "error" : isStuck ? "error" : "processing",
-            stages, error: errStage?.error ?? (isStuck ? "обработка заняла слишком долго — попробуйте загрузить файл заново" : null),
+            stages, error: errStage?.error ?? (isStuck ? "обработка заняла слишком долго" : null),
             name: data.name || entry.name, mimeType: data.mime_type || entry.mimeType, size: data.size || entry.size,
           }))
         } catch {}
@@ -361,7 +346,7 @@ const Hero: Component = () => {
   })
   onCleanup(() => { if (pollTimer) { clearInterval(pollTimer); pollTimer = undefined } })
 
-  // Landing query
+  // Query
   async function handleQuery() {
     const q = qText().trim()
     if (!q) return
@@ -383,7 +368,8 @@ const Hero: Component = () => {
   // ══════ RENDER ══════
 
   return (
-    <div class="min-h-screen bg-bg-canvas font-sans">
+    <div class="min-h-screen bg-bg-canvas font-sans flex flex-col">
+      {/* 1. HEADER */}
       <Nav variant="hero" onLogin={() => setAuthOpen(true)} />
       <Toast />
       <AuthModal
@@ -401,55 +387,7 @@ const Hero: Component = () => {
         onClose={() => setViewDocId(null)}
       />
 
-      {/* ═══ SECTION 1: HERO INFO ═══ */}
-      <section style={{ padding: "32px 64px 24px" }}>
-        <div class="flex" style={{ gap: "64px", "align-items": "center" }}>
-          <div class="flex-1 flex flex-col" style={{ gap: "16px" }}>
-            <span style={{ "font-size": "13px", "font-weight": "500", color: "#1E3EA0", "letter-spacing": "0.05em", "text-transform": "uppercase" }}>
-              любой формат — любой размер · скоро
-            </span>
-            <h1 style={{
-              "font-size": "52px", "font-weight": "700", color: "#0A0A0A",
-              "letter-spacing": "-1.5px", "line-height": "1.08",
-            }}>
-              получите доступ к файлам из любой нейросети
-            </h1>
-            <p style={{
-              "font-size": "15px", color: "#333333", "line-height": "1.7",
-              "max-width": "520px", "margin-top": "12px",
-            }}>
-              вы загружаете файлы — мы открываем их для всех нейросетей.
-              <br />
-              один раз подключите свою и она всегда будет знать что вам нужно.
-            </p>
-            <p style={{
-              "font-family": "Inter, sans-serif",
-              "font-size": "14px", "font-weight": "500", color: "#1E3EA0",
-              background: "transparent", padding: "0",
-              "margin-top": "20px", cursor: "pointer",
-              display: "inline-block", width: "fit-content",
-              "text-decoration": "underline", "text-underline-offset": "4px",
-            }} onClick={() => { setConnectionClient("chatgpt"); setConnectionOpen(true) }}>
-              подключить нейросеть
-            </p>
-          </div>
-          <div class="shrink-0" style={{ width: "480px" }}>
-            <KnowledgeGraph
-              onNodeClick={(clientId) => {
-                const openModal = () => {
-                  setConnectionClient(clientId as any)
-                  setConnectionOpen(true)
-                }
-                if (!requireAuth(openModal)) return
-                openModal()
-              }}
-              connectedClients={[]}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 2: BLACK DROP ZONE ═══ */}
+      {/* 2. DROP ZONE */}
       <section
         class="flex flex-col items-center justify-center cursor-pointer transition-colors duration-[150ms]"
         style={{
@@ -500,14 +438,9 @@ const Hero: Component = () => {
 
         <button
           style={{
-            "margin-top": "20px",
-            border: "1px solid #333333",
-            padding: "8px 24px",
-            "font-size": "14px",
-            color: "#CCCCCC",
-            background: "transparent",
-            cursor: "pointer",
-            transition: "border-color 80ms, color 80ms",
+            "margin-top": "20px", border: "1px solid #333333", padding: "8px 24px",
+            "font-size": "14px", color: "#CCCCCC", background: "transparent",
+            cursor: "pointer", transition: "border-color 80ms, color 80ms",
           }}
           onClick={(e) => { e.stopPropagation(); fileInputRef?.click() }}
           onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#1E3EA0"; e.currentTarget.style.color = "#FFFFFF" }}
@@ -516,48 +449,24 @@ const Hero: Component = () => {
           выбрать файлы
         </button>
 
-        <div class="flex items-center" style={{
-          "margin-top": "24px", border: "1px solid #333333", padding: "12px 20px", gap: "12px",
-        }}>
-          <span class="font-mono" style={{
-            background: "#1E3EA0", color: "#FAFAFA", "font-size": "12px", "font-weight": "500", padding: "4px 10px",
-          }}>ctrl + v</span>
-          <span style={{ "font-size": "13px", color: "#999999" }}>
-            скопировали текст? просто вставьте — мы всё сделаем
-          </span>
-        </div>
-
         {dropError() && (
           <span class="text-signal-error" style={{ "font-size": "11px", "margin-top": "12px" }}>{dropError()}</span>
         )}
       </section>
 
-      {/* ═══ SECTION 3: FILE LIST ═══ */}
+      {/* Pipeline progress (current uploads) */}
       <Show when={hasFiles()}>
-        <section style={{ padding: "24px 64px 24px" }}>
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs text-text-tertiary lowercase">файлы ({files().length})</span>
-            <div class="flex items-center gap-4">
-              <Show when={processingCount() > 0}>
-                <span class="text-xs text-accent">обработка: {processingCount()}</span>
-              </Show>
-              <Show when={readyCount() > 0}>
-                <span class="text-xs text-signal-success">готово: {readyCount()}</span>
-              </Show>
-            </div>
-          </div>
-          <div class="flex flex-col border border-border-default">
+        <section style={{ padding: "16px 64px", background: "#F8F8F8", "border-bottom": "1px solid #E5E5E5" }}>
+          <div class="flex flex-col border border-border-default bg-white">
             <For each={files()}>
               {(entry) => (
                 <div
                   class={`flex flex-col gap-3 p-4 cursor-pointer border-b border-border-subtle last:border-b-0 transition-colors duration-[80ms] ${
-                    selectedId() === entry.id ? "bg-bg-canvas" : "bg-bg-surface hover:bg-bg-canvas"
+                    selectedId() === entry.id ? "bg-bg-canvas" : "hover:bg-bg-canvas"
                   }`}
                   onClick={() => {
                     setSelectedId(entry.id)
-                    if (entry.status === "ready" && entry.documentId) {
-                      setViewDocId(entry.documentId)
-                    }
+                    if (entry.status === "ready" && entry.documentId) setViewDocId(entry.documentId)
                   }}
                 >
                   <div class="flex items-center justify-between gap-4">
@@ -585,85 +494,13 @@ const Hero: Component = () => {
         </section>
       </Show>
 
-      {/* ═══ SECTION 3b: POST-UPLOAD QUERY ═══ */}
-      <Show when={readyCount() > 0}>
-        <section style={{ padding: "32px 64px 40px", background: "#FAFAFA", "border-top": "2px solid #0A0A0A" }}>
-          <div class="flex flex-col" style={{ gap: "16px" }}>
-            <span style={{ "font-size": "13px", "font-weight": "500", color: "#1E3EA0", "letter-spacing": "0.05em", "text-transform": "uppercase" }}>
-              готово — {readyCount()} {readyCount() === 1 ? "файл обработан" : "файлов обработано"}
-            </span>
-            <h2 style={{ "font-size": "28px", "font-weight": "700", color: "#0A0A0A", "letter-spacing": "-0.5px" }}>
-              попробуйте задать вопрос
-            </h2>
-            <div class="flex" style={{ gap: "8px", "margin-top": "4px" }}>
-              <input
-                type="text"
-                value={qText()}
-                onInput={(e) => setQText(e.currentTarget.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") handleQuery() }}
-                placeholder="о чём ваши документы? что в них написано?"
-                disabled={qLoading()}
-                style={{
-                  flex: "1", padding: "16px 20px", "font-size": "16px",
-                  border: "2px solid #0A0A0A", background: "#FFFFFF", color: "#0A0A0A",
-                  outline: "none", "font-family": "Inter, sans-serif",
-                }}
-                onFocus={(e) => { e.currentTarget.style.borderColor = "#1E3EA0" }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = "#0A0A0A" }}
-              />
-              <button
-                disabled={!qText().trim() || qLoading()}
-                onClick={handleQuery}
-                style={{
-                  padding: "16px 32px", "font-size": "15px", "font-weight": "600",
-                  background: qText().trim() && !qLoading() ? "#0A0A0A" : "#CCCCCC",
-                  color: "#FAFAFA", border: "none", cursor: qText().trim() && !qLoading() ? "pointer" : "default",
-                  "font-family": "Inter, sans-serif", "white-space": "nowrap",
-                  transition: "background 80ms",
-                }}
-                onMouseEnter={(e) => { if (qText().trim() && !qLoading()) e.currentTarget.style.background = "#1E3EA0" }}
-                onMouseLeave={(e) => { if (qText().trim() && !qLoading()) e.currentTarget.style.background = "#0A0A0A" }}
-              >
-                {qLoading() ? "ищем..." : "спросить"}
-              </button>
-            </div>
-            <Show when={qResult()}>
-              {(r) => (
-                <div class="flex flex-col gap-4" style={{ background: "#FFFFFF", padding: "24px", border: "1px solid #E5E5E5", "margin-top": "4px" }}>
-                  <p class="whitespace-pre-wrap" style={{ "font-size": "15px", color: "#0A0A0A", "line-height": "1.65" }}>
-                    {r().answer}
-                  </p>
-                  <Show when={r().sources.length > 0}>
-                    <div class="flex flex-col gap-2" style={{ "padding-top": "12px", "border-top": "1px solid #E5E5E5" }}>
-                      <span style={{ "font-size": "11px", "font-weight": "500", color: "#666666", "letter-spacing": "0.05em", "text-transform": "uppercase" }}>источники</span>
-                      <div class="flex flex-wrap" style={{ gap: "8px" }}>
-                        <For each={r().sources}>
-                          {(s) => (
-                            <span style={{
-                              "font-size": "12px", color: "#1E3EA0",
-                              padding: "3px 10px", border: "1px solid #C8D6F5", background: "#F0F4FD",
-                            }}>
-                              {s.document_name} · {(s.score * 100).toFixed(0)}%
-                            </span>
-                          )}
-                        </For>
-                      </div>
-                    </div>
-                  </Show>
-                </div>
-              )}
-            </Show>
-          </div>
-        </section>
-      </Show>
-
-      {/* ═══ SECTION 4: DASHBOARD ═══ */}
-      <section style={{ background: "#F2F2F2", padding: "64px" }}>
-        <div class="flex items-center justify-between" style={{ "margin-bottom": "32px" }}>
-          <h2 style={{ "font-size": "28px", "font-weight": "700", color: "#0A0A0A", "letter-spacing": "-0.5px" }}>
-            ваши документы
+      {/* 3. DOCUMENTS */}
+      <section style={{ padding: "48px 64px", flex: "1" }}>
+        <div class="flex items-center justify-between" style={{ "margin-bottom": "24px" }}>
+          <h2 style={{ "font-size": "24px", "font-weight": "700", color: "#0A0A0A", "letter-spacing": "-0.5px" }}>
+            Ваши документы
           </h2>
-          <Show when={isAuthenticated()}>
+          <Show when={isAuthenticated() && landingDocs().length > 5}>
             <A href="/dashboard" style={{ "font-size": "12px", color: "#1E3EA0" }}>
               все документы →
             </A>
@@ -671,71 +508,59 @@ const Hero: Component = () => {
         </div>
 
         <Show
-          when={isAuthenticated()}
+          when={isAuthenticated() && landingDocs().length > 0}
           fallback={
-            <div class="flex flex-col items-center gap-6" style={{ padding: "48px 0" }}>
-              <div class="flex w-full" style={{ gap: "16px" }}>
-                {(["документы", "фрагменты", "запросы"] as const).map((label) => (
-                  <div class="flex-1 flex flex-col" style={{ background: "#FAFAFA", padding: "20px 24px", gap: "4px" }}>
-                    <span style={{ "font-size": "32px", "font-weight": "700", color: "#CCCCCC" }}>—</span>
-                    <span style={{ "font-size": "12px", "font-weight": "500", color: "#666666" }}>{label}</span>
-                  </div>
-                ))}
-              </div>
-              <p style={{ "font-size": "12px", color: "#666666" }}>загрузите первый файл чтобы создать базу знаний</p>
+            <div class="flex flex-col items-center gap-4" style={{ padding: "48px 0" }}>
+              <span style={{ "font-size": "14px", color: "#999999" }}>
+                {isAuthenticated() ? "загрузите первый файл чтобы создать базу знаний" : "войдите чтобы увидеть ваши документы"}
+              </span>
             </div>
           }
         >
-          {/* Stats */}
+          {/* Stats row */}
           <div class="flex" style={{ gap: "16px", "margin-bottom": "24px" }}>
             {([
-              [landingDocs().length, "документы"],
-              [landingChunks(), "фрагменты"],
-              [0, "запросы"],
+              [landingDocs().length, "документов"],
+              [landingChunks(), "фрагментов"],
             ] as [number, string][]).map(([v, l]) => (
-              <div class="flex-1 flex flex-col" style={{ background: "#FAFAFA", padding: "20px 24px", gap: "4px" }}>
-                <span style={{ "font-size": "32px", "font-weight": "700", "line-height": "1", color: "#0A0A0A" }}>{v}</span>
-                <span style={{ "font-size": "12px", "font-weight": "500", color: "#666666" }}>{l}</span>
+              <div class="flex items-baseline gap-2" style={{ padding: "16px 20px", background: "#F8F8F8" }}>
+                <span style={{ "font-size": "28px", "font-weight": "700", "line-height": "1", color: "#0A0A0A" }}>{v}</span>
+                <span style={{ "font-size": "12px", color: "#666666" }}>{l}</span>
               </div>
             ))}
           </div>
 
-          {/* Compact doc list */}
-          <Show when={landingDocs().length > 0}>
-            <div style={{ background: "#FAFAFA" }}>
-              <div class="flex items-center" style={{ padding: "10px 16px", "border-bottom": "1px solid #E5E5E5" }}>
-                <span class="flex-1" style={{ "font-size": "11px", color: "#666666", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>документ</span>
-                <span style={{ width: "80px", "font-size": "11px", color: "#666666", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>фрагменты</span>
-                <span style={{ width: "100px", "font-size": "11px", color: "#666666", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>статус</span>
-              </div>
-              <For each={landingDocs().slice(0, 5)}>
-                {(doc) => (
-                  <div
-                    class="flex items-center cursor-pointer transition-colors duration-[80ms] hover:bg-bg-elevated"
-                    style={{ padding: "10px 16px", "border-bottom": "1px solid #F2F2F2" }}
-                    onClick={() => setViewDocId(doc.id)}
-                  >
-                    <span class="flex-1 truncate" style={{ "font-size": "14px", color: "#0A0A0A" }}>{doc.name}</span>
-                    <span style={{ width: "80px", "font-size": "12px", color: "#0A0A0A" }}>{doc.chunk_count}</span>
-                    <span style={{ width: "100px" }}><Badge variant={statusToVariant(doc.status)} /></span>
-                  </div>
-                )}
-              </For>
+          {/* Document table */}
+          <div style={{ background: "#FAFAFA", border: "1px solid #E5E5E5" }}>
+            <div class="flex items-center" style={{ padding: "10px 16px", "border-bottom": "1px solid #E5E5E5" }}>
+              <span class="flex-1" style={{ "font-size": "11px", color: "#666666", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>документ</span>
+              <span style={{ width: "80px", "font-size": "11px", color: "#666666", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>фрагменты</span>
+              <span style={{ width: "100px", "font-size": "11px", color: "#666666", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>статус</span>
             </div>
-          </Show>
+            <For each={landingDocs().slice(0, 10)}>
+              {(doc) => (
+                <div
+                  class="flex items-center cursor-pointer transition-colors duration-[80ms] hover:bg-white"
+                  style={{ padding: "10px 16px", "border-bottom": "1px solid #F2F2F2" }}
+                  onClick={() => setViewDocId(doc.id)}
+                >
+                  <span class="flex-1 truncate" style={{ "font-size": "14px", color: "#0A0A0A" }}>{doc.name}</span>
+                  <span style={{ width: "80px", "font-size": "12px", color: "#0A0A0A" }}>{doc.chunk_count}</span>
+                  <span style={{ width: "100px" }}><Badge variant={statusToVariant(doc.status)} /></span>
+                </div>
+              )}
+            </For>
+          </div>
 
-          {/* Inline query */}
-          <div class="flex flex-col" style={{ "margin-top": "24px", gap: "12px" }}>
-            <span style={{ "font-size": "11px", color: "#666666", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
-              вопрос по документам
-            </span>
+          {/* Query */}
+          <div class="flex flex-col" style={{ "margin-top": "24px", gap: "8px" }}>
             <div class="flex" style={{ gap: "8px" }}>
               <input
                 type="text"
                 value={qText()}
                 onInput={(e) => setQText(e.currentTarget.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") handleQuery() }}
-                placeholder="задайте вопрос..."
+                placeholder="задайте вопрос по документам..."
                 disabled={qLoading()}
                 class="flex-1 px-4 py-3 text-sm border border-border-default bg-bg-canvas text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-accent"
               />
@@ -749,14 +574,17 @@ const Hero: Component = () => {
             <Show when={qResult()}>
               {(r) => (
                 <div class="flex flex-col gap-3" style={{ background: "#FAFAFA", padding: "16px", border: "1px solid #E5E5E5" }}>
-                  <p class="whitespace-pre-wrap" style={{ "font-size": "12px", color: "#0A0A0A", "line-height": "1.5" }}>
+                  <p class="whitespace-pre-wrap" style={{ "font-size": "14px", color: "#0A0A0A", "line-height": "1.6" }}>
                     {r().answer}
                   </p>
                   <Show when={r().sources.length > 0}>
-                    <div class="flex flex-col gap-1">
-                      <span style={{ "font-size": "10px", color: "#666666" }}>источники:</span>
+                    <div class="flex flex-wrap" style={{ gap: "6px", "padding-top": "8px", "border-top": "1px solid #E5E5E5" }}>
                       <For each={r().sources}>
-                        {(s) => <span style={{ "font-size": "10px", color: "#1E3EA0" }}>{s.document_name} ({(s.score * 100).toFixed(0)}%)</span>}
+                        {(s) => (
+                          <span style={{ "font-size": "11px", color: "#1E3EA0", padding: "2px 8px", border: "1px solid #C8D6F5", background: "#F0F4FD" }}>
+                            {s.document_name} · {(s.score * 100).toFixed(0)}%
+                          </span>
+                        )}
                       </For>
                     </div>
                   </Show>
@@ -767,70 +595,56 @@ const Hero: Component = () => {
         </Show>
       </section>
 
-      {/* ═══ SECTION 5: CONNECTION ═══ */}
-      <section style={{ padding: "64px" }}>
+      {/* 4. CONNECTION */}
+      <section style={{ padding: "48px 64px", "border-top": "1px solid #E5E5E5" }}>
         <div class="flex" style={{ gap: "64px" }}>
-          <div class="flex-1 flex flex-col" style={{ gap: "24px" }}>
-            <h2 style={{ "font-size": "28px", "font-weight": "700", color: "#0A0A0A", "letter-spacing": "-0.5px" }}>подключение</h2>
+          <div class="flex-1 flex flex-col" style={{ gap: "20px" }}>
+            <h2 style={{ "font-size": "24px", "font-weight": "700", color: "#0A0A0A", "letter-spacing": "-0.5px" }}>Подключение</h2>
             <p style={{ "font-size": "15px", color: "#666666", "line-height": "1.6" }}>
               откройте ChatGPT, Claude или Cursor — и спросите по вашим файлам
             </p>
-            <div class="flex flex-col" style={{ gap: "20px" }}>
+            <div class="flex flex-col" style={{ gap: "16px" }}>
               {([
-                ["1", "скопируйте ссылку подключения", "нажмите copy справа — ссылка скопируется"],
-                ["2", "вставьте в настройки нейросети", "нажмите на нужную нейросеть выше — покажем куда вставить"],
-                ["3", "спросите что-нибудь", "«какие документы загружены?» — если ответит, всё работает"],
+                ["1", "скопируйте ссылку подключения", "нажмите «скопировать» справа"],
+                ["2", "вставьте в настройки нейросети", "нажмите на нужную нейросеть ниже — покажем куда"],
+                ["3", "спросите что-нибудь", "«какие документы загружены?»"],
               ] as const).map(([num, title, desc]) => (
-                <div class="flex" style={{ gap: "16px" }}>
-                  <span style={{
-                    "font-size": "16px", "font-weight": "700", color: "#1E3EA0",
-                    width: "28px", "text-align": "center", "flex-shrink": "0",
-                  }}>{num}</span>
-                  <div class="flex flex-col" style={{ gap: "4px" }}>
-                    <span style={{ "font-size": "16px", "font-weight": "600", color: "#0A0A0A" }}>{title}</span>
-                    <span style={{ "font-size": "14px", color: "#666666" }}>{desc}</span>
+                <div class="flex" style={{ gap: "12px" }}>
+                  <span style={{ "font-size": "14px", "font-weight": "700", color: "#1E3EA0", width: "20px", "flex-shrink": "0" }}>{num}</span>
+                  <div class="flex flex-col" style={{ gap: "2px" }}>
+                    <span style={{ "font-size": "14px", "font-weight": "600", color: "#0A0A0A" }}>{title}</span>
+                    <span style={{ "font-size": "13px", color: "#666666" }}>{desc}</span>
                   </div>
                 </div>
               ))}
             </div>
-            <A href="/api" style={{ "font-size": "12px", color: "#1E3EA0", "margin-top": "8px" }}>
-              подробная инструкция →
-            </A>
           </div>
 
-          <div class="flex flex-col shrink-0" style={{ width: "480px", gap: "24px" }}>
-            {/* Instruction for AI */}
+          <div class="flex flex-col shrink-0" style={{ width: "440px", gap: "20px" }}>
+            {/* MCP URL card */}
             <div class="flex flex-col" style={{ gap: "8px" }}>
               <span style={{ "font-size": "11px", color: "#666666", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
-                скинь это своей нейросети
+                ссылка подключения
               </span>
-              <div style={{ border: "2px solid #1E3EA0", position: "relative" }}>
-                <p style={{
-                  padding: "24px 24px 20px", "font-size": "15px", color: "#0A0A0A",
-                  "line-height": "1.7",
-                }}>
-                  Подключи мою базу знаний Contexter.
-                  <br />Ссылка: <span class="font-mono" style={{ "font-size": "12px", color: "#1E3EA0", "word-break": "break-all" }}>{mcpUrl()}</span>
-                  <br />Это MCP-сервер. Добавь его в настройки и используй для ответов по моим документам.
-                </p>
+              <div class="flex items-center" style={{ border: "2px solid #1E3EA0", padding: "12px 16px", gap: "12px" }}>
+                <span class="font-mono flex-1 truncate" style={{ "font-size": "12px", color: "#1E3EA0" }}>{mcpUrl()}</span>
                 <button
-                  onClick={() => copyText(`Подключи мою базу знаний Contexter.\nСсылка: ${mcpUrl()}\nЭто MCP-сервер. Добавь его в настройки и используй для ответов по моим документам.`)}
+                  onClick={() => copyText(mcpUrl())}
                   style={{
-                    position: "absolute", top: "12px", right: "12px",
                     padding: "6px 16px", "font-size": "12px", "font-weight": "600", color: "#FAFAFA",
-                    background: "#1E3EA0", border: "none", cursor: "pointer",
+                    background: "#1E3EA0", border: "none", cursor: "pointer", "white-space": "nowrap",
                   }}
                 >скопировать</button>
               </div>
             </div>
 
-            {/* Or choose manually */}
-            <div class="flex flex-col" style={{ gap: "12px" }}>
-              <span style={{ "font-size": "13px", color: "#666666" }}>
-                или настройте вручную:
+            {/* Client buttons */}
+            <div class="flex flex-col" style={{ gap: "8px" }}>
+              <span style={{ "font-size": "11px", color: "#666666", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
+                инструкция для
               </span>
               <div class="flex items-center flex-wrap" style={{ gap: "8px" }}>
-                {([["chatgpt", "ChatGPT"], ["claude-web", "Claude.ai"], ["claude-desktop", "Claude Desktop"], ["perplexity", "Perplexity"], ["cursor", "Cursor"], ["antigravity", "Antigravity"]] as const).map(([id, name]) => (
+                {([["chatgpt", "ChatGPT"], ["claude-web", "Claude.ai"], ["claude-desktop", "Claude Desktop"], ["perplexity", "Perplexity"], ["cursor", "Cursor"]] as const).map(([id, name]) => (
                   <button
                     class="font-mono"
                     style={{
@@ -849,27 +663,22 @@ const Hero: Component = () => {
         </div>
       </section>
 
-      {/* ═══ TRUST FOOTER ═══ */}
-      <footer style={{ "border-top": "1px solid #E5E5E5", padding: "20px 64px" }}>
+      {/* 5. FOOTER */}
+      <footer style={{ "border-top": "1px solid #E5E5E5", padding: "20px 64px", "margin-top": "auto" }}>
         <div class="flex items-center flex-wrap" style={{ gap: "32px" }}>
-          <span style={{ "font-size": "12px", color: "#666666", "line-height": "1.5" }}>
-            ваши файлы хранятся на серверах Cloudflare в Европе
+          <span style={{ "font-size": "12px", color: "#666666" }}>
+            ваши файлы хранятся на серверах в Европе
           </span>
-          <span style={{ "font-size": "12px", color: "#666666", "line-height": "1.5" }}>
+          <span style={{ "font-size": "12px", color: "#666666" }}>
             данные не используются для обучения ИИ
           </span>
-          <span style={{ "font-size": "12px", color: "#666666", "line-height": "1.5" }}>
+          <span style={{ "font-size": "12px", color: "#666666" }}>
             вы можете удалить все файлы в любой момент
           </span>
-          <span style={{ "flex": "1" }} />
-          <a
-            href="mailto:support@contexter.dev"
-            style={{ "font-size": "12px", color: "#666666", "text-decoration": "none", "white-space": "nowrap" }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "#1E3EA0" }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "#666666" }}
-          >
-            support@contexter.dev
-          </a>
+          <span style={{ flex: "1" }} />
+          <span style={{ "font-size": "12px", color: "#999999" }}>
+            © 2026 Contexter
+          </span>
         </div>
       </footer>
     </div>

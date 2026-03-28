@@ -7,6 +7,7 @@ import { fileTypeFromBuffer } from "file-type"
 import { runPipelineAsync, createPendingJobs } from "../services/pipeline"
 import { getPipelineQueue } from "../services/queue"
 import { resolveAuth } from "../services/auth"
+import { getOrCreateSubscription, getUserStorageUsed } from "../services/billing"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
 
@@ -77,6 +78,22 @@ upload.post("/", async (c) => {
   const auth = await resolveAuth(sql, c.req.raw)
   if (!auth) return c.json({ error: "Unauthorized. Provide token via Bearer header or ?token= param." }, 401)
   if (auth.permission !== "read_write") return c.json({ error: "Write access required." }, 403)
+
+  // Storage limit check — enforce tier limits
+  const sub = await getOrCreateSubscription(sql, auth.userId)
+  if (sub) {
+    const storageUsed = await getUserStorageUsed(sql, auth.userId)
+    const storageLimit = Number(sub.storage_limit_bytes ?? 1073741824)
+    if (storageUsed >= storageLimit) {
+      return c.json({
+        error: "Storage limit reached. Upgrade your plan to upload more files.",
+        storageUsed,
+        storageLimit,
+        tier: sub.tier,
+        upgradeUrl: "/api/billing",
+      }, 403)
+    }
+  }
 
   // NEW-004: per-user upload rate limit — max 20 uploads per hour
   const uploadRateKey = `rate:upload:${auth.userId}`
