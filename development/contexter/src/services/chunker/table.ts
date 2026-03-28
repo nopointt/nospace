@@ -21,6 +21,7 @@ export function chunkTable(text: string, maxTokens: number = 500): Chunk[] {
         startOffset: part.offset,
         endOffset: part.offset + part.text.length,
         metadata: { type: "row" },
+        chunkType: "flat",
       })
     }
   }
@@ -53,6 +54,7 @@ export function chunkTable(text: string, maxTokens: number = 500): Chunk[] {
             type: "row",
             sheet: table.sheetName,
           },
+          chunkType: "flat",
         })
         currentRows = []
         currentTokens = headerTokens
@@ -73,6 +75,7 @@ export function chunkTable(text: string, maxTokens: number = 500): Chunk[] {
           type: "row",
           sheet: table.sheetName,
         },
+        chunkType: "flat",
       })
     }
   }

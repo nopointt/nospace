@@ -6,9 +6,12 @@ import { ChunkerService } from "./chunker"
 import type { Chunk } from "./chunker"
 import { EmbedderService } from "./embedder"
 import type { BatchEmbeddingResult } from "./embedder"
+import { CachedEmbedderService } from "./embedder/cache"
 import { VectorStoreService } from "./vectorstore"
 import type { VectorRecord } from "./vectorstore"
 import { GetObjectCommand } from "@aws-sdk/client-s3"
+import { addContextualPrefixes } from "./chunker/contextual"
+import { findNearDuplicate } from "./embedder/dedup"
 
 export interface PipelineStageResult {
   stage: string
@@ -89,7 +92,8 @@ function createServices(env: Env, sql: Sql) {
     groqApiKey: env.GROQ_API_KEY,
   })
   const chunkerService = new ChunkerService()
-  const embedderService = new EmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
+  const rawEmbedder = new EmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
+  const embedderService = new CachedEmbedderService(rawEmbedder, env.redis)
   const vectorStoreService = new VectorStoreService({ sql })
   return { parserService, chunkerService, embedderService, vectorStoreService }
 }
@@ -149,6 +153,20 @@ export async function runPipeline(
     return { documentId, stages }
   }
 
+  // F-020: contextual prefix (non-fatal — proceed without if Groq fails)
+  try {
+    const contextualizedChunks = await addContextualPrefixes(
+      parseResult.content,
+      chunks,
+      process.env["GROQ_LLM_URL"] ?? env.GROQ_API_URL,
+      env.GROQ_API_KEY,
+      env.GROQ_LLM_MODEL
+    )
+    chunks = contextualizedChunks
+  } catch (e) {
+    console.warn("contextual prefix generation failed, proceeding without:", e instanceof Error ? e.message : String(e))
+  }
+
   let embedResult: BatchEmbeddingResult
   try {
     stages[2].status = "running"
@@ -172,30 +190,62 @@ export async function runPipeline(
   try {
     stages[3].status = "running"
     const start = Date.now()
+    const resolvedUserId = userId ?? "anonymous"
 
-    const chunkRows = chunks.map((chunk) => ({
-      id: `${documentId}-${chunk.index}`,
-      document_id: documentId,
-      user_id: userId ?? "anonymous",
-      content: chunk.content,
-      chunk_index: chunk.index,
-      token_count: chunk.tokenCount,
-    }))
+    // F-028: dedup check — separate canonical from duplicate chunks
+    const canonicalRows: object[] = []
+    const duplicateRows: object[] = []
+
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i]!
+      const embedding = embedResult.embeddings[i]!.vector
+      const duplicateOf = await findNearDuplicate(sql, embedding, resolvedUserId)
+      const row = {
+        id: `${documentId}-${chunk.index}`,
+        document_id: documentId,
+        user_id: resolvedUserId,
+        content: chunk.content,
+        chunk_index: chunk.index,
+        token_count: chunk.tokenCount,
+        context_prefix: chunk.contextPrefix ?? null,
+        context_version: chunk.contextPrefix ? 1 : 0,
+        duplicate_of: duplicateOf ?? null,
+      }
+      if (duplicateOf !== null) {
+        duplicateRows.push(row)
+      } else {
+        canonicalRows.push(row)
+      }
+    }
+
+    const allRows = [...canonicalRows, ...duplicateRows]
     await sql`
-      INSERT INTO chunks ${sql(chunkRows)}
-      ON CONFLICT (id) DO UPDATE SET content = EXCLUDED.content, token_count = EXCLUDED.token_count
+      INSERT INTO chunks ${sql(allRows)}
+      ON CONFLICT (id) DO UPDATE SET
+        content = EXCLUDED.content,
+        token_count = EXCLUDED.token_count,
+        context_prefix = EXCLUDED.context_prefix,
+        context_version = EXCLUDED.context_version,
+        duplicate_of = EXCLUDED.duplicate_of
     `
 
-    const records: VectorRecord[] = chunks.map((chunk, i) => ({
-      id: `${documentId}-${chunk.index}`,
-      vector: embedResult.embeddings[i].vector,
-      metadata: { documentId, userId: userId ?? "anonymous", chunkIndex: chunk.index, content: chunk.content },
-    }))
-    await vectorStoreService.index(records)
+    // Only index canonical chunks in the vector store — skip duplicates
+    const records: VectorRecord[] = canonicalRows.map((row) => {
+      const r = row as { id: string; chunk_index: number; content: string }
+      const chunkIdx = chunks.findIndex((c) => `${documentId}-${c.index}` === r.id)
+      return {
+        id: r.id,
+        vector: embedResult.embeddings[chunkIdx]!.vector,
+        metadata: { documentId, userId: resolvedUserId, chunkIndex: r.chunk_index, content: r.content },
+      }
+    })
+    if (records.length > 0) {
+      await vectorStoreService.index(records)
+    }
 
     stages[3].status = "done"
     stages[3].durationMs = Date.now() - start
-    stages[3].data = { vectorsIndexed: records.length, ftsIndexed: records.length }
+    stages[3].data = { vectorsIndexed: records.length, duplicatesSkipped: duplicateRows.length, ftsIndexed: records.length }
   } catch (e) {
     stages[3].status = "error"
     stages[3].error = e instanceof Error ? e.message : String(e)
@@ -251,6 +301,27 @@ export async function runPipelineAsync(
     return
   }
 
+  // F-020: contextual prefix (non-fatal — reuse chunk job status slot)
+  try {
+    await updateJobStatus(sql, jobIds.chunk, "running")
+    const contextualizedChunks = await withTimeout(
+      addContextualPrefixes(
+        parseResult.content,
+        chunks,
+        process.env["GROQ_LLM_URL"] ?? env.GROQ_API_URL,
+        env.GROQ_API_KEY,
+        env.GROQ_LLM_MODEL
+      ),
+      STAGE_TIMEOUT_MS.chunk,
+      "contextual-prefix"
+    )
+    chunks = contextualizedChunks
+    await updateJobStatus(sql, jobIds.chunk, "done", 100)
+  } catch (e) {
+    await updateJobStatus(sql, jobIds.chunk, "done", 100)
+    console.warn("contextual prefix generation failed, proceeding without:", e instanceof Error ? e.message : String(e))
+  }
+
   let embedResult: BatchEmbeddingResult
   try {
     await updateJobStatus(sql, jobIds.embed, "running")
@@ -271,25 +342,56 @@ export async function runPipelineAsync(
   try {
     await updateJobStatus(sql, jobIds.index, "running")
 
-    const chunkRows = chunks.map((chunk) => ({
-      id: `${documentId}-${chunk.index}`,
-      document_id: documentId,
-      user_id: userId,
-      content: chunk.content,
-      chunk_index: chunk.index,
-      token_count: chunk.tokenCount,
-    }))
+    // F-028: dedup check — separate canonical from duplicate chunks
+    const canonicalRows: object[] = []
+    const duplicateRows: object[] = []
+
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i]!
+      const embedding = embedResult.embeddings[i]!.vector
+      const duplicateOf = await findNearDuplicate(sql, embedding, userId)
+      const row = {
+        id: `${documentId}-${chunk.index}`,
+        document_id: documentId,
+        user_id: userId,
+        content: chunk.content,
+        chunk_index: chunk.index,
+        token_count: chunk.tokenCount,
+        context_prefix: chunk.contextPrefix ?? null,
+        context_version: chunk.contextPrefix ? 1 : 0,
+        duplicate_of: duplicateOf ?? null,
+      }
+      if (duplicateOf !== null) {
+        duplicateRows.push(row)
+      } else {
+        canonicalRows.push(row)
+      }
+    }
+
+    const allRows = [...canonicalRows, ...duplicateRows]
     await sql`
-      INSERT INTO chunks ${sql(chunkRows)}
-      ON CONFLICT (id) DO UPDATE SET content = EXCLUDED.content, token_count = EXCLUDED.token_count
+      INSERT INTO chunks ${sql(allRows)}
+      ON CONFLICT (id) DO UPDATE SET
+        content = EXCLUDED.content,
+        token_count = EXCLUDED.token_count,
+        context_prefix = EXCLUDED.context_prefix,
+        context_version = EXCLUDED.context_version,
+        duplicate_of = EXCLUDED.duplicate_of
     `
 
-    const records: VectorRecord[] = chunks.map((chunk, i) => ({
-      id: `${documentId}-${chunk.index}`,
-      vector: embedResult.embeddings[i].vector,
-      metadata: { documentId, userId, chunkIndex: chunk.index, content: chunk.content },
-    }))
-    await vectorStoreService.index(records)
+    // Only index canonical chunks in the vector store — skip duplicates
+    const records: VectorRecord[] = canonicalRows.map((row) => {
+      const r = row as { id: string; chunk_index: number; content: string }
+      const chunkIdx = chunks.findIndex((c) => `${documentId}-${c.index}` === r.id)
+      return {
+        id: r.id,
+        vector: embedResult.embeddings[chunkIdx]!.vector,
+        metadata: { documentId, userId, chunkIndex: r.chunk_index, content: r.content },
+      }
+    })
+    if (records.length > 0) {
+      await vectorStoreService.index(records)
+    }
 
     await updateJobStatus(sql, jobIds.index, "done", 100)
   } catch (e) {
@@ -370,6 +472,22 @@ export async function resumePipelineFromStage(
     return
   }
 
+  // F-020: contextual prefix (non-fatal)
+  try {
+    if (startIndex <= 1) {
+      const contextualizedChunks = await addContextualPrefixes(
+        parseResult.content,
+        chunks,
+        process.env["GROQ_LLM_URL"] ?? env.GROQ_API_URL,
+        env.GROQ_API_KEY,
+        env.GROQ_LLM_MODEL
+      )
+      chunks = contextualizedChunks
+    }
+  } catch (e) {
+    console.warn("contextual prefix generation failed, proceeding without:", e instanceof Error ? e.message : String(e))
+  }
+
   let embedResult: BatchEmbeddingResult
   try {
     if (startIndex <= 2) await updateJobStatus(sql, jobIds.embed, "running")
@@ -387,25 +505,59 @@ export async function resumePipelineFromStage(
   if (startIndex <= 3) {
     try {
       await updateJobStatus(sql, jobIds.index, "running")
-      const chunkRows = chunks.map((chunk) => ({
-        id: `${documentId}-${chunk.index}`,
-        document_id: documentId,
-        user_id: userId,
-        content: chunk.content,
-        chunk_index: chunk.index,
-        token_count: chunk.tokenCount,
-      }))
+
+      // F-028: dedup check — separate canonical from duplicate chunks
+      const canonicalRows: object[] = []
+      const duplicateRows: object[] = []
+
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i]!
+        const embedding = embedResult.embeddings[i]!.vector
+        const duplicateOf = await findNearDuplicate(sql, embedding, userId)
+        const row = {
+          id: `${documentId}-${chunk.index}`,
+          document_id: documentId,
+          user_id: userId,
+          content: chunk.content,
+          chunk_index: chunk.index,
+          token_count: chunk.tokenCount,
+          context_prefix: chunk.contextPrefix ?? null,
+          context_version: chunk.contextPrefix ? 1 : 0,
+          duplicate_of: duplicateOf ?? null,
+        }
+        if (duplicateOf !== null) {
+          duplicateRows.push(row)
+        } else {
+          canonicalRows.push(row)
+        }
+      }
+
+      const allRows = [...canonicalRows, ...duplicateRows]
       await sql`
-        INSERT INTO chunks ${sql(chunkRows)}
-        ON CONFLICT (id) DO UPDATE SET content = EXCLUDED.content, token_count = EXCLUDED.token_count
+        INSERT INTO chunks ${sql(allRows)}
+        ON CONFLICT (id) DO UPDATE SET
+          content = EXCLUDED.content,
+          token_count = EXCLUDED.token_count,
+          context_prefix = EXCLUDED.context_prefix,
+          context_version = EXCLUDED.context_version,
+          duplicate_of = EXCLUDED.duplicate_of
       `
+
       // P1-011: include userId in metadata for vector scope filtering on retry
-      const records: VectorRecord[] = chunks.map((chunk, i) => ({
-        id: `${documentId}-${chunk.index}`,
-        vector: embedResult.embeddings[i].vector,
-        metadata: { documentId, userId, chunkIndex: chunk.index, content: chunk.content },
-      }))
-      await vectorStoreService.index(records)
+      // Only index canonical chunks in the vector store — skip duplicates
+      const records: VectorRecord[] = canonicalRows.map((row) => {
+        const r = row as { id: string; chunk_index: number; content: string }
+        const chunkIdx = chunks.findIndex((c) => `${documentId}-${c.index}` === r.id)
+        return {
+          id: r.id,
+          vector: embedResult.embeddings[chunkIdx]!.vector,
+          metadata: { documentId, userId, chunkIndex: r.chunk_index, content: r.content },
+        }
+      })
+      if (records.length > 0) {
+        await vectorStoreService.index(records)
+      }
+
       await updateJobStatus(sql, jobIds.index, "done", 100)
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e)

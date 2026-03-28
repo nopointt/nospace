@@ -145,6 +145,7 @@ function buildChunk(content: string, index: number, startOffset: number, section
     startOffset,
     endOffset: startOffset + content.length,
     metadata: { type: "semantic", sectionHeading },
+    chunkType: "flat",
   }
 }
 

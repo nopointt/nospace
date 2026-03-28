@@ -7,6 +7,9 @@ export function countTokens(text: string): number {
   return text.split(/\s+/).filter((w) => w.length > 0).length
 }
 
+/** Synchronous alias for countTokens — used by hierarchical chunker. */
+export const countTokensSync = countTokens
+
 /**
  * Split text into tokens (words). Returns array of words with their character offsets.
  */

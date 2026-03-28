@@ -1,6 +1,7 @@
 import type { Parser, ParserInput, ParseResult } from "./types"
 import { buildMetadata } from "./types"
 import { streamToBuffer } from "./utils"
+import { MistralOcrService, isMimeTypeSupportedByMistral } from "./mistral-ocr"
 
 /**
  * Document parser using Docling API (IBM, MIT license).
@@ -56,6 +57,51 @@ export class DoclingParser implements Parser {
 
     if (!content || content.trim().length === 0) {
       warnings.push("Docling returned empty content — file may be image-only or protected")
+    }
+
+    // F-024: Mistral OCR cloud fallback
+    // Triggers when local OCR produced empty output AND cloud fallback is enabled
+    const cloudFallbackEnabled = process.env.OCR_CLOUD_FALLBACK_ENABLED === "true"
+    const ocrFailed = !content || content.trim().length === 0
+    const mimeSupported = isMimeTypeSupportedByMistral(input.mimeType)
+
+    if (cloudFallbackEnabled && ocrFailed && mimeSupported) {
+      console.log(JSON.stringify({
+        event: "mistral_ocr_fallback_triggered",
+        fileName: input.fileName,
+        mimeType: input.mimeType,
+      }))
+
+      try {
+        const mistralApiKey = process.env.MISTRAL_API_KEY
+        if (!mistralApiKey) {
+          warnings.push("Mistral OCR fallback enabled but MISTRAL_API_KEY not set")
+        } else {
+          const mistralOcr = new MistralOcrService(mistralApiKey)
+          const fallback = await mistralOcr.ocr(buffer, input.mimeType)
+
+          if (fallback.content.trim().length > 0) {
+            console.log(JSON.stringify({
+              event: "mistral_ocr_success",
+              fileName: input.fileName,
+              pageCount: fallback.pageCount,
+              contentLength: fallback.content.length,
+            }))
+            return {
+              content: fallback.content,
+              metadata: buildMetadata(input, fallback.content, detectFormat(input.mimeType), {
+                warnings: ["Content extracted via Mistral OCR cloud fallback"],
+              }),
+            }
+          } else {
+            warnings.push("Mistral OCR also returned empty content")
+          }
+        }
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e)
+        warnings.push(`Mistral OCR fallback failed: ${msg}`)
+        console.error(JSON.stringify({ event: "mistral_ocr_fallback_failed", error: msg }))
+      }
     }
 
     return {

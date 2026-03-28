@@ -330,7 +330,7 @@ async function handleToolCall(
         const embedder = new EmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
         const vectorStore = new VectorStoreService({ sql })
         await vectorStore.initialize()
-        const llm = new LlmService(env.GROQ_API_KEY)
+        const llm = new LlmService({ apiKey: env.GROQ_API_KEY, model: env.GROQ_LLM_MODEL ?? "llama-3.1-8b-instant" })
         const rag = new RagService({ llm, embedder, vectorStore })
 
         // P1-003: pass userId to scope search to this user's documents only
@@ -676,7 +676,7 @@ async function handleToolCall(
         const context = chunks.map((c, i) => `[${i + 1}] ${c.content}`).join("\n\n")
 
         // Ask LLM with document context
-        const llm = new LlmService(env.GROQ_API_KEY)
+        const llm = new LlmService({ apiKey: env.GROQ_API_KEY, model: env.GROQ_LLM_MODEL ?? "llama-3.1-8b-instant" })
         const answer = await llm.chat([
           { role: "system", content: `Answer the question using ONLY the provided document context. Document: "${doc.name}". If the answer is not in the context, say so. Answer in the user's language.` },
           { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` },
@@ -783,7 +783,7 @@ async function handleToolCall(
         // Truncate to ~6000 tokens for LLM context
         const truncated = fullText.slice(0, 24000)
 
-        const llm = new LlmService(env.GROQ_API_KEY)
+        const llm = new LlmService({ apiKey: env.GROQ_API_KEY, model: env.GROQ_LLM_MODEL ?? "llama-3.1-8b-instant" })
         const summary = await llm.chat([
           { role: "system", content: "Create a concise summary of the document. Include key points, main topics, and important details. Answer in the same language as the document." },
           { role: "user", content: truncated },

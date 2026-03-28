@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-28 (session 198 — billing, auth, deep research)
+> Last updated: 2026-03-28 (session 204 — RAG quality 22/33 features, new services/routes)
 ---
 
 ## Identity
@@ -26,7 +26,12 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Cache/sessions | Redis 7 (with password, BullMQ queue) |
 | Embeddings | Jina v4 API (truncate_dim=1024) |
 | Transcription | Groq Whisper Large v3 API |
-| RAG answer | Groq Llama 3.1 8B Instant |
+| RAG answer | Groq Llama 3.1 70B (answer) + 8B (rewrite) |
+| LLM fallback | DeepInfra (optional, DEEPINFRA_API_KEY) |
+| Reranker | Cross-encoder (RerankerService, optional) |
+| Embedding cache | Redis (CachedEmbedderService, SHA-256 keys) |
+| Circuit breakers | cockatiel v3 (groqLlmPolicy, embeddingPolicy) |
+| OCR fallback | Mistral OCR API (default-off, OCR_CLOUD_FALLBACK_ENABLED) |
 | User auth | Custom token-based (register → apiToken). OAuth 2.1 + PKCE (S256) |
 | MCP server | Streamable HTTP (JSON-RPC on /sse, 12 tools) |
 | Document parsing | Docling (IBM, MIT, Docker container) |
@@ -54,11 +59,12 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 |---|---|
 | Project root | `nospace/development/contexter/` |
 | Source code | `development/contexter/src/` |
-| Services | `src/services/` (parsers, chunker, embedder, vectorstore, rag, auth, pipeline, llm, queue) |
-| Routes | `src/routes/` (upload, query, status, auth, dev, mcp-remote, health, retry, documents, pipeline, oauth) |
+| Services | `src/services/` (parsers, chunker, embedder, vectorstore, rag, auth, pipeline, llm, reranker, resilience, feedback-decay, evaluation/) |
+| Routes | `src/routes/` (upload, query, status, auth, dev, mcp-remote, health, retry, documents, pipeline, oauth, feedback, metrics, maintenance) |
+| Eval scripts | `evaluation/` (run-eval.ts, generate-synthetic.ts, check-stale.ts) |
 | Frontend | `development/contexter/web/` (SolidJS SPA) |
 | Dockerfile | `development/contexter/Dockerfile` (bun + ffmpeg) |
-| PG migrations | `development/contexter/drizzle-pg/` (2 files) |
+| PG migrations | `development/contexter/drizzle-pg/` (0000–0010, 11 files) |
 | Memory | `development/contexter/memory/` |
 
 ## Deployed
@@ -115,8 +121,9 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 ## Pipeline
 
 ```
-file → parse (Docling/TextParser/AudioParser/VideoParser) → chunk (semantic/table/timestamp) → embed (Jina v4) → index (pgvector + tsvector auto)
-query → rewrite (Groq LLM) → search (tsvector ∥ pgvector → RRF) → context → Groq LLM → answer
+file → parse (Docling/MistralOCR/TextParser/AudioParser/VideoParser) → chunk (hierarchical/semantic/table/timestamp) → contextual prefix (Groq) → dedup check (pgvector 0.98) → embed (Jina v4, CachedEmbedderService) → index (pgvector + tsvector)
+query → rewrite (Groq 8B) → embed → search (tsvector ∥ pgvector → convex fusion) → rerank (CrossEncoder) → MMR diversity → resolveParents → context → Groq 70B → answer (SSE stream)
+eval: proxy metrics (ROUGE-L) + LLM eval (RAGAS: claim→verdict→relevancy) + offline eval pipeline
 ```
 
 Job queue: BullMQ (Redis) → 3 retries, 1/5/15 min backoff, dead letter after 3 failures.
@@ -125,9 +132,10 @@ Job queue: BullMQ (Redis) → 3 retries, 1/5/15 min backoff, dead letter after 3
 
 PDF, DOCX, XLSX, PPTX, ODS, CSV, JSON, TXT, MD, HTML, Images (PNG/JPG/WebP/SVG), Audio (MP3/WAV/M4A/OGG), Video (MP4/MOV/WebM → audio extraction), YouTube URL (subtitles)
 
-## PG Schema (7 tables)
+## PG Schema (8 tables)
 
-users (+ telegram_id, google_id, avatar_url), documents, chunks, jobs, shares, subscriptions, payments
+users (+ telegram_id, google_id, avatar_url), documents, chunks (+ parentId/chunkType/sectionHeading/pageNumber/contextPrefix/duplicateOf/feedbackPos/feedbackNeg/feedbackScore), jobs, shares, subscriptions, payments, feedback
+eval_metrics + eval_metrics_daily_agg (proxy evaluation tables)
 
 15 indexes: PK + unique + btree (user_id, document_id, status) + GIN (tsv) + HNSW (embedding cosine)
 

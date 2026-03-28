@@ -67,7 +67,7 @@ dev.post("/query", async (c) => {
 
   const embedder = new EmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
   const vectorStore = new VectorStoreService({ sql })
-  const llm = new LlmService(env.GROQ_API_KEY)
+  const llm = new LlmService({ apiKey: env.GROQ_API_KEY, model: env.GROQ_LLM_MODEL ?? "llama-3.1-8b-instant" })
   const rag = new RagService({
     llm,
     embedder,

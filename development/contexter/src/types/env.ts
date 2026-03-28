@@ -14,4 +14,12 @@ export interface Env {
   DOCLING_URL: string
   BASE_URL: string
   ENVIRONMENT: string
+  // F-024: Mistral OCR cloud fallback — opt-in only
+  OCR_CLOUD_FALLBACK_ENABLED?: string
+  MISTRAL_API_KEY?: string
+  // F-012: DeepInfra fallback provider — optional
+  DEEPINFRA_API_KEY?: string
+  // F-015: model split — optional, defaults applied in LlmService
+  GROQ_REWRITE_MODEL?: string
+  GROQ_ANSWER_MODEL?: string
 }

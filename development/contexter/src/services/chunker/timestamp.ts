@@ -58,6 +58,7 @@ function buildTimestampChunk(segments: TimestampedSegment[], index: number): Chu
       startTime: segments[0].startTime,
       endTime: segments[segments.length - 1].endTime,
     },
+    chunkType: "flat",
   }
 }
 
@@ -117,6 +118,7 @@ function chunkByDuration(text: string, maxTokens: number): Chunk[] {
         startOffset: offset,
         endOffset: offset + content.length,
         metadata: { type: "timestamp" },
+        chunkType: "flat",
       })
       offset += content.length + 1
       currentSentences = []
@@ -136,6 +138,7 @@ function chunkByDuration(text: string, maxTokens: number): Chunk[] {
       startOffset: offset,
       endOffset: offset + content.length,
       metadata: { type: "timestamp" },
+      chunkType: "flat",
     })
   }
 

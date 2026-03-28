@@ -1,7 +1,7 @@
 ---
 # contexter-gtm.md — CTX-08 GTM Strategy & Positioning
 > Layer: L3 | Epic: CTX-08 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-28 (session 201 — spec review, F-011 implemented)
+> Last updated: 2026-03-28 (session 204 — RAG quality Wave 1-4, 22/33 features verified)
 ---
 
 ## Goal
@@ -73,8 +73,22 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - [x] Write implementation plan from research
 - [x] Spec review (Opus): 2 CRITICAL + 5 HIGH fixed, all 10 specs ready for G3
 - [x] F-011 structure-aware chunking implemented (Wave 1E)
-- [ ] Implement remaining Wave 1 (F-001–F-005, F-008, F-010, F-013, F-022, F-023)
-- [ ] Implement Wave 2–4 (F-006, F-007, F-009, F-012–F-033)
+- [x] Implement remaining Wave 1 (F-001–F-005, F-008, F-010, F-013, F-022, F-023) ✅ session 204
+- [x] Implement Wave 2 (F-006, F-007, F-009, F-017, F-020, F-021, F-024, F-028) ✅ session 204
+- [x] Implement Wave 3 (F-030, F-031, F-032, F-023) ✅ session 204
+- [x] F-012/014/015/016 LLM provider abstraction + SSE streaming ✅ implemented, Schlemmer G2 pending
+- [ ] Schlemmer G2: verify F-012/014/015/016 + resolveParents
+- [ ] F-018 HyDE (Mies K)
+- [ ] F-019 query decomposition (Mies K)
+- [ ] F-025 NLI hallucination detection (Mies M)
+- [ ] F-026 confidence scoring (Mies M)
+- [ ] F-027 source attribution (Mies R, after F-025+F-026)
+- [ ] F-029 BM25 conditional
+- [ ] F-033 eval dashboard (after F-032)
+- [ ] F-031 query.ts sampling enqueue (collision-blocked)
+- [ ] vectorstore/index.ts:80-84 immutability fix (F-030 MEDIUM)
+- [ ] Build + deploy dist/index.js (stale since 2026-03-27)
+- [ ] Fix JINA_DIMENSIONS stale comment in types.ts (1024 → 512)
 
 ### Phase 6: Iteration (open)
 - [ ] Landing page copy/design iterations based on feedback

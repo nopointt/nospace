@@ -20,6 +20,11 @@ import { oauth } from "./routes/oauth"
 import { billing } from "./routes/billing"
 import { webhooks } from "./routes/webhooks"
 import { authSocial } from "./routes/auth-social"
+import { metrics } from "./routes/metrics"
+import { startMaintenanceWorker, shutdownMaintenanceQueue } from "./routes/maintenance"
+import { feedbackRouter } from "./routes/feedback"
+import { startFeedbackDecayWorker, scheduleFeedbackDecay } from "./services/feedback-decay"
+import { startLlmEvalWorker, shutdownLlmEvalQueue } from "./services/evaluation/llm-eval"
 
 // P3-015: validate required env vars at startup — fail fast with clear message
 const REQUIRED_ENV = [
@@ -206,6 +211,8 @@ app.route("/api/pipeline", pipeline)
 app.route("/api/billing", billing)
 app.route("/webhooks", webhooks)
 app.route("/dev", dev)
+app.route("/api/metrics", metrics)
+app.route("/api/feedback", feedbackRouter)
 app.route("/", oauth)
 
 // --- Start BullMQ pipeline worker ---
@@ -217,9 +224,40 @@ try {
   console.error("Pipeline worker failed to start — jobs will use direct fallback:", e instanceof Error ? e.message : String(e))
 }
 
+// F-013: start maintenance worker (retention cron)
+let maintenanceWorker: ReturnType<typeof startMaintenanceWorker> | null = null
+try {
+  maintenanceWorker = startMaintenanceWorker(process.env.REDIS_URL ?? "redis://localhost:6379", sql)
+  console.log("Maintenance worker started")
+} catch (e) {
+  console.error("Maintenance worker failed to start:", e instanceof Error ? e.message : String(e))
+}
+
+// F-030: start feedback decay worker (daily 02:00 UTC cron)
+let feedbackDecayWorker: Awaited<ReturnType<typeof startFeedbackDecayWorker>> | null = null
+try {
+  feedbackDecayWorker = startFeedbackDecayWorker(process.env.REDIS_URL ?? "redis://localhost:6379", sql)
+  await scheduleFeedbackDecay(process.env.REDIS_URL ?? "redis://localhost:6379")
+  console.log("Feedback decay worker started")
+} catch (e) {
+  console.error("Feedback decay worker failed to start:", e instanceof Error ? e.message : String(e))
+}
+
+// F-031: start LLM eval worker (sampled evaluation — concurrency 1, Groq rate-limit aware)
+let llmEvalWorker: ReturnType<typeof startLlmEvalWorker> | null = null
+try {
+  llmEvalWorker = startLlmEvalWorker(process.env.REDIS_URL ?? "redis://localhost:6379", sql)
+  console.log("LLM eval worker started (concurrency: 1)")
+} catch (e) {
+  console.error("LLM eval worker failed to start:", e instanceof Error ? e.message : String(e))
+}
+
 process.on("SIGTERM", async () => {
   console.log("SIGTERM received, shutting down gracefully...")
   if (pipelineWorker) await shutdownQueue(pipelineWorker)
+  if (maintenanceWorker) await shutdownMaintenanceQueue(maintenanceWorker)
+  if (feedbackDecayWorker) await feedbackDecayWorker.close()
+  if (llmEvalWorker) await shutdownLlmEvalQueue(llmEvalWorker)
   await sql.end()
   process.exit(0)
 })
