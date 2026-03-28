@@ -28,7 +28,7 @@ async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
     // Token expired or invalid — clear auth and reload
     localStorage.removeItem("contexter_auth")
     window.location.href = "/"
-    throw new Error("сессия истекла — войдите снова")
+    throw new Error("Сессия истекла — войдите снова")
   }
 
   if (!res.ok) {

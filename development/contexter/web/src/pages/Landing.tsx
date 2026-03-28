@@ -47,19 +47,19 @@ const LandingNav: Component<{ onCTA: () => void }> = (props) => (
           href="#how"
           class="text-[14px] text-[#808080] hover:text-[#0A0A0A] transition-colors duration-[80ms]"
         >
-          как это работает
+          Как это работает
         </a>
         <a
           href="#features"
           class="text-[14px] text-[#808080] hover:text-[#0A0A0A] transition-colors duration-[80ms]"
         >
-          возможности
+          Возможности
         </a>
         <a
           href="#pricing"
           class="text-[14px] text-[#808080] hover:text-[#0A0A0A] transition-colors duration-[80ms]"
         >
-          цены
+          Цены
         </a>
         <a
           href="#faq"
@@ -73,7 +73,7 @@ const LandingNav: Component<{ onCTA: () => void }> = (props) => (
         onClick={props.onCTA}
         class="bg-[#1E3EA0] text-white text-[14px] font-semibold px-5 py-2 hover:bg-[#162f78] active:bg-[#0f2260] transition-colors duration-[80ms] ml-auto"
       >
-        попробовать бесплатно
+        Попробовать бесплатно
       </button>
     </div>
   </nav>
@@ -98,7 +98,7 @@ const TrustBar: Component = () => (
       <p
         class="text-center text-[11px] md:text-[13px] text-[#999] mb-4 md:mb-5 uppercase tracking-widest"
       >
-        работает со всеми нейросетями, которые вы уже используете
+        Работает со всеми нейросетями, которые вы уже используете
       </p>
       <div class="flex items-center justify-center flex-wrap" style={{ gap: "20px" }}>
         <For each={AI_LOGOS}>
@@ -496,15 +496,15 @@ const FinalCTA: Component<{ onCTA: () => void }> = (props) => (
 // ─── Footer ───────────────────────────────────────────────────────────────
 
 const FOOTER_PRODUCT_LINKS = [
-  { label: "как это работает", href: "#how" },
-  { label: "возможности", href: "#features" },
-  { label: "цены", href: "#pricing" },
+  { label: "Как это работает", href: "#how" },
+  { label: "Возможности", href: "#features" },
+  { label: "Цены", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
 ]
 
 const FOOTER_COMPANY_LINKS = [
-  { label: "политика конфиденциальности", href: "#" },
-  { label: "условия использования", href: "#" },
+  { label: "Политика конфиденциальности", href: "#" },
+  { label: "Условия использования", href: "#" },
 ]
 
 const Footer: Component = () => (
@@ -586,7 +586,7 @@ const HeroSection: Component<{ onCTA: () => void }> = (props) => (
         <p
           class="text-[15px] md:text-[17px] text-[#555] leading-[1.65] max-w-[560px]"
         >
-          Загрузи документы один раз — и ChatGPT, Claude, Gemini автоматически знают весь контекст. Принимаем аудио, видео, ссылки, пдф и другие форматы без ограничений на размер.
+          Загрузи документы один раз — и ChatGPT, Claude, Gemini автоматически знают весь контекст. Принимаем аудио, видео, ссылки, PDF и другие форматы без ограничений на размер.
         </p>
 
         <div class="flex flex-col items-center" style={{ gap: "12px" }}>

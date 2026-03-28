@@ -40,7 +40,7 @@ const SELECTION_CARDS: SelectionCard[] = [
   {
     id: "claude",
     label: "Claude",
-    subtitle: "от Anthropic",
+    subtitle: "От Anthropic",
     plan: "Нужен Pro, Team или Enterprise план (или бесплатно через Desktop)",
     iconBg: "#CC785C",
     iconLabel: "C",
@@ -156,7 +156,7 @@ function makeClients(token: string): ClientInfo[] {
       transport: "нативный",
       steps: [
         { action: "Settings → MCP Servers", detail: "Откройте perplexity.ai → Settings (⚙) → MCP Servers" },
-        { action: "Add Server → вставьте URL", detail: "Нажмите Add Server. Имя: Contexter. URL: вставьте ссылку выше" },
+        { action: "Add Server → Вставьте URL", detail: "Нажмите Add Server. Имя: Contexter. URL: вставьте ссылку выше" },
         { action: "Спросите что-нибудь", detail: "В новом чате Perplexity спросите по вашим документам" },
       ],
       config: null,

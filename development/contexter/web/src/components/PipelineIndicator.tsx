@@ -15,11 +15,11 @@ interface PipelineIndicatorProps {
 }
 
 const STAGE_LABELS: Record<string, string> = {
-  parse: "извлечение текста",
-  chunk: "разбивка на фрагменты",
-  embed: "создание индекса",
-  index: "сохранение",
-  transcribe: "расшифровка аудио",
+  parse: "Извлечение текста",
+  chunk: "Разбивка на фрагменты",
+  embed: "Создание индекса",
+  index: "Сохранение",
+  transcribe: "Расшифровка аудио",
 }
 
 const statusStyles: Record<StageStatus, { dot: string; text: string; weight: string }> = {
@@ -42,7 +42,7 @@ const PipelineIndicator: Component<PipelineIndicatorProps> = (props) => {
               )}
               <div class="flex items-center gap-2">
                 <span class={`w-2 h-2 rounded-full shrink-0 ${style().dot}`} />
-                <span class={`font-mono text-xs lowercase whitespace-nowrap ${style().text} ${style().weight}`}>
+                <span class={`font-mono text-xs whitespace-nowrap ${style().text} ${style().weight}`}>
                   {STAGE_LABELS[stage.name] ?? stage.name}
                   {stage.status === "done" && stage.duration != null && (
                     <span class="text-text-tertiary font-normal ml-1">

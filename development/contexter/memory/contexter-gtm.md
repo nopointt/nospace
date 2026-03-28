@@ -1,7 +1,7 @@
 ---
 # contexter-gtm.md — CTX-08 GTM Strategy & Positioning
 > Layer: L3 | Epic: CTX-08 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-28 (session 206 — all fixes deployed, 32/33 features live, F-029 BM25 deferred PG17)
+> Last updated: 2026-03-29 (session 207 — capitalization audit 12/12 complete, deployed)
 ---
 
 ## Goal

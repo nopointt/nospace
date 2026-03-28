@@ -14,7 +14,7 @@ const Nav: Component<NavProps> = (props) => {
   const navigate = useNavigate()
 
   const linkClass = (path: string) =>
-    `text-[14px] lowercase tracking-wide transition-colors duration-[80ms] ${
+    `text-[14px] tracking-wide transition-colors duration-[80ms] ${
       location.pathname === path
         ? "text-text-primary font-medium"
         : "text-text-tertiary hover:text-text-primary"
@@ -48,23 +48,23 @@ const Nav: Component<NavProps> = (props) => {
         <div class="flex items-center gap-6">
           <div class="flex items-center" style={{ gap: "32px" }}>
             <A href="/" class={linkClass("/")}>
-              загрузить
+              Загрузить
             </A>
             <A href="/dashboard" class={linkClass("/dashboard")}>
-              документы
+              Документы
             </A>
             <A href="/api" class={linkClass("/api")}>
-              подключение
+              Подключение
             </A>
             <Show when={isAuthenticated()}>
               <A href="/settings" class={linkClass("/settings")}>
-                настройки
+                Настройки
               </A>
             </Show>
             <Show
               when={isAuthenticated()}
               fallback={
-                <Button variant="primary" onClick={() => props.onLogin ? props.onLogin() : navigate("/")}>войти</Button>
+                <Button variant="primary" onClick={() => props.onLogin ? props.onLogin() : navigate("/")}>Войти</Button>
               }
             >
               <div class="flex items-center" style={{ gap: "12px" }}>
@@ -83,9 +83,9 @@ const Nav: Component<NavProps> = (props) => {
                 </div>
                 <button
                   onClick={handleLogout}
-                  class="text-[13px] lowercase text-text-tertiary hover:text-text-primary transition-colors duration-[80ms]"
+                  class="text-[13px] text-text-tertiary hover:text-text-primary transition-colors duration-[80ms]"
                 >
-                  выход
+                  Выход
                 </button>
               </div>
             </Show>

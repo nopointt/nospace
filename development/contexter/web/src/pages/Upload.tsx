@@ -183,7 +183,7 @@ const Upload: Component = () => {
         }),
       )
     } catch (e) {
-      const message = e instanceof Error ? e.message : "ошибка загрузки"
+      const message = e instanceof Error ? e.message : "Ошибка загрузки"
       setFiles((prev) =>
         updateEntry(prev, entry.id, {
           status: "error",
@@ -212,7 +212,7 @@ const Upload: Component = () => {
         }),
       )
     } catch (e) {
-      const message = e instanceof Error ? e.message : "ошибка загрузки"
+      const message = e instanceof Error ? e.message : "Ошибка загрузки"
       setFiles((prev) =>
         updateEntry(prev, entry.id, {
           status: "error",
@@ -241,7 +241,7 @@ const Upload: Component = () => {
         if (isDuplicate(file)) {
           // Flow 4.6 — duplicate warning
           const confirmed = window.confirm(
-            `"${file.name}" уже загружен. загрузить повторно?`,
+            `"${file.name}" уже загружен. Загрузить повторно?`,
           )
           if (!confirmed) continue
         }
@@ -302,10 +302,10 @@ const Upload: Component = () => {
       const entry: FileEntry = {
         id: generateId(),
         name: isYouTube
-          ? `youtube: ${trimmed.slice(0, 60)}`
+          ? `YouTube: ${trimmed.slice(0, 60)}`
           : isUrl
-            ? `url: ${trimmed.slice(0, 60)}`
-            : `текст (${trimmed.length} символов)`,
+            ? `URL: ${trimmed.slice(0, 60)}`
+            : `Текст (${trimmed.length} символов)`,
         size: new Blob([trimmed]).size,
         mimeType: isUrl ? "text/uri-list" : "text/plain",
         documentId: null,
@@ -320,11 +320,11 @@ const Upload: Component = () => {
       setSelectedId(entry.id)
 
       if (isYouTube) {
-        showToast("youtube url добавлен", "info")
+        showToast("YouTube URL добавлен", "info")
       } else if (isUrl) {
-        showToast("url добавлен", "info")
+        showToast("URL добавлен", "info")
       } else {
-        showToast(`текст вставлен · ${trimmed.length} символов`, "success")
+        showToast(`Текст вставлен · ${trimmed.length} символов`, "success")
       }
 
       processTextUpload(trimmed, entry)
@@ -440,19 +440,19 @@ const Upload: Component = () => {
       <main class="flex-1 w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-8">
         {/* Header */}
         <div class="flex items-baseline justify-between mb-8">
-          <h1 class="font-mono text-lg font-medium text-text-primary lowercase">
-            загрузить
+          <h1 class="font-mono text-lg font-medium text-text-primary">
+            Загрузить
           </h1>
           <Show when={files().length > 0}>
             <div class="flex items-center gap-4">
               <Show when={processingCount() > 0}>
                 <span class="font-mono text-xs text-accent">
-                  обработка: {processingCount()}
+                  Обработка: {processingCount()}
                 </span>
               </Show>
               <Show when={readyCount() > 0}>
                 <span class="font-mono text-xs text-signal-success">
-                  готово: {readyCount()}
+                  Готово: {readyCount()}
                 </span>
               </Show>
             </div>
@@ -474,8 +474,8 @@ const Upload: Component = () => {
             <Show when={files().length > 0}>
               <div class="flex flex-col gap-0">
                 <div class="flex items-center justify-between mb-3">
-                  <span class="font-mono text-xs text-text-tertiary lowercase">
-                    файлы ({files().length})
+                  <span class="font-mono text-xs text-text-tertiary">
+                    Файлы ({files().length})
                   </span>
                 </div>
 
@@ -526,7 +526,7 @@ const Upload: Component = () => {
                                 variant="ghost"
                                 onClick={() => handleRetry(entry.id)}
                               >
-                                повторить
+                                Повторить
                               </Button>
                             </Show>
                           </div>
@@ -546,8 +546,8 @@ const Upload: Component = () => {
                 when={selectedEntry()}
                 fallback={
                   <div class="border border-border-default bg-bg-surface p-8 flex items-center justify-center min-h-[300px]">
-                    <span class="font-mono text-xs text-text-disabled lowercase">
-                      выберите файл для предпросмотра
+                    <span class="font-mono text-xs text-text-disabled">
+                      Выберите файл для предпросмотра
                     </span>
                   </div>
                 }
@@ -556,8 +556,8 @@ const Upload: Component = () => {
                   <div class="flex flex-col gap-4">
                     {/* File info */}
                     <div class="flex flex-col gap-2">
-                      <span class="font-mono text-xs text-text-tertiary lowercase">
-                        предпросмотр
+                      <span class="font-mono text-xs text-text-tertiary">
+                        Предпросмотр
                       </span>
                       <div class="flex flex-col gap-1">
                         <span class="font-mono text-sm text-text-primary font-medium truncate">
@@ -576,8 +576,8 @@ const Upload: Component = () => {
 
                     {/* Pipeline status */}
                     <div class="flex flex-col gap-2">
-                      <span class="font-mono text-xs text-text-tertiary lowercase">
-                        статус
+                      <span class="font-mono text-xs text-text-tertiary">
+                        Статус
                       </span>
                       <Badge variant={fileBadgeVariant(entry().status)} />
                       <PipelineIndicator stages={entry().stages} />
@@ -587,13 +587,13 @@ const Upload: Component = () => {
                     <Show when={entry().stats}>
                       {(stats) => (
                         <div class="flex flex-col gap-2">
-                          <span class="font-mono text-xs text-text-tertiary lowercase">
-                            статистика
+                          <span class="font-mono text-xs text-text-tertiary">
+                            Статистика
                           </span>
                           <div class="grid grid-cols-2 gap-2">
                             <div class="border border-border-default p-3">
                               <span class="font-mono text-[10px] text-text-tertiary block">
-                                чанки
+                                Чанки
                               </span>
                               <span class="font-mono text-sm text-text-primary font-medium">
                                 {stats().chunks}
@@ -601,7 +601,7 @@ const Upload: Component = () => {
                             </div>
                             <div class="border border-border-default p-3">
                               <span class="font-mono text-[10px] text-text-tertiary block">
-                                токены
+                                Токены
                               </span>
                               <span class="font-mono text-sm text-text-primary font-medium">
                                 {stats().tokens}
@@ -614,8 +614,8 @@ const Upload: Component = () => {
 
                     {/* Extraction preview */}
                     <div class="flex flex-col gap-2">
-                      <span class="font-mono text-xs text-text-tertiary lowercase">
-                        извлечённый текст
+                      <span class="font-mono text-xs text-text-tertiary">
+                        Извлечённый текст
                       </span>
                       <Show
                         when={entry().preview}
@@ -623,12 +623,12 @@ const Upload: Component = () => {
                           <div class="border border-border-default bg-bg-surface p-4 min-h-[200px] flex items-center justify-center">
                             <span class="font-mono text-[10px] text-text-disabled">
                               {entry().status === "processing" || entry().status === "uploading"
-                                ? "ожидание парсинга..."
+                                ? "Ожидание парсинга..."
                                 : entry().status === "error"
-                                  ? "ошибка извлечения"
+                                  ? "Ошибка извлечения"
                                   : entry().status === "pending"
-                                    ? "загрузка не начата"
-                                    : "предпросмотр недоступен"}
+                                    ? "Загрузка не начата"
+                                    : "Предпросмотр недоступен"}
                             </span>
                           </div>
                         }

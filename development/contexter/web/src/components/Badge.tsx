@@ -12,25 +12,25 @@ const variantStyles: Record<BadgeVariant, { border: string; dot: string; text: s
     border: "border-accent",
     dot: "bg-accent animate-pulse",
     text: "text-accent",
-    label: "обработка",
+    label: "Обработка",
   },
   ready: {
     border: "border-signal-success",
     dot: "bg-signal-success",
     text: "text-signal-success",
-    label: "готов",
+    label: "Готов",
   },
   error: {
     border: "border-signal-error",
     dot: "bg-signal-error",
     text: "text-signal-error",
-    label: "ошибка",
+    label: "Ошибка",
   },
   pending: {
     border: "border-border-default",
     dot: "bg-text-tertiary",
     text: "text-text-tertiary",
-    label: "ожидание",
+    label: "Ожидание",
   },
 }
 
@@ -41,7 +41,7 @@ const Badge: Component<BadgeProps> = (props) => {
     <span
       class={`
         inline-flex items-center gap-1.5 px-2.5 py-1
-        border font-mono text-[10px] font-medium lowercase
+        border font-mono text-[10px] font-medium
         ${style().border} ${style().text}
       `}
     >

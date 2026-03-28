@@ -33,7 +33,7 @@ const Button: Component<ButtonProps> = (props) => {
       onClick={props.onClick}
       class={`
         inline-flex items-center justify-center gap-2
-        px-4 py-2 font-mono text-sm font-medium lowercase
+        px-4 py-2 font-mono text-sm font-medium
         transition-colors duration-[80ms] ease-out
         disabled:opacity-40 disabled:cursor-not-allowed
         ${variantStyles[variant()]}
