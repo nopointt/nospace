@@ -1,0 +1,14 @@
+{
+  "id": "gs-008",
+  "question": "What is the primary function of the Contexter pipeline as mentioned in this document?",
+  "expected_answer": "This document tests Markdown parsing in the Contexter pipeline.",
+  "expected_sources": [
+    "f030b335-e6f8-4a"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

@@ -1,0 +1,14 @@
+{
+  "id": "gs-004",
+  "question": "What is the purpose of each paragraph in this section?",
+  "expected_answer": "Each paragraph is intentionally verbose to ensure the document exceeds the hierarchical chunking threshold that splits documents into parent and child chunks.",
+  "expected_sources": [
+    "d4018185-53c0-40"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

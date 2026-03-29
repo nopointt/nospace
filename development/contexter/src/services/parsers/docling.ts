@@ -1,4 +1,4 @@
-import type { Parser, ParserInput, ParseResult, ParsedImage } from "./types"
+import type { Parser, ParserInput, ParseResult, ParsedImage, DoclingElement } from "./types"
 import { buildMetadata } from "./types"
 import { streamToBuffer } from "./utils"
 import { MistralOcrService, isMimeTypeSupportedByMistral } from "./mistral-ocr"
@@ -113,10 +113,15 @@ export class DoclingParser implements Parser {
       }
     }
 
+    const jsonDoc: DoclingDocumentJson | undefined =
+      data.document?.json_content ?? data.json_content
+    const elements = jsonDoc ? extractDoclingElements(jsonDoc) : undefined
+
     return {
       content: content || "",
       metadata: buildMetadata(input, content || "", detectFormat(input.mimeType), { warnings }),
       images: images && images.length > 0 ? images : undefined,
+      doclingElements: elements && elements.length > 0 ? elements : undefined,
     }
   }
 }
@@ -161,11 +166,17 @@ interface DoclingPictureItem {
   prov?: Array<{ page_no?: number }>
 }
 
+interface DoclingTextItem {
+  text?: string
+  label?: string
+  prov?: Array<{ page_no?: number }>
+}
+
 interface DoclingDocumentJson {
   pictures?: DoclingPictureItem[]
   /** Docling may nest items under "body.children" */
   body?: { children?: DoclingPictureItem[] }
-  texts?: Array<{ text?: string; label?: string; prov?: Array<{ page_no?: number }> }>
+  texts?: DoclingTextItem[]
 }
 
 interface DoclingResponse {
@@ -249,6 +260,27 @@ function buildCaptionLookup(doc: DoclingDocumentJson): Map<number, string> {
     }
   }
   return map
+}
+
+/**
+ * Extract typed elements from Docling JSON document structure.
+ * Filters out items with no text or no label, preserving document order.
+ */
+function extractDoclingElements(doc: DoclingDocumentJson): DoclingElement[] {
+  if (!doc.texts || doc.texts.length === 0) return []
+
+  const elements: DoclingElement[] = []
+  for (const item of doc.texts) {
+    if (!item.text || !item.label) continue
+    const trimmed = item.text.trim()
+    if (trimmed.length === 0) continue
+    elements.push({
+      label: item.label,
+      text: trimmed,
+      page: item.prov?.[0]?.page_no,
+    })
+  }
+  return elements
 }
 
 function detectFormat(mimeType: string): string {

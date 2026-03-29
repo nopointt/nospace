@@ -34,10 +34,19 @@ if (!process.env.GROQ_API_KEY) {
 }
 
 const sql = postgres(process.env.DATABASE_URL, { max: 2 })
-const llm = new LlmService({
-  apiKey: process.env.GROQ_API_KEY,
-  model: "llama-3.1-8b-instant",
-})
+
+// LLM with NIM fallback — Groq free tier TPD limit often exhausted
+const llm = new LlmService(
+  { apiKey: process.env.GROQ_API_KEY, model: "llama-3.1-8b-instant", name: "Groq" },
+  process.env.NIM_API_KEY
+    ? {
+        apiKey: process.env.NIM_API_KEY,
+        model: process.env.NIM_MODEL ?? "meta/llama-3.1-8b-instant",
+        baseUrl: process.env.NIM_BASE_URL ?? "https://integrate.api.nvidia.com/v1",
+        name: "NIM",
+      }
+    : undefined,
+)
 
 interface Chunk {
   id: string

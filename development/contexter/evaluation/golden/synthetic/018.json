@@ -1,0 +1,14 @@
+{
+  "id": "gs-018",
+  "question": "What was the title of the JSON document being tested in the Contexter pipeline run with the ID 'mnc6pa4s-iw06'?",
+  "expected_answer": "JSON Format Test Document",
+  "expected_sources": [
+    "42d3c59e-caa9-4c"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

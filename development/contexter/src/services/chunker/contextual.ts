@@ -85,8 +85,8 @@ async function callGroqForPrefix(
   groqApiKey: string,
   model: string
 ): Promise<string> {
-  // Truncate to ~3000 tokens (approx 12000 chars at ~4 chars/token) to stay within context limits
-  const truncDoc = documentText.slice(0, 12000)
+  // Truncate to ~1000 tokens (approx 4000 chars) to stay within Groq Free TPM limit (6K)
+  const truncDoc = documentText.slice(0, 4000)
   const body = {
     model,
     messages: [

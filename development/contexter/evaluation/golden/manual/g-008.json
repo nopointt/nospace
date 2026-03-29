@@ -1,0 +1,9 @@
+{
+  "id": "g-008",
+  "question": "What database does Contexter use?",
+  "expected_answer": "PostgreSQL with pgvector for hybrid search.",
+  "tags": ["product-overview"],
+  "added_by": "axis",
+  "added_at": "2026-03-29T18:00:00Z",
+  "reviewed": true
+}

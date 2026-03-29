@@ -161,4 +161,21 @@ export class VectorStoreService {
       bestChildScore: Number(r.best_child_score),
     }))
   }
+
+  /**
+   * Count total children per parent for a set of parent IDs.
+   * Used by resolveParents auto-merge to compute retrieved/total ratio.
+   */
+  async fetchChildrenCountByParent(parentIds: string[]): Promise<Map<string, number>> {
+    if (parentIds.length === 0) return new Map()
+
+    const rows = await this.sql<{ parent_id: string; child_count: string }[]>`
+      SELECT parent_id, COUNT(*)::text AS child_count
+      FROM chunks
+      WHERE parent_id = ANY(${parentIds}) AND chunk_type = 'child'
+      GROUP BY parent_id
+    `
+
+    return new Map(rows.map((r) => [r.parent_id, Number(r.child_count)]))
+  }
 }

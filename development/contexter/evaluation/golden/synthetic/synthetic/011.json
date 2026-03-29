@@ -1,0 +1,14 @@
+{
+  "id": "gs-011",
+  "question": "What is the document number for this concurrent upload test?",
+  "expected_answer": "document number 1",
+  "expected_sources": [
+    "d4ea9069-d7b6-42"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

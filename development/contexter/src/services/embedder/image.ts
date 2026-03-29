@@ -59,7 +59,6 @@ export class ImageEmbedderService {
       model: JINA_CLIP_MODEL,
       input,
       dimensions: JINA_DIMENSIONS,
-      truncate_dim: JINA_DIMENSIONS,
     }
 
     const response = await fetch(this.apiUrl, {

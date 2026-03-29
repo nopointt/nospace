@@ -71,11 +71,18 @@ export async function getOrCreateSubscription(sql: Sql, userId: string) {
   `
   if (existing) return existing
 
+  // INSERT with ON CONFLICT to handle concurrent race (two requests both see "no subscription")
   const id = genId()
-  const [sub] = await sql`
+  await sql`
     INSERT INTO subscriptions (id, user_id, tier, status, storage_limit_bytes)
     VALUES (${id}, ${userId}, 'free', 'active', ${TIERS.free.storageLimitBytes})
-    RETURNING id, tier, status, storage_limit_bytes, current_period_start, current_period_end
+    ON CONFLICT (user_id) DO NOTHING
+  `
+
+  // Re-SELECT to get the row (either ours or the concurrent winner's)
+  const [sub] = await sql`
+    SELECT id, tier, status, storage_limit_bytes, current_period_start, current_period_end
+    FROM subscriptions WHERE user_id = ${userId}
   `
   return sub
 }

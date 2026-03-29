@@ -1,0 +1,14 @@
+{
+  "id": "gs-014",
+  "question": "What is the purpose of making paragraphs in the document intentionally verbose?",
+  "expected_answer": "to ensure the document exceeds the hierarchical chunking threshold that splits documents into parent and child chunks",
+  "expected_sources": [
+    "9721b9e9-effd-44"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

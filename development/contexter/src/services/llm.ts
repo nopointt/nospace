@@ -1,10 +1,14 @@
 /**
- * LLM service — OpenAI-compatible chat completions.
- * F-012: LlmProviderConfig + DeepInfra fallback on 5xx/429 exhaustion.
+ * LLM service — OpenAI-compatible chat completions with provider chain.
+ *
+ * Provider chain: Groq (primary) → NIM (fallback 1) → DeepInfra (fallback 2).
+ * On 429/5xx from any provider, the next in the chain is tried.
+ * If all providers fail, returns a context passthrough (raw retrieved text).
+ *
+ * F-012: provider chain with ordered fallbacks.
  * F-014: chatStream async generator (SSE token streaming).
  * F-015: model split — rewrite model vs answer model via env.
- * F-016: cache_control on system messages (future-proofs for Anthropic).
- * F-022: groqLlmPolicy circuit breaker integration.
+ * F-022: groqLlmPolicy circuit breaker on Groq calls.
  */
 
 import { groqLlmPolicy, setGroqLlmFallback } from "./resilience"
@@ -20,20 +24,19 @@ export interface LlmResponse {
   completionTokens: number
 }
 
-// F-012: provider configuration
 export interface LlmProviderConfig {
   apiKey: string
   model: string
-  baseUrl?: string // default: Groq
+  baseUrl?: string
+  /** Human-readable name for logging (e.g., "Groq", "NIM", "DeepInfra") */
+  name?: string
 }
 
-// Sentinel prefix for upstream exhaustion — callers can detect and surface correctly
-const UNAVAILABLE_SENTINEL = "LLM_UNAVAILABLE"
+type ResolvedProvider = Required<Pick<LlmProviderConfig, "apiKey" | "model" | "baseUrl">> & { name: string }
 
 const GROQ_BASE_URL = "https://api.groq.com/openai/v1"
-const DEEPINFRA_BASE_URL = "https://api.deepinfra.com/v1/openai"
 
-// Internal shaped message with optional cache_control (F-016)
+// Internal wire message with optional cache_control (F-016, Anthropic-only)
 interface WireMessage {
   role: string
   content: string
@@ -41,155 +44,129 @@ interface WireMessage {
 }
 
 function toWireMessages(messages: LlmMessage[]): WireMessage[] {
-  return messages.map((m) => {
-    const wire: WireMessage = { role: m.role, content: m.content }
-    // F-016: mark system messages for prompt caching — no-op on Groq/DeepInfra, active on Anthropic
-    if (m.role === "system") {
-      wire.cache_control = { type: "ephemeral" }
-    }
-    return wire
-  })
+  return messages.map((m) => ({ role: m.role, content: m.content }))
 }
 
 function isGroqUrl(url: string): boolean {
   return url.includes("groq.com")
 }
 
-export class LlmService {
-  private primary: Required<LlmProviderConfig>
-  private fallback: Required<LlmProviderConfig> | null
+function resolveProvider(config: LlmProviderConfig, defaultName: string): ResolvedProvider {
+  return {
+    apiKey: config.apiKey,
+    model: config.model,
+    baseUrl: config.baseUrl ?? GROQ_BASE_URL,
+    name: config.name ?? defaultName,
+  }
+}
 
-  constructor(
-    primary: LlmProviderConfig,
-    fallbackConfig?: LlmProviderConfig
-  ) {
-    this.primary = {
-      apiKey: primary.apiKey,
-      model: primary.model,
-      baseUrl: primary.baseUrl ?? GROQ_BASE_URL,
-    }
-    this.fallback = fallbackConfig
-      ? {
-          apiKey: fallbackConfig.apiKey,
-          model: fallbackConfig.model,
-          baseUrl: fallbackConfig.baseUrl ?? GROQ_BASE_URL,
-        }
-      : null
+export class LlmService {
+  private chain: ResolvedProvider[]
+
+  /**
+   * @param primary — main provider (typically Groq)
+   * @param fallbacks — ordered fallback providers, tried in sequence on 429/5xx
+   */
+  constructor(primary: LlmProviderConfig, ...fallbacks: (LlmProviderConfig | undefined)[]) {
+    this.chain = [
+      resolveProvider(primary, "primary"),
+      ...fallbacks
+        .filter((f): f is LlmProviderConfig => f !== undefined)
+        .map((f, i) => resolveProvider(f, f.name ?? `fallback-${i + 1}`)),
+    ]
   }
 
   async chat(messages: LlmMessage[], maxTokens: number = 1024): Promise<LlmResponse> {
-    try {
-      return await this.chatWithProvider(this.primary, messages, maxTokens)
-    } catch (err) {
-      if (this.fallback && isFallbackEligible(err)) {
-        console.warn("LLM primary failed — activating DeepInfra fallback")
-        setGroqLlmFallback(true)
-        try {
-          return await this.chatWithFallback(this.fallback, messages, maxTokens)
-        } catch (fallbackErr) {
-          setGroqLlmFallback(false)
-          const fbMsg = fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr)
-          console.error(`LLM fallback also failed: ${fbMsg.slice(0, 100)}`)
-          return {
-            response: extractContextPassthrough(messages),
-            promptTokens: 0,
-            completionTokens: 0,
+    for (let i = 0; i < this.chain.length; i++) {
+      const provider = this.chain[i]
+      try {
+        const result = await this.chatWithProvider(provider, messages, maxTokens)
+        if (i > 0) setGroqLlmFallback(false) // reset fallback state on success
+        return result
+      } catch (err) {
+        const isLast = i === this.chain.length - 1
+        if (isLast || !isFallbackEligible(err)) {
+          if (isLast && this.chain.length > 1) {
+            // All providers exhausted — return context passthrough
+            console.error(`LLM chain exhausted (${this.chain.length} providers) — returning context passthrough`)
+            return {
+              response: extractContextPassthrough(messages),
+              promptTokens: 0,
+              completionTokens: 0,
+            }
           }
-        } finally {
-          setGroqLlmFallback(false)
+          throw err
         }
-      }
-      throw err
-    }
-  }
-
-  async *chatStream(
-    messages: LlmMessage[],
-    maxTokens: number = 1536
-  ): AsyncGenerator<string> {
-    try {
-      yield* this.chatStreamWithProvider(this.primary, messages, maxTokens)
-    } catch (err) {
-      if (this.fallback && isFallbackEligible(err)) {
-        console.warn("LLM primary stream failed — activating DeepInfra fallback")
-        setGroqLlmFallback(true)
-        try {
-          yield* this.chatStreamWithProvider(this.fallback, messages, maxTokens)
-        } catch (fallbackErr) {
-          setGroqLlmFallback(false)
-          console.error("LLM stream: both providers failed, yielding context passthrough")
-          yield extractContextPassthrough(messages)
-          return
-        } finally {
-          setGroqLlmFallback(false)
-        }
-      } else {
-        throw err
+        const next = this.chain[i + 1]
+        console.warn(`LLM [${provider.name}] failed (${errSummary(err)}) — falling back to [${next?.name}]`)
+        if (isGroqUrl(provider.baseUrl)) setGroqLlmFallback(true)
       }
     }
+    // Unreachable, but TypeScript needs it
+    throw new Error("LLM provider chain is empty")
   }
 
-  // NOTE: Stream-iteration errors bypass circuit breaker tracking — the breaker wraps
-  // generator creation, not consumption. A sustained stream failure may not open the circuit.
+  async *chatStream(messages: LlmMessage[], maxTokens: number = 1536): AsyncGenerator<string> {
+    for (let i = 0; i < this.chain.length; i++) {
+      const provider = this.chain[i]
+      try {
+        yield* this.chatStreamWithProvider(provider, messages, maxTokens)
+        if (i > 0) setGroqLlmFallback(false)
+        return
+      } catch (err) {
+        const isLast = i === this.chain.length - 1
+        if (isLast || !isFallbackEligible(err)) {
+          if (isLast && this.chain.length > 1) {
+            console.error(`LLM stream chain exhausted — yielding context passthrough`)
+            yield extractContextPassthrough(messages)
+            return
+          }
+          throw err
+        }
+        const next = this.chain[i + 1]
+        console.warn(`LLM stream [${provider.name}] failed (${errSummary(err)}) — falling back to [${next?.name}]`)
+        if (isGroqUrl(provider.baseUrl)) setGroqLlmFallback(true)
+      }
+    }
+  }
 
   private async chatWithProvider(
-    config: Required<LlmProviderConfig>,
+    provider: ResolvedProvider,
     messages: LlmMessage[],
-    maxTokens: number
+    maxTokens: number,
   ): Promise<LlmResponse> {
-    const call = () => fetchChatCompletion(config, messages, maxTokens)
-
-    // F-022: wrap Groq calls with circuit breaker policy
-    const raw = isGroqUrl(config.baseUrl)
+    const call = () => fetchChatCompletion(provider, messages, maxTokens)
+    return isGroqUrl(provider.baseUrl)
       ? await groqLlmPolicy.execute(call)
       : await call()
-
-    return raw
-  }
-
-  // Fallback bypasses circuit breaker — it's already the last resort
-  private async chatWithFallback(
-    config: Required<LlmProviderConfig>,
-    messages: LlmMessage[],
-    maxTokens: number
-  ): Promise<LlmResponse> {
-    try {
-      return await fetchChatCompletion(config, messages, maxTokens)
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err)
-      throw new Error(`${UNAVAILABLE_SENTINEL}:${msg}`)
-    }
   }
 
   private async *chatStreamWithProvider(
-    config: Required<LlmProviderConfig>,
+    provider: ResolvedProvider,
     messages: LlmMessage[],
-    maxTokens: number
+    maxTokens: number,
   ): AsyncGenerator<string> {
-    const call = () => fetchChatStream(config, messages, maxTokens)
-
-    // F-022: wrap Groq stream calls with circuit breaker policy
-    const stream = isGroqUrl(config.baseUrl)
+    const call = () => fetchChatStream(provider, messages, maxTokens)
+    const stream = isGroqUrl(provider.baseUrl)
       ? await groqLlmPolicy.execute(call)
       : await call()
-
     yield* stream
   }
 }
 
 // ---------------------------------------------------------------------------
-// Pure fetch helpers — no class state
+// Pure fetch helpers
 // ---------------------------------------------------------------------------
 
 async function fetchChatCompletion(
-  config: Required<LlmProviderConfig>,
+  config: ResolvedProvider,
   messages: LlmMessage[],
-  maxTokens: number
+  maxTokens: number,
 ): Promise<LlmResponse> {
   const res = await fetch(`${config.baseUrl}/chat/completions`, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${config.apiKey}`,
+      Authorization: `Bearer ${config.apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -204,10 +181,10 @@ async function fetchChatCompletion(
     throw new Error(`LLM API error ${res.status}: ${text.slice(0, 200)}`)
   }
 
-  const data = await res.json() as GroqResponse
+  const data = (await res.json()) as GroqResponse
 
   if (!data.choices?.length) {
-    console.warn("LLM returned empty choices — possible content filtering")
+    console.warn(`LLM [${config.name}] returned empty choices — possible content filtering`)
     return { response: "", promptTokens: 0, completionTokens: 0 }
   }
 
@@ -219,14 +196,14 @@ async function fetchChatCompletion(
 }
 
 async function* fetchChatStream(
-  config: Required<LlmProviderConfig>,
+  config: ResolvedProvider,
   messages: LlmMessage[],
-  maxTokens: number
+  maxTokens: number,
 ): AsyncGenerator<string> {
   const res = await fetch(`${config.baseUrl}/chat/completions`, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${config.apiKey}`,
+      Authorization: `Bearer ${config.apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -257,7 +234,6 @@ async function* fetchChatStream(
 
       buffer += decoder.decode(value, { stream: true })
       const lines = buffer.split("\n")
-      // Keep the last (potentially incomplete) line in buffer
       buffer = lines.pop() ?? ""
 
       for (const line of lines) {
@@ -281,8 +257,15 @@ async function* fetchChatStream(
 }
 
 // ---------------------------------------------------------------------------
-// Eligibility: only fall back on upstream errors (5xx, 429)
+// Fallback eligibility + helpers
 // ---------------------------------------------------------------------------
+
+function isFallbackEligible(err: unknown): boolean {
+  if (!(err instanceof Error)) return false
+  if (err.constructor.name === "BrokenCircuitError") return true
+  if (err.constructor.name === "IsolatedCircuitError") return true
+  return /API error (5\d\d|429)/.test(err.message)
+}
 
 function extractContextPassthrough(messages: LlmMessage[]): string {
   const userMsg = messages.find((m) => m.role === "user")
@@ -294,13 +277,9 @@ function extractContextPassthrough(messages: LlmMessage[]): string {
   return "LLM unavailable. Please try again later."
 }
 
-function isFallbackEligible(err: unknown): boolean {
-  if (!(err instanceof Error)) return false
-  // cockatiel BrokenCircuitError / IsolatedCircuitError — circuit is open
-  if (err.constructor.name === "BrokenCircuitError") return true
-  if (err.constructor.name === "IsolatedCircuitError") return true
-  // HTTP 5xx or 429 from provider
-  return /API error (5\d\d|429)/.test(err.message)
+function errSummary(err: unknown): string {
+  if (err instanceof Error) return err.message.slice(0, 80)
+  return String(err).slice(0, 80)
 }
 
 // ---------------------------------------------------------------------------

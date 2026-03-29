@@ -3,6 +3,7 @@ import type { Sql } from "postgres"
 import type { Env } from "../types/env"
 import type Redis from "ioredis"
 import { generateToken, resolveAuth } from "../services/auth"
+import { getClientIp, checkRateLimit } from "../services/rate-limit"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
 
@@ -54,26 +55,10 @@ auth.post("/register", async (c) => {
     }
   }
 
-  // Max 5 new registrations per IP per hour (only incremented for truly new users)
-  // P2-008: wrap Redis in try/catch — fail-open if Redis is down
-  // P2-017: use CF-Connecting-IP first — X-Forwarded-For is trivially spoofable
-  const ip = c.req.header("CF-Connecting-IP")
-    ?? c.req.header("X-Real-IP")
-    ?? c.req.header("X-Forwarded-For")?.split(",")[0]?.trim()
-    ?? "unknown"
-  const rateKey = `reg:${ip}`
-  let isRateLimited = false
-  try {
-    const count = await redis.get(rateKey)
-    if (count && parseInt(count) >= 20) {
-      isRateLimited = true
-    } else {
-      await redis.set(rateKey, String((parseInt(count ?? "0")) + 1), "EX", 3600)
-    }
-  } catch (e) {
-    console.error("Redis rate limit check failed, allowing registration:", e instanceof Error ? e.message : String(e))
-  }
-  if (isRateLimited) {
+  // Max 20 new registrations per IP per hour. Whitelisted IPs bypass.
+  const ip = getClientIp(c)
+  const { allowed } = await checkRateLimit(redis, `reg:${ip}`, 20, 3600, ip, env.RATE_LIMIT_WHITELIST_IPS)
+  if (!allowed) {
     return c.json({ error: "слишком много регистраций — попробуйте позже" }, 429)
   }
 

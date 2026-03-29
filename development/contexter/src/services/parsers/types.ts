@@ -20,11 +20,30 @@ export interface StoredImage extends ParsedImage {
   r2Key: string
 }
 
+/**
+ * A single element from Docling's ML-based document structure analysis.
+ * Sourced from json_content.texts[] in the Docling API response.
+ */
+export interface DoclingElement {
+  /** Docling element label (e.g. "title", "section_header", "narrative_text"). */
+  label: string
+  /** Extracted text for this element. */
+  text: string
+  /** 1-based page number (first provenance entry). */
+  page?: number
+}
+
 export interface ParseResult {
   content: string
   metadata: ParseMetadata
   /** Images extracted from the document (PDF only, optional). */
   images?: ParsedImage[]
+  /**
+   * Typed elements from Docling's ML-based structure analysis.
+   * Present when the Docling parser is used and json_content is available.
+   * Used by the chunker for more accurate block classification than regex.
+   */
+  doclingElements?: DoclingElement[]
 }
 
 export interface ParseMetadata {

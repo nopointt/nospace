@@ -1,3 +1,16 @@
+// --- Crash handlers — must be first, before any imports that could throw ---
+process.on("uncaughtException", (err, origin) => {
+  console.error(JSON.stringify({ event: "UNCAUGHT_EXCEPTION", origin, error: err.message, stack: err.stack }))
+})
+process.on("unhandledRejection", (reason) => {
+  const msg = reason instanceof Error ? reason.message : String(reason)
+  const stack = reason instanceof Error ? reason.stack : undefined
+  console.error(JSON.stringify({ event: "UNHANDLED_REJECTION", error: msg, stack }))
+})
+process.on("exit", (code) => {
+  console.log(JSON.stringify({ event: "PROCESS_EXIT", code }))
+})
+
 import { Hono } from "hono"
 import { cors } from "hono/cors"
 import postgres from "postgres"
@@ -78,6 +91,17 @@ const env: Env = {
   DOCLING_URL: process.env.DOCLING_URL ?? "http://localhost:5001",
   BASE_URL: process.env.BASE_URL ?? "https://api.contexter.cc",
   ENVIRONMENT: process.env.ENVIRONMENT ?? "production",
+  // LLM provider chain: Groq (primary) → NIM (fallback 1) → DeepInfra (fallback 2)
+  NIM_API_KEY: process.env.NIM_API_KEY,
+  NIM_BASE_URL: process.env.NIM_BASE_URL,
+  NIM_MODEL: process.env.NIM_MODEL,
+  DEEPINFRA_API_KEY: process.env.DEEPINFRA_API_KEY,
+  DEEPINFRA_MODEL: process.env.DEEPINFRA_MODEL,
+  // LLM model overrides
+  GROQ_REWRITE_MODEL: process.env.GROQ_REWRITE_MODEL,
+  GROQ_ANSWER_MODEL: process.env.GROQ_ANSWER_MODEL,
+  // Rate limit whitelist
+  RATE_LIMIT_WHITELIST_IPS: process.env.RATE_LIMIT_WHITELIST_IPS,
 }
 
 type AppEnv = { Variables: { sql: typeof sql; env: Env; redis: typeof redis; requestId: string } }

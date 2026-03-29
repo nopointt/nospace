@@ -1,0 +1,14 @@
+{
+  "id": "gs-016",
+  "question": "What topics are covered by the MCP add context test?",
+  "expected_answer": "tool-based ingestion, RAG pipeline, document indexing",
+  "expected_sources": [
+    "4c93bb37-670c-4e"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

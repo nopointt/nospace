@@ -13,6 +13,7 @@ import { computeProxyMetrics, logProxyMetrics } from "../services/evaluation/pro
 import { shouldSample, getLlmEvalQueue } from "../services/evaluation/llm-eval"
 
 const GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+const NIM_BASE_URL = "https://integrate.api.nvidia.com/v1"
 const DEEPINFRA_BASE_URL = "https://api.deepinfra.com/v1/openai"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
@@ -23,30 +24,63 @@ export const query = new Hono<AppEnv>()
 // Shared helpers
 // ---------------------------------------------------------------------------
 
+/**
+ * Build LLM services with 3-tier provider chain:
+ *   Groq (primary, fastest) → NIM (fallback 1, reliable) → DeepInfra (fallback 2, last resort)
+ *
+ * Each tier activates only when the previous returns 429 or 5xx.
+ * Rewrite LLM (query rewriting, 8B) uses only Groq — it's fast and cheap, no fallback needed.
+ * Answer LLM (70B) uses the full chain — this is where rate limits matter.
+ */
 function buildLlmServices(env: Env): { llmRewrite: LlmService; llmAnswer: LlmService } {
-  // F-015: model split — rewrite uses fast small model, answer uses high-quality model
   const rewriteModel = env.GROQ_REWRITE_MODEL ?? "llama-3.1-8b-instant"
   const answerModel = env.GROQ_ANSWER_MODEL ?? "llama-3.3-70b-versatile"
 
-  const rewritePrimary: LlmProviderConfig = {
-    apiKey: env.GROQ_API_KEY,
-    model: rewriteModel,
-    baseUrl: GROQ_BASE_URL,
-  }
-
-  const answerPrimary: LlmProviderConfig = {
+  // Primary: Groq (fastest inference, free tier with daily limits)
+  const groqPrimary: LlmProviderConfig = {
     apiKey: env.GROQ_API_KEY,
     model: answerModel,
     baseUrl: GROQ_BASE_URL,
+    name: "Groq",
   }
 
-  // F-012: DeepInfra fallback — only when key is present
-  const deepinfraFallback: LlmProviderConfig | undefined = env.DEEPINFRA_API_KEY
-    ? { apiKey: env.DEEPINFRA_API_KEY, model: answerModel, baseUrl: DEEPINFRA_BASE_URL }
+  // Fallback 1: NVIDIA NIM (reliable, good quality, OpenAI-compatible)
+  const nimFallback: LlmProviderConfig | undefined = env.NIM_API_KEY
+    ? {
+        apiKey: env.NIM_API_KEY,
+        model: env.NIM_MODEL ?? "meta/llama-3.1-70b-instruct",
+        baseUrl: env.NIM_BASE_URL ?? NIM_BASE_URL,
+        name: "NIM",
+      }
     : undefined
 
-  const llmRewrite = new LlmService(rewritePrimary)
-  const llmAnswer = new LlmService(answerPrimary, deepinfraFallback)
+  // Fallback 2: DeepInfra (last resort, broadest model selection)
+  const deepinfraFallback: LlmProviderConfig | undefined = env.DEEPINFRA_API_KEY
+    ? {
+        apiKey: env.DEEPINFRA_API_KEY,
+        model: env.DEEPINFRA_MODEL ?? answerModel,
+        baseUrl: DEEPINFRA_BASE_URL,
+        name: "DeepInfra",
+      }
+    : undefined
+
+  // Rewrite: Groq primary + NIM fallback (shares TPD quota, need fallback too)
+  const nimRewriteFallback: LlmProviderConfig | undefined = env.NIM_API_KEY
+    ? {
+        apiKey: env.NIM_API_KEY,
+        model: env.NIM_MODEL ?? "meta/llama-3.1-8b-instant",
+        baseUrl: env.NIM_BASE_URL ?? NIM_BASE_URL,
+        name: "NIM-rewrite",
+      }
+    : undefined
+
+  const llmRewrite = new LlmService(
+    { apiKey: env.GROQ_API_KEY, model: rewriteModel, baseUrl: GROQ_BASE_URL, name: "Groq-rewrite" },
+    nimRewriteFallback,
+  )
+
+  // Answer: full chain — Groq → NIM → DeepInfra
+  const llmAnswer = new LlmService(groqPrimary, nimFallback, deepinfraFallback)
 
   return { llmRewrite, llmAnswer }
 }

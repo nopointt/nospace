@@ -1,0 +1,14 @@
+{
+  "id": "gs-010",
+  "question": "How does the chunking algorithm handle large sections in this document?",
+  "expected_answer": "The chunking algorithm produces separate child chunks for large sections while preserving a parent chunk that summarises the full section for retrieval purposes.",
+  "expected_sources": [
+    "4512492d-e62e-49"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

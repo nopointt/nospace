@@ -1,0 +1,9 @@
+{
+  "id": "g-006",
+  "question": "Who founded Contexter?",
+  "expected_answer": "Founded by Zhaslan Utegenov in 2026.",
+  "tags": ["product-overview"],
+  "added_by": "axis",
+  "added_at": "2026-03-29T18:00:00Z",
+  "reviewed": true
+}

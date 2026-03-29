@@ -19,7 +19,12 @@ import { countTokensSync } from "./tokenizer"
  * PARENT_MIN_TOKENS, a single flat chunk is returned instead.
  */
 export function chunkHierarchical(text: string, options: ChunkerOptions = {}): Chunk[] {
-  const parents = chunkSemantic(text, { ...options, maxTokens: PARENT_MAX_TOKENS, overlap: 0 })
+  const parents = chunkSemantic(text, {
+    ...options,
+    softMaxTokens: PARENT_MAX_TOKENS,
+    hardMaxTokens: PARENT_MAX_TOKENS,
+    overlap: 0,
+  })
 
   // Short document — skip hierarchy, emit flat
   if (parents.length === 1 && parents[0]!.tokenCount < PARENT_MIN_TOKENS) {

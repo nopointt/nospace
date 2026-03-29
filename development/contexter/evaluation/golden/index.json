@@ -1,1 +1,167 @@
-{"pairs": []}
+{
+  "version": "1.0.0",
+  "created": "2026-03-29",
+  "description": "Golden test pairs for Contexter RAG evaluation. Source: golden-test-doc.md (Contexter Product Overview).",
+  "pairs": [
+    {
+      "id": "g-001",
+      "query": "What formats does Contexter support?",
+      "expectedAnswer": "Contexter supports 15 formats: PDF, DOCX, XLSX, PPTX, ODS, CSV, JSON, TXT, MD, HTML, PNG/JPG/WebP/SVG images, MP3/WAV/M4A/OGG audio, and MP4/MOV/WebM video.",
+      "expectedKeywords": ["15", "PDF", "DOCX", "audio", "video", "images"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-002",
+      "query": "How much does the Pro plan cost?",
+      "expectedAnswer": "The Pro plan costs $29/month and includes 10GB storage and 1000 queries/day.",
+      "expectedKeywords": ["$29", "10GB", "1000"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-003",
+      "query": "What is Contexter?",
+      "expectedAnswer": "Contexter is a RAG-as-a-service platform that lets users upload documents in any format and creates an AI-powered knowledge base searchable via MCP protocol.",
+      "expectedKeywords": ["RAG", "knowledge base", "MCP", "upload"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-004",
+      "query": "What is MCP protocol in Contexter?",
+      "expectedAnswer": "MCP (Model Context Protocol) endpoint allows any compatible AI assistant — Claude, ChatGPT, Gemini — to connect and search your knowledge base via /sse with token-based auth.",
+      "expectedKeywords": ["MCP", "Claude", "ChatGPT", "/sse", "token"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-005",
+      "query": "What embedding model does Contexter use?",
+      "expectedAnswer": "Contexter uses Jina v4 embeddings with late chunking.",
+      "expectedKeywords": ["Jina", "v4", "late chunking"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-006",
+      "query": "Who founded Contexter?",
+      "expectedAnswer": "Contexter was founded by Zhaslan Utegenov in 2026.",
+      "expectedKeywords": ["Zhaslan", "Utegenov", "2026"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-007",
+      "query": "How does Contexter parse PDF files?",
+      "expectedAnswer": "Contexter parses PDFs using Docling (IBM).",
+      "expectedKeywords": ["Docling", "IBM"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-008",
+      "query": "What database does Contexter use?",
+      "expectedAnswer": "Contexter uses PostgreSQL with pgvector for hybrid search (vector + full-text).",
+      "expectedKeywords": ["PostgreSQL", "pgvector", "hybrid"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-009",
+      "query": "How does the upload pipeline work?",
+      "expectedAnswer": "Upload → parse (Docling/Whisper) → structure-aware chunking → contextual prefix → Jina v4 embedding → pgvector HNSW index.",
+      "expectedKeywords": ["parse", "chunk", "embed", "index", "pgvector"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-010",
+      "query": "What are the pricing tiers?",
+      "expectedAnswer": "Starter $9/month (1GB, 100 queries/day), Pro $29/month (10GB, 1000 queries/day), Business $79/month (100GB, unlimited queries).",
+      "expectedKeywords": ["$9", "$29", "$79", "Starter", "Pro", "Business"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-011",
+      "query": "How fast was Contexter built?",
+      "expectedAnswer": "Built from zero to production in 7 days.",
+      "expectedKeywords": ["7 days", "zero", "production"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-012",
+      "query": "What runtime does Contexter use?",
+      "expectedAnswer": "Contexter is built on Bun runtime with Hono API framework.",
+      "expectedKeywords": ["Bun", "Hono"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-013",
+      "query": "How does Contexter handle audio files?",
+      "expectedAnswer": "Audio files are parsed using Whisper for transcription.",
+      "expectedKeywords": ["Whisper", "audio"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-014",
+      "query": "What chunking strategy does Contexter use?",
+      "expectedAnswer": "Contexter uses structure-aware splitting that preserves code blocks, tables, and lists.",
+      "expectedKeywords": ["structure-aware", "code blocks", "tables", "lists"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-015",
+      "query": "What LLM generates answers in Contexter?",
+      "expectedAnswer": "Groq Llama is used for contextual prefix generation and answer synthesis.",
+      "expectedKeywords": ["Groq", "Llama"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-016",
+      "query": "How many storage does the Starter plan include?",
+      "expectedAnswer": "The Starter plan includes 1GB of storage.",
+      "expectedKeywords": ["1GB", "Starter"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-017",
+      "query": "What search method does Contexter use?",
+      "expectedAnswer": "Hybrid search combining vector (pgvector HNSW) and full-text (BM25), with reranking and LLM answer generation.",
+      "expectedKeywords": ["hybrid", "vector", "BM25", "reranking"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-018",
+      "query": "Can ChatGPT connect to Contexter?",
+      "expectedAnswer": "Yes, any compatible AI assistant including ChatGPT can connect via the MCP protocol.",
+      "expectedKeywords": ["ChatGPT", "MCP"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-019",
+      "query": "What is the Business plan query limit?",
+      "expectedAnswer": "The Business plan offers unlimited queries.",
+      "expectedKeywords": ["unlimited", "Business"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    },
+    {
+      "id": "g-020",
+      "query": "What is the Contexter website?",
+      "expectedAnswer": "The website is https://contexter.cc, API is at https://api.contexter.cc.",
+      "expectedKeywords": ["contexter.cc", "api.contexter.cc"],
+      "documentId": "635fa04a-fc8f-4d",
+      "reviewed": true
+    }
+  ]
+}

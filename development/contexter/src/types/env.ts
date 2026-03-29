@@ -20,12 +20,18 @@ export interface Env {
   // F-024: Mistral OCR cloud fallback — opt-in only
   OCR_CLOUD_FALLBACK_ENABLED?: string
   MISTRAL_API_KEY?: string
-  // F-012: DeepInfra fallback provider — optional
+  // F-012: LLM provider chain — Groq (primary) → NIM (fallback 1) → DeepInfra (fallback 2)
+  NIM_API_KEY?: string
+  NIM_BASE_URL?: string       // default: https://integrate.api.nvidia.com/v1
+  NIM_MODEL?: string           // default: meta/llama-3.1-70b-instruct
   DEEPINFRA_API_KEY?: string
+  DEEPINFRA_MODEL?: string     // default: same as GROQ_ANSWER_MODEL
   // F-015: model split — optional, defaults applied in LlmService
   GROQ_REWRITE_MODEL?: string
   GROQ_ANSWER_MODEL?: string
   // F-025: NLI sidecar
   NLI_SIDECAR_URL?: string
   NLI_ENABLED?: string
+  // Rate limit whitelist — comma-separated IPs that bypass all rate limits (for E2E tests, monitoring)
+  RATE_LIMIT_WHITELIST_IPS?: string
 }

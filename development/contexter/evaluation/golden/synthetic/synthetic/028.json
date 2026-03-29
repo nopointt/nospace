@@ -1,0 +1,14 @@
+{
+  "id": "gs-028",
+  "question": "What is the purpose of intentionally verbose paragraphs in this document?",
+  "expected_answer": "to ensure the document exceeds the hierarchical chunking threshold",
+  "expected_sources": [
+    "555124f9-09c1-4a"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

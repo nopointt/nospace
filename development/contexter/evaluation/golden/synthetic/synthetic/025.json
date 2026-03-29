@@ -1,0 +1,14 @@
+{
+  "id": "gs-025",
+  "question": "What is the purpose of the run identifier \"mnc6pa4s-iw06\" in this document?",
+  "expected_answer": "The run identifier 'mnc6pa4s-iw06' is for uniqueness.",
+  "expected_sources": [
+    "9721b9e9-effd-44"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

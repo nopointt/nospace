@@ -366,13 +366,20 @@ export class RagService {
   }
 
   /**
-   * F-017: Replace child chunk results with their parent's full content.
-   * De-duplicates: if two children share a parent, only the parent appears once (highest score wins).
-   * Flat chunks and legacy chunks pass through unchanged.
-   * No-op when sql is not provided in deps.
+   * Resolve child chunks to parent chunks using auto-merge threshold.
+   *
+   * Auto-merge (R4 research): only replace children with parent when the ratio
+   * of retrieved children to total children exceeds MERGE_THRESHOLD (0.4).
+   * This prevents flooding the LLM context with irrelevant parent content
+   * when only 1 out of 5 children matched.
+   *
+   * When ratio < threshold, individual children pass through with their
+   * contextPrefix intact (more precise, less context waste).
    */
   private async resolveParents(results: HybridSearchResult[]): Promise<HybridSearchResult[]> {
     if (!this.deps.sql) return results
+
+    const MERGE_THRESHOLD = 0.4
 
     const childResults = results.filter(
       (r) => r.metadata.chunkType === "child" && r.metadata.parentId
@@ -387,28 +394,64 @@ export class RagService {
     const childScores = childResults.map((r) => r.score)
 
     const parentRows = await this.deps.vectorStore.fetchParentsForChildren(childIds, childScores)
+    if (parentRows.length === 0) return results
 
-    // Build HybridSearchResult entries from parent rows — deduplicated by parentId
-    const parentMap = new Map<string, HybridSearchResult>()
-    for (const row of parentRows) {
-      if (!parentMap.has(row.parentId)) {
-        // Approximate the documentId from the first child that had this parentId
-        const firstChild = childResults.find((r) => r.metadata.parentId === row.parentId)
-        parentMap.set(row.parentId, {
-          id: row.parentId,
-          score: row.bestChildScore,
-          source: "vector" as const,
-          metadata: {
-            documentId: firstChild?.metadata.documentId ?? "",
-            chunkIndex: -1,
-            content: row.parentContent,
-            chunkType: "parent",
-          },
-        })
+    // Count total children per parent (one SQL query)
+    const parentIds = parentRows.map((r) => r.parentId)
+    const totalChildrenMap = await this.deps.vectorStore.fetchChildrenCountByParent(parentIds)
+
+    // Count how many children were retrieved per parent
+    const retrievedCountMap = new Map<string, number>()
+    for (const child of childResults) {
+      const pid = child.metadata.parentId
+      if (pid) {
+        retrievedCountMap.set(pid, (retrievedCountMap.get(pid) ?? 0) + 1)
       }
     }
 
-    const resolved = [...Array.from(parentMap.values()), ...flatResults]
+    // Decide per parent: merge (use parent) or keep individual children
+    const mergedParents = new Map<string, HybridSearchResult>()
+    const keptChildParentIds = new Set<string>()
+
+    for (const row of parentRows) {
+      const total = totalChildrenMap.get(row.parentId) ?? 1
+      const retrieved = retrievedCountMap.get(row.parentId) ?? 0
+      const ratio = retrieved / total
+
+      if (ratio >= MERGE_THRESHOLD) {
+        if (!mergedParents.has(row.parentId)) {
+          const firstChild = childResults.find((r) => r.metadata.parentId === row.parentId)
+          mergedParents.set(row.parentId, {
+            id: row.parentId,
+            score: row.bestChildScore,
+            source: "vector" as const,
+            metadata: {
+              documentId: firstChild?.metadata.documentId ?? "",
+              chunkIndex: -1,
+              content: row.parentContent,
+              chunkType: "parent",
+            },
+          })
+        }
+      } else {
+        keptChildParentIds.add(row.parentId)
+      }
+    }
+
+    // Children whose parent didn't meet merge threshold pass through individually
+    const keptChildren = childResults.filter(
+      (r) => r.metadata.parentId && keptChildParentIds.has(r.metadata.parentId)
+    )
+
+    // Cross-dedup: exclude flat/parent results already resolved via merge
+    const mergedIds = new Set(mergedParents.keys())
+    const dedupedFlat = flatResults.filter((r) => !mergedIds.has(r.id))
+
+    const resolved = [
+      ...Array.from(mergedParents.values()),
+      ...keptChildren,
+      ...dedupedFlat,
+    ]
     return resolved.sort((a, b) => b.score - a.score)
   }
 

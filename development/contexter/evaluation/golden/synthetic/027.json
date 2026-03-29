@@ -1,0 +1,14 @@
+{
+  "id": "gs-027",
+  "question": "What is the identifier for the system we are deploying in this guide?",
+  "expected_answer": "mnc8448n-hdbq",
+  "expected_sources": [
+    "ec473b89-77e2-41"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

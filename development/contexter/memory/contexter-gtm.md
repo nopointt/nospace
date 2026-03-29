@@ -1,7 +1,7 @@
 ---
 # contexter-gtm.md — CTX-08 GTM Strategy & Positioning
 > Layer: L3 | Epic: CTX-08 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-29 (session 208 — presigned upload, audio segmentation, PDF images, pipeline crash blocker)
+> Last updated: 2026-03-29 (session 209 — pipeline infinite loop fix, E2E suites 1-6 PASS, 8 chunking research files)
 ---
 
 ## Goal
@@ -97,6 +97,45 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - [ ] Testimonials collection (Artem demo + early users)
 - [ ] A/B testing hero variants
 
+### Phase 7.1: Pipeline Fix + E2E Tests + Chunking Research (session 209)
+
+**Goal:** Починить pipeline crash, запустить E2E тесты, провести глубокое исследование чанкирования.
+
+**Pipeline fix:**
+- [x] CRITICAL: regex infinite loop в `buildHeadingEvents()` — trailing `\n` зацикливает JSC
+- [x] Fix: `text.split("\n")` + `for...of` вместо regex loop
+- [x] GROQ_LLM_URL добавлен в server .env
+- [x] Crash handlers в index.ts
+- [x] Jina embed timeout 10s → 30s
+- [x] Contextual prefix truncation 12K → 4K chars
+- [x] Deploy + verify: TXT 3.5s, PDF 45.9s — pipeline works
+
+**E2E тесты (6 of 8 suites passed):**
+- [x] Suite 1: Landing & Navigation — 10/10
+- [x] Suite 2: Authentication — 4/4
+- [x] Suite 3: API Health — 11/11
+- [x] Suite 4: Presigned Upload — 7/7
+- [x] Suite 5: Upload UI Flow — 5/5
+- [x] Suite 6: Connection Modal — 5/5
+- [ ] Suite 7: Query Flow (RAG) — blocked by direct upload 415
+- [ ] Suite 8: API Error Handling — not run
+
+**Chunking research (8 files, all complete):**
+- [x] Seed: `chunking-sota-2026-seed-research.md` (630 lines)
+- [x] R1: `chunking-r1-late-chunking-audit.md` — Jina v5 NO-GO, token batching HIGH bug
+- [x] R2: `chunking-r2-contextual-late-combo.md` — SYNERGY confirmed (+23.6 nDCG)
+- [x] R3: `chunking-r3-structure-aware-adaptive.md` — 5 failure modes, двухстадийный split
+- [x] R4: `chunking-r4-parent-child-hierarchical.md` — 80% ready, auto-merge ~1 day
+- [x] R5: `chunking-r5-pic-pseudo-instruction.md` — 50 lines, PIC-Mean no LLM
+- [x] R6: `chunking-r6-proposition-dense-x.md` — NO-GO, adaptive better
+- [x] R7: `chunking-r7-evaluation-framework.md` — 3-layer Ekimetrics+TokenIoU+RAGAS
+
+**Known bugs:**
+- [ ] Direct upload (`POST /api/upload`) returns 415 for multipart — `resolveMimeType()` issue
+- [ ] PDF 22K chars → 1 chunk (BPE encoder not loaded, splitParagraphs may not split Docling output)
+- [ ] Debug logging in pipeline.ts — temporary, remove after stabilization
+- [ ] Git: changes not committed
+
 ### Phase 7: Unlimited Upload + Audio Segmentation + PDF Images (session 208)
 
 **Goal:** Убрать лимит 100MB, поддержать файлы любого размера. Сегментация аудио для Whisper. Извлечение картинок из PDF с мультимодальным embedding.
@@ -148,9 +187,11 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - Image chunk: content = caption + page context, chunkType = "image", metadata: imageR2Key
 - Embed: Jina v4 multimodal (image input alongside text)
 
-## Research Files (14)
+## Research Files (23)
 
 `nospace/docs/research/`:
+
+**GTM (14 files, sessions 194-195):**
 - `contexter-gtm-market-landscape.md` (446 lines)
 - `contexter-gtm-direct-competitors.md` (v1 RAG frame)
 - `contexter-gtm-indirect-competitors.md` (v1)
@@ -167,6 +208,55 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - `contexter-gtm-landing-page-structure.md`
 - `contexter-gtm-synthesis-competitive-map.md`
 - `contexter-gtm-synthesis-positioning.md`
+
+**Chunking SOTA (8 files, session 209):**
+- `chunking-sota-2026-seed-research.md` — seed overview, 12 dimensions, 630 lines
+- `chunking-r1-late-chunking-audit.md` — Jina v4/v5 audit, API bugs, v5=NO-GO
+- `chunking-r2-contextual-late-combo.md` — synergy confirmed, +23.6 nDCG
+- `chunking-r3-structure-aware-adaptive.md` — 5 failure modes, двухстадийный split plan
+- `chunking-r4-parent-child-hierarchical.md` — auto-merge threshold, F-017 80% ready
+- `chunking-r5-pic-pseudo-instruction.md` — summary-guided, 50 lines, PIC-Mean
+- `chunking-r6-proposition-dense-x.md` — NO-GO, adaptive+late chunking better
+- `chunking-r7-evaluation-framework.md` — Ekimetrics+TokenIoU+RAGAS 3-layer
+
+**Bug fixing methodology (1 file, session 209):**
+- `ai-bug-fixing-methodology-research.md` — SOTA AI debugging, 741 lines
+
+### Phase 8: Chunking Overhaul + Pre-launch QA (sessions 210)
+
+**Goal:** Structure-aware chunking, pre-launch safety, comprehensive E2E.
+
+**Chunking Overhaul (Waves 0-5):**
+- [x] Wave 0: bug fixes (truncate_dim, BPE race, debug code, cross-dedup)
+- [x] Wave 1: structure-aware block classifier + two-stage split (code/table/list atomic)
+- [x] Wave 2: hierarchical auto-activation + parent_id in DB + auto-merge 0.4
+- [x] Wave 3: token-aware late_chunking batching (8K cap)
+- [x] Wave 4: Docling JSON element type integration
+- [x] Wave 5: evaluation framework (intrinsic + retrieval metrics + Wilcoxon)
+
+**Pre-launch Phase 1 (complete):**
+- [x] PostgreSQL backups (daily cron → R2 offsite, restore tested)
+- [x] Prompt injection defense in system prompt
+- [x] Health check → Telegram alerts (cron */5 min)
+- [x] Smoke E2E (10/10 PASS)
+- [x] Golden test pairs (10 manual canary)
+- [x] Canary baseline (10/10 PASS)
+
+**Pre-launch Phase 2 (in progress):**
+- [x] Docker memory fix (swap 1.6GB → 12MB)
+- [x] E2E suites 5-21 (106 tests, 97%+ pass rate)
+- [x] Cross-user data isolation (9/9 PASS)
+- [x] 15 synthetic golden pairs
+- [x] Deploy procedure + rollback docs
+- [x] LLM provider chain: Groq → NIM → DeepInfra
+- [x] Rate limit whitelist for E2E tests
+- [x] Bug fixes: subscription race, double confirm 500, cache_control, env mapping
+- [ ] k6 load test baseline
+- [ ] Netdata alerting rules
+
+**Research (2 files):**
+- `pre-release-qa-strategy-research.md` — 13 sections, Opus
+- `chunking-implementation-plan.md` — 6 waves, AC table
 
 ## Blockers
 

@@ -19,6 +19,14 @@ async function getEncoder(): Promise<(text: string) => number[]> {
 }
 
 /**
+ * Ensure BPE encoder is loaded before any synchronous token counting.
+ * Must be called (and awaited) once before using countTokensSync.
+ */
+export async function ensureEncoderLoaded(): Promise<void> {
+  await getEncoder()
+}
+
+/**
  * Count BPE tokens in text using cl100k_base.
  * Async because encoder loads lazily on first call.
  */

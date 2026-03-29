@@ -1,0 +1,9 @@
+{
+  "id": "g-002",
+  "question": "How much does the Pro plan cost?",
+  "expected_answer": "The Pro plan costs 29 dollars per month with 10GB storage and 1000 queries per day.",
+  "tags": ["product-overview"],
+  "added_by": "axis",
+  "added_at": "2026-03-29T18:00:00Z",
+  "reviewed": true
+}

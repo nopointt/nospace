@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-29 (session 208 — presigned R2 upload, GROQ_LLM_URL, DB migrations 0005-0011, pipeline crash blocker)
+> Last updated: 2026-03-30 (session 210 — chunking overhaul Waves 0-5, pre-launch QA Phase 1+2, 106 E2E tests, LLM provider chain, deploy docs)
 ---
 
 ## Identity

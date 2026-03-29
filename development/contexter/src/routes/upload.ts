@@ -164,6 +164,7 @@ upload.post("/", async (c) => {
   const safeFileName = sanitizeFileName(file.name)
 
   const mimeType = resolveMimeType(file.type, safeFileName)
+  console.log(JSON.stringify({ event: "upload_debug", fileName: safeFileName, fileType: file.type, resolvedMime: mimeType, allowed: ALLOWED_MIME_TYPES.has(mimeType) }))
   if (mimeType === "application/octet-stream" || !ALLOWED_MIME_TYPES.has(mimeType)) {
     return c.json({ error: `Unsupported file type: ${safeFileName}` }, 415)
   }
@@ -395,6 +396,12 @@ upload.post("/confirm", async (c) => {
     }
   } catch (e) {
     console.error("Magic bytes check failed, proceeding:", e instanceof Error ? e.message : String(e))
+  }
+
+  // Check if document already confirmed (idempotent: double confirm returns existing status)
+  const [existingDoc] = await sql`SELECT id, status FROM documents WHERE id = ${documentId}`
+  if (existingDoc) {
+    return c.json({ documentId, status: existingDoc.status }, 200)
   }
 
   // Insert document row

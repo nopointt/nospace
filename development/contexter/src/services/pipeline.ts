@@ -12,6 +12,7 @@ import { VectorStoreService } from "./vectorstore"
 import type { VectorRecord } from "./vectorstore"
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 import { addContextualPrefixes } from "./chunker/contextual"
+import { ensureEncoderLoaded } from "./chunker/tokenizer"
 import { findNearDuplicate } from "./embedder/dedup"
 
 export interface PipelineStageResult {
@@ -170,6 +171,71 @@ interface ImageChunkExt {
   _imageHeight: number
 }
 
+/**
+ * Resolve parentIndex (position in parents array) → parent_id (DB chunk ID).
+ * For hierarchical chunks, each child's parentIndex refers to the Nth parent chunk.
+ * Returns a Map from child chunk.index → parent DB ID string.
+ */
+function resolveParentIds(chunks: Chunk[], documentId: string): Map<number, string> {
+  const parents = chunks.filter((c) => c.chunkType === "parent")
+  const map = new Map<number, string>()
+  for (const chunk of chunks) {
+    if (chunk.chunkType === "child" && chunk.parentIndex !== undefined) {
+      const parent = parents[chunk.parentIndex]
+      if (parent) {
+        map.set(chunk.index, `${documentId}-${parent.index}`)
+      }
+    }
+  }
+  return map
+}
+
+/**
+ * Build DB rows for chunks, separating canonical from duplicate.
+ * Includes parent_id for hierarchical chunks.
+ */
+async function buildChunkRows(
+  chunks: Chunk[],
+  embedResult: BatchEmbeddingResult,
+  documentId: string,
+  userId: string,
+  sql: Sql,
+  parentIdMap: Map<number, string>,
+): Promise<{ canonicalRows: object[]; duplicateRows: object[] }> {
+  const canonicalRows: object[] = []
+  const duplicateRows: object[] = []
+
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i]!
+    const ext = chunk as Chunk & Partial<ImageChunkExt>
+    const embedding = embedResult.embeddings[i]!.vector
+    const duplicateOf = await findNearDuplicate(sql, embedding, userId)
+    const isImage = ext._imageR2Key !== undefined
+    const row = {
+      id: `${documentId}-${chunk.index}`,
+      document_id: documentId,
+      user_id: userId,
+      content: chunk.content,
+      chunk_index: chunk.index,
+      token_count: chunk.tokenCount,
+      context_prefix: chunk.contextPrefix ?? null,
+      context_version: chunk.contextPrefix ? 1 : 0,
+      duplicate_of: duplicateOf ?? null,
+      chunk_type: isImage ? "image" : (chunk.chunkType ?? "flat"),
+      parent_id: parentIdMap.get(chunk.index) ?? null,
+      page_number: chunk.metadata.page ?? null,
+      section_heading: isImage ? (ext._imageR2Key ?? null) : (chunk.metadata.sectionHeading ?? null),
+    }
+    if (duplicateOf !== null) {
+      duplicateRows.push(row)
+    } else {
+      canonicalRows.push(row)
+    }
+  }
+
+  return { canonicalRows, duplicateRows }
+}
+
 export async function runPipeline(
   documentId: string,
   input: ParserInput,
@@ -211,11 +277,16 @@ export async function runPipeline(
   const resolvedUserId = userId ?? "anonymous"
   const storedImages = await storeImagesToR2(parseResult, documentId, resolvedUserId, env)
 
+  // Warm up BPE encoder before synchronous chunking to avoid wordCount*1.4 fallback
+  await ensureEncoderLoaded()
+
   let chunks: Chunk[]
   try {
     stages[1].status = "running"
     const start = Date.now()
-    chunks = chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat)
+    chunks = chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat, {
+      doclingElements: parseResult.doclingElements,
+    })
 
     // Append image chunks after text chunks
     if (storedImages.length > 0) {
@@ -293,37 +364,10 @@ export async function runPipeline(
     stages[3].status = "running"
     const start = Date.now()
 
-    // F-028: dedup check — separate canonical from duplicate chunks
-    const canonicalRows: object[] = []
-    const duplicateRows: object[] = []
-
-    for (let i = 0; i < chunks.length; i++) {
-      const chunk = chunks[i]!
-      const ext = chunk as Chunk & Partial<ImageChunkExt>
-      const embedding = embedResult.embeddings[i]!.vector
-      const duplicateOf = await findNearDuplicate(sql, embedding, resolvedUserId)
-      const isImage = ext._imageR2Key !== undefined
-      const row = {
-        id: `${documentId}-${chunk.index}`,
-        document_id: documentId,
-        user_id: resolvedUserId,
-        content: chunk.content,
-        chunk_index: chunk.index,
-        token_count: chunk.tokenCount,
-        context_prefix: chunk.contextPrefix ?? null,
-        context_version: chunk.contextPrefix ? 1 : 0,
-        duplicate_of: duplicateOf ?? null,
-        chunk_type: isImage ? "image" : (chunk.chunkType ?? "flat"),
-        page_number: chunk.metadata.page ?? null,
-        // Store r2Key in section_heading column (flexible metadata slot) for images
-        section_heading: isImage ? (ext._imageR2Key ?? null) : (chunk.metadata.sectionHeading ?? null),
-      }
-      if (duplicateOf !== null) {
-        duplicateRows.push(row)
-      } else {
-        canonicalRows.push(row)
-      }
-    }
+    const parentIdMap = resolveParentIds(chunks, documentId)
+    const { canonicalRows, duplicateRows } = await buildChunkRows(
+      chunks, embedResult, documentId, resolvedUserId, sql, parentIdMap,
+    )
 
     const allRows = [...canonicalRows, ...duplicateRows]
     await sql`
@@ -335,13 +379,13 @@ export async function runPipeline(
         context_version = EXCLUDED.context_version,
         duplicate_of = EXCLUDED.duplicate_of,
         chunk_type = EXCLUDED.chunk_type,
+        parent_id = EXCLUDED.parent_id,
         page_number = EXCLUDED.page_number,
         section_heading = EXCLUDED.section_heading
     `
 
-    // Only index canonical chunks in the vector store — skip duplicates
     const records: VectorRecord[] = canonicalRows.map((row) => {
-      const r = row as { id: string; chunk_index: number; content: string; chunk_type: string }
+      const r = row as { id: string; chunk_index: number; content: string }
       const chunkIdx = chunks.findIndex((c) => `${documentId}-${c.index}` === r.id)
       return {
         id: r.id,
@@ -373,12 +417,14 @@ export async function runPipelineAsync(
   userId: string,
   jobIds: Record<StageType, string>
 ): Promise<void> {
+  console.log(JSON.stringify({ event: "pipeline_start", documentId, fileName: input.fileName, mimeType: input.mimeType, fileSize: input.fileSize }))
   const { parserService, chunkerService, embedderService, imageEmbedderService, vectorStoreService } = createServices(env, sql)
 
   const MAX_DECOMPRESSED_BYTES = 500 * 1024 * 1024
 
   let parseResult: ParseResult
   try {
+    console.log(JSON.stringify({ event: "pipeline_stage", documentId, stage: "parse", status: "start" }))
     await updateJobStatus(sql, jobIds.parse, "running")
     parseResult = await withTimeout(parserService.parse(input), STAGE_TIMEOUT_MS.parse, "parse")
     // NEW-007: zip bomb protection — reject documents whose decompressed content exceeds 500MB
@@ -399,14 +445,16 @@ export async function runPipelineAsync(
   // Store extracted images to R2 (non-fatal, best-effort)
   const storedImages = await storeImagesToR2(parseResult, documentId, userId, env)
 
+  // Warm up BPE encoder before synchronous chunking to avoid wordCount*1.4 fallback
+  await ensureEncoderLoaded()
+
   let chunks: Chunk[]
   try {
+    console.log(JSON.stringify({ event: "pipeline_stage", documentId, stage: "chunk", status: "start" }))
     await updateJobStatus(sql, jobIds.chunk, "running")
-    const textChunks = await withTimeout(
-      Promise.resolve(chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat)),
-      STAGE_TIMEOUT_MS.chunk, "chunk"
-    )
-    // Append image chunks after text chunks
+    const textChunks = chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat, {
+      doclingElements: parseResult.doclingElements,
+    })
     chunks = storedImages.length > 0
       ? [...textChunks, ...buildImageChunks(storedImages, textChunks.length)]
       : textChunks
@@ -443,6 +491,7 @@ export async function runPipelineAsync(
 
   let embedResult: BatchEmbeddingResult
   try {
+    console.log(JSON.stringify({ event: "pipeline_stage", documentId, stage: "embed", status: "start", chunkCount: chunks.length }))
     await updateJobStatus(sql, jobIds.embed, "running")
 
     const textEmbedResult = await withTimeout(
@@ -477,38 +526,13 @@ export async function runPipelineAsync(
   }
 
   try {
+    console.log(JSON.stringify({ event: "pipeline_stage", documentId, stage: "index", status: "start" }))
     await updateJobStatus(sql, jobIds.index, "running")
 
-    // F-028: dedup check — separate canonical from duplicate chunks
-    const canonicalRows: object[] = []
-    const duplicateRows: object[] = []
-
-    for (let i = 0; i < chunks.length; i++) {
-      const chunk = chunks[i]!
-      const ext = chunk as Chunk & Partial<ImageChunkExt>
-      const embedding = embedResult.embeddings[i]!.vector
-      const duplicateOf = await findNearDuplicate(sql, embedding, userId)
-      const isImage = ext._imageR2Key !== undefined
-      const row = {
-        id: `${documentId}-${chunk.index}`,
-        document_id: documentId,
-        user_id: userId,
-        content: chunk.content,
-        chunk_index: chunk.index,
-        token_count: chunk.tokenCount,
-        context_prefix: chunk.contextPrefix ?? null,
-        context_version: chunk.contextPrefix ? 1 : 0,
-        duplicate_of: duplicateOf ?? null,
-        chunk_type: isImage ? "image" : (chunk.chunkType ?? "flat"),
-        page_number: chunk.metadata.page ?? null,
-        section_heading: isImage ? (ext._imageR2Key ?? null) : (chunk.metadata.sectionHeading ?? null),
-      }
-      if (duplicateOf !== null) {
-        duplicateRows.push(row)
-      } else {
-        canonicalRows.push(row)
-      }
-    }
+    const parentIdMap = resolveParentIds(chunks, documentId)
+    const { canonicalRows, duplicateRows } = await buildChunkRows(
+      chunks, embedResult, documentId, userId, sql, parentIdMap,
+    )
 
     const allRows = [...canonicalRows, ...duplicateRows]
     await sql`
@@ -520,11 +544,11 @@ export async function runPipelineAsync(
         context_version = EXCLUDED.context_version,
         duplicate_of = EXCLUDED.duplicate_of,
         chunk_type = EXCLUDED.chunk_type,
+        parent_id = EXCLUDED.parent_id,
         page_number = EXCLUDED.page_number,
         section_heading = EXCLUDED.section_heading
     `
 
-    // Only index canonical chunks in the vector store — skip duplicates
     const records: VectorRecord[] = canonicalRows.map((row) => {
       const r = row as { id: string; chunk_index: number; content: string }
       const chunkIdx = chunks.findIndex((c) => `${documentId}-${c.index}` === r.id)
@@ -547,6 +571,7 @@ export async function runPipelineAsync(
   }
 
   await updateDocumentStatus(sql, documentId, "ready", null)
+  console.log(JSON.stringify({ event: "pipeline_complete", documentId }))
 }
 
 export async function resumePipelineFromStage(
@@ -608,10 +633,14 @@ export async function resumePipelineFromStage(
   // Store extracted images to R2 (non-fatal, best-effort)
   const storedImages = await storeImagesToR2(parseResult, documentId, userId, env)
 
+  await ensureEncoderLoaded()
+
   let chunks: Chunk[]
   try {
     if (startIndex <= 1) await updateJobStatus(sql, jobIds.chunk, "running")
-    const textChunks = chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat)
+    const textChunks = chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat, {
+      doclingElements: parseResult.doclingElements,
+    })
     chunks = storedImages.length > 0
       ? [...textChunks, ...buildImageChunks(storedImages, textChunks.length)]
       : textChunks
@@ -673,36 +702,10 @@ export async function resumePipelineFromStage(
     try {
       await updateJobStatus(sql, jobIds.index, "running")
 
-      // F-028: dedup check — separate canonical from duplicate chunks
-      const canonicalRows: object[] = []
-      const duplicateRows: object[] = []
-
-      for (let i = 0; i < chunks.length; i++) {
-        const chunk = chunks[i]!
-        const ext = chunk as Chunk & Partial<ImageChunkExt>
-        const embedding = embedResult.embeddings[i]!.vector
-        const duplicateOf = await findNearDuplicate(sql, embedding, userId)
-        const isImage = ext._imageR2Key !== undefined
-        const row = {
-          id: `${documentId}-${chunk.index}`,
-          document_id: documentId,
-          user_id: userId,
-          content: chunk.content,
-          chunk_index: chunk.index,
-          token_count: chunk.tokenCount,
-          context_prefix: chunk.contextPrefix ?? null,
-          context_version: chunk.contextPrefix ? 1 : 0,
-          duplicate_of: duplicateOf ?? null,
-          chunk_type: isImage ? "image" : (chunk.chunkType ?? "flat"),
-          page_number: chunk.metadata.page ?? null,
-          section_heading: isImage ? (ext._imageR2Key ?? null) : (chunk.metadata.sectionHeading ?? null),
-        }
-        if (duplicateOf !== null) {
-          duplicateRows.push(row)
-        } else {
-          canonicalRows.push(row)
-        }
-      }
+      const parentIdMap = resolveParentIds(chunks, documentId)
+      const { canonicalRows, duplicateRows } = await buildChunkRows(
+        chunks, embedResult, documentId, userId, sql, parentIdMap,
+      )
 
       const allRows = [...canonicalRows, ...duplicateRows]
       await sql`
@@ -714,12 +717,11 @@ export async function resumePipelineFromStage(
           context_version = EXCLUDED.context_version,
           duplicate_of = EXCLUDED.duplicate_of,
           chunk_type = EXCLUDED.chunk_type,
+          parent_id = EXCLUDED.parent_id,
           page_number = EXCLUDED.page_number,
           section_heading = EXCLUDED.section_heading
       `
 
-      // P1-011: include userId in metadata for vector scope filtering on retry
-      // Only index canonical chunks in the vector store — skip duplicates
       const records: VectorRecord[] = canonicalRows.map((row) => {
         const r = row as { id: string; chunk_index: number; content: string }
         const chunkIdx = chunks.findIndex((c) => `${documentId}-${c.index}` === r.id)

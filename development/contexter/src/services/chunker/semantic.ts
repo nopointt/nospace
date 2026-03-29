@@ -1,143 +1,145 @@
+/**
+ * Structure-aware semantic chunker.
+ *
+ * Two-stage algorithm:
+ *   Stage 1: classifyBlocks() detects structural boundaries (headings, code, tables, lists)
+ *   Stage 2: Pack blocks into chunks respecting soft/hard token limits and atomicity
+ *
+ * Atomic blocks (code_block, table, list) are never split unless they exceed hardMax.
+ * Headings always start a new chunk. Overlap only between paragraph-ending chunks.
+ */
 import type { Chunk, ChunkerOptions } from "./types"
-import { DEFAULT_MAX_TOKENS, DEFAULT_OVERLAP } from "./types"
+import { resolveTokenLimits } from "./types"
 import { countTokensSync, tokenize } from "./tokenizer"
-
-const HEADING_REGEX = /^(#{1,6})\s+(.+)$/m
-
-interface HeadingEvent {
-  offset: number
-  path: string
-}
+import { classifyBlocks } from "./block-classifier"
+import type { Block } from "./block-classifier"
 
 /**
- * Scan all lines in text and build a sorted array of heading change events.
- * Each event records the character offset at which a new heading path becomes active.
+ * Chunk text using structure-aware two-stage splitting.
+ * Accepts optional pre-classified blocks to avoid duplicate classification.
  */
-function buildHeadingEvents(text: string): HeadingEvent[] {
-  const events: HeadingEvent[] = []
-  const headingLevels = new Map<number, string>()
-  const lineRegex = /^.*$/gm
-  let match: RegExpExecArray | null
-
-  while ((match = lineRegex.exec(text)) !== null) {
-    const line = match[0]
-    const headingMatch = HEADING_REGEX.exec(line)
-    if (headingMatch) {
-      const level = headingMatch[1].length
-      const headingText = headingMatch[2].trim()
-
-      headingLevels.set(level, headingText)
-
-      // Reset all child levels whenever a parent heading changes
-      for (const key of Array.from(headingLevels.keys())) {
-        if (key > level) {
-          headingLevels.delete(key)
-        }
-      }
-
-      const path = Array.from(
-        new Map([...headingLevels.entries()].sort((a, b) => a[0] - b[0])).values()
-      ).join(" > ")
-
-      events.push({ offset: match.index, path })
-    }
-  }
-
-  return events
-}
-
-/**
- * Return the active heading path for a paragraph at the given character offset.
- * Picks the latest heading event whose offset is <= paraOffset.
- * Returns undefined when no heading precedes the paragraph.
- */
-function getActiveHeading(events: HeadingEvent[], paraOffset: number): string | undefined {
-  let active: string | undefined
-  for (const event of events) {
-    if (event.offset <= paraOffset) {
-      active = event.path
-    } else {
-      break
-    }
-  }
-  return active
-}
-
-/**
- * Semantic chunker: splits markdown/text by paragraph boundaries,
- * then groups paragraphs into chunks up to maxTokens.
- * Overlap re-includes trailing tokens from previous chunk.
- * Heading-aware: attaches the active sectionHeading to each chunk.
- */
-export function chunkSemantic(text: string, options: ChunkerOptions = {}): Chunk[] {
-  const maxTokens = options.maxTokens ?? DEFAULT_MAX_TOKENS
-  const overlap = options.overlap ?? DEFAULT_OVERLAP
-
+export function chunkSemantic(text: string, options: ChunkerOptions = {}, preClassified?: Block[]): Chunk[] {
   if (!text || text.trim().length === 0) return []
 
-  const headingEvents = buildHeadingEvents(text)
-  const paragraphs = splitParagraphs(text)
+  const { softMax, hardMax, overlap } = resolveTokenLimits(options)
+  const blocks = preClassified ?? classifyBlocks(text)
   const chunks: Chunk[] = []
-  let currentParts: string[] = []
-  let currentTokenCount = 0
-  let chunkStartOffset = 0
-  let chunkSectionHeading: string | undefined
 
-  for (const para of paragraphs) {
-    const paraTokens = countTokensSync(para.text)
-    const paraHeading = getActiveHeading(headingEvents, para.offset)
+  let buffer: Block[] = []
+  let bufferTokens = 0
+  let activeHeadingPath: string | undefined
 
-    // Single paragraph exceeds maxTokens — force-split by token window
-    if (paraTokens > maxTokens) {
-      // Flush current buffer first
-      if (currentParts.length > 0) {
-        chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset, chunkSectionHeading))
-        const overlapText = getOverlapText(currentParts.join("\n\n"), overlap)
-        currentParts = overlapText ? [overlapText] : []
-        currentTokenCount = countTokensSync(currentParts.join("\n\n"))
-        chunkStartOffset = para.offset - (overlapText?.length ?? 0)
-        chunkSectionHeading = paraHeading
+  for (const block of blocks) {
+    // --- Headings start a new section ---
+    if (block.type === "heading") {
+      // Flush if buffer has non-heading content (don't emit heading-only chunks)
+      if (buffer.some((b) => b.type !== "heading")) {
+        flushBuffer()
       }
-
-      // Split large paragraph by token windows
-      const subChunks = splitByTokenWindow(para.text, maxTokens, overlap, para.offset)
-      for (const sub of subChunks) {
-        chunks.push(buildChunk(sub.text, chunks.length, sub.offset, paraHeading))
-      }
-      currentParts = []
-      currentTokenCount = 0
-      chunkStartOffset = para.offset + para.text.length
-      chunkSectionHeading = undefined
+      activeHeadingPath = block.headingPath
+      buffer.push(block)
+      bufferTokens += block.tokenCount
       continue
     }
 
-    // Adding this paragraph would exceed limit — flush
-    if (currentTokenCount + paraTokens > maxTokens && currentParts.length > 0) {
-      chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset, chunkSectionHeading))
-      const overlapText = getOverlapText(currentParts.join("\n\n"), overlap)
-      currentParts = overlapText ? [overlapText] : []
-      currentTokenCount = countTokensSync(currentParts.join("\n\n"))
-      chunkStartOffset = para.offset - (overlapText?.length ?? 0)
-      chunkSectionHeading = paraHeading
+    // --- Atomic blocks: code, table, list — keep whole when possible ---
+    if (block.type === "code_block" || block.type === "table" || block.type === "list") {
+      // Oversized atomic block: flush buffer, then force-split the block
+      if (block.tokenCount > hardMax) {
+        flushBuffer()
+        const subChunks = splitAtomicBlock(block, hardMax)
+        for (const sub of subChunks) {
+          chunks.push(buildChunk(sub.content, chunks.length, sub.startOffset, headingForBlock(block)))
+        }
+        continue
+      }
+
+      // Would exceed hardMax with buffer → flush first, then add
+      if (bufferTokens + block.tokenCount > hardMax && buffer.length > 0) {
+        flushBuffer()
+      }
+
+      buffer.push(block)
+      bufferTokens += block.tokenCount
+
+      // Exceeded softMax → flush (the atomic block is already included)
+      if (bufferTokens >= softMax) {
+        flushBuffer()
+      }
+      continue
     }
 
-    if (currentParts.length === 0) {
-      chunkStartOffset = para.offset
-      chunkSectionHeading = paraHeading
+    // --- Paragraph blocks: standard packing ---
+    // Oversized paragraph: flush, then split by token window
+    if (block.tokenCount > hardMax) {
+      flushBuffer()
+      const subs = splitByTokenWindow(block.content, hardMax, overlap, block.startOffset)
+      for (const sub of subs) {
+        chunks.push(buildChunk(sub.text, chunks.length, sub.offset, headingForBlock(block)))
+      }
+      continue
     }
-    currentParts.push(para.text)
-    currentTokenCount += paraTokens
+
+    // Would exceed softMax → flush, then add
+    if (bufferTokens + block.tokenCount > softMax && buffer.length > 0) {
+      flushBuffer()
+    }
+
+    buffer.push(block)
+    bufferTokens += block.tokenCount
   }
 
-  // Flush remainder
-  if (currentParts.length > 0) {
-    chunks.push(buildChunk(currentParts.join("\n\n"), chunks.length, chunkStartOffset, chunkSectionHeading))
-  }
-
+  flushBuffer()
   return chunks
+
+  // --- Internal helpers ---
+
+  function headingForBlock(block: Block): string | undefined {
+    return activeHeadingPath ?? block.headingPath
+  }
+
+  function flushBuffer(): void {
+    if (buffer.length === 0) return
+
+    const content = buffer.map((b) => b.content).join("\n\n")
+    const startOffset = buffer[0].startOffset
+    const heading = activeHeadingPath ?? buffer[0].headingPath
+
+    chunks.push(buildChunk(content, chunks.length, startOffset, heading))
+
+    // Overlap: carry trailing tokens forward, but only from paragraph-ending buffers.
+    // Overlapping from code/table/list endings produces broken fragments.
+    const lastBlock = buffer[buffer.length - 1]
+    const shouldOverlap = overlap > 0 && lastBlock.type === "paragraph"
+
+    if (shouldOverlap) {
+      const overlapText = getOverlapText(content, overlap)
+      if (overlapText) {
+        buffer = [{
+          type: "paragraph",
+          content: overlapText,
+          startOffset: startOffset + content.length - overlapText.length,
+          endOffset: startOffset + content.length,
+          tokenCount: countTokensSync(overlapText),
+        }]
+        bufferTokens = buffer[0].tokenCount
+        return
+      }
+    }
+
+    buffer = []
+    bufferTokens = 0
+  }
 }
 
-function buildChunk(content: string, index: number, startOffset: number, sectionHeading?: string): Chunk {
+// ─── Chunk construction ───
+
+function buildChunk(
+  content: string,
+  index: number,
+  startOffset: number,
+  sectionHeading?: string,
+): Chunk {
   return {
     content,
     index,
@@ -149,39 +151,23 @@ function buildChunk(content: string, index: number, startOffset: number, section
   }
 }
 
-interface Paragraph {
-  text: string
-  offset: number
-}
-
-function splitParagraphs(text: string): Paragraph[] {
-  const parts: Paragraph[] = []
-  const regex = /[^\n]+(?:\n(?!\n)[^\n]*)*/g
-  let match: RegExpExecArray | null
-  while ((match = regex.exec(text)) !== null) {
-    const trimmed = match[0].trim()
-    if (trimmed.length > 0) {
-      parts.push({ text: trimmed, offset: match.index })
-    }
-  }
-  return parts
-}
+// ─── Overlap ───
 
 function getOverlapText(text: string, overlapTokens: number): string | null {
   if (overlapTokens <= 0) return null
-  // Use BPE token count (countTokensSync) instead of word count for accurate overlap measurement.
-  // Approximate char offset: proportion of tokens from the end.
-  const totalBpeTokens = countTokensSync(text)
-  if (totalBpeTokens <= overlapTokens) return null
-  const overlapChars = Math.floor(text.length * (overlapTokens / Math.max(totalBpeTokens, 1)))
+  const totalTokens = countTokensSync(text)
+  if (totalTokens <= overlapTokens) return null
+  const overlapChars = Math.floor(text.length * (overlapTokens / Math.max(totalTokens, 1)))
   return text.slice(text.length - overlapChars)
 }
+
+// ─── Token-window fallback for oversized paragraphs ───
 
 function splitByTokenWindow(
   text: string,
   maxTokens: number,
   overlap: number,
-  baseOffset: number
+  baseOffset: number,
 ): Array<{ text: string; offset: number }> {
   const tokens = tokenize(text)
   const result: Array<{ text: string; offset: number }> = []
@@ -196,4 +182,165 @@ function splitByTokenWindow(
   }
 
   return result
+}
+
+// ─── Force-split strategies for oversized atomic blocks ───
+
+interface SplitFragment {
+  content: string
+  startOffset: number
+}
+
+/**
+ * Split an atomic block that exceeds hardMax into smaller pieces.
+ * Each type has a domain-specific split strategy:
+ *  - code_block: split at blank lines, preserve fences
+ *  - table: split by rows, prepend header to each fragment
+ *  - list: split at top-level item boundaries
+ */
+function splitAtomicBlock(block: Block, hardMax: number): SplitFragment[] {
+  switch (block.type) {
+    case "code_block":
+      return splitCodeBlock(block, hardMax)
+    case "table":
+      return splitTableBlock(block, hardMax)
+    case "list":
+      return splitListBlock(block, hardMax)
+    default:
+      return [{ content: block.content, startOffset: block.startOffset }]
+  }
+}
+
+/**
+ * Split oversized code block at blank lines within the code.
+ * Each sub-block gets the opening/closing fences re-applied.
+ */
+function splitCodeBlock(block: Block, hardMax: number): SplitFragment[] {
+  const lines = block.content.split("\n")
+  if (lines.length < 3) return [{ content: block.content, startOffset: block.startOffset }]
+
+  const openFence = lines[0]
+  const closeFence = lines[lines.length - 1]
+  const innerLines = lines.slice(1, lines.length - 1)
+
+  const groups = splitLinesAtBoundaries(
+    innerLines,
+    hardMax,
+    (line) => line.trim() === "",
+    (group) => countTokensSync([openFence, ...group, closeFence].join("\n")),
+  )
+
+  return groups.map((group) => ({
+    content: [openFence, ...group, closeFence].join("\n"),
+    startOffset: block.startOffset,
+  }))
+}
+
+/**
+ * Split oversized table by rows, prepending header+separator to each fragment.
+ */
+function splitTableBlock(block: Block, hardMax: number): SplitFragment[] {
+  const lines = block.content.split("\n")
+
+  // Find separator row to determine header
+  const sepIdx = lines.findIndex((l) => /^\s*\|[\s:-]*-{3,}[\s:-]*\|/.test(l))
+  if (sepIdx < 0) return [{ content: block.content, startOffset: block.startOffset }]
+
+  const headerLines = lines.slice(0, sepIdx + 1)
+  const dataLines = lines.slice(sepIdx + 1).filter((l) => l.trim().length > 0)
+  const headerText = headerLines.join("\n")
+  const headerTokens = countTokensSync(headerText)
+
+  const groups = splitLinesAtBoundaries(
+    dataLines,
+    hardMax,
+    () => true, // every row is a valid split point
+    (group) => countTokensSync([headerText, ...group].join("\n")),
+  )
+
+  return groups.map((group) => ({
+    content: [headerText, ...group].join("\n"),
+    startOffset: block.startOffset,
+  }))
+}
+
+/**
+ * Split oversized list at top-level item boundaries.
+ * Top-level items start with a list marker at zero or minimal indentation.
+ */
+function splitListBlock(block: Block, hardMax: number): SplitFragment[] {
+  const lines = block.content.split("\n")
+
+  // Find top-level item start indices (lines matching list marker with ≤1 space indent)
+  const itemStarts: number[] = []
+  for (let i = 0; i < lines.length; i++) {
+    if (/^(\s{0,1})([-*+]|\d+\.)\s/.test(lines[i])) {
+      itemStarts.push(i)
+    }
+  }
+
+  if (itemStarts.length <= 1) {
+    // Single item or no items — fall back to token window split
+    return splitByTokenWindow(block.content, hardMax, 0, block.startOffset).map((s) => ({
+      content: s.text,
+      startOffset: s.offset,
+    }))
+  }
+
+  // Group items so each group fits in hardMax
+  const fragments: SplitFragment[] = []
+  let groupLines: string[] = []
+
+  for (let idx = 0; idx < itemStarts.length; idx++) {
+    const itemStart = itemStarts[idx]
+    const itemEnd = idx + 1 < itemStarts.length ? itemStarts[idx + 1] : lines.length
+    const itemLines = lines.slice(itemStart, itemEnd)
+    const combined = [...groupLines, ...itemLines].join("\n")
+
+    if (countTokensSync(combined) > hardMax && groupLines.length > 0) {
+      fragments.push({ content: groupLines.join("\n"), startOffset: block.startOffset })
+      groupLines = itemLines
+    } else {
+      groupLines = [...groupLines, ...itemLines]
+    }
+  }
+
+  if (groupLines.length > 0) {
+    fragments.push({ content: groupLines.join("\n"), startOffset: block.startOffset })
+  }
+
+  return fragments
+}
+
+// ─── Utility: split lines into groups at valid boundary points ───
+
+/**
+ * Split an array of lines into groups that fit within tokenBudget.
+ * `isBoundary(line)` returns true for lines where a split is preferred.
+ * `measureGroup(lines)` returns the token count for a group (may include header overhead).
+ */
+function splitLinesAtBoundaries(
+  lines: string[],
+  tokenBudget: number,
+  isBoundary: (line: string) => boolean,
+  measureGroup: (group: string[]) => number,
+): string[][] {
+  const groups: string[][] = []
+  let current: string[] = []
+
+  for (const line of lines) {
+    const candidate = [...current, line]
+    if (measureGroup(candidate) > tokenBudget && current.length > 0) {
+      groups.push(current)
+      current = [line]
+    } else {
+      current = candidate
+    }
+  }
+
+  if (current.length > 0) {
+    groups.push(current)
+  }
+
+  return groups
 }

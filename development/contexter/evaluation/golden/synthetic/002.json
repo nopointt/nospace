@@ -1,0 +1,14 @@
+{
+  "id": "gs-002",
+  "question": "What is the timestamp for the creation of this document?",
+  "expected_answer": "October 12, 2023, at 12:14:03 PM UTC.",
+  "expected_sources": [
+    "2ac091c4-b803-4c"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}

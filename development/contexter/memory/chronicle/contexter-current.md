@@ -450,3 +450,20 @@ CTX-01+CTX-07 closed (MLP COMPLETE). CTX-08 GTM created. Full competitive resear
 ## 2026-03-29 — сессия 208 CLOSE [Axis]
 
 Presigned R2 upload + audio segmentation + PDF image extraction + multimodal embed. All code written, deployed. Pipeline crashes Bun — needs diagnosis next session. GROQ URL fix applied. DB migrations 0005-0011 applied. E2E tests written (17 suites) but blocked by pipeline crash.
+
+<!-- ENTRY:2026-03-29:CLOSE:209:contexter:contexter-gtm [AXIS] -->
+## 2026-03-29 — сессия 209 CLOSE [Axis]
+
+**CRITICAL FIX: Pipeline infinite loop.** Root cause: regex `/^.*$/gm` in `buildHeadingEvents()` (semantic.ts) hangs on trailing `\n` in Bun's JSC. Fix: `text.split("\n")` + `for...of`. Also fixed: GROQ_LLM_URL env, Jina timeout 10→30s, contextual prefix truncation 12K→4K.
+
+**E2E: 42/50 tests pass.** Suites 1-6 all green (42 tests). Suite 7 blocked by direct upload 415 (multipart MIME resolution). Suite 8 not run.
+
+**Chunking research: 8 files completed (Opus deep dives).** Key: Jina v5 NO-GO (no late chunking), contextual+late = synergy (+23.6 nDCG), structure-aware chunker needed (5 failure modes), parent-child 80% ready (F-017), PIC 50 lines no LLM, Dense X NO-GO, evaluation framework designed.
+
+**Open bugs:** direct upload 415, PDF→1 chunk (BPE not loaded), debug logging still in pipeline.ts, changes not committed to git.
+<!-- ENTRY:2026-03-30:CLOSE:211:contexter:contexter-gtm [AXIS] -->
+## 2026-03-30 — сессия 211 CLOSE [Axis]
+
+**Epic:** CTX-08 GTM — Chunking Overhaul + Pre-launch QA
+
+**Summary:** Chunking overhaul Waves 0-5 deployed. Pre-launch Phase 1 complete (backups, canary, alerts, smoke). Phase 2: 106 E2E tests, Docker memory fix, LLM provider chain Groq→NIM→DeepInfra, 25 golden pairs, deploy docs. 6 bugs found+fixed.

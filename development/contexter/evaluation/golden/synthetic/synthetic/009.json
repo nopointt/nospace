@@ -1,0 +1,14 @@
+{
+  "id": "gs-009",
+  "question": "What are the pipeline stages in the Contexter RAG pipeline?",
+  "expected_answer": "The pipeline stages are parse, chunk, embed, and index.",
+  "expected_sources": [
+    "cde1f0ec-9c28-42"
+  ],
+  "tags": [
+    "synthetic"
+  ],
+  "added_by": "synthetic",
+  "added_at": "2026-03-29",
+  "reviewed": false
+}
