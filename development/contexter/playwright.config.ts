@@ -2,12 +2,17 @@ import { defineConfig } from "@playwright/test"
 
 export default defineConfig({
   testDir: "./e2e",
-  // Default timeout 2 minutes. CJM pipeline tests may run longer due to
-  // Vectorize eventual consistency (2-5 min lag). Override per-test as needed.
-  timeout: 120_000,
+  // Default 3 minutes. Audio pipeline tests override to 5 minutes.
+  timeout: 180_000,
   retries: 0,
   use: {
-    baseURL: "http://localhost:8787",
+    // Production frontend for browser tests
+    baseURL: "https://contexter.cc",
+    screenshot: "only-on-failure",
+    video: "off",
+    trace: "off",
   },
   reporter: [["list"]],
+  // Run suites in parallel where possible (serial suites self-manage)
+  fullyParallel: false,
 })

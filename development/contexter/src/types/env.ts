@@ -11,6 +11,8 @@ export interface Env {
   JINA_API_URL: string
   /** Used for Whisper transcription only. Do not use for LLM chat — use GROQ_LLM_URL. */
   GROQ_API_URL: string
+  /** Used for LLM chat completions (contextual prefix, RAG answer). Base URL without /chat/completions. */
+  GROQ_LLM_URL: string
   GROQ_LLM_MODEL: string
   DOCLING_URL: string
   BASE_URL: string

@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-28 (session 205 — 32/33 RAG features, CC fusion, NLI sidecar, 78/102 review fixes)
+> Last updated: 2026-03-29 (session 208 — presigned R2 upload, GROQ_LLM_URL, DB migrations 0005-0011, pipeline crash blocker)
 ---
 
 ## Identity

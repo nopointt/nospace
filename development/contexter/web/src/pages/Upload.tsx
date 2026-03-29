@@ -14,7 +14,7 @@ import PipelineIndicator from "../components/PipelineIndicator"
 import type { PipelineStage, StageStatus } from "../components/PipelineIndicator"
 import AuthModal from "../components/AuthModal"
 import Toast, { showToast } from "../components/Toast"
-import { uploadFile, uploadText, getDocumentStatus } from "../lib/api"
+import { uploadText, getDocumentStatus, presignUpload, confirmUpload, uploadToR2 } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
 
 // --- Types ---
@@ -30,18 +30,18 @@ interface FileEntry {
   readonly preview: string | null
   readonly error: string | null
   readonly stats: { chunks: number; tokens: number } | null
+  readonly uploadProgress?: { loaded: number; total: number }
 }
 
 type BadgeVariant = "processing" | "ready" | "error" | "pending"
 
 // --- Constants ---
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB
 const POLL_INTERVAL = 2000
 const SUPPORTED_EXTENSIONS = new Set([
   "pdf", "docx", "xlsx", "pptx", "csv", "json", "txt", "md",
-  "png", "jpg", "jpeg", "gif", "webp", "svg",
-  "mp3", "wav", "ogg", "m4a", "flac",
+  "png", "jpg", "jpeg", "webp", "svg",
+  "mp3", "wav", "ogg", "m4a",
   "mp4", "webm", "mov",
 ])
 const STAGE_NAMES = ["parse", "chunk", "embed", "index"] as const
@@ -58,6 +58,13 @@ function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`
+  if (bytes < 1073741824) return `${(bytes / 1048576).toFixed(1)} MB`
+  return `${(bytes / 1073741824).toFixed(1)} GB`
 }
 
 function getExtension(name: string): string {
@@ -148,7 +155,6 @@ const Upload: Component = () => {
 
   function validateFile(file: File): string | null {
     if (file.size === 0) return `${file.name}: пустой файл`
-    if (file.size > MAX_FILE_SIZE) return `${file.name}: файл больше 100MB`
     const ext = getExtension(file.name)
     if (ext && !SUPPORTED_EXTENSIONS.has(ext)) {
       return `${file.name}: формат .${ext} не поддерживается`
@@ -171,11 +177,38 @@ const Upload: Component = () => {
     setFiles((prev) => updateEntry(prev, entry.id, { status: "uploading" }))
 
     try {
-      const result = await uploadFile(file, token)
+      // All files go through presigned upload (server never touches file bytes)
+      const { uploadUrl, documentId, r2Key } = await presignUpload(
+        file.name,
+        file.type || "application/octet-stream",
+        file.size,
+        token,
+      )
+
+      await uploadToR2(uploadUrl, file, (loaded, total) => {
+        setFiles((prev) =>
+          updateEntry(prev, entry.id, {
+            uploadProgress: { loaded, total },
+          }),
+        )
+      })
+
+      await confirmUpload(
+        {
+          documentId,
+          r2Key,
+          fileName: file.name,
+          mimeType: file.type || "application/octet-stream",
+          fileSize: file.size,
+        },
+        token,
+      )
+
       setFiles((prev) =>
         updateEntry(prev, entry.id, {
-          documentId: result.documentId,
+          documentId,
           status: "processing",
+          uploadProgress: undefined,
           stages: STAGE_NAMES.map((name, i) => ({
             name,
             status: i === 0 ? ("active" as StageStatus) : ("pending" as StageStatus),
@@ -188,6 +221,7 @@ const Upload: Component = () => {
         updateEntry(prev, entry.id, {
           status: "error",
           error: message,
+          uploadProgress: undefined,
         }),
       )
     }
@@ -510,7 +544,33 @@ const Upload: Component = () => {
                           <Badge variant={fileBadgeVariant(entry.status)} />
                         </div>
 
-                        {/* Row 2: pipeline */}
+                        {/* Row 2: upload progress (presigned large file) */}
+                        <Show when={entry.status === "uploading" && entry.uploadProgress != null}>
+                          {(_) => {
+                            const prog = entry.uploadProgress!
+                            const pct = Math.round((prog.loaded / prog.total) * 100)
+                            return (
+                              <div class="flex flex-col gap-1">
+                                <div class="flex items-center justify-between">
+                                  <span class="font-mono text-[10px] text-text-tertiary">
+                                    {formatBytes(prog.loaded)} / {formatBytes(prog.total)}
+                                  </span>
+                                  <span class="font-mono text-[10px] text-accent">
+                                    {pct}%
+                                  </span>
+                                </div>
+                                <div class="h-[2px] bg-border-default w-full">
+                                  <div
+                                    class="h-full bg-accent transition-all duration-150"
+                                    style={{ width: `${pct}%` }}
+                                  />
+                                </div>
+                              </div>
+                            )
+                          }}
+                        </Show>
+
+                        {/* Row 3: pipeline */}
                         <Show when={entry.status !== "pending"}>
                           <PipelineIndicator stages={entry.stages} />
                         </Show>

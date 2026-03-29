@@ -4,7 +4,7 @@ import { AudioParser } from "./audio"
 import { VideoParser } from "./video"
 import { YouTubeParser } from "./youtube"
 
-export type { Parser, ParserInput, ParseResult, ParseMetadata } from "./types"
+export type { Parser, ParserInput, ParseResult, ParseMetadata, ParsedImage, StoredImage } from "./types"
 
 export interface ParserServiceConfig {
   doclingUrl: string

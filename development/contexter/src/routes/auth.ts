@@ -65,7 +65,7 @@ auth.post("/register", async (c) => {
   let isRateLimited = false
   try {
     const count = await redis.get(rateKey)
-    if (count && parseInt(count) >= 5) {
+    if (count && parseInt(count) >= 20) {
       isRateLimited = true
     } else {
       await redis.set(rateKey, String((parseInt(count ?? "0")) + 1), "EX", 3600)

@@ -2,8 +2,11 @@ import type { Parser, ParserInput, ParseResult } from "./types"
 import { buildMetadata } from "./types"
 import { streamToBuffer } from "./utils"
 import { randomUUID } from "crypto"
-import { unlink, writeFile, readFile } from "fs/promises"
+import { unlink, writeFile, stat } from "fs/promises"
 import { existsSync } from "fs"
+import { segmentAndTranscribe } from "./audio-segmenter"
+
+const MAX_DIRECT_BYTES = 23 * 1024 * 1024
 
 export class VideoParser implements Parser {
   readonly formats = [
@@ -71,44 +74,29 @@ export class VideoParser implements Parser {
         throw new Error(`ffmpeg exited with code ${exitCode}: ${stderrText.slice(0, 500)}`)
       }
 
-      // Read extracted WAV
-      const wavBuffer = await readFile(audioPath)
+      // Check WAV size to decide transcription path
+      const wavSize = (await stat(audioPath)).size
 
-      // Send to Groq Whisper
-      const formData = new FormData()
-      const blob = new Blob([wavBuffer], { type: "audio/wav" })
-      formData.append("file", blob, `${id}.wav`)
-      formData.append("model", "whisper-large-v3")
-      formData.append("response_format", "verbose_json")
+      if (wavSize <= MAX_DIRECT_BYTES) {
+        return this.transcribeDirectWhisper(audioPath, id, input)
+      }
 
-      const response = await fetch(this.groqApiUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${this.groqApiKey}`,
-        },
-        body: formData,
+      // Large WAV: use silence-aware segmenter
+      // segmentAndTranscribe expects the input path + ext; WAV is already 16kHz mono
+      const result = await segmentAndTranscribe({
+        inputPath: audioPath,
+        ext: "wav",
+        groqApiUrl: this.groqApiUrl,
+        groqApiKey: this.groqApiKey,
       })
 
-      if (!response.ok) {
-        const error = await response.text()
-        throw new Error(`Groq Whisper error ${response.status}: ${error}`)
-      }
-
-      const result = (await response.json()) as WhisperResponse
-      const warnings: string[] = []
-
-      if (!result.text || result.text.trim().length === 0) {
-        warnings.push("Whisper returned empty transcription — audio may be silent or corrupted")
-      }
-
-      const content = result.text || ""
-
+      const content = result.text
       return {
         content,
         metadata: buildMetadata(input, content, "video", {
           duration: result.duration,
           language: result.language,
-          warnings,
+          warnings: result.warnings,
         }),
       }
     } finally {
@@ -120,6 +108,52 @@ export class VideoParser implements Parser {
           )
         }
       }
+    }
+  }
+
+  private async transcribeDirectWhisper(
+    audioPath: string,
+    id: string,
+    input: ParserInput
+  ): Promise<ParseResult> {
+    const { readFile } = await import("fs/promises")
+    const wavBuffer = await readFile(audioPath)
+
+    const formData = new FormData()
+    const blob = new Blob([wavBuffer], { type: "audio/wav" })
+    formData.append("file", blob, `${id}.wav`)
+    formData.append("model", "whisper-large-v3")
+    formData.append("response_format", "verbose_json")
+
+    const response = await fetch(this.groqApiUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.groqApiKey}`,
+      },
+      body: formData,
+    })
+
+    if (!response.ok) {
+      const error = await response.text()
+      throw new Error(`Groq Whisper error ${response.status}: ${error}`)
+    }
+
+    const result = (await response.json()) as WhisperResponse
+    const warnings: string[] = []
+
+    if (!result.text || result.text.trim().length === 0) {
+      warnings.push("Whisper returned empty transcription — audio may be silent or corrupted")
+    }
+
+    const content = result.text || ""
+
+    return {
+      content,
+      metadata: buildMetadata(input, content, "video", {
+        duration: result.duration,
+        language: result.language,
+        warnings,
+      }),
     }
   }
 }

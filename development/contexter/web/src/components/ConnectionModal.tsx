@@ -155,12 +155,13 @@ function makeClients(token: string): ClientInfo[] {
       label: "Perplexity",
       transport: "нативный",
       steps: [
-        { action: "Settings → MCP Servers", detail: "Откройте perplexity.ai → Settings (⚙) → MCP Servers" },
-        { action: "Add Server → Вставьте URL", detail: "Нажмите Add Server. Имя: Contexter. URL: вставьте ссылку выше" },
-        { action: "Спросите что-нибудь", detail: "В новом чате Perplexity спросите по вашим документам" },
+        { action: "Settings → Connectors", detail: "Нажмите на аватар (внизу слева) → Connectors" },
+        { action: "+ Custom connector", detail: "Нажмите + Custom connector (вверху справа). Name: Contexter. MCP server URL: вставьте ссылку выше. Отметьте галочку → Add" },
+        { action: "Добавьте коннектор в чат", detail: "В новом чате нажмите + рядом с полем ввода → выберите Contexter. Может запросить авторизацию — подтвердите" },
+        { action: "Спросите что-нибудь", detail: "Спросите по вашим документам — Perplexity будет использовать Contexter как источник" },
       ],
       config: null,
-      gotcha: "Работает на платном плане Perplexity. Бесплатный план — только для Mac",
+      gotcha: "Нужен Pro план Perplexity",
     },
     {
       id: "cursor",
@@ -210,26 +211,43 @@ async function copyToClipboard(text: string) {
 
 // --- URL field with copy ---
 
-const UrlField: Component<{ url: string }> = (props) => (
-  <div class="flex items-center" style={{ border: "1px solid #333333", "margin-bottom": "16px" }}>
-    <span
-      class="flex-1 truncate font-mono"
-      style={{ padding: "10px 14px", "font-size": "12px", color: "#CCCCCC" }}
-    >
-      {props.url}
-    </span>
-    <button
-      onClick={() => copyToClipboard(props.url)}
-      class="shrink-0 font-mono"
-      style={{
-        padding: "10px 14px", "font-size": "11px", color: "#808080",
-        "border-left": "1px solid #333333", background: "transparent", cursor: "pointer",
-      }}
-    >
-      Скопировать
-    </button>
-  </div>
-)
+const UrlField: Component<{ url: string }> = (props) => {
+  const tokenFromUrl = () => {
+    const match = props.url.match(/token=(.+)$/)
+    return match ? match[1] : ""
+  }
+
+  return (
+    <div class="flex items-center" style={{ border: "1px solid #333333", "margin-bottom": "16px" }}>
+      <span
+        class="flex-1 truncate font-mono"
+        style={{ padding: "10px 14px", "font-size": "12px", color: "#CCCCCC" }}
+      >
+        {props.url}
+      </span>
+      <button
+        onClick={() => copyToClipboard(tokenFromUrl())}
+        class="shrink-0 font-mono"
+        style={{
+          padding: "10px 14px", "font-size": "11px", color: "#808080",
+          "border-left": "1px solid #333333", background: "transparent", cursor: "pointer",
+        }}
+      >
+        Скопировать токен
+      </button>
+      <button
+        onClick={() => copyToClipboard(props.url)}
+        class="shrink-0 font-mono"
+        style={{
+          padding: "10px 14px", "font-size": "11px", color: "#808080",
+          "border-left": "1px solid #333333", background: "transparent", cursor: "pointer",
+        }}
+      >
+        Скопировать ссылку
+      </button>
+    </div>
+  )
+}
 
 // --- Client Icon ---
 

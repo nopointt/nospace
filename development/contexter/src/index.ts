@@ -73,6 +73,7 @@ const env: Env = {
   GROQ_API_KEY: process.env.GROQ_API_KEY!,
   JINA_API_URL: process.env.JINA_API_URL ?? "https://api.jina.ai/v1/embeddings",
   GROQ_API_URL: process.env.GROQ_API_URL ?? "https://api.groq.com/openai/v1/audio/transcriptions",
+  GROQ_LLM_URL: process.env.GROQ_LLM_URL ?? "https://api.groq.com/openai/v1",
   GROQ_LLM_MODEL: process.env.GROQ_LLM_MODEL ?? "llama-3.1-8b-instant",
   DOCLING_URL: process.env.DOCLING_URL ?? "http://localhost:5001",
   BASE_URL: process.env.BASE_URL ?? "https://api.contexter.cc",

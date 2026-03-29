@@ -217,3 +217,55 @@ export function deleteDocument(documentId: string, token: string) {
     { method: "DELETE", token },
   )
 }
+
+export function presignUpload(
+  fileName: string,
+  mimeType: string,
+  fileSize: number,
+  token: string,
+) {
+  return api<{ uploadUrl: string; documentId: string; r2Key: string; expiresIn: number }>(
+    "/api/upload/presign",
+    { method: "POST", body: JSON.stringify({ fileName, mimeType, fileSize }), token },
+  )
+}
+
+export function confirmUpload(
+  data: {
+    documentId: string
+    r2Key: string
+    fileName: string
+    mimeType: string
+    fileSize: number
+  },
+  token: string,
+) {
+  return api<{ documentId: string; status: string }>(
+    "/api/upload/confirm",
+    { method: "POST", body: JSON.stringify(data), token },
+  )
+}
+
+export function uploadToR2(
+  url: string,
+  file: File,
+  onProgress: (loaded: number, total: number) => void,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open("PUT", url)
+    xhr.setRequestHeader("Content-Type", file.type)
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) onProgress(e.loaded, e.total)
+    }
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve()
+      } else {
+        reject(new Error(`Upload failed: ${xhr.status}`))
+      }
+    }
+    xhr.onerror = () => reject(new Error("Network error during upload"))
+    xhr.send(file)
+  })
+}

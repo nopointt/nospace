@@ -1,4 +1,4 @@
-import type { Parser, ParserInput, ParseResult } from "./types"
+import type { Parser, ParserInput, ParseResult, ParsedImage } from "./types"
 import { buildMetadata } from "./types"
 import { streamToBuffer } from "./utils"
 import { MistralOcrService, isMimeTypeSupportedByMistral } from "./mistral-ocr"
@@ -37,6 +37,11 @@ export class DoclingParser implements Parser {
     const formData = new FormData()
     const blob = new Blob([buffer], { type: input.mimeType })
     formData.append("files", blob, input.fileName)
+    // Request both MD (text) and JSON (images) output formats
+    formData.append("to_formats", "md")
+    formData.append("to_formats", "json")
+    // Embed images as base64 in the JSON output for extraction
+    formData.append("image_export_mode", "embedded")
 
     // P0-003: Docling-serve 1.15.0 API is at /v1/convert/file (no /api prefix)
     // P2-007: 90s timeout — shorter than 120s pipeline timeout to get clean error
@@ -54,6 +59,10 @@ export class DoclingParser implements Parser {
     const data = await res.json() as DoclingResponse
     const content = data.document?.md_content ?? data.md_content ?? ""
     const warnings: string[] = []
+    // Extract images from Docling JSON output (PDFs only)
+    const images = input.mimeType === "application/pdf"
+      ? extractImagesFromDocling(data)
+      : undefined
 
     if (!content || content.trim().length === 0) {
       warnings.push("Docling returned empty content — file may be image-only or protected")
@@ -107,6 +116,7 @@ export class DoclingParser implements Parser {
     return {
       content: content || "",
       metadata: buildMetadata(input, content || "", detectFormat(input.mimeType), { warnings }),
+      images: images && images.length > 0 ? images : undefined,
     }
   }
 }
@@ -141,9 +151,104 @@ export class TextParser implements Parser {
   }
 }
 
+interface DoclingPictureItem {
+  self_ref?: string
+  /** Base64-encoded image data URI or raw base64 string. */
+  data?: string
+  /** Image dimensions reported by Docling. */
+  size?: { width?: number; height?: number }
+  /** 1-based page number. */
+  prov?: Array<{ page_no?: number }>
+}
+
+interface DoclingDocumentJson {
+  pictures?: DoclingPictureItem[]
+  /** Docling may nest items under "body.children" */
+  body?: { children?: DoclingPictureItem[] }
+  texts?: Array<{ text?: string; label?: string; prov?: Array<{ page_no?: number }> }>
+}
+
 interface DoclingResponse {
-  document?: { md_content?: string }
+  document?: {
+    md_content?: string
+    /** Parsed JSON document structure when json format is requested. */
+    json_content?: DoclingDocumentJson
+  }
   md_content?: string
+  json_content?: DoclingDocumentJson
+}
+
+// Minimum decoded size (5 KB) — skip decorative or blank images
+const MIN_IMAGE_BYTES = 5 * 1024
+// Minimum dimension — skip icons, bullets
+const MIN_IMAGE_DIM = 150
+
+/**
+ * Extract images from Docling JSON response, applying size/dimension filters.
+ * Returns ParsedImage[] ready for R2 storage.
+ */
+function extractImagesFromDocling(data: DoclingResponse): ParsedImage[] {
+  const jsonDoc: DoclingDocumentJson | undefined =
+    data.document?.json_content ?? data.json_content
+
+  if (!jsonDoc?.pictures || jsonDoc.pictures.length === 0) {
+    return []
+  }
+
+  // Build a quick lookup: page_no → nearest text (caption candidate)
+  const captionByPage = buildCaptionLookup(jsonDoc)
+
+  const images: ParsedImage[] = []
+
+  for (const pic of jsonDoc.pictures) {
+    if (!pic.data) continue
+
+    // Strip data URI prefix if present: "data:image/png;base64,<data>"
+    const colonSemi = pic.data.indexOf(";base64,")
+    const raw = colonSemi !== -1 ? pic.data.slice(colonSemi + 8) : pic.data
+    const mimeType = colonSemi !== -1
+      ? pic.data.slice(5, colonSemi)  // "image/png"
+      : "image/png"
+
+    // Dimension check
+    const width = pic.size?.width ?? 0
+    const height = pic.size?.height ?? 0
+    if (width < MIN_IMAGE_DIM || height < MIN_IMAGE_DIM) continue
+
+    // Decoded size check — base64 is 4/3 ratio
+    const approxBytes = Math.floor(raw.length * 0.75)
+    if (approxBytes < MIN_IMAGE_BYTES) continue
+
+    const page = pic.prov?.[0]?.page_no ?? 1
+
+    images.push({
+      base64: raw,
+      mimeType,
+      page,
+      width,
+      height,
+      caption: captionByPage.get(page),
+    })
+  }
+
+  return images
+}
+
+/**
+ * Build a map from page number to the first "caption"-labelled text on that page.
+ * Falls back to empty map if no texts are present.
+ */
+function buildCaptionLookup(doc: DoclingDocumentJson): Map<number, string> {
+  const map = new Map<number, string>()
+  if (!doc.texts) return map
+  for (const t of doc.texts) {
+    if (t.label !== "caption" || !t.text) continue
+    const page = t.prov?.[0]?.page_no ?? 0
+    if (page > 0 && !map.has(page)) {
+      map.set(page, t.text)
+    }
+  }
+  return map
 }
 
 function detectFormat(mimeType: string): string {

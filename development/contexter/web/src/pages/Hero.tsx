@@ -16,11 +16,13 @@ import ConnectionModal from "../components/ConnectionModal"
 import DocumentModal from "../components/DocumentModal"
 import Toast, { showToast } from "../components/Toast"
 import {
-  uploadFile,
   uploadText,
   getDocumentStatus,
   listDocuments,
   query as queryApi,
+  presignUpload,
+  confirmUpload,
+  uploadToR2,
   API_BASE,
 } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
@@ -46,12 +48,11 @@ import type { PipelineStage, StageStatus } from "../components/PipelineIndicator
 
 // --- Constants ---
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024
 const POLL_INTERVAL = 2000
 const SUPPORTED_EXTENSIONS = new Set([
   "pdf", "docx", "xlsx", "pptx", "csv", "json", "txt", "md",
-  "png", "jpg", "jpeg", "gif", "webp", "svg",
-  "mp3", "wav", "ogg", "m4a", "flac",
+  "png", "jpg", "jpeg", "webp", "svg",
+  "mp3", "wav", "ogg", "m4a",
   "mp4", "webm", "mov",
 ])
 const STAGE_NAMES = ["parse", "chunk", "embed", "index"] as const
@@ -204,7 +205,7 @@ const Hero: Component = () => {
   // Validation
   function validateFile(file: File): string | null {
     if (file.size === 0) return `${file.name}: Пустой файл`
-    if (file.size > MAX_FILE_SIZE) return `${file.name}: Файл больше 100MB`
+    // No file size limit — presigned upload handles any size
     const ext = getExtension(file.name)
     if (ext && !SUPPORTED_EXTENSIONS.has(ext)) return `${file.name}: .${ext} не поддерживается`
     return null
@@ -220,9 +221,13 @@ const Hero: Component = () => {
     if (!t) return
     setFiles((prev) => updateEntry(prev, entry.id, { status: "uploading" }))
     try {
-      const result = await uploadFile(file, t)
+      const { uploadUrl, documentId, r2Key } = await presignUpload(
+        file.name, file.type || "application/octet-stream", file.size, t,
+      )
+      await uploadToR2(uploadUrl, file, () => {})
+      await confirmUpload({ documentId, r2Key, fileName: file.name, mimeType: file.type || "application/octet-stream", fileSize: file.size }, t)
       setFiles((prev) => updateEntry(prev, entry.id, {
-        documentId: result.documentId, status: "processing",
+        documentId, status: "processing",
         stages: STAGE_NAMES.map((n, i) => ({ name: n, status: (i === 0 ? "active" : "pending") as StageStatus })),
       }))
     } catch (e) {
@@ -626,15 +631,26 @@ const Hero: Component = () => {
               <span style={{ "font-size": "11px", color: "#666666", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
                 Ссылка подключения
               </span>
-              <div class="flex items-center" style={{ border: "2px solid #1E3EA0", padding: "12px 16px", gap: "12px" }}>
-                <span class="font-mono flex-1 truncate" style={{ "font-size": "12px", color: "#1E3EA0" }}>{mcpUrl()}</span>
-                <button
-                  onClick={() => copyText(mcpUrl())}
-                  style={{
-                    padding: "6px 16px", "font-size": "12px", "font-weight": "600", color: "#FAFAFA",
-                    background: "#1E3EA0", border: "none", cursor: "pointer", "white-space": "nowrap",
-                  }}
-                >Скопировать</button>
+              <div class="flex flex-col" style={{ gap: "8px" }}>
+                <div style={{ border: "2px solid #1E3EA0", padding: "12px 16px" }}>
+                  <span class="font-mono block truncate" style={{ "font-size": "12px", color: "#1E3EA0" }}>{mcpUrl()}</span>
+                </div>
+                <div class="flex" style={{ gap: "8px" }}>
+                  <button
+                    onClick={() => copyText(mcpUrl())}
+                    style={{
+                      padding: "6px 16px", "font-size": "12px", "font-weight": "600", color: "#FAFAFA",
+                      background: "#1E3EA0", border: "1px solid #1E3EA0", cursor: "pointer", "white-space": "nowrap",
+                    }}
+                  >Скопировать ссылку</button>
+                  <button
+                    onClick={() => copyText(mcpUrl().match(/token=(.+)$/)?.[1] ?? "")}
+                    style={{
+                      padding: "6px 16px", "font-size": "12px", "font-weight": "600", color: "#1E3EA0",
+                      background: "transparent", border: "1px solid #1E3EA0", cursor: "pointer", "white-space": "nowrap",
+                    }}
+                  >Скопировать токен</button>
+                </div>
               </div>
             </div>
 

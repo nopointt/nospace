@@ -1,15 +1,16 @@
 import type { Sql } from "postgres"
 import type { Env } from "../types/env"
 import { ParserService } from "./parsers"
-import type { ParserInput, ParseResult } from "./parsers"
+import type { ParserInput, ParseResult, StoredImage } from "./parsers"
 import { ChunkerService } from "./chunker"
 import type { Chunk } from "./chunker"
 import { EmbedderService } from "./embedder"
 import type { BatchEmbeddingResult } from "./embedder"
 import { CachedEmbedderService } from "./embedder/cache"
+import { ImageEmbedderService } from "./embedder/image"
 import { VectorStoreService } from "./vectorstore"
 import type { VectorRecord } from "./vectorstore"
-import { GetObjectCommand } from "@aws-sdk/client-s3"
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 import { addContextualPrefixes } from "./chunker/contextual"
 import { findNearDuplicate } from "./embedder/dedup"
 
@@ -94,8 +95,79 @@ function createServices(env: Env, sql: Sql) {
   const chunkerService = new ChunkerService()
   const rawEmbedder = new EmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
   const embedderService = new CachedEmbedderService(rawEmbedder, env.redis)
+  const imageEmbedderService = new ImageEmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
   const vectorStoreService = new VectorStoreService({ sql })
-  return { parserService, chunkerService, embedderService, vectorStoreService }
+  return { parserService, chunkerService, embedderService, imageEmbedderService, vectorStoreService }
+}
+
+/**
+ * Store extracted images to R2 and return StoredImage[] with r2Keys.
+ * Non-fatal: logs and returns empty array on failure.
+ */
+async function storeImagesToR2(
+  parseResult: ParseResult,
+  documentId: string,
+  userId: string,
+  env: Env,
+): Promise<StoredImage[]> {
+  if (!parseResult.images || parseResult.images.length === 0) return []
+
+  const stored: StoredImage[] = []
+  for (const [i, img] of parseResult.images.entries()) {
+    try {
+      const imageBuffer = Buffer.from(img.base64, "base64")
+      const r2Key = `${userId}/${documentId}/images/p${img.page}_i${i}.png`
+      await env.storage.send(new PutObjectCommand({
+        Bucket: env.storageBucket,
+        Key: r2Key,
+        Body: imageBuffer,
+        ContentType: img.mimeType,
+      }))
+      stored.push({ ...img, r2Key })
+    } catch (e) {
+      console.warn(JSON.stringify({
+        event: "image_r2_store_failed",
+        documentId,
+        page: img.page,
+        index: i,
+        error: e instanceof Error ? e.message : String(e),
+      }))
+    }
+  }
+  return stored
+}
+
+/**
+ * Build image Chunk objects from stored images, appended after text chunks.
+ */
+function buildImageChunks(storedImages: StoredImage[], startIndex: number): Chunk[] {
+  return storedImages.map((img, i) => ({
+    index: startIndex + i,
+    content: img.caption ?? `[Image from page ${img.page}]`,
+    tokenCount: 10,
+    startOffset: 0,
+    endOffset: 0,
+    metadata: {
+      type: "semantic" as const,
+      page: img.page,
+    },
+    chunkType: "flat" as const,
+    // Carry image-specific info in an extension field read during index stage
+    _imageR2Key: img.r2Key,
+    _imageMimeType: img.mimeType,
+    _imageBase64: img.base64,
+    _imageWidth: img.width,
+    _imageHeight: img.height,
+  } as Chunk & ImageChunkExt))
+}
+
+/** Extra fields carried on image chunks through the embed → index stages. */
+interface ImageChunkExt {
+  _imageR2Key: string
+  _imageMimeType: string
+  _imageBase64: string
+  _imageWidth: number
+  _imageHeight: number
 }
 
 export async function runPipeline(
@@ -112,7 +184,7 @@ export async function runPipeline(
     { stage: "index", status: "pending" },
   ]
 
-  const { parserService, chunkerService, embedderService, vectorStoreService } = createServices(env, sql)
+  const { parserService, chunkerService, embedderService, imageEmbedderService, vectorStoreService } = createServices(env, sql)
 
   let parseResult: ParseResult
   try {
@@ -135,11 +207,21 @@ export async function runPipeline(
     return { documentId, stages }
   }
 
+  // Store extracted images to R2 (non-fatal, best-effort)
+  const resolvedUserId = userId ?? "anonymous"
+  const storedImages = await storeImagesToR2(parseResult, documentId, resolvedUserId, env)
+
   let chunks: Chunk[]
   try {
     stages[1].status = "running"
     const start = Date.now()
     chunks = chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat)
+
+    // Append image chunks after text chunks
+    if (storedImages.length > 0) {
+      chunks = [...chunks, ...buildImageChunks(storedImages, chunks.length)]
+    }
+
     stages[1].status = "done"
     stages[1].durationMs = Date.now() - start
     stages[1].data = {
@@ -154,15 +236,18 @@ export async function runPipeline(
   }
 
   // F-020: contextual prefix (non-fatal — proceed without if Groq fails)
+  // Only apply to text chunks (image chunks have no contextual prefix)
+  const imageChunkStart = chunks.length - storedImages.length
   try {
-    const contextualizedChunks = await addContextualPrefixes(
+    const textChunks = chunks.slice(0, imageChunkStart)
+    const contextualizedText = await addContextualPrefixes(
       parseResult.content,
-      chunks,
-      process.env["GROQ_LLM_URL"] ?? env.GROQ_API_URL,
+      textChunks,
+      env.GROQ_LLM_URL,
       env.GROQ_API_KEY,
       env.GROQ_LLM_MODEL
     )
-    chunks = contextualizedChunks
+    chunks = [...contextualizedText, ...chunks.slice(imageChunkStart)]
   } catch (e) {
     console.warn("contextual prefix generation failed, proceeding without:", e instanceof Error ? e.message : String(e))
   }
@@ -171,9 +256,26 @@ export async function runPipeline(
   try {
     stages[2].status = "running"
     const start = Date.now()
-    embedResult = await embedderService.embedBatch(chunks.map((c) => c.content), {
-      lateChunking: true,
-    })
+
+    const textEmbedResult = await embedderService.embedBatch(
+      chunks.slice(0, imageChunkStart).map((c) => c.content),
+      { lateChunking: true },
+    )
+
+    // Embed image chunks with jina-clip-v2 (separate model — see image.ts TODO)
+    let imageEmbedResult: BatchEmbeddingResult = { embeddings: [], totalTokens: 0 }
+    if (storedImages.length > 0) {
+      imageEmbedResult = await imageEmbedderService.embedImages(
+        storedImages.map((img) => img.base64),
+        storedImages.map((img) => img.mimeType),
+      )
+    }
+
+    embedResult = {
+      embeddings: [...textEmbedResult.embeddings, ...imageEmbedResult.embeddings],
+      totalTokens: textEmbedResult.totalTokens + imageEmbedResult.totalTokens,
+    }
+
     stages[2].status = "done"
     stages[2].durationMs = Date.now() - start
     stages[2].data = {
@@ -190,7 +292,6 @@ export async function runPipeline(
   try {
     stages[3].status = "running"
     const start = Date.now()
-    const resolvedUserId = userId ?? "anonymous"
 
     // F-028: dedup check — separate canonical from duplicate chunks
     const canonicalRows: object[] = []
@@ -198,8 +299,10 @@ export async function runPipeline(
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i]!
+      const ext = chunk as Chunk & Partial<ImageChunkExt>
       const embedding = embedResult.embeddings[i]!.vector
       const duplicateOf = await findNearDuplicate(sql, embedding, resolvedUserId)
+      const isImage = ext._imageR2Key !== undefined
       const row = {
         id: `${documentId}-${chunk.index}`,
         document_id: documentId,
@@ -210,6 +313,10 @@ export async function runPipeline(
         context_prefix: chunk.contextPrefix ?? null,
         context_version: chunk.contextPrefix ? 1 : 0,
         duplicate_of: duplicateOf ?? null,
+        chunk_type: isImage ? "image" : (chunk.chunkType ?? "flat"),
+        page_number: chunk.metadata.page ?? null,
+        // Store r2Key in section_heading column (flexible metadata slot) for images
+        section_heading: isImage ? (ext._imageR2Key ?? null) : (chunk.metadata.sectionHeading ?? null),
       }
       if (duplicateOf !== null) {
         duplicateRows.push(row)
@@ -226,12 +333,15 @@ export async function runPipeline(
         token_count = EXCLUDED.token_count,
         context_prefix = EXCLUDED.context_prefix,
         context_version = EXCLUDED.context_version,
-        duplicate_of = EXCLUDED.duplicate_of
+        duplicate_of = EXCLUDED.duplicate_of,
+        chunk_type = EXCLUDED.chunk_type,
+        page_number = EXCLUDED.page_number,
+        section_heading = EXCLUDED.section_heading
     `
 
     // Only index canonical chunks in the vector store — skip duplicates
     const records: VectorRecord[] = canonicalRows.map((row) => {
-      const r = row as { id: string; chunk_index: number; content: string }
+      const r = row as { id: string; chunk_index: number; content: string; chunk_type: string }
       const chunkIdx = chunks.findIndex((c) => `${documentId}-${c.index}` === r.id)
       return {
         id: r.id,
@@ -263,17 +373,17 @@ export async function runPipelineAsync(
   userId: string,
   jobIds: Record<StageType, string>
 ): Promise<void> {
-  const { parserService, chunkerService, embedderService, vectorStoreService } = createServices(env, sql)
+  const { parserService, chunkerService, embedderService, imageEmbedderService, vectorStoreService } = createServices(env, sql)
 
-  const MAX_DECOMPRESSED_BYTES = 50 * 1024 * 1024
+  const MAX_DECOMPRESSED_BYTES = 500 * 1024 * 1024
 
   let parseResult: ParseResult
   try {
     await updateJobStatus(sql, jobIds.parse, "running")
     parseResult = await withTimeout(parserService.parse(input), STAGE_TIMEOUT_MS.parse, "parse")
-    // NEW-007: zip bomb protection — reject documents whose decompressed content exceeds 50MB
+    // NEW-007: zip bomb protection — reject documents whose decompressed content exceeds 500MB
     if (parseResult.content.length > MAX_DECOMPRESSED_BYTES) {
-      const msg = "decompressed content exceeds 50MB limit"
+      const msg = "decompressed content exceeds 500MB limit"
       await updateJobStatus(sql, jobIds.parse, "error", 0, msg)
       await updateDocumentStatus(sql, documentId, "failed", msg)
       return
@@ -286,13 +396,20 @@ export async function runPipelineAsync(
     return
   }
 
+  // Store extracted images to R2 (non-fatal, best-effort)
+  const storedImages = await storeImagesToR2(parseResult, documentId, userId, env)
+
   let chunks: Chunk[]
   try {
     await updateJobStatus(sql, jobIds.chunk, "running")
-    chunks = await withTimeout(
+    const textChunks = await withTimeout(
       Promise.resolve(chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat)),
       STAGE_TIMEOUT_MS.chunk, "chunk"
     )
+    // Append image chunks after text chunks
+    chunks = storedImages.length > 0
+      ? [...textChunks, ...buildImageChunks(storedImages, textChunks.length)]
+      : textChunks
     await updateJobStatus(sql, jobIds.chunk, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
@@ -302,20 +419,22 @@ export async function runPipelineAsync(
   }
 
   // F-020: contextual prefix (non-fatal — reuse chunk job status slot)
+  // Only apply to text chunks; image chunks are appended after
+  const imageChunkStart = chunks.length - storedImages.length
   try {
     await updateJobStatus(sql, jobIds.chunk, "running")
-    const contextualizedChunks = await withTimeout(
+    const contextualizedText = await withTimeout(
       addContextualPrefixes(
         parseResult.content,
-        chunks,
-        process.env["GROQ_LLM_URL"] ?? env.GROQ_API_URL,
+        chunks.slice(0, imageChunkStart),
+        env.GROQ_LLM_URL,
         env.GROQ_API_KEY,
         env.GROQ_LLM_MODEL
       ),
       STAGE_TIMEOUT_MS.chunk,
       "contextual-prefix"
     )
-    chunks = contextualizedChunks
+    chunks = [...contextualizedText, ...chunks.slice(imageChunkStart)]
     await updateJobStatus(sql, jobIds.chunk, "done", 100)
   } catch (e) {
     await updateJobStatus(sql, jobIds.chunk, "done", 100)
@@ -325,12 +444,30 @@ export async function runPipelineAsync(
   let embedResult: BatchEmbeddingResult
   try {
     await updateJobStatus(sql, jobIds.embed, "running")
-    embedResult = await withTimeout(
-      embedderService.embedBatch(chunks.map((c) => c.content), {
-        lateChunking: true,
-      }),
+
+    const textEmbedResult = await withTimeout(
+      embedderService.embedBatch(
+        chunks.slice(0, imageChunkStart).map((c) => c.content),
+        { lateChunking: true },
+      ),
       STAGE_TIMEOUT_MS.embed, "embed"
     )
+
+    let imageEmbedResult: BatchEmbeddingResult = { embeddings: [], totalTokens: 0 }
+    if (storedImages.length > 0) {
+      imageEmbedResult = await withTimeout(
+        imageEmbedderService.embedImages(
+          storedImages.map((img) => img.base64),
+          storedImages.map((img) => img.mimeType),
+        ),
+        STAGE_TIMEOUT_MS.embed, "embed-images"
+      )
+    }
+
+    embedResult = {
+      embeddings: [...textEmbedResult.embeddings, ...imageEmbedResult.embeddings],
+      totalTokens: textEmbedResult.totalTokens + imageEmbedResult.totalTokens,
+    }
     await updateJobStatus(sql, jobIds.embed, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
@@ -348,8 +485,10 @@ export async function runPipelineAsync(
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i]!
+      const ext = chunk as Chunk & Partial<ImageChunkExt>
       const embedding = embedResult.embeddings[i]!.vector
       const duplicateOf = await findNearDuplicate(sql, embedding, userId)
+      const isImage = ext._imageR2Key !== undefined
       const row = {
         id: `${documentId}-${chunk.index}`,
         document_id: documentId,
@@ -360,6 +499,9 @@ export async function runPipelineAsync(
         context_prefix: chunk.contextPrefix ?? null,
         context_version: chunk.contextPrefix ? 1 : 0,
         duplicate_of: duplicateOf ?? null,
+        chunk_type: isImage ? "image" : (chunk.chunkType ?? "flat"),
+        page_number: chunk.metadata.page ?? null,
+        section_heading: isImage ? (ext._imageR2Key ?? null) : (chunk.metadata.sectionHeading ?? null),
       }
       if (duplicateOf !== null) {
         duplicateRows.push(row)
@@ -376,7 +518,10 @@ export async function runPipelineAsync(
         token_count = EXCLUDED.token_count,
         context_prefix = EXCLUDED.context_prefix,
         context_version = EXCLUDED.context_version,
-        duplicate_of = EXCLUDED.duplicate_of
+        duplicate_of = EXCLUDED.duplicate_of,
+        chunk_type = EXCLUDED.chunk_type,
+        page_number = EXCLUDED.page_number,
+        section_heading = EXCLUDED.section_heading
     `
 
     // Only index canonical chunks in the vector store — skip duplicates
@@ -445,7 +590,7 @@ export async function resumePipelineFromStage(
     fileSize: doc.size as number,
   }
 
-  const { parserService, chunkerService, embedderService, vectorStoreService } = createServices(env, sql)
+  const { parserService, chunkerService, embedderService, imageEmbedderService, vectorStoreService } = createServices(env, sql)
 
   // Re-parse (needed for all retry paths)
   let parseResult: ParseResult
@@ -460,10 +605,16 @@ export async function resumePipelineFromStage(
     return
   }
 
+  // Store extracted images to R2 (non-fatal, best-effort)
+  const storedImages = await storeImagesToR2(parseResult, documentId, userId, env)
+
   let chunks: Chunk[]
   try {
     if (startIndex <= 1) await updateJobStatus(sql, jobIds.chunk, "running")
-    chunks = chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat)
+    const textChunks = chunkerService.chunk(parseResult.content, parseResult.metadata.sourceFormat)
+    chunks = storedImages.length > 0
+      ? [...textChunks, ...buildImageChunks(storedImages, textChunks.length)]
+      : textChunks
     if (startIndex <= 1) await updateJobStatus(sql, jobIds.chunk, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
@@ -473,16 +624,17 @@ export async function resumePipelineFromStage(
   }
 
   // F-020: contextual prefix (non-fatal)
+  const imageChunkStart = chunks.length - storedImages.length
   try {
     if (startIndex <= 1) {
-      const contextualizedChunks = await addContextualPrefixes(
+      const contextualizedText = await addContextualPrefixes(
         parseResult.content,
-        chunks,
-        process.env["GROQ_LLM_URL"] ?? env.GROQ_API_URL,
+        chunks.slice(0, imageChunkStart),
+        env.GROQ_LLM_URL,
         env.GROQ_API_KEY,
         env.GROQ_LLM_MODEL
       )
-      chunks = contextualizedChunks
+      chunks = [...contextualizedText, ...chunks.slice(imageChunkStart)]
     }
   } catch (e) {
     console.warn("contextual prefix generation failed, proceeding without:", e instanceof Error ? e.message : String(e))
@@ -491,9 +643,24 @@ export async function resumePipelineFromStage(
   let embedResult: BatchEmbeddingResult
   try {
     if (startIndex <= 2) await updateJobStatus(sql, jobIds.embed, "running")
-    embedResult = await embedderService.embedBatch(chunks.map((c) => c.content), {
-      lateChunking: true,
-    })
+
+    const textEmbedResult = await embedderService.embedBatch(
+      chunks.slice(0, imageChunkStart).map((c) => c.content),
+      { lateChunking: true },
+    )
+
+    let imageEmbedResult: BatchEmbeddingResult = { embeddings: [], totalTokens: 0 }
+    if (storedImages.length > 0) {
+      imageEmbedResult = await imageEmbedderService.embedImages(
+        storedImages.map((img) => img.base64),
+        storedImages.map((img) => img.mimeType),
+      )
+    }
+
+    embedResult = {
+      embeddings: [...textEmbedResult.embeddings, ...imageEmbedResult.embeddings],
+      totalTokens: textEmbedResult.totalTokens + imageEmbedResult.totalTokens,
+    }
     if (startIndex <= 2) await updateJobStatus(sql, jobIds.embed, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)
@@ -512,8 +679,10 @@ export async function resumePipelineFromStage(
 
       for (let i = 0; i < chunks.length; i++) {
         const chunk = chunks[i]!
+        const ext = chunk as Chunk & Partial<ImageChunkExt>
         const embedding = embedResult.embeddings[i]!.vector
         const duplicateOf = await findNearDuplicate(sql, embedding, userId)
+        const isImage = ext._imageR2Key !== undefined
         const row = {
           id: `${documentId}-${chunk.index}`,
           document_id: documentId,
@@ -524,6 +693,9 @@ export async function resumePipelineFromStage(
           context_prefix: chunk.contextPrefix ?? null,
           context_version: chunk.contextPrefix ? 1 : 0,
           duplicate_of: duplicateOf ?? null,
+          chunk_type: isImage ? "image" : (chunk.chunkType ?? "flat"),
+          page_number: chunk.metadata.page ?? null,
+          section_heading: isImage ? (ext._imageR2Key ?? null) : (chunk.metadata.sectionHeading ?? null),
         }
         if (duplicateOf !== null) {
           duplicateRows.push(row)
@@ -540,7 +712,10 @@ export async function resumePipelineFromStage(
           token_count = EXCLUDED.token_count,
           context_prefix = EXCLUDED.context_prefix,
           context_version = EXCLUDED.context_version,
-          duplicate_of = EXCLUDED.duplicate_of
+          duplicate_of = EXCLUDED.duplicate_of,
+          chunk_type = EXCLUDED.chunk_type,
+          page_number = EXCLUDED.page_number,
+          section_heading = EXCLUDED.section_heading
       `
 
       // P1-011: include userId in metadata for vector scope filtering on retry

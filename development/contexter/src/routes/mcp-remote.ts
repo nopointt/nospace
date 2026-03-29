@@ -68,7 +68,7 @@ const TOOLS = [
   },
   {
     name: "upload_document",
-    description: "Upload a file to the knowledge base. The file must be base64-encoded. Supported formats: PDF, DOCX, XLSX, PPTX, CSV, JSON, TXT, MD, images (PNG/JPG/WebP), audio (MP3/WAV/OGG).",
+    description: "Upload a file to the knowledge base. The file must be base64-encoded. Supported formats: PDF, DOCX, XLSX, PPTX, ODS, ODT, CSV, JSON, TXT, MD, HTML, XML, SVG, images (PNG/JPG/WebP), audio (MP3/WAV/M4A/OGG), video (MP4/MOV/WebM), YouTube URL.",
     inputSchema: {
       type: "object" as const,
       properties: {

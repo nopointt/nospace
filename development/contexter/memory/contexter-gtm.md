@@ -1,7 +1,7 @@
 ---
 # contexter-gtm.md — CTX-08 GTM Strategy & Positioning
 > Layer: L3 | Epic: CTX-08 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-29 (session 207 — capitalization audit 12/12 complete, deployed)
+> Last updated: 2026-03-29 (session 208 — presigned upload, audio segmentation, PDF images, pipeline crash blocker)
 ---
 
 ## Goal
@@ -96,6 +96,57 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - [ ] Product video (deferred)
 - [ ] Testimonials collection (Artem demo + early users)
 - [ ] A/B testing hero variants
+
+### Phase 7: Unlimited Upload + Audio Segmentation + PDF Images (session 208)
+
+**Goal:** Убрать лимит 100MB, поддержать файлы любого размера. Сегментация аудио для Whisper. Извлечение картинок из PDF с мультимодальным embedding.
+
+**Architecture decisions:**
+- Presigned R2 upload (браузер → R2 напрямую, сервер не трогает байты)
+- Audio: silence-detect → segment ≤23MB mid-silence → parallel Whisper → merge
+- PDF images: Docling `image_export_mode=embedded` (poppler не нужен)
+- Multimodal embed: Jina v4 (text + image в одном vector space)
+- Старый upload path остаётся для файлов ≤50MB и MCP (лимит 200MB)
+
+**Wave 0 (Axis):**
+- [x] CORS на R2 bucket contexter-files
+- [x] Docling image extraction test → подходит (image_export_mode=embedded, классификация, chart data)
+- [x] Спека в L3
+
+**Wave 1 (parallel Domain Leads):**
+- [x] Backend: `/api/upload/presign` + `/api/upload/confirm` + @aws-sdk/s3-request-presigner + лимиты 200MB
+- [x] Frontend: Upload.tsx XHR presigned flow + progress bar (PRESIGN_THRESHOLD=50MB)
+
+**Wave 2 (parallel Domain Leads):**
+- [x] AudioParser v2: silence-detect → segment ≤23MB mid-silence → parallel Whisper (concurrency 3) → merge
+- [x] VideoParser v2: ffmpeg extract → size check → segmenter if >23MB
+- [x] PDF image extraction: Docling to_formats=json + image_export_mode=embedded → filter → R2 → image chunks
+- [x] ImageEmbedderService: jina-clip-v2 for multimodal (text model = jina-embeddings-v4, separate)
+- [x] Pipeline: storeImagesToR2 + buildImageChunks + dual embed (text + image)
+
+**Wave 3 (Axis):**
+- [x] Deploy backend (Hetzner) + frontend (CF Pages) ✅ session 208
+- [x] Health check: all services ok
+- [x] Smoke test: /api/upload/presign returns 401 (correct auth gate)
+
+**Audio segmentation spec:**
+- WAV 16kHz mono = 32KB/s = ~12min per 23MB
+- silencedetect: noise=-30dB, min_duration=0.3s
+- Split at mid-silence, target ≤11min per segment (margin)
+- No silence in 11min → force-split
+- Empty segments (>95% silence) → skip Whisper
+- Parallel Whisper: concurrency 3, retry 2x per segment
+- Language: detect from first non-empty segment, pass to rest
+- Progress: segments_done / total_segments
+- verbose_json format for timestamp-accurate merge
+
+**PDF image spec:**
+- Docling image_export_mode=embedded + to_formats=json
+- Filter: skip <150×150 or <5KB (icons, decorative)
+- Classify via PictureClassificationLabel (skip: icon, logo, bar_code, qr_code, stamp)
+- Store images to R2: {userId}/{documentId}/images/p{page}_i{index}.png
+- Image chunk: content = caption + page context, chunkType = "image", metadata: imageR2Key
+- Embed: Jina v4 multimodal (image input alongside text)
 
 ## Research Files (14)
 
