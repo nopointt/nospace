@@ -52,7 +52,7 @@ Gleichgewicht: the two poles sustain tension. Raw and structured are not opposed
 RAG citation — Zeitschrift: "Single-typeface, lowercase, functional layout — the system of the Zeitschrift itself."
 
 Contexter follows this literally:
-- JetBrains Mono for everything (single constructed typeface)
+- Inter for body/UI + JetBrains Mono for code/data
 - Lowercase dominant (Bayer universal alphabet)
 - Layout by function, not decoration
 

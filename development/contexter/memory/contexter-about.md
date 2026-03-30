@@ -53,7 +53,7 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Services | `src/services/` (parsers/, chunker/, embedder/, vectorstore/, rag/, mcp/, evaluation/, auth, billing, content-filter, feedback-decay, llm, nli, pipeline, queue, rate-limit, reranker, resilience) |
 | Routes | `src/routes/` (auth, auth-social, billing, dev, documents, feedback, health, maintenance, mcp-remote, metrics, oauth, pipeline, query, retry, status, upload, webhooks) — 17 files |
 | Eval scripts | `evaluation/` (run-eval.ts, run-eval-chunking.ts, canary.ts, generate-synthetic.ts, generate-dataset.ts, check-stale.ts, compare.ts, types.ts, metrics/) — 10 files |
-| Frontend | `web/` (SolidJS SPA, pages: Landing, Hero, Dashboard, DocumentViewer, ApiPage, Settings, Privacy, Terms) |
+| Frontend | `web/` (SolidJS SPA, pages: Landing, Hero, Dashboard, DocumentViewer, Upload, ApiPage, Settings, Login, Register, ForgotPassword, ResetPassword, VerifyEmail, Privacy, Terms) |
 | Ops | `ops/` (deploy.sh, deploy-web.sh, rollback.sh, Dockerfile, netdata/) |
 | k6 load tests | `k6/` (setup.js, scenario-1-queries.js, scenario-2-uploads.js, scenario-3-mixed.js, smoke.js, capacity-model.ts, deepinfra-model.ts) |
 | PG migrations | `drizzle-pg/` (0000–0012, 13 files) |
@@ -207,6 +207,7 @@ Production data: ~756 users, ~744 documents, ~1281 chunks (as of 2026-03-30).
 | CTX-07 Production Hardening | [contexter-production.md](contexter-production.md) | ✅ MLP COMPLETE (2026-03-27) |
 | CTX-08 GTM Strategy | [contexter-gtm.md](contexter-gtm.md) | ✅ CLOSED (2026-03-30, open items → backlog) |
 | **CTX-04 Auth** | [contexter-auth.md](contexter-auth.md) | 🔶 IN PROGRESS |
+| **CTX-09 UI/UX Polish** | [contexter-uiux-polish.md](contexter-uiux-polish.md) | 🔶 IN PROGRESS |
 
 ## Write Authority
 

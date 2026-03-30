@@ -133,14 +133,14 @@ const DocumentViewer: Component = () => {
             class="flex flex-col items-start"
             style={{ gap: "12px", "padding-top": "48px" }}
           >
-            <p style={{ "font-size": "14px", color: "#D32F2F" }}>
+            <p style={{ "font-size": "14px", color: "var(--color-signal-error)" }}>
               Не удалось загрузить документ
             </p>
             <button
               onClick={() => navigate("/dashboard")}
               style={{
                 "font-size": "12px",
-                color: "#1E3EA0",
+                color: "var(--color-accent)",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
@@ -161,9 +161,9 @@ const DocumentViewer: Component = () => {
                 <h1
                   style={{
                     "font-size": "20px",
-                    "font-weight": "600",
-                    color: "#0A0A0A",
-                    "line-height": "1.3",
+                    "font-weight": "700",
+                    color: "var(--color-text-primary)",
+                    "line-height": "1.2",
                     margin: "0",
                     "word-break": "break-word",
                   }}
@@ -188,7 +188,7 @@ const DocumentViewer: Component = () => {
               </div>
 
               {/* Divider */}
-              <div style={{ height: "1px", background: "#E5E5E5" }} />
+              <div style={{ height: "1px", background: "var(--color-border-subtle)" }} />
 
               {/* Content body */}
               <Show
@@ -224,7 +224,7 @@ const DocumentViewer: Component = () => {
                     {(chunk) => (
                       <div
                         style={{
-                          "border-bottom": "1px solid #F0F0F0",
+                          "border-bottom": "1px solid var(--color-border-subtle)",
                           padding: "16px 0",
                         }}
                       >
@@ -247,9 +247,9 @@ const DocumentViewer: Component = () => {
                         <p
                           class="whitespace-pre-wrap"
                           style={{
-                            "font-size": "13px",
-                            color: "#0A0A0A",
-                            "line-height": "1.65",
+                            "font-size": "14px",
+                            color: "var(--color-text-primary)",
+                            "line-height": "1.5",
                             margin: "0",
                           }}
                         >
@@ -273,7 +273,7 @@ const DocumentViewer: Component = () => {
 const MetaItem: Component<{ label: string; value: string }> = (props) => (
   <div class="flex items-center" style={{ gap: "6px" }}>
     <span style={metaLabelStyle}>{props.label}</span>
-    <span style={{ "font-size": "12px", color: "#0A0A0A" }}>{props.value}</span>
+    <span style={{ "font-size": "12px", color: "var(--color-text-primary)" }}>{props.value}</span>
   </div>
 )
 

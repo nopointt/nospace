@@ -97,7 +97,7 @@ All: JetBrains Mono, letterSpacing -0.04em (-4%).
 
 ## Shared Properties
 
-- **Font:** JetBrains Mono for ALL components
+- **Font:** Inter for UI text, JetBrains Mono for code/data/technical content
 - **Icons:** Lucide (iconFontFamily: "lucide")
 - **Corners:** 0px everywhere (Mondrian P-37: right angle governs)
 - **Shadows:** none (Van Doesburg: pure plastic means)

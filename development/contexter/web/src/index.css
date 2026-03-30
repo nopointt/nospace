@@ -21,8 +21,8 @@
   /* === Text Hierarchy === */
   --color-text-primary: #0A0A0A;
   --color-text-secondary: #333333;
-  --color-text-tertiary: #666666;
-  --color-text-disabled: #999999;
+  --color-text-tertiary: #808080;
+  --color-text-disabled: #CCCCCC;
 
   /* === Background Elevation (no shadows — color shift only) === */
   --color-bg-canvas: #FAFAFA;
@@ -38,6 +38,14 @@
   /* === Interactive States === */
   --color-interactive-hover: #F2F2F2;
   --color-interactive-pressed: #D9D9D9;
+
+  /* === Interactive States — Accent (mix with black: 25%/50%) === */
+  --color-accent-hover: #19317A;
+  --color-accent-pressed: #142455;
+
+  /* === Interactive States — Error (mix with black: 25%/50%) === */
+  --color-signal-error-hover: #A12626;
+  --color-signal-error-pressed: #6E1C1C;
 
   /* === Signal (functional only) === */
   --color-signal-error: #D32F2F;

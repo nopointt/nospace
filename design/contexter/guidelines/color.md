@@ -48,8 +48,22 @@ RAG justification — Kandinsky P-11: Blue = cold pole (Blau-polus). Maximum tem
 
 | Token | Value | Use |
 |---|---|---|
-| `--interactive-hover` | #F2F2F2 | Hover background |
-| `--interactive-pressed` | #D9D9D9 | Pressed/active background |
+| `--interactive-hover` | #F2F2F2 | Hover background (neutral elements) |
+| `--interactive-pressed` | #D9D9D9 | Pressed/active background (neutral elements) |
+
+### Interactive States — Accent (derived: mix with black)
+
+| Token | Value | Formula | Use |
+|---|---|---|---|
+| `--accent-hover` | #19317A | mix(accent, black, 25%) | Accent button hover |
+| `--accent-pressed` | #142455 | mix(accent, black, 50%) | Accent button pressed |
+
+### Interactive States — Error (derived: mix with black)
+
+| Token | Value | Formula | Use |
+|---|---|---|---|
+| `--signal-error-hover` | #A12626 | mix(error, black, 25%) | Danger button hover |
+| `--signal-error-pressed` | #6E1C1C | mix(error, black, 50%) | Danger button pressed |
 
 ### Signal (functional only)
 

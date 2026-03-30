@@ -32,7 +32,7 @@ const Input: Component<InputProps> = (props) => {
             ? "border-signal-error focus:border-signal-error"
             : "border-border-default focus:border-accent focus:border-2"
           }
-          outline-none
+          outline-hidden
         `}
       />
       {props.error && (

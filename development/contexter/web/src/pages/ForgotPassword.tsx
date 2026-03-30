@@ -82,7 +82,7 @@ const ForgotPassword: Component = () => {
                 <div class="flex items-center gap-4 mt-4">
                   <A
                     href="/login"
-                    class="text-xs text-accent hover:text-[#162f78] transition-colors duration-[80ms] font-mono"
+                    class="text-xs text-accent hover:text-accent-hover transition-colors duration-[80ms] font-mono"
                   >
                     Вернуться ко входу
                   </A>

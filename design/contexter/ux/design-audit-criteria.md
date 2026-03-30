@@ -6,11 +6,11 @@
 
 | ID | Критерий | Источник |
 |---|---|---|
-| DS-01 | **Font**: JetBrains Mono ONLY — никаких других шрифтов | typography.md rule 01 |
+| DS-01 | **Font**: Inter (body/UI) + JetBrains Mono (code/data). No other families. | typography.md rule 01 |
 | DS-02 | **Sizes**: только из scale (10, 12, 14, 16, 20, 24, 32, 48) | typography.md rule 02 |
 | DS-03 | **Weights**: только 400, 500, 700 | typography.md rule 03 |
 | DS-04 | **Case**: lowercase dominant (headings, buttons, labels, nav) | typography.md rule 04 |
-| DS-05 | **Colors**: только из 20 tokens (--black, --white, --accent, --text-*, --bg-*, --border-*, --signal-*, --interactive-*) | color.md |
+| DS-05 | **Colors**: только из 24 tokens (--black, --white, --accent, --accent-hover, --accent-pressed, --text-*, --bg-*, --border-*, --signal-*, --signal-error-hover, --signal-error-pressed, --interactive-*) | color.md |
 | DS-06 | **Corner radius**: 0px everywhere | principles.md (Mondrian P-37) |
 | DS-07 | **Shadows**: none — ни на одном элементе | elevation.md rule 1 |
 | DS-08 | **Spacing**: только из scale (0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80) | spacing.md rule 01 |
@@ -46,5 +46,5 @@
 | BH-06 | **Mondrian**: right angle governs — 0px corners, orthogonal layout | Mondrian P-37 |
 | BH-07 | **Van Doesburg**: pure plastic means — линия и плоскость, без декора | Van Doesburg |
 | BH-08 | **Kandinsky weights**: left=departure(raw), right=arrival(structured) | Kandinsky, layout.md rule 02 |
-| BH-09 | **Zeitschrift**: single typeface, lowercase, functional layout | Zeitschrift citations |
+| BH-09 | **Zeitschrift**: lowercase, functional layout | Zeitschrift citations |
 | BH-10 | **Sachlichkeit**: no rhetoric, product speaks through facts | Zeitschrift P-13 |

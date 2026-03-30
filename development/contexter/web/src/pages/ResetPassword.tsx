@@ -98,7 +98,7 @@ const ResetPassword: Component = () => {
                 </p>
                 <A
                   href="/login"
-                  class="text-xs text-accent hover:text-[#162f78] transition-colors duration-[80ms] font-mono mt-2"
+                  class="text-xs text-accent hover:text-accent-hover transition-colors duration-[80ms] font-mono mt-2"
                 >
                   Войти сейчас
                 </A>
@@ -119,7 +119,7 @@ const ResetPassword: Component = () => {
                   </p>
                   <A
                     href="/forgot-password"
-                    class="text-xs text-accent hover:text-[#162f78] transition-colors duration-[80ms] font-mono mt-2"
+                    class="text-xs text-accent hover:text-accent-hover transition-colors duration-[80ms] font-mono mt-2"
                   >
                     Запросить новую ссылку
                   </A>

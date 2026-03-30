@@ -71,6 +71,7 @@ Conflicts are escalated to the Senior Architect, then to CEO if unresolved.
 | 2 | `rules/regulations/context-economy-regulation.md` | All agents, token efficiency, context limits | Always active |
 | 2 | `rules/regulations/task-management-regulation.md` | All agents, task lifecycle | Per quarter |
 | 2 | `rules/regulations/git-regulation.md` | All agents, version control | Per quarter |
+| 2 | `rules/regulations/research-regulation.md` | All agents, research methodology | Per quarter |
 | 3 | `development/<p>/branches/<b>/spec.md` | Branch only | Ephemeral |
 
 ## § 7 — Agent Ecosystem

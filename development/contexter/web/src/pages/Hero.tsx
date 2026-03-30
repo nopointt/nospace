@@ -394,12 +394,10 @@ const Hero: Component = () => {
 
       {/* 2. DROP ZONE */}
       <section
-        class="flex flex-col items-center justify-center cursor-pointer transition-colors duration-[150ms]"
+        class={`flex flex-col items-center justify-center cursor-pointer transition-colors duration-[150ms] bg-black ${dragOver() ? "border-2 border-accent" : "border-2 border-transparent"}`}
         style={{
-          background: "#0A0A0A",
           padding: "80px 64px",
           "min-height": "320px",
-          border: dragOver() ? "2px solid #1E3EA0" : "2px solid transparent",
         }}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
         onDragLeave={(e) => { e.preventDefault(); setDragOver(false) }}
@@ -424,8 +422,8 @@ const Hero: Component = () => {
         }} />
 
         <svg
-          class={`transition-transform duration-[80ms] ${dragOver() ? "scale-110" : ""}`}
-          style={{ width: "48px", height: "48px", color: dragOver() ? "#1E3EA0" : "#FAFAFA" }}
+          class={`transition-transform duration-[80ms] ${dragOver() ? "scale-110 text-accent" : "text-white"}`}
+          style={{ width: "48px", height: "48px" }}
           xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
         >
@@ -434,35 +432,31 @@ const Hero: Component = () => {
           <line x1="12" y1="3" x2="12" y2="15" />
         </svg>
 
-        <span style={{ "font-size": "18px", "font-weight": "500", color: "#FAFAFA", "margin-top": "24px", "text-align": "center" }}>
+        <span class="text-[20px] font-medium text-white mt-6 text-center">
           Перетащите файлы или вставьте текст
         </span>
-        <span style={{ "font-size": "14px", color: "#999999", "margin-top": "12px", "text-align": "center" }}>
+        <span class="text-[14px] text-text-disabled mt-3 text-center">
           PDF · DOCX · XLSX · Аудио · YouTube · Изображения · или просто текст
         </span>
 
         <button
-          style={{
-            "margin-top": "20px", border: "1px solid #333333", padding: "8px 24px",
-            "font-size": "14px", color: "#CCCCCC", background: "transparent",
-            cursor: "pointer", transition: "border-color 80ms, color 80ms",
-          }}
+          class="mt-5 border border-text-secondary py-2 px-6 text-[14px] text-text-disabled bg-transparent cursor-pointer transition-[border-color,color] duration-[80ms]"
           onClick={(e) => { e.stopPropagation(); fileInputRef?.click() }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#1E3EA0"; e.currentTarget.style.color = "#FFFFFF" }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#333333"; e.currentTarget.style.color = "#CCCCCC" }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-white)" }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-text-secondary)"; e.currentTarget.style.color = "var(--color-text-disabled)" }}
         >
           Выбрать файлы
         </button>
 
         {dropError() && (
-          <span class="text-signal-error" style={{ "font-size": "11px", "margin-top": "12px" }}>{dropError()}</span>
+          <span class="text-signal-error text-[10px] mt-3">{dropError()}</span>
         )}
       </section>
 
       {/* Pipeline progress (current uploads) */}
       <Show when={hasFiles()}>
-        <section style={{ padding: "16px 64px", background: "#F8F8F8", "border-bottom": "1px solid #E5E5E5" }}>
-          <div class="flex flex-col border border-border-default bg-white">
+        <section class="bg-bg-canvas border-b border-border-subtle" style={{ padding: "16px 64px" }}>
+          <div class="flex flex-col border border-border-default bg-bg-canvas">
             <For each={files()}>
               {(entry) => (
                 <div
@@ -502,11 +496,11 @@ const Hero: Component = () => {
       {/* 3. DOCUMENTS */}
       <section style={{ padding: "48px 64px", flex: "1" }}>
         <div class="flex items-center justify-between" style={{ "margin-bottom": "24px" }}>
-          <h2 style={{ "font-size": "24px", "font-weight": "700", color: "#0A0A0A", "letter-spacing": "-0.5px" }}>
+          <h2 class="text-black" style={{ "font-size": "24px", "font-weight": "700", "letter-spacing": "-0.5px" }}>
             Ваши документы
           </h2>
           <Show when={isAuthenticated() && landingDocs().length > 5}>
-            <A href="/dashboard" style={{ "font-size": "12px", color: "#1E3EA0" }}>
+            <A href="/dashboard" class="text-accent" style={{ "font-size": "12px" }}>
               Все документы →
             </A>
           </Show>
@@ -516,7 +510,7 @@ const Hero: Component = () => {
           when={isAuthenticated() && landingDocs().length > 0}
           fallback={
             <div class="flex flex-col items-center gap-4" style={{ padding: "48px 0" }}>
-              <span style={{ "font-size": "14px", color: "#999999" }}>
+              <span class="text-text-tertiary" style={{ "font-size": "14px" }}>
                 {isAuthenticated() ? "Загрузите первый файл, чтобы создать базу знаний" : "Войдите, чтобы увидеть ваши документы"}
               </span>
             </div>
@@ -528,29 +522,29 @@ const Hero: Component = () => {
               [landingDocs().length, "документов"],
               [landingChunks(), "фрагментов"],
             ] as [number, string][]).map(([v, l]) => (
-              <div class="flex items-baseline gap-2" style={{ padding: "16px 20px", background: "#F8F8F8" }}>
-                <span style={{ "font-size": "28px", "font-weight": "700", "line-height": "1", color: "#0A0A0A" }}>{v}</span>
-                <span style={{ "font-size": "12px", color: "#666666" }}>{l}</span>
+              <div class="flex items-baseline gap-2 bg-bg-canvas" style={{ padding: "16px 20px" }}>
+                <span class="text-black" style={{ "font-size": "32px", "font-weight": "700", "line-height": "1" }}>{v}</span>
+                <span class="text-text-tertiary" style={{ "font-size": "12px" }}>{l}</span>
               </div>
             ))}
           </div>
 
           {/* Document table */}
-          <div style={{ background: "#FAFAFA", border: "1px solid #E5E5E5" }}>
-            <div class="flex items-center" style={{ padding: "10px 16px", "border-bottom": "1px solid #E5E5E5" }}>
-              <span class="flex-1" style={{ "font-size": "11px", color: "#666666", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>документ</span>
-              <span style={{ width: "80px", "font-size": "11px", color: "#666666", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>фрагменты</span>
-              <span style={{ width: "100px", "font-size": "11px", color: "#666666", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>статус</span>
+          <div class="bg-bg-canvas border border-border-subtle">
+            <div class="flex items-center border-b border-border-subtle" style={{ padding: "10px 16px" }}>
+              <span class="flex-1 text-text-tertiary" style={{ "font-size": "10px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>документ</span>
+              <span class="text-text-tertiary" style={{ width: "80px", "font-size": "10px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>фрагменты</span>
+              <span class="text-text-tertiary" style={{ width: "100px", "font-size": "10px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>статус</span>
             </div>
             <For each={landingDocs().slice(0, 10)}>
               {(doc) => (
                 <div
-                  class="flex items-center cursor-pointer transition-colors duration-[80ms] hover:bg-white"
-                  style={{ padding: "10px 16px", "border-bottom": "1px solid #F2F2F2" }}
+                  class="flex items-center cursor-pointer transition-colors duration-[80ms] hover:bg-bg-canvas"
+                  style={{ padding: "10px 16px", "border-bottom": "1px solid var(--color-bg-surface)" }}
                   onClick={() => setViewDocId(doc.id)}
                 >
-                  <span class="flex-1 truncate" style={{ "font-size": "14px", color: "#0A0A0A" }}>{doc.name}</span>
-                  <span style={{ width: "80px", "font-size": "12px", color: "#0A0A0A" }}>{doc.chunk_count}</span>
+                  <span class="flex-1 truncate text-black" style={{ "font-size": "14px" }}>{doc.name}</span>
+                  <span class="text-black" style={{ width: "80px", "font-size": "12px" }}>{doc.chunk_count}</span>
                   <span style={{ width: "100px" }}><Badge variant={statusToVariant(doc.status)} /></span>
                 </div>
               )}
@@ -567,7 +561,7 @@ const Hero: Component = () => {
                 onKeyDown={(e) => { if (e.key === "Enter") handleQuery() }}
                 placeholder="Задайте вопрос по документам..."
                 disabled={qLoading()}
-                class="flex-1 px-4 py-3 text-sm border border-border-default bg-bg-canvas text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-accent"
+                class="flex-1 px-4 py-3 text-sm border border-border-default bg-bg-canvas text-text-primary placeholder:text-text-disabled focus:outline-hidden focus:border-accent"
               />
               <Button
                 variant={qText().trim() ? "primary" : "ghost"}
@@ -578,15 +572,15 @@ const Hero: Component = () => {
             </div>
             <Show when={qResult()}>
               {(r) => (
-                <div class="flex flex-col gap-3" style={{ background: "#FAFAFA", padding: "16px", border: "1px solid #E5E5E5" }}>
-                  <p class="whitespace-pre-wrap" style={{ "font-size": "14px", color: "#0A0A0A", "line-height": "1.6" }}>
+                <div class="flex flex-col gap-3 bg-bg-canvas border border-border-subtle" style={{ padding: "16px" }}>
+                  <p class="whitespace-pre-wrap text-black" style={{ "font-size": "14px", "line-height": "1.5" }}>
                     {r().answer}
                   </p>
                   <Show when={r().sources.length > 0}>
-                    <div class="flex flex-wrap" style={{ gap: "6px", "padding-top": "8px", "border-top": "1px solid #E5E5E5" }}>
+                    <div class="flex flex-wrap border-t border-border-subtle" style={{ gap: "6px", "padding-top": "8px" }}>
                       <For each={r().sources}>
                         {(s) => (
-                          <span style={{ "font-size": "11px", color: "#1E3EA0", padding: "2px 8px", border: "1px solid #C8D6F5", background: "#F0F4FD" }}>
+                          <span class="text-accent border border-border-default bg-bg-surface" style={{ "font-size": "10px", padding: "2px 8px" }}>
                             {s.document_name} · {(s.score * 100).toFixed(0)}%
                           </span>
                         )}
@@ -601,11 +595,11 @@ const Hero: Component = () => {
       </section>
 
       {/* 4. CONNECTION */}
-      <section style={{ padding: "48px 64px", "border-top": "1px solid #E5E5E5" }}>
+      <section class="border-t border-border-subtle" style={{ padding: "48px 64px" }}>
         <div class="flex" style={{ gap: "64px" }}>
           <div class="flex-1 flex flex-col" style={{ gap: "20px" }}>
-            <h2 style={{ "font-size": "24px", "font-weight": "700", color: "#0A0A0A", "letter-spacing": "-0.5px" }}>Подключение</h2>
-            <p style={{ "font-size": "15px", color: "#666666", "line-height": "1.6" }}>
+            <h2 class="text-black" style={{ "font-size": "24px", "font-weight": "700", "letter-spacing": "-0.5px" }}>Подключение</h2>
+            <p class="text-text-tertiary" style={{ "font-size": "14px", "line-height": "1.5" }}>
               Откройте ChatGPT, Claude или Cursor — и спросите по вашим файлам
             </p>
             <div class="flex flex-col" style={{ gap: "16px" }}>
@@ -615,10 +609,10 @@ const Hero: Component = () => {
                 ["3", "Спросите что-нибудь", "«Какие документы загружены?»"],
               ] as const).map(([num, title, desc]) => (
                 <div class="flex" style={{ gap: "12px" }}>
-                  <span style={{ "font-size": "14px", "font-weight": "700", color: "#1E3EA0", width: "20px", "flex-shrink": "0" }}>{num}</span>
+                  <span class="text-accent" style={{ "font-size": "14px", "font-weight": "700", width: "20px", "flex-shrink": "0" }}>{num}</span>
                   <div class="flex flex-col" style={{ gap: "2px" }}>
-                    <span style={{ "font-size": "14px", "font-weight": "600", color: "#0A0A0A" }}>{title}</span>
-                    <span style={{ "font-size": "13px", color: "#666666" }}>{desc}</span>
+                    <span class="text-black" style={{ "font-size": "14px", "font-weight": "700" }}>{title}</span>
+                    <span class="text-text-tertiary" style={{ "font-size": "12px" }}>{desc}</span>
                   </div>
                 </div>
               ))}
@@ -628,27 +622,27 @@ const Hero: Component = () => {
           <div class="flex flex-col shrink-0" style={{ width: "440px", gap: "20px" }}>
             {/* MCP URL card */}
             <div class="flex flex-col" style={{ gap: "8px" }}>
-              <span style={{ "font-size": "11px", color: "#666666", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
+              <span class="text-text-tertiary" style={{ "font-size": "10px", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
                 Ссылка подключения
               </span>
               <div class="flex flex-col" style={{ gap: "8px" }}>
-                <div style={{ border: "2px solid #1E3EA0", padding: "12px 16px" }}>
-                  <span class="font-mono block truncate" style={{ "font-size": "12px", color: "#1E3EA0" }}>{mcpUrl()}</span>
+                <div class="border-2 border-accent" style={{ padding: "12px 16px" }}>
+                  <span class="font-mono block truncate text-accent" style={{ "font-size": "12px" }}>{mcpUrl()}</span>
                 </div>
                 <div class="flex" style={{ gap: "8px" }}>
                   <button
                     onClick={() => copyText(mcpUrl())}
                     style={{
-                      padding: "6px 16px", "font-size": "12px", "font-weight": "600", color: "#FAFAFA",
-                      background: "#1E3EA0", border: "1px solid #1E3EA0", cursor: "pointer", "white-space": "nowrap",
+                      padding: "6px 16px", "font-size": "12px", "font-weight": "700", cursor: "pointer", "white-space": "nowrap",
                     }}
+                    class="text-white bg-accent border border-accent"
                   >Скопировать ссылку</button>
                   <button
                     onClick={() => copyText(mcpUrl().match(/token=(.+)$/)?.[1] ?? "")}
                     style={{
-                      padding: "6px 16px", "font-size": "12px", "font-weight": "600", color: "#1E3EA0",
-                      background: "transparent", border: "1px solid #1E3EA0", cursor: "pointer", "white-space": "nowrap",
+                      padding: "6px 16px", "font-size": "12px", "font-weight": "700", cursor: "pointer", "white-space": "nowrap",
                     }}
+                    class="text-accent bg-transparent border border-accent"
                   >Скопировать токен</button>
                 </div>
               </div>
@@ -656,21 +650,20 @@ const Hero: Component = () => {
 
             {/* Client buttons */}
             <div class="flex flex-col" style={{ gap: "8px" }}>
-              <span style={{ "font-size": "11px", color: "#666666", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
+              <span class="text-text-tertiary" style={{ "font-size": "10px", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
                 Инструкция для
               </span>
               <div class="flex items-center flex-wrap" style={{ gap: "8px" }}>
                 {([["chatgpt", "ChatGPT"], ["claude-web", "Claude.ai"], ["claude-desktop", "Claude Desktop"], ["perplexity", "Perplexity"], ["cursor", "Cursor"]] as const).map(([id, name]) => (
                   <button
-                    class="font-mono"
+                    class="font-mono text-text-tertiary border border-border-subtle bg-transparent"
                     style={{
                       padding: "6px 14px", "font-size": "12px", "font-weight": "500",
-                      border: "1px solid #E5E5E5", color: "#666666", background: "transparent",
                       cursor: "pointer", transition: "all 80ms",
                     }}
                     onClick={() => { setConnectionClient(id as any); setConnectionOpen(true) }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#1E3EA0"; e.currentTarget.style.color = "#1E3EA0" }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#E5E5E5"; e.currentTarget.style.color = "#666666" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-accent)" }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-border-subtle)"; e.currentTarget.style.color = "var(--color-text-tertiary)" }}
                   >{name}</button>
                 ))}
               </div>
@@ -680,19 +673,19 @@ const Hero: Component = () => {
       </section>
 
       {/* 5. FOOTER */}
-      <footer style={{ "border-top": "1px solid #E5E5E5", padding: "20px 64px", "margin-top": "auto" }}>
+      <footer class="border-t border-border-subtle mt-auto" style={{ padding: "20px 64px" }}>
         <div class="flex items-center flex-wrap" style={{ gap: "32px" }}>
-          <span style={{ "font-size": "12px", color: "#666666" }}>
+          <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
             Ваши файлы хранятся на серверах в Европе
           </span>
-          <span style={{ "font-size": "12px", color: "#666666" }}>
+          <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
             Данные не используются для обучения ИИ
           </span>
-          <span style={{ "font-size": "12px", color: "#666666" }}>
+          <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
             Вы можете удалить все файлы в любой момент
           </span>
           <span style={{ flex: "1" }} />
-          <span style={{ "font-size": "12px", color: "#999999" }}>
+          <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
             © 2026 Contexter
           </span>
         </div>

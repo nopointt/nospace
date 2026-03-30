@@ -14,13 +14,13 @@ interface ButtonProps {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-accent text-white hover:bg-[#162f78] active:bg-[#0f2260]",
+    "bg-accent text-white hover:bg-accent-hover active:bg-accent-pressed",
   secondary:
-    "bg-transparent text-black border border-black hover:bg-black hover:text-white active:bg-[#333333]",
+    "bg-transparent text-black border border-black hover:bg-black hover:text-white active:bg-bg-pressed",
   ghost:
     "bg-transparent text-text-secondary hover:text-text-primary hover:bg-interactive-hover active:bg-interactive-pressed",
   danger:
-    "bg-signal-error text-white hover:bg-[#b71c1c] active:bg-[#961717]",
+    "bg-signal-error text-white hover:bg-signal-error-hover active:bg-signal-error-pressed",
 }
 
 const Button: Component<ButtonProps> = (props) => {

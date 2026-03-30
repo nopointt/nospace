@@ -94,40 +94,36 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
       >
         {/* panel */}
         <div
-          class="flex flex-col"
+          class="flex flex-col bg-bg-canvas border border-border-subtle"
           style={{
             width: "min(720px, 95vw)",
             "max-height": "80vh",
-            background: "#FAFAFA",
-            border: "1px solid #E5E5E5",
             animation: "docModalIn 120ms ease-out",
           }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* ── header ── */}
           <div
-            class="shrink-0 flex items-start justify-between"
+            class="shrink-0 flex items-start justify-between bg-bg-canvas border-b border-border-subtle"
             style={{
               padding: "20px 24px 16px",
-              "border-bottom": "1px solid #E5E5E5",
-              background: "#FAFAFA",
             }}
           >
             <div class="flex flex-col" style={{ gap: "8px", "min-width": "0", flex: "1" }}>
               {/* loading skeleton for name */}
               <Show when={doc.loading}>
                 <div
-                  class="animate-pulse"
-                  style={{ height: "20px", width: "55%", background: "#E5E5E5" }}
+                  class="animate-pulse bg-bg-elevated"
+                  style={{ height: "20px", width: "55%" }}
                 />
                 <div
-                  class="animate-pulse"
-                  style={{ height: "12px", width: "35%", background: "#EBEBEB", "margin-top": "4px" }}
+                  class="animate-pulse bg-bg-elevated"
+                  style={{ height: "12px", width: "35%", "margin-top": "4px" }}
                 />
               </Show>
 
               <Show when={doc.error && !doc.loading}>
-                <p style={{ "font-size": "14px", color: "#D32F2F" }}>
+                <p class="text-signal-error" style={{ "font-size": "14px" }}>
                   Не удалось загрузить документ
                 </p>
               </Show>
@@ -138,8 +134,8 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
                     <h2
                       style={{
                         "font-size": "16px",
-                        "font-weight": "600",
-                        color: "#0A0A0A",
+                        "font-weight": "700",
+                        color: "var(--color-text-primary)",
                         "line-height": "1.3",
                         margin: "0",
                         "word-break": "break-word",
@@ -162,7 +158,7 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
               </Show>
 
               <Show when={doc.error && !doc.loading}>
-                <p style={{ "font-size": "13px", color: "#D32F2F", margin: "0" }}>
+                <p style={{ "font-size": "12px", color: "var(--color-signal-error)", margin: "0" }}>
                   Не удалось загрузить документ
                 </p>
               </Show>
@@ -182,7 +178,7 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
-                color: "#666666",
+                color: "var(--color-text-tertiary)",
                 "margin-left": "12px",
                 "margin-top": "-4px",
               }}
@@ -208,8 +204,8 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
               <div class="flex flex-col" style={{ gap: "8px", "padding-top": "24px" }}>
                 {[100, 90, 95, 80, 88, 75].map((w) => (
                   <div
-                    class="animate-pulse"
-                    style={{ height: "13px", width: `${w}%`, background: "#EBEBEB" }}
+                    class="animate-pulse bg-bg-elevated"
+                    style={{ height: "12px", width: `${w}%` }}
                   />
                 ))}
               </div>
@@ -227,8 +223,8 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
                     >
                       <p
                         style={{
-                          "font-size": "13px",
-                          color: "#999999",
+                          "font-size": "12px",
+                          color: "var(--color-text-disabled)",
                           margin: "0",
                         }}
                       >
@@ -243,7 +239,7 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
                     style={{
                       "padding-top": "16px",
                       "padding-bottom": "12px",
-                      "border-bottom": "1px solid #E5E5E5",
+                      "border-bottom": "1px solid var(--color-border-subtle)",
                       "margin-bottom": "0",
                     }}
                   >
@@ -251,7 +247,7 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
                     <span
                       style={{
                         "font-size": "10px",
-                        color: "#999999",
+                        color: "var(--color-text-disabled)",
                       }}
                     >
                       {d().chunkCount} фрагм.
@@ -263,15 +259,15 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
                     {(chunk) => (
                       <div
                         style={{
-                          "border-bottom": "1px solid #E5E5E5",
+                          "border-bottom": "1px solid var(--color-border-subtle)",
                           padding: "16px 0",
                         }}
                       >
                         <div
                           style={{
-                            "font-size": "9px",
+                            "font-size": "10px",
                             "font-weight": "500",
-                            color: "#999999",
+                            color: "var(--color-text-disabled)",
                             "letter-spacing": "1px",
                             "text-transform": "uppercase",
                             "margin-bottom": "8px",
@@ -286,8 +282,8 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
                           class="whitespace-pre-wrap"
                           style={{
                             "font-size": "14px",
-                            color: "#0A0A0A",
-                            "line-height": "1.7",
+                            color: "var(--color-text-primary)",
+                            "line-height": "1.5",
                             margin: "0",
                           }}
                         >
@@ -318,7 +314,7 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
 const MetaItem: Component<{ label: string; value: string }> = (props) => (
   <div class="flex items-center" style={{ gap: "6px" }}>
     <span style={metaLabelStyle}>{props.label}</span>
-    <span style={{ "font-size": "12px", color: "#0A0A0A" }}>{props.value}</span>
+    <span style={{ "font-size": "12px", color: "var(--color-text-primary)" }}>{props.value}</span>
   </div>
 )
 
@@ -327,7 +323,7 @@ const MetaItem: Component<{ label: string; value: string }> = (props) => (
 const metaLabelStyle = {
   "font-size": "10px",
   "font-weight": "500",
-  color: "#999999",
+  color: "var(--color-text-disabled)",
   "letter-spacing": "1px",
   "text-transform": "uppercase" as const,
 }
@@ -335,7 +331,7 @@ const metaLabelStyle = {
 const sectionLabelStyle = {
   "font-size": "10px",
   "font-weight": "500",
-  color: "#999999",
+  color: "var(--color-text-disabled)",
   "letter-spacing": "1px",
   "text-transform": "uppercase" as const,
 }

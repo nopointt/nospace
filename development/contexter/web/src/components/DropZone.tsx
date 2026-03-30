@@ -68,8 +68,8 @@ const DropZone: Component<DropZoneProps> = (props) => {
         border border-dashed
         ${props.disabled ? "opacity-40 cursor-not-allowed" : ""}
         ${isDragOver()
-          ? "border-accent border-solid border-2 bg-white"
-          : "border-border-default bg-bg-surface hover:border-accent hover:bg-white"
+          ? "border-accent border-solid border-2 bg-bg-canvas"
+          : "border-border-default bg-bg-surface hover:border-accent hover:bg-bg-canvas"
         }
         ${props.error ? "border-signal-error" : ""}
       `}

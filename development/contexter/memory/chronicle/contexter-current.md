@@ -517,3 +517,24 @@ Presigned R2 upload + audio segmentation + PDF image extraction + multimodal emb
 **Summary:** Massive session — 4 pre-launch QA phases completed (28 tasks), CTX-08 closed, CTX-04 Auth epic opened and completed (better-auth v1.5.6, email+password, Google OAuth, hybrid resolveAuth, 5 frontend pages, Resend domain verified). Deploy automation (ops/deploy.sh, Dockerfile COPY). Full L0-L3 audit (15 factual corrections). Production readiness audit (13 issues found and fixed). k6 load test baseline. Capacity model for 10K users. Netdata alerts. Content filter. Circuit breakers. GDPR deletion. WAL archiving. Legal pages. Product backlog (14 tickets).
 
 Backend prod-ready for 50 users. Frontend has white screen issue on /register (deferred to frontend audit session).
+<!-- ENTRY:2026-03-30:CLOSE:216:contexter:contexter-uiux-polish [AXIS] -->
+## 2026-03-30 — session 216 CLOSE [Axis]
+
+**Decisions:**
+- All subagents = Sonnet by default
+- Design system = source of truth for colors (index.css aligned)
+- Bauhaus RAG consulted for 4 design decisions
+- Inter = primary font, JetBrains Mono = code only
+- ConnectionModal: dark → light theme (Mondrian P-35)
+- 4 hover/pressed tokens added (mix formula 25%/50%)
+
+**Completed:**
+- Research regulation v1.0 + 7 seed research files
+- Kandinsky (UX Reviewer) + Bayer (UI Reviewer) agents created
+- Wave 1 audit: 39 UI + 12 UX findings
+- Wave 2.0: design system foundation
+- Wave 2.1: **300 token violations → 0** (100% compliance)
+
+**Opened:**
+- Phase 2.2: UX fixes (createEffect cleanup, 401 modal, auth unification, focus traps, error placement)
+- Wave 3: Polish | Wave 4: Verification

@@ -299,9 +299,8 @@ const Dashboard: Component = () => {
           <div class="flex flex-col">
             {/* Header row */}
             <div
-              class="flex items-center"
+              class="flex items-center bg-bg-surface"
               style={{
-                background: "#F2F2F2",
                 padding: "10px 16px",
               }}
             >
@@ -317,10 +316,9 @@ const Dashboard: Component = () => {
               <For each={[1, 2, 3, 4]}>
                 {() => (
                   <div
-                    class="flex items-center"
+                    class="flex items-center border-b border-border-subtle"
                     style={{
                       padding: "10px 16px",
-                      "border-bottom": "1px solid #E5E5E5",
                     }}
                   >
                     <div class="flex-1">
@@ -349,14 +347,14 @@ const Dashboard: Component = () => {
                 class="flex flex-col items-start"
                 style={{ padding: "32px 16px", gap: "12px" }}
               >
-                <p style={{ "font-size": "13px", color: "#D32F2F" }}>
+                <p class="text-signal-error" style={{ "font-size": "12px" }}>
                   Не удалось загрузить документы
                 </p>
                 <button
                   onClick={loadDocuments}
+                  class="text-accent"
                   style={{
                     "font-size": "12px",
-                    color: "#1E3EA0",
                     background: "none",
                     border: "none",
                     cursor: "pointer",
@@ -395,32 +393,32 @@ const Dashboard: Component = () => {
                     class={`
                       flex items-center cursor-pointer
                       transition-colors duration-[80ms]
-                      hover:bg-interactive-hover
+                      hover:bg-interactive-hover border-b border-border-subtle
                       ${selectedId() === doc.id ? "bg-interactive-hover" : ""}
                     `}
                     style={{
                       padding: "10px 16px",
-                      "border-bottom": "1px solid #E5E5E5",
                     }}
                     onClick={() => selectDoc(doc)}
                   >
                     <span
-                      class="flex-1 truncate"
-                      style={{ "font-size": "12px", color: "#0A0A0A" }}
+                      class="flex-1 truncate text-black"
+                      style={{ "font-size": "12px" }}
                     >
                       {doc.name}
                     </span>
-                    <span style={{ width: "80px", "font-size": "12px", color: "#0A0A0A" }}>
+                    <span class="text-black" style={{ width: "80px", "font-size": "12px" }}>
                       {mimeShort(doc.mime_type)}
                     </span>
-                    <span style={{ width: "60px", "font-size": "12px", color: "#0A0A0A" }}>
+                    <span class="text-black" style={{ width: "60px", "font-size": "12px" }}>
                       {doc.chunk_count}
                     </span>
                     <span style={{ width: "100px" }}>
                       <Badge variant={statusToVariant(doc.status)} />
                     </span>
                     <span
-                      style={{ width: "80px", "font-size": "12px", color: "#0A0A0A" }}
+                      class="text-black"
+                      style={{ width: "80px", "font-size": "12px" }}
                       title={formatDateFull(doc.created_at)}
                     >
                       {formatDate(doc.created_at)}
@@ -434,10 +432,9 @@ const Dashboard: Component = () => {
 
         {/* ── RIGHT: 420px fixed — Query Panel ── */}
         <div
-          class="shrink-0 flex flex-col"
+          class="shrink-0 flex flex-col border-l border-border-subtle"
           style={{
             width: "420px",
-            "border-left": "1px solid #E5E5E5",
             padding: "32px 0px 32px 32px",
             gap: "24px",
           }}
@@ -473,15 +470,14 @@ const Dashboard: Component = () => {
               </div>
             </Show>
             <Show when={queryError()}>
-              <p style={{ "font-size": "12px", color: "#D32F2F" }}>{queryError()}</p>
+              <p class="text-signal-error" style={{ "font-size": "12px" }}>{queryError()}</p>
             </Show>
             <Show when={queryResult()}>
               {(result) => (
                 <p
-                  class="whitespace-pre-wrap"
+                  class="whitespace-pre-wrap text-black"
                   style={{
                     "font-size": "12px",
-                    color: "#0A0A0A",
                     "line-height": "1.5",
                   }}
                 >
@@ -512,22 +508,20 @@ const Dashboard: Component = () => {
                   <For each={result().sources}>
                     {(source) => (
                       <div
-                        class="flex items-center"
+                        class="flex items-center bg-bg-surface"
                         style={{
-                          background: "#F2F2F2",
                           padding: "8px 12px",
                           gap: "8px",
                         }}
                       >
                         <span
-                          class="shrink-0"
+                          class="shrink-0 bg-accent"
                           style={{
                             width: "6px",
                             height: "6px",
-                            background: "#1E3EA0",
                           }}
                         />
-                        <span style={{ "font-size": "10px", color: "#0A0A0A" }}>
+                        <span class="text-black" style={{ "font-size": "10px" }}>
                           {source.document_name} ({(source.score * 100).toFixed(0)}%)
                         </span>
                       </div>
@@ -544,7 +538,7 @@ const Dashboard: Component = () => {
           </div>
 
           {/* Developer link */}
-          <A href="/api" style={{ "font-size": "12px", color: "#1E3EA0" }}>
+          <A href="/api" class="text-accent" style={{ "font-size": "12px" }}>
             Для разработчиков → /api
           </A>
         </div>
@@ -565,19 +559,18 @@ const Dashboard: Component = () => {
 
 const StatCard: Component<{ value: number; label: string }> = (props) => (
   <div
-    class="flex-1 flex flex-col"
+    class="flex-1 flex flex-col bg-bg-surface"
     style={{
-      background: "#F2F2F2",
       padding: "16px 20px",
       gap: "4px",
     }}
   >
     <span
+      class="text-black"
       style={{
         "font-size": "32px",
         "font-weight": "700",
         "line-height": "1",
-        color: "#0A0A0A",
       }}
     >
       {props.value}

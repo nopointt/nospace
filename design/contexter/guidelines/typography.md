@@ -1,18 +1,19 @@
 # Typography Guidelines — Contexter
 
-Adapted from Harkly `guidelines/typography.md`. Single typeface system.
-
-RAG: Zeitschrift — "Single-typeface, lowercase, functional layout." "Continuous lowercase grotesque throughout."
+Adapted from Harkly `guidelines/typography.md`. Dual typeface system.
 
 ---
 
-## 01. One Font Family (departure from Harkly)
+## 01. Two Font Families
 
-**Rule:** JetBrains Mono for everything. Headings, body, labels, code, data, buttons. No second family.
+**Rule:** Inter for body/UI text. JetBrains Mono for code, data, and technical content.
 
-Harkly uses Inter + JetBrains Mono (two families). Contexter follows Neue Typographie literally: one constructed typeface family.
+| Token | Family | Use |
+|---|---|---|
+| `--font-sans` | Inter | Body text, headings, labels, buttons, navigation |
+| `--font-mono` | JetBrains Mono | Code blocks, inline code, API tokens, technical data, pipeline labels |
 
-JetBrains Mono is a geometric monospace — each character occupies identical width. This creates natural vertical alignment in tables, data, and grids without extra effort.
+Inter is a geometric sans-serif optimized for screen readability. JetBrains Mono provides fixed-width alignment for technical content where character alignment matters.
 
 ---
 
@@ -75,7 +76,7 @@ Materialwahrheit. Text is native screen material.
 | code | 14px | 400 | 1.0 | Inline code |
 | code-block | 13px | 400 | 1.4 | Code block |
 
-All use JetBrains Mono (single font = code and body share the same typeface).
+Body roles use Inter (`--font-sans`). Code roles use JetBrains Mono (`--font-mono`).
 
 ---
 

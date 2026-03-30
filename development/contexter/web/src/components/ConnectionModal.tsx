@@ -74,7 +74,7 @@ const SELECTION_CARDS: SelectionCard[] = [
     label: "Другой клиент",
     subtitle: "Любая программа с поддержкой MCP",
     plan: "Зависит от клиента",
-    iconBg: "#333333",
+    iconBg: "#808080",
     iconLabel: "…",
   },
 ]
@@ -218,30 +218,24 @@ const UrlField: Component<{ url: string }> = (props) => {
   }
 
   return (
-    <div class="flex items-center" style={{ border: "1px solid #333333", "margin-bottom": "16px" }}>
+    <div class="flex items-center border border-border-default mb-4">
       <span
-        class="flex-1 truncate font-mono"
-        style={{ padding: "10px 14px", "font-size": "12px", color: "#CCCCCC" }}
+        class="flex-1 truncate font-mono text-text-disabled"
+        style={{ padding: "10px 14px", "font-size": "12px" }}
       >
         {props.url}
       </span>
       <button
         onClick={() => copyToClipboard(tokenFromUrl())}
-        class="shrink-0 font-mono"
-        style={{
-          padding: "10px 14px", "font-size": "11px", color: "#808080",
-          "border-left": "1px solid #333333", background: "transparent", cursor: "pointer",
-        }}
+        class="shrink-0 font-mono text-text-tertiary border-l border-border-default bg-transparent cursor-pointer"
+        style={{ padding: "10px 14px", "font-size": "11px" }}
       >
         Скопировать токен
       </button>
       <button
         onClick={() => copyToClipboard(props.url)}
-        class="shrink-0 font-mono"
-        style={{
-          padding: "10px 14px", "font-size": "11px", color: "#808080",
-          "border-left": "1px solid #333333", background: "transparent", cursor: "pointer",
-        }}
+        class="shrink-0 font-mono text-text-tertiary border-l border-border-default bg-transparent cursor-pointer"
+        style={{ padding: "10px 14px", "font-size": "11px" }}
       >
         Скопировать ссылку
       </button>
@@ -263,8 +257,8 @@ const ClientIcon: Component<{ bg: string; label: string; size?: number }> = (pro
       "flex-shrink": "0",
       "font-size": `${Math.round((props.size ?? 40) * 0.4)}px`,
       "font-weight": "700",
-      color: "#FFFFFF",
-      "font-family": "Inter, sans-serif",
+      color: "var(--color-white)",
+      "font-family": "var(--font-sans)",
     }}
   >
     {props.label}
@@ -371,7 +365,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
     if (id === "perplexity") return { bg: "#20808D", label: "P" }
     if (id === "cursor") return { bg: "#7C3AED", label: "↗" }
     if (id === "antigravity") return { bg: "#4285F4", label: "A" }
-    return { bg: "#333333", label: "?" }
+    return { bg: "#808080", label: "?" }
   }
 
   return (
@@ -379,17 +373,15 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
       {/* Overlay */}
       <div
         class="fixed inset-0 z-[200] flex items-center justify-center"
-        style={{ background: "rgba(10, 10, 10, 0.72)" }}
+        style={{ background: "rgba(10, 10, 10, 0.48)" }}
         onClick={(e) => { if (e.target === e.currentTarget) props.onClose() }}
       >
         {/* Modal */}
         <div
-          class="flex flex-col"
+          class="flex flex-col bg-bg-surface border border-border-default"
           style={{
             width: "min(560px, 95vw)",
             "max-height": "80vh",
-            background: "#141414",
-            border: "1px solid #333333",
             "margin-top": "-5vh",
             animation: "modalIn 120ms ease-out",
           }}
@@ -397,8 +389,8 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
         >
           {/* Header */}
           <div
-            class="flex items-center justify-between shrink-0"
-            style={{ height: "56px", padding: "0 24px", background: "#0A0A0A", "border-bottom": "1px solid #333333" }}
+            class="flex items-center justify-between shrink-0 bg-bg-canvas border-b border-border-default"
+            style={{ height: "56px", padding: "0 24px" }}
           >
             <div class="flex items-center" style={{ gap: "12px" }}>
               {/* Back arrow — visible on claude-sub and instructions */}
@@ -406,28 +398,23 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                 <button
                   aria-label="назад"
                   onClick={handleBack}
-                  style={{
-                    width: "28px", height: "28px", display: "flex", "align-items": "center",
-                    "justify-content": "center", background: "transparent", border: "none",
-                    cursor: "pointer", color: "#808080", padding: "0",
-                  }}
+                  class="text-text-tertiary bg-transparent border-none cursor-pointer p-0 flex items-center justify-center"
+                  style={{ width: "28px", height: "28px" }}
                 >
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
                     <polyline points="10,3 5,8 10,13" />
                   </svg>
                 </button>
               </Show>
-              <span style={{ "font-size": "16px", "font-weight": "600", color: "#FAFAFA" }}>
+              <span class="text-black font-bold" style={{ "font-size": "16px" }}>
                 {headerTitle()}
               </span>
             </div>
             <button
               aria-label="закрыть"
               onClick={props.onClose}
-              style={{
-                width: "32px", height: "32px", display: "flex", "align-items": "center", "justify-content": "center",
-                background: "transparent", border: "none", cursor: "pointer", color: "#808080",
-              }}
+              class="text-text-tertiary bg-transparent border-none cursor-pointer flex items-center justify-center"
+              style={{ width: "32px", height: "32px" }}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
                 <line x1="3" y1="3" x2="13" y2="13" />
@@ -439,14 +426,14 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
           {/* === SCREEN 1: Selection === */}
           <Show when={isOnSelect()}>
             <div class="flex-1 overflow-y-auto" style={{ padding: "20px 24px 24px" }}>
-              <p style={{ "font-size": "13px", color: "#808080", "margin-bottom": "16px", "line-height": "1.4" }}>
+              <p class="text-text-tertiary" style={{ "font-size": "13px", "margin-bottom": "16px", "line-height": "1.4" }}>
                 Какую нейросеть вы используете?
               </p>
               <div class="flex flex-col" style={{ gap: "8px" }}>
                 <For each={SELECTION_CARDS}>
                   {(card) => {
                     const icon = card.id === "other"
-                      ? { bg: "#333333", label: "…" }
+                      ? { bg: "#808080", label: "…" }
                       : card.id === "claude"
                         ? { bg: "#CC785C", label: "C" }
                         : (() => {
@@ -455,51 +442,46 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                               perplexity: { bg: "#20808D", label: "P" },
                               cursor: { bg: "#7C3AED", label: "↗" },
                             }
-                            return m[card.id] ?? { bg: "#333333", label: "?" }
+                            return m[card.id] ?? { bg: "#808080", label: "?" }
                           })()
 
                     return (
                       <button
                         onClick={() => handleCardClick(card)}
-                        class="flex items-center text-left"
+                        class="flex items-center text-left bg-bg-canvas border border-border-default cursor-pointer w-full"
                         style={{
                           gap: "16px",
                           padding: "16px",
-                          background: "#0A0A0A",
-                          border: "1px solid #333333",
-                          cursor: "pointer",
                           transition: "border-color 80ms",
-                          width: "100%",
                         }}
-                        onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#1E3EA0" }}
-                        onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#333333" }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-accent)" }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-border-default)" }}
                       >
                         <ClientIcon bg={icon.bg} label={icon.label} size={40} />
                         <div class="flex flex-col flex-1" style={{ gap: "3px", "min-width": "0" }}>
                           <div class="flex items-center" style={{ gap: "10px" }}>
-                            <span style={{ "font-size": "16px", "font-weight": "600", color: "#FAFAFA", "font-family": "Inter, sans-serif" }}>
+                            <span class="text-black font-medium" style={{ "font-size": "16px" }}>
                               {card.label}
                             </span>
                             <Show when={card.id === "claude"}>
-                              <span style={{
-                                "font-size": "10px", "font-weight": "500", color: "#808080",
-                                background: "#1A1A1A", border: "1px solid #333333",
-                                padding: "2px 6px", "letter-spacing": "0.04em",
-                                "font-family": "Inter, sans-serif",
-                              }}>
+                              <span class="text-text-tertiary bg-bg-surface border border-border-default font-mono"
+                                style={{
+                                  "font-size": "10px",
+                                  padding: "2px 6px", "letter-spacing": "0.04em",
+                                }}>
                                 2 варианта
                               </span>
                             </Show>
                           </div>
-                          <span style={{ "font-size": "13px", color: "#666666", "font-family": "Inter, sans-serif" }}>
+                          <span class="text-text-secondary" style={{ "font-size": "13px" }}>
                             {card.subtitle}
                           </span>
-                          <span style={{ "font-size": "11px", color: "#4A4A4A", "margin-top": "4px", "font-family": "Inter, sans-serif" }}>
+                          <span class="text-text-tertiary" style={{ "font-size": "11px", "margin-top": "4px" }}>
                             {card.plan}
                           </span>
                         </div>
                         {/* Chevron */}
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#4A4A4A" stroke-width="1.5" style={{ "flex-shrink": "0" }}>
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="text-border-strong shrink-0">
                           <polyline points="6,3 11,8 6,13" />
                         </svg>
                       </button>
@@ -513,7 +495,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
           {/* === SCREEN 1.5: Claude sub-choice === */}
           <Show when={isOnClaudeSub()}>
             <div class="flex-1 overflow-y-auto" style={{ padding: "20px 24px 24px" }}>
-              <p style={{ "font-size": "13px", color: "#808080", "margin-bottom": "16px", "line-height": "1.4" }}>
+              <p class="text-text-tertiary" style={{ "font-size": "13px", "margin-bottom": "16px", "line-height": "1.4" }}>
                 Выберите способ использования Claude
               </p>
               <div class="flex flex-col" style={{ gap: "8px" }}>
@@ -521,32 +503,28 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                   {(choice) => (
                     <button
                       onClick={() => handleSubChoice(choice.id)}
-                      class="flex items-center text-left"
+                      class="flex items-center text-left bg-bg-canvas border border-border-default cursor-pointer w-full"
                       style={{
                         gap: "16px",
                         padding: "16px",
-                        background: "#0A0A0A",
-                        border: "1px solid #333333",
-                        cursor: "pointer",
                         transition: "border-color 80ms",
-                        width: "100%",
                       }}
-                      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#1E3EA0" }}
-                      onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#333333" }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-accent)" }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-border-default)" }}
                     >
                       <ClientIcon bg="#CC785C" label="C" size={40} />
                       <div class="flex flex-col flex-1" style={{ gap: "3px" }}>
-                        <span style={{ "font-size": "16px", "font-weight": "600", color: "#FAFAFA", "font-family": "Inter, sans-serif" }}>
+                        <span class="text-black font-medium" style={{ "font-size": "16px" }}>
                           {choice.label}
                         </span>
-                        <span style={{ "font-size": "13px", color: "#666666", "font-family": "Inter, sans-serif" }}>
+                        <span class="text-text-secondary" style={{ "font-size": "13px" }}>
                           {choice.detail}
                         </span>
-                        <span style={{ "font-size": "11px", color: "#4A4A4A", "margin-top": "4px", "font-family": "Inter, sans-serif" }}>
+                        <span class="text-text-tertiary" style={{ "font-size": "11px", "margin-top": "4px" }}>
                           {choice.plan}
                         </span>
                       </div>
-                      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#4A4A4A" stroke-width="1.5" style={{ "flex-shrink": "0" }}>
+                      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="text-border-strong shrink-0">
                         <polyline points="6,3 11,8 6,13" />
                       </svg>
                     </button>
@@ -560,25 +538,22 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
           <Show when={isOnInstructions()}>
             {/* Tab Strip */}
             <div
-              class="flex items-end shrink-0"
-              style={{ height: "40px", background: "#0A0A0A", "border-bottom": "1px solid #333333", "padding-left": "24px" }}
+              class="flex items-end shrink-0 bg-bg-canvas border-b border-border-default"
+              style={{ height: "40px", "padding-left": "24px" }}
             >
               <For each={clients()}>
                 {(client) => (
                   <button
                     onClick={() => setActiveTab(client.id)}
                     aria-label={`подключение через ${client.label}`}
-                    class="font-mono"
+                    class="font-mono bg-transparent border-none cursor-pointer"
                     style={{
                       padding: "0 16px",
                       height: "40px",
                       "font-size": "12px",
                       "font-weight": "500",
-                      color: activeTab() === client.id ? "#FAFAFA" : "#808080",
-                      background: "transparent",
-                      border: "none",
-                      "border-bottom": activeTab() === client.id ? "2px solid #1E3EA0" : "2px solid transparent",
-                      cursor: "pointer",
+                      color: activeTab() === client.id ? "var(--color-black)" : "var(--color-text-tertiary)",
+                      "border-bottom": activeTab() === client.id ? "2px solid var(--color-accent)" : "2px solid transparent",
                       transition: "color 80ms",
                     }}
                   >
@@ -597,17 +572,15 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
               <For each={activeClient().steps}>
                 {(step, i) => (
                   <div class="flex" style={{ gap: "16px", "margin-bottom": "20px" }}>
-                    <span style={{
-                      width: "24px", "flex-shrink": "0", "padding-top": "2px",
-                      "font-size": "11px", "font-weight": "700", color: "#1E3EA0", "letter-spacing": "0.04em",
-                    }}>
+                    <span class="font-mono text-accent font-bold shrink-0"
+                      style={{ width: "24px", "padding-top": "2px", "font-size": "11px", "letter-spacing": "0.04em" }}>
                       {String(i() + 1).padStart(2, "0")}
                     </span>
                     <div class="flex flex-col" style={{ gap: "4px" }}>
-                      <span style={{ "font-size": "15px", "font-weight": "500", color: "#FAFAFA", "line-height": "1.3" }}>
+                      <span class="text-black font-medium" style={{ "font-size": "15px", "line-height": "1.3" }}>
                         {step.action}
                       </span>
-                      <span style={{ "font-size": "13px", color: "#808080", "line-height": "1.5" }}>
+                      <span class="text-text-tertiary" style={{ "font-size": "13px", "line-height": "1.5" }}>
                         {step.detail}
                       </span>
                     </div>
@@ -617,11 +590,11 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
 
               {/* Config block */}
               <Show when={activeClient().config}>
-                <div style={{ position: "relative", background: "#0A0A0A", border: "1px solid #333333", "margin-bottom": "16px" }}>
+                <div class="relative bg-bg-canvas border border-border-default mb-4">
                   <pre
-                    class="font-mono"
+                    class="font-mono text-text-secondary"
                     style={{
-                      padding: "16px 14px 44px", "font-size": "12px", color: "#CCCCCC",
+                      padding: "16px 14px 44px", "font-size": "12px",
                       "line-height": "1.5", "white-space": "pre", "overflow-x": "auto",
                     }}
                   >
@@ -629,13 +602,13 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                   </pre>
                   <button
                     onClick={handleCopyConfig}
-                    class="font-mono"
+                    class="font-mono absolute"
                     style={{
-                      position: "absolute", bottom: "8px", right: "8px",
-                      padding: "6px 12px", "font-size": "12px", "font-weight": "600",
-                      color: copied() ? "#FAFAFA" : "#808080",
-                      background: copied() ? "#1E3EA0" : "transparent",
-                      border: `1px solid ${copied() ? "#1E3EA0" : "#333333"}`,
+                      bottom: "8px", right: "8px",
+                      padding: "6px 12px", "font-size": "12px", "font-weight": "500",
+                      color: copied() ? "var(--color-white)" : "var(--color-text-tertiary)",
+                      background: copied() ? "var(--color-accent)" : "transparent",
+                      border: `1px solid ${copied() ? "var(--color-accent)" : "var(--color-border-default)"}`,
                       cursor: "pointer", transition: "all 80ms",
                     }}
                   >
@@ -646,11 +619,12 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
 
               {/* URL-only clients — show URL to paste */}
               <Show when={activeTab() === "chatgpt" || activeTab() === "claude-web" || activeTab() === "perplexity"}>
-                <div style={{ background: "#0A0A0A", border: "1px solid #333333", padding: "16px", "margin-bottom": "16px" }}>
-                  <span style={{ "font-size": "11px", color: "#808080", "text-transform": "uppercase", "letter-spacing": "0.08em", display: "block", "margin-bottom": "8px" }}>
+                <div class="bg-bg-canvas border border-border-default mb-4" style={{ padding: "16px" }}>
+                  <span class="text-text-tertiary font-mono block mb-2"
+                    style={{ "font-size": "11px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>
                     Ссылка для подключения
                   </span>
-                  <span class="font-mono" style={{ "font-size": "12px", color: "#CCCCCC", "word-break": "break-all" }}>
+                  <span class="font-mono text-text-secondary" style={{ "font-size": "12px", "word-break": "break-all" }}>
                     {mcpUrl()}
                   </span>
                 </div>
@@ -658,20 +632,20 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
 
               {/* Gotcha */}
               <div class="flex items-start" style={{ gap: "8px", "margin-top": "4px" }}>
-                <span style={{ color: "#1E3EA0", "font-size": "11px", "flex-shrink": "0", "margin-top": "2px" }}>*</span>
-                <span style={{ "font-size": "12px", color: "#808080" }}>
+                <span class="text-accent shrink-0" style={{ "font-size": "11px", "margin-top": "2px" }}>*</span>
+                <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
                   {activeClient().gotcha}
                 </span>
               </div>
 
               {/* Divider */}
-              <div style={{ height: "1px", background: "#333333", margin: "16px 0" }} />
+              <div class="border-t border-border-default" style={{ margin: "16px 0" }} />
 
               {/* Verify section */}
               <div class="flex items-center justify-between">
                 <div class="flex items-center" style={{ gap: "8px" }}>
-                  <span style={{ width: "8px", height: "8px", background: "#333333", "flex-shrink": "0" }} />
-                  <span style={{ "font-size": "12px", color: "#808080" }}>
+                  <span class="bg-border-default shrink-0" style={{ width: "8px", height: "8px" }} />
+                  <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
                     Спросите: «Какие документы загружены?»
                   </span>
                 </div>

@@ -82,7 +82,7 @@ const VerifyEmail: Component = () => {
               <div class="flex items-center gap-4 mt-2">
                 <A
                   href="/login"
-                  class="text-xs text-accent hover:text-[#162f78] transition-colors duration-[80ms] font-mono"
+                  class="text-xs text-accent hover:text-accent-hover transition-colors duration-[80ms] font-mono"
                 >
                   Войти в аккаунт
                 </A>
@@ -112,7 +112,7 @@ const VerifyEmail: Component = () => {
               <div class="flex items-center gap-4 mt-2">
                 <A
                   href="/login"
-                  class="text-xs text-accent hover:text-[#162f78] transition-colors duration-[80ms] font-mono"
+                  class="text-xs text-accent hover:text-accent-hover transition-colors duration-[80ms] font-mono"
                 >
                   Войти в аккаунт
                 </A>

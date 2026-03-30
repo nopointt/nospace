@@ -157,7 +157,7 @@ const Login: Component = () => {
               </A>
               <A
                 href="/register"
-                class="text-xs text-accent hover:text-[#162f78] transition-colors duration-[80ms] font-mono"
+                class="text-xs text-accent hover:text-accent-hover transition-colors duration-[80ms] font-mono"
               >
                 Создать аккаунт
               </A>

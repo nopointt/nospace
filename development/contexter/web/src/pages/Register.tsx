@@ -146,11 +146,11 @@ const Register: Component = () => {
 
             <p class="text-[10px] text-text-tertiary font-mono leading-[1.6]">
               Нажимая «Создать аккаунт», вы соглашаетесь с{" "}
-              <A href="/terms" class="text-accent hover:text-[#162f78] transition-colors duration-[80ms]">
+              <A href="/terms" class="text-accent hover:text-accent-hover transition-colors duration-[80ms]">
                 Условиями использования
               </A>{" "}
               и{" "}
-              <A href="/privacy" class="text-accent hover:text-[#162f78] transition-colors duration-[80ms]">
+              <A href="/privacy" class="text-accent hover:text-accent-hover transition-colors duration-[80ms]">
                 Политикой конфиденциальности
               </A>
             </p>
@@ -160,7 +160,7 @@ const Register: Component = () => {
                 Уже есть аккаунт?{" "}
                 <A
                   href="/login"
-                  class="text-accent hover:text-[#162f78] transition-colors duration-[80ms]"
+                  class="text-accent hover:text-accent-hover transition-colors duration-[80ms]"
                 >
                   Войти
                 </A>
