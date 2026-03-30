@@ -26,10 +26,12 @@ const Toast: Component = () => {
     <Show when={toast()}>
       {(t) => (
         <div
+          role="status"
+          aria-live="polite"
           class={`
             fixed bottom-6 right-6 z-[400]
             flex items-center gap-2 px-4 py-3
-            bg-white border font-mono text-xs
+            bg-bg-canvas border font-mono text-xs
             transition-all duration-[250ms] ease-out
             ${variantStyles[t().variant]}
           `}

@@ -119,7 +119,7 @@ const Settings: Component = () => {
             <p class="text-text-secondary text-sm">
               Войдите, чтобы управлять настройками
             </p>
-            <Button variant="primary" onClick={() => navigate("/upload")}>
+            <Button variant="primary" onClick={() => navigate("/login")}>
               Войти
             </Button>
           </div>

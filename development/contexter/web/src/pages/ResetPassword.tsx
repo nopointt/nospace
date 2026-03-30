@@ -93,7 +93,7 @@ const ResetPassword: Component = () => {
                 <h1 class="text-[24px] font-bold text-text-primary leading-[1.2]">
                   Пароль обновлён
                 </h1>
-                <p class="text-sm text-text-secondary leading-[1.6]">
+                <p class="text-sm text-text-secondary leading-[1.5]">
                   Ваш пароль успешно изменён. Перенаправление на страницу входа...
                 </p>
                 <A
@@ -113,7 +113,7 @@ const ResetPassword: Component = () => {
                   <h1 class="text-[24px] font-bold text-text-primary leading-[1.2]">
                     Недействительная ссылка
                   </h1>
-                  <p class="text-sm text-text-secondary leading-[1.6]">
+                  <p class="text-sm text-text-secondary leading-[1.5]">
                     Ссылка для сброса пароля отсутствует или истекла.
                     Запросите новую ссылку.
                   </p>
@@ -136,6 +136,9 @@ const ResetPassword: Component = () => {
                 </p>
               </div>
 
+              <Show when={error()}>
+                <p class="text-signal-error text-xs font-mono">{error()}</p>
+              </Show>
               <div class="flex flex-col gap-4">
                 <Input
                   placeholder="Новый пароль"
@@ -143,6 +146,7 @@ const ResetPassword: Component = () => {
                   value={password()}
                   onInput={setPassword}
                   onKeyDown={handleKeyDown}
+                  autocomplete="new-password"
                 />
                 <Input
                   placeholder="Подтвердите пароль"
@@ -150,7 +154,7 @@ const ResetPassword: Component = () => {
                   value={confirmPassword()}
                   onInput={setConfirmPassword}
                   onKeyDown={handleKeyDown}
-                  error={error()}
+                  autocomplete="new-password"
                 />
               </div>
 

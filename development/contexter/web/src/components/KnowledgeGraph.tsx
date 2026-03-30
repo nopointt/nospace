@@ -94,7 +94,7 @@ const COLOR_NEAR = { r: 0x1E, g: 0x3E, b: 0xA0 }  // #1E3EA0
 const COLOR_FAR  = { r: 0xD9, g: 0xD9, b: 0xD9 }  // #D9D9D9 — bg-elevated, clearly visible on #FAFAFA
 
 // Idle blob fill color (matches COLOR_FAR)
-const IDLE_FILL = "#D9D9D9"
+const IDLE_FILL = "var(--color-bg-pressed)"
 
 // ── Idle floating (levitation) — Der Kreisel ─────────────────────────────
 // Stability through motion (Klee b03 P-03). Blobs are spinning-top forms:
@@ -168,8 +168,8 @@ const KnowledgeGraph: Component<Props> = (props) => {
   let ghostEl: SVGCircleElement | undefined
 
   // Logo color constants
-  const LOGO_COLOR_FAR  = "#AAAAAA"  // idle: subtle gray on D9D9D9 blob
-  const LOGO_COLOR_NEAR = "#FFFFFF"  // active: white when blob is blue
+  const LOGO_COLOR_FAR  = "var(--color-border-default)"  // idle: subtle gray on D9D9D9 blob
+  const LOGO_COLOR_NEAR = "var(--color-white)"  // active: white when blob is blue
 
   // Filter element refs for wobble
   let turbEl: SVGFETurbulenceElement | undefined
@@ -375,7 +375,7 @@ const KnowledgeGraph: Component<Props> = (props) => {
 
         // Stop 0 (focal / cursor-side): always full blue, opacity = t
         // At t=1 this is solid #1E3EA0 at the center
-        stop0.setAttribute("stop-color", "#1E3EA0")
+        stop0.setAttribute("stop-color", "var(--color-accent)")
         stop0.setAttribute("stop-opacity", String(t))
 
         // Stop 1 (outer edge): lerp gray→blue directly by t
@@ -641,7 +641,7 @@ const KnowledgeGraph: Component<Props> = (props) => {
             x={b.homeX}
             y={b.homeY + b.r + 20}
             text-anchor="middle"
-            fill="#333333"
+            fill="var(--color-text-secondary)"
             style={{
               "font-family": "'JetBrains Mono', monospace",
               "font-size": "12px",

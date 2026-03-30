@@ -74,7 +74,7 @@ const ForgotPassword: Component = () => {
                 <h1 class="text-[24px] font-bold text-text-primary leading-[1.2]">
                   Письмо отправлено
                 </h1>
-                <p class="text-sm text-text-secondary leading-[1.6]">
+                <p class="text-sm text-text-secondary leading-[1.5]">
                   Мы отправили ссылку для сброса пароля на{" "}
                   <span class="font-mono text-text-primary">{email()}</span>.
                   Проверьте почту и перейдите по ссылке.
@@ -108,6 +108,7 @@ const ForgotPassword: Component = () => {
                 onInput={setEmail}
                 onKeyDown={handleKeyDown}
                 error={error()}
+                autocomplete="email"
               />
             </div>
 
@@ -125,7 +126,7 @@ const ForgotPassword: Component = () => {
               <div class="flex items-center justify-center">
                 <A
                   href="/login"
-                  class="text-xs text-text-tertiary hover:text-accent transition-colors duration-[80ms] font-mono"
+                  class="text-xs text-text-tertiary hover:text-text-primary transition-colors duration-[80ms] font-mono"
                 >
                   Вернуться ко входу
                 </A>

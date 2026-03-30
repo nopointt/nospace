@@ -18,8 +18,9 @@
 | CTX-01 | MVP Pipeline + API + Frontend | ✅ MLP COMPLETE (2026-03-27) | `contexter-mvp.md` |
 | CTX-02 | Design System + Pencil Screens | ✅ DONE | — |
 | CTX-03 | Frontend (SolidJS SPA) | ✅ DEPLOYED (CF Pages, contexter.cc) | — |
-| **CTX-04** | **Auth (OAuth: Google + Email, Telegram deferred)** | **🔜 NEXT** | — |
+| **CTX-04** | **Auth (OAuth: Google + Email, Telegram deferred)** | **🔜 NEXT** | `contexter-auth.md` |
 | CTX-05 | Benchmarks + Pricing + Billing | ⬜ PLANNED | — |
+| CTX-09 | UI/UX Polish (design system, responsive, a11y, pipeline indicator) | ✅ COMPLETE (2026-03-30) | `contexter-uiux-polish.md` |
 | CTX-06 | Production Migration (CF Workers → Hetzner) | ✅ CLOSED (2026-03-27) | `contexter-migration.md` |
 | CTX-07 | Production Hardening | ✅ MLP COMPLETE (2026-03-27) | `contexter-production.md` |
 

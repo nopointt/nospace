@@ -10,7 +10,7 @@ import {
 import Nav from "../components/Nav"
 import Button from "../components/Button"
 import Badge from "../components/Badge"
-import PipelineIndicator from "../components/PipelineIndicator"
+import PipelineIndicator, { getTimeEstimate } from "../components/PipelineIndicator"
 import AuthModal from "../components/AuthModal"
 import ConnectionModal from "../components/ConnectionModal"
 import DocumentModal from "../components/DocumentModal"
@@ -26,6 +26,7 @@ import {
   API_BASE,
 } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
+import { formatSize, statusToVariant, humanizeError } from "../lib/helpers"
 
 // --- Types ---
 
@@ -65,12 +66,6 @@ function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
-function formatSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
 function getExtension(name: string): string {
   return name.split(".").pop()?.toLowerCase() ?? ""
 }
@@ -86,7 +81,7 @@ function mapApiStages(
     const apiStage = apiStages.find((s) => s.type === name)
     if (!apiStage) return { name, status: "pending" as StageStatus }
     const statusMap: Record<string, StageStatus> = {
-      pending: "pending", processing: "active", completed: "done", done: "done", error: "error",
+      pending: "pending", processing: "active", running: "active", completed: "done", done: "done", error: "error",
     }
     const stage: PipelineStage = { name, status: statusMap[apiStage.status] ?? "pending" }
     if (apiStage.error_message) return { ...stage, error: apiStage.error_message }
@@ -101,13 +96,6 @@ function fileBadgeVariant(status: FileEntry["status"]): BadgeVariant {
     case "ready": return "ready"
     case "error": return "error"
   }
-}
-
-function statusToVariant(s: string): BadgeVariant {
-  if (s === "ready" || s === "completed") return "ready"
-  if (s === "error" || s === "failed") return "error"
-  if (s === "processing") return "processing"
-  return "pending"
 }
 
 function updateEntry(entries: readonly FileEntry[], id: string, patch: Partial<FileEntry>): FileEntry[] {
@@ -149,8 +137,7 @@ const Hero: Component = () => {
   } | null>(null)
 
   // Load docs + resume polling
-  createEffect(async () => {
-    if (!isAuthenticated()) return
+  async function loadInitialDocs() {
     const t = getToken()
     if (!t) return
     try {
@@ -173,6 +160,11 @@ const Hero: Component = () => {
         startPolling()
       }
     } catch {}
+  }
+
+  createEffect(() => {
+    if (!isAuthenticated()) return
+    loadInitialDocs()
   })
 
   // Refresh docs when files finish processing
@@ -336,6 +328,12 @@ const Hero: Component = () => {
           const isStuck = !allDone && !hasError && data.created_at &&
             (Date.now() - new Date(data.created_at).getTime()) > 5 * 60 * 1000 &&
             stages.some((s) => s.status === "running")
+          if (allDone && entry.status === "processing") {
+            const totalDuration = stages.reduce((sum, s) => sum + (s.duration ?? 0), 0)
+            if (totalDuration > 5000) {
+              showToast(`«${data.name || entry.name}» готов к поиску`, "success")
+            }
+          }
           setFiles((prev) => updateEntry(prev, entry.id, {
             status: allDone ? "ready" : hasError ? "error" : isStuck ? "error" : "processing",
             stages, error: errStage?.error ?? (isStuck ? "Обработка заняла слишком долго" : null),
@@ -394,11 +392,7 @@ const Hero: Component = () => {
 
       {/* 2. DROP ZONE */}
       <section
-        class={`flex flex-col items-center justify-center cursor-pointer transition-colors duration-[150ms] bg-black ${dragOver() ? "border-2 border-accent" : "border-2 border-transparent"}`}
-        style={{
-          padding: "80px 64px",
-          "min-height": "320px",
-        }}
+        class={`flex flex-col items-center justify-center cursor-pointer transition-colors duration-[150ms] bg-black px-4 py-12 md:px-16 md:py-20 min-h-[240px] md:min-h-[320px] ${dragOver() ? "border-2 border-accent" : "border-2 border-transparent"}`}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
         onDragLeave={(e) => { e.preventDefault(); setDragOver(false) }}
         onDrop={(e) => {
@@ -439,14 +433,28 @@ const Hero: Component = () => {
           PDF · DOCX · XLSX · Аудио · YouTube · Изображения · или просто текст
         </span>
 
-        <button
-          class="mt-5 border border-text-secondary py-2 px-6 text-[14px] text-text-disabled bg-transparent cursor-pointer transition-[border-color,color] duration-[80ms]"
-          onClick={(e) => { e.stopPropagation(); fileInputRef?.click() }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-white)" }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-text-secondary)"; e.currentTarget.style.color = "var(--color-text-disabled)" }}
-        >
-          Выбрать файлы
-        </button>
+        <div class="flex items-center gap-3 mt-5">
+          <button
+            class="border border-text-secondary py-2 px-6 text-sm text-text-disabled bg-transparent cursor-pointer transition-[border-color,color] duration-[80ms]"
+            onClick={(e) => { e.stopPropagation(); fileInputRef?.click() }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-white)" }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-text-secondary)"; e.currentTarget.style.color = "var(--color-text-disabled)" }}
+          >
+            Выбрать файлы
+          </button>
+          <span class="text-text-disabled text-xs">или</span>
+          <button
+            class="border border-text-secondary py-2 px-6 text-sm text-text-disabled bg-transparent cursor-pointer transition-[border-color,color] duration-[80ms]"
+            onClick={(e) => { e.stopPropagation() }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-white)" }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-text-secondary)"; e.currentTarget.style.color = "var(--color-text-disabled)" }}
+          >
+            ctrl+v
+          </button>
+        </div>
+        <span class="text-text-disabled text-xs mt-3 text-center">
+          Скопировали что-то? Просто нажмите ctrl+v — мы всё подхватим
+        </span>
 
         {dropError() && (
           <span class="text-signal-error text-[10px] mt-3">{dropError()}</span>
@@ -455,7 +463,7 @@ const Hero: Component = () => {
 
       {/* Pipeline progress (current uploads) */}
       <Show when={hasFiles()}>
-        <section class="bg-bg-canvas border-b border-border-subtle" style={{ padding: "16px 64px" }}>
+        <section class="bg-bg-canvas border-b border-border-subtle px-4 py-4 md:px-16">
           <div class="flex flex-col border border-border-default bg-bg-canvas">
             <For each={files()}>
               {(entry) => (
@@ -476,11 +484,25 @@ const Hero: Component = () => {
                     <Badge variant={fileBadgeVariant(entry.status)} />
                   </div>
                   <Show when={entry.status !== "pending"}>
-                    <PipelineIndicator stages={entry.stages} />
+                    <PipelineIndicator stages={entry.stages} mimeType={entry.mimeType} />
+                    <Show when={entry.status === "processing" && getTimeEstimate(entry.mimeType) !== null}>
+                      <span class="text-[10px] text-text-tertiary mt-1">
+                        ожидаемое время: {getTimeEstimate(entry.mimeType)}
+                      </span>
+                    </Show>
                   </Show>
                   <Show when={entry.status === "error" && entry.error}>
                     <div class="flex items-center justify-between gap-4 p-3 border border-signal-error bg-bg-canvas">
-                      <span class="text-xs text-signal-error">{entry.error}</span>
+                      <div class="flex flex-col gap-1">
+                        <span class="text-xs text-signal-error">{humanizeError(entry.error)}</span>
+                        <Show when={entry.stages?.find((s) => s.status === "error")}>
+                          {(failedStage) => (
+                            <span class="text-[10px] text-text-tertiary">этап: {
+                              {parse: "распознавание", chunk: "разбивка", embed: "векторизация", index: "сохранение"}[failedStage().name] ?? failedStage().name
+                            }</span>
+                          )}
+                        </Show>
+                      </div>
                       <Show when={entry.documentId}>
                         <Button variant="ghost" onClick={() => handleRetry(entry.id)}>Повторить</Button>
                       </Show>
@@ -494,7 +516,7 @@ const Hero: Component = () => {
       </Show>
 
       {/* 3. DOCUMENTS */}
-      <section style={{ padding: "48px 64px", flex: "1" }}>
+      <section class="px-4 py-12 md:px-16 flex-1">
         <div class="flex items-center justify-between" style={{ "margin-bottom": "24px" }}>
           <h2 class="text-black" style={{ "font-size": "24px", "font-weight": "700", "letter-spacing": "-0.5px" }}>
             Ваши документы
@@ -517,7 +539,7 @@ const Hero: Component = () => {
           }
         >
           {/* Stats row */}
-          <div class="flex" style={{ gap: "16px", "margin-bottom": "24px" }}>
+          <div class="flex flex-wrap gap-4 mb-6">
             {([
               [landingDocs().length, "документов"],
               [landingChunks(), "фрагментов"],
@@ -552,7 +574,7 @@ const Hero: Component = () => {
           </div>
 
           {/* Query */}
-          <div class="flex flex-col" style={{ "margin-top": "24px", gap: "8px" }}>
+          <div class="flex flex-col" aria-live="polite" style={{ "margin-top": "24px", gap: "8px" }}>
             <div class="flex" style={{ gap: "8px" }}>
               <input
                 type="text"
@@ -595,85 +617,87 @@ const Hero: Component = () => {
       </section>
 
       {/* 4. CONNECTION */}
-      <section class="border-t border-border-subtle" style={{ padding: "48px 64px" }}>
-        <div class="flex" style={{ gap: "64px" }}>
-          <div class="flex-1 flex flex-col" style={{ gap: "20px" }}>
-            <h2 class="text-black" style={{ "font-size": "24px", "font-weight": "700", "letter-spacing": "-0.5px" }}>Подключение</h2>
-            <p class="text-text-tertiary" style={{ "font-size": "14px", "line-height": "1.5" }}>
-              Откройте ChatGPT, Claude или Cursor — и спросите по вашим файлам
-            </p>
-            <div class="flex flex-col" style={{ gap: "16px" }}>
-              {([
-                ["1", "Скопируйте ссылку подключения", "Нажмите «скопировать» справа"],
-                ["2", "Вставьте в настройки нейросети", "Нажмите на нужную нейросеть ниже — покажем куда"],
-                ["3", "Спросите что-нибудь", "«Какие документы загружены?»"],
-              ] as const).map(([num, title, desc]) => (
-                <div class="flex" style={{ gap: "12px" }}>
-                  <span class="text-accent" style={{ "font-size": "14px", "font-weight": "700", width: "20px", "flex-shrink": "0" }}>{num}</span>
-                  <div class="flex flex-col" style={{ gap: "2px" }}>
-                    <span class="text-black" style={{ "font-size": "14px", "font-weight": "700" }}>{title}</span>
-                    <span class="text-text-tertiary" style={{ "font-size": "12px" }}>{desc}</span>
+      <Show when={isAuthenticated()}>
+        <section class="border-t border-border-subtle px-4 py-12 md:px-16">
+          <div class="flex flex-col md:flex-row gap-8 md:gap-16">
+            <div class="flex-1 flex flex-col" style={{ gap: "20px" }}>
+              <h2 class="text-black" style={{ "font-size": "24px", "font-weight": "700", "letter-spacing": "-0.5px" }}>Подключение</h2>
+              <p class="text-text-tertiary" style={{ "font-size": "14px", "line-height": "1.5" }}>
+                Откройте ChatGPT, Claude или Cursor — и спросите по вашим файлам
+              </p>
+              <div class="flex flex-col" style={{ gap: "16px" }}>
+                {([
+                  ["1", "Скопируйте ссылку подключения", "Нажмите «скопировать» справа"],
+                  ["2", "Вставьте в настройки нейросети", "Нажмите на нужную нейросеть ниже — покажем куда"],
+                  ["3", "Спросите что-нибудь", "«Какие документы загружены?»"],
+                ] as const).map(([num, title, desc]) => (
+                  <div class="flex" style={{ gap: "12px" }}>
+                    <span class="text-accent" style={{ "font-size": "14px", "font-weight": "700", width: "20px", "flex-shrink": "0" }}>{num}</span>
+                    <div class="flex flex-col" style={{ gap: "2px" }}>
+                      <span class="text-black" style={{ "font-size": "14px", "font-weight": "700" }}>{title}</span>
+                      <span class="text-text-tertiary" style={{ "font-size": "12px" }}>{desc}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div class="flex flex-col shrink-0" style={{ width: "440px", gap: "20px" }}>
-            {/* MCP URL card */}
-            <div class="flex flex-col" style={{ gap: "8px" }}>
-              <span class="text-text-tertiary" style={{ "font-size": "10px", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
-                Ссылка подключения
-              </span>
-              <div class="flex flex-col" style={{ gap: "8px" }}>
-                <div class="border-2 border-accent" style={{ padding: "12px 16px" }}>
-                  <span class="font-mono block truncate text-accent" style={{ "font-size": "12px" }}>{mcpUrl()}</span>
-                </div>
-                <div class="flex" style={{ gap: "8px" }}>
-                  <button
-                    onClick={() => copyText(mcpUrl())}
-                    style={{
-                      padding: "6px 16px", "font-size": "12px", "font-weight": "700", cursor: "pointer", "white-space": "nowrap",
-                    }}
-                    class="text-white bg-accent border border-accent"
-                  >Скопировать ссылку</button>
-                  <button
-                    onClick={() => copyText(mcpUrl().match(/token=(.+)$/)?.[1] ?? "")}
-                    style={{
-                      padding: "6px 16px", "font-size": "12px", "font-weight": "700", cursor: "pointer", "white-space": "nowrap",
-                    }}
-                    class="text-accent bg-transparent border border-accent"
-                  >Скопировать токен</button>
-                </div>
-              </div>
-            </div>
-
-            {/* Client buttons */}
-            <div class="flex flex-col" style={{ gap: "8px" }}>
-              <span class="text-text-tertiary" style={{ "font-size": "10px", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
-                Инструкция для
-              </span>
-              <div class="flex items-center flex-wrap" style={{ gap: "8px" }}>
-                {([["chatgpt", "ChatGPT"], ["claude-web", "Claude.ai"], ["claude-desktop", "Claude Desktop"], ["perplexity", "Perplexity"], ["cursor", "Cursor"]] as const).map(([id, name]) => (
-                  <button
-                    class="font-mono text-text-tertiary border border-border-subtle bg-transparent"
-                    style={{
-                      padding: "6px 14px", "font-size": "12px", "font-weight": "500",
-                      cursor: "pointer", transition: "all 80ms",
-                    }}
-                    onClick={() => { setConnectionClient(id as any); setConnectionOpen(true) }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-accent)" }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-border-subtle)"; e.currentTarget.style.color = "var(--color-text-tertiary)" }}
-                  >{name}</button>
                 ))}
               </div>
             </div>
+
+            <div class="flex flex-col shrink-0 w-full md:w-[440px]" style={{ gap: "20px" }}>
+              {/* MCP URL card */}
+              <div class="flex flex-col" style={{ gap: "8px" }}>
+                <span class="text-text-tertiary" style={{ "font-size": "10px", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
+                  Ссылка подключения
+                </span>
+                <div class="flex flex-col" style={{ gap: "8px" }}>
+                  <div class="border-2 border-accent" style={{ padding: "12px 16px" }}>
+                    <span class="font-mono block truncate text-accent" style={{ "font-size": "12px" }}>{mcpUrl()}</span>
+                  </div>
+                  <div class="flex" style={{ gap: "8px" }}>
+                    <button
+                      onClick={() => copyText(mcpUrl())}
+                      style={{
+                        padding: "6px 16px", "font-size": "12px", "font-weight": "700", cursor: "pointer", "white-space": "nowrap",
+                      }}
+                      class="text-white bg-accent border border-accent"
+                    >Скопировать ссылку</button>
+                    <button
+                      onClick={() => copyText(mcpUrl().match(/token=(.+)$/)?.[1] ?? "")}
+                      style={{
+                        padding: "6px 16px", "font-size": "12px", "font-weight": "700", cursor: "pointer", "white-space": "nowrap",
+                      }}
+                      class="text-accent bg-transparent border border-accent"
+                    >Скопировать токен</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Client buttons */}
+              <div class="flex flex-col" style={{ gap: "8px" }}>
+                <span class="text-text-tertiary" style={{ "font-size": "10px", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
+                  Инструкция для
+                </span>
+                <div class="flex items-center flex-wrap" style={{ gap: "8px" }}>
+                  {([["chatgpt", "ChatGPT"], ["claude-web", "Claude.ai"], ["claude-desktop", "Claude Desktop"], ["perplexity", "Perplexity"], ["cursor", "Cursor"]] as const).map(([id, name]) => (
+                    <button
+                      class="font-mono text-text-tertiary border border-border-subtle bg-transparent"
+                      style={{
+                        padding: "6px 14px", "font-size": "12px", "font-weight": "500",
+                        cursor: "pointer", transition: "all 80ms",
+                      }}
+                      onClick={() => { setConnectionClient(id as any); setConnectionOpen(true) }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-accent)" }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-border-subtle)"; e.currentTarget.style.color = "var(--color-text-tertiary)" }}
+                    >{name}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </Show>
 
       {/* 5. FOOTER */}
-      <footer class="border-t border-border-subtle mt-auto" style={{ padding: "20px 64px" }}>
+      <footer class="border-t border-border-subtle mt-auto px-4 py-5 md:px-16">
         <div class="flex items-center flex-wrap" style={{ gap: "32px" }}>
           <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
             Ваши файлы хранятся на серверах в Европе

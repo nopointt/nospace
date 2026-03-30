@@ -1,6 +1,7 @@
 import type { Component, JSX } from "solid-js"
 
 interface InputProps {
+  id?: string
   value?: string
   placeholder?: string
   onInput?: (value: string) => void
@@ -10,22 +11,27 @@ interface InputProps {
   error?: string
   class?: string
   ref?: (el: HTMLInputElement) => void
+  autocomplete?: string
 }
 
 const Input: Component<InputProps> = (props) => {
   return (
     <div class={`flex flex-col gap-1 ${props.class ?? ""}`}>
       <input
+        id={props.id}
         ref={props.ref}
         type={props.type ?? "text"}
         value={props.value ?? ""}
         placeholder={props.placeholder}
         disabled={props.disabled}
+        autocomplete={props.autocomplete}
+        aria-invalid={props.error ? "true" : undefined}
+        aria-describedby={props.id && props.error ? `${props.id}-error` : undefined}
         onInput={(e) => props.onInput?.(e.currentTarget.value)}
         onKeyDown={(e) => props.onKeyDown?.(e)}
         class={`
           w-full h-10 px-4 font-mono text-sm
-          bg-white border transition-colors duration-[80ms]
+          bg-bg-canvas border transition-colors duration-[80ms]
           placeholder:text-text-tertiary
           disabled:opacity-40 disabled:cursor-not-allowed
           ${props.error
@@ -36,7 +42,7 @@ const Input: Component<InputProps> = (props) => {
         `}
       />
       {props.error && (
-        <span class="text-[10px] font-mono text-signal-error">{props.error}</span>
+        <span id={props.id ? `${props.id}-error` : undefined} class="text-[10px] font-mono text-signal-error">{props.error}</span>
       )}
     </div>
   )

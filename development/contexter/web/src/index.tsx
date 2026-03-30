@@ -58,6 +58,7 @@ render(
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/verify-email" component={VerifyEmail} />
+      <Route path="*" component={() => <Navigate href="/" />} />
     </Router>
   ),
   document.getElementById("root")!,

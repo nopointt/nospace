@@ -26,9 +26,7 @@ async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
   })
 
   if (res.status === 401) {
-    // Token expired or invalid — clear auth and reload
     localStorage.removeItem("contexter_auth")
-    window.location.href = "/"
     throw new Error("Сессия истекла — войдите снова")
   }
 

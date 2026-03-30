@@ -1,4 +1,4 @@
-import { createSignal, createEffect, Show, For, type Component } from "solid-js"
+import { createSignal, createEffect, onCleanup, Show, For, type Component } from "solid-js"
 import { showToast } from "./Toast"
 import { getToken } from "../lib/store"
 import { API_BASE } from "../lib/api"
@@ -220,22 +220,22 @@ const UrlField: Component<{ url: string }> = (props) => {
   return (
     <div class="flex items-center border border-border-default mb-4">
       <span
-        class="flex-1 truncate font-mono text-text-disabled"
-        style={{ padding: "10px 14px", "font-size": "12px" }}
+        class="flex-1 truncate font-mono text-text-disabled text-xs"
+        style={{ padding: "10px 14px" }}
       >
         {props.url}
       </span>
       <button
         onClick={() => copyToClipboard(tokenFromUrl())}
-        class="shrink-0 font-mono text-text-tertiary border-l border-border-default bg-transparent cursor-pointer"
-        style={{ padding: "10px 14px", "font-size": "11px" }}
+        class="shrink-0 font-mono text-text-tertiary border-l border-border-default bg-transparent cursor-pointer text-xs"
+        style={{ padding: "10px 14px" }}
       >
         Скопировать токен
       </button>
       <button
         onClick={() => copyToClipboard(props.url)}
-        class="shrink-0 font-mono text-text-tertiary border-l border-border-default bg-transparent cursor-pointer"
-        style={{ padding: "10px 14px", "font-size": "11px" }}
+        class="shrink-0 font-mono text-text-tertiary border-l border-border-default bg-transparent cursor-pointer text-xs"
+        style={{ padding: "10px 14px" }}
       >
         Скопировать ссылку
       </button>
@@ -285,6 +285,9 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
   const [activeTab, setActiveTab] = createSignal<ClientId>(props.initialClient ?? "chatgpt")
   const [copied, setCopied] = createSignal(false)
 
+  let modalRef: HTMLDivElement | undefined
+  let previousFocus: Element | null = null
+
   // When modal opens: if initialClient is set, jump straight to instructions; otherwise selection screen
   createEffect(() => {
     if (props.open) {
@@ -297,12 +300,42 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
     }
   })
 
-  // Close on Escape
+  // Close on Escape + focus management
   createEffect(() => {
     if (!props.open) return
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") props.onClose() }
+    previousFocus = document.activeElement
+    queueMicrotask(() => {
+      const focusable = modalRef?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+      focusable?.focus()
+    })
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { props.onClose(); return }
+      if (e.key === "Tab" && modalRef) {
+        const focusable = modalRef.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        if (focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
     window.addEventListener("keydown", handler)
-    return () => window.removeEventListener("keydown", handler)
+    onCleanup(() => {
+      window.removeEventListener("keydown", handler)
+      if (previousFocus instanceof HTMLElement) {
+        previousFocus.focus()
+        previousFocus = null
+      }
+    })
   })
 
   const token = () => getToken() ?? "ВАШ_ТОКЕН"
@@ -372,12 +405,15 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
     <Show when={props.open}>
       {/* Overlay */}
       <div
-        class="fixed inset-0 z-[200] flex items-center justify-center"
-        style={{ background: "rgba(10, 10, 10, 0.48)" }}
+        class="fixed inset-0 z-[200] flex items-center justify-center bg-black/50"
         onClick={(e) => { if (e.target === e.currentTarget) props.onClose() }}
       >
         {/* Modal */}
         <div
+          ref={modalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="connectionmodal-title"
           class="flex flex-col bg-bg-surface border border-border-default"
           style={{
             width: "min(560px, 95vw)",
@@ -406,7 +442,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                   </svg>
                 </button>
               </Show>
-              <span class="text-black font-bold" style={{ "font-size": "16px" }}>
+              <span id="connectionmodal-title" class="text-black font-bold" style={{ "font-size": "16px" }}>
                 {headerTitle()}
               </span>
             </div>
@@ -426,7 +462,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
           {/* === SCREEN 1: Selection === */}
           <Show when={isOnSelect()}>
             <div class="flex-1 overflow-y-auto" style={{ padding: "20px 24px 24px" }}>
-              <p class="text-text-tertiary" style={{ "font-size": "13px", "margin-bottom": "16px", "line-height": "1.4" }}>
+              <p class="text-text-tertiary text-xs" style={{ "margin-bottom": "16px", "line-height": "1.4" }}>
                 Какую нейросеть вы используете?
               </p>
               <div class="flex flex-col" style={{ gap: "8px" }}>
@@ -473,10 +509,10 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                               </span>
                             </Show>
                           </div>
-                          <span class="text-text-secondary" style={{ "font-size": "13px" }}>
+                          <span class="text-text-secondary text-xs">
                             {card.subtitle}
                           </span>
-                          <span class="text-text-tertiary" style={{ "font-size": "11px", "margin-top": "4px" }}>
+                          <span class="text-text-tertiary text-xs" style={{ "margin-top": "4px" }}>
                             {card.plan}
                           </span>
                         </div>
@@ -495,7 +531,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
           {/* === SCREEN 1.5: Claude sub-choice === */}
           <Show when={isOnClaudeSub()}>
             <div class="flex-1 overflow-y-auto" style={{ padding: "20px 24px 24px" }}>
-              <p class="text-text-tertiary" style={{ "font-size": "13px", "margin-bottom": "16px", "line-height": "1.4" }}>
+              <p class="text-text-tertiary text-xs" style={{ "margin-bottom": "16px", "line-height": "1.4" }}>
                 Выберите способ использования Claude
               </p>
               <div class="flex flex-col" style={{ gap: "8px" }}>
@@ -517,10 +553,10 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                         <span class="text-black font-medium" style={{ "font-size": "16px" }}>
                           {choice.label}
                         </span>
-                        <span class="text-text-secondary" style={{ "font-size": "13px" }}>
+                        <span class="text-text-secondary text-xs">
                           {choice.detail}
                         </span>
-                        <span class="text-text-tertiary" style={{ "font-size": "11px", "margin-top": "4px" }}>
+                        <span class="text-text-tertiary text-xs" style={{ "margin-top": "4px" }}>
                           {choice.plan}
                         </span>
                       </div>
@@ -546,11 +582,10 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                   <button
                     onClick={() => setActiveTab(client.id)}
                     aria-label={`подключение через ${client.label}`}
-                    class="font-mono bg-transparent border-none cursor-pointer"
+                    class="font-mono bg-transparent border-none cursor-pointer text-xs"
                     style={{
                       padding: "0 16px",
                       height: "40px",
-                      "font-size": "12px",
                       "font-weight": "500",
                       color: activeTab() === client.id ? "var(--color-black)" : "var(--color-text-tertiary)",
                       "border-bottom": activeTab() === client.id ? "2px solid var(--color-accent)" : "2px solid transparent",
@@ -572,15 +607,15 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
               <For each={activeClient().steps}>
                 {(step, i) => (
                   <div class="flex" style={{ gap: "16px", "margin-bottom": "20px" }}>
-                    <span class="font-mono text-accent font-bold shrink-0"
-                      style={{ width: "24px", "padding-top": "2px", "font-size": "11px", "letter-spacing": "0.04em" }}>
+                    <span class="font-mono text-accent font-bold shrink-0 text-xs"
+                      style={{ width: "24px", "padding-top": "2px", "letter-spacing": "0.04em" }}>
                       {String(i() + 1).padStart(2, "0")}
                     </span>
                     <div class="flex flex-col" style={{ gap: "4px" }}>
-                      <span class="text-black font-medium" style={{ "font-size": "15px", "line-height": "1.3" }}>
+                      <span class="text-black font-medium text-sm" style={{ "line-height": "1.3" }}>
                         {step.action}
                       </span>
-                      <span class="text-text-tertiary" style={{ "font-size": "13px", "line-height": "1.5" }}>
+                      <span class="text-text-tertiary text-xs" style={{ "line-height": "1.5" }}>
                         {step.detail}
                       </span>
                     </div>
@@ -592,9 +627,9 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
               <Show when={activeClient().config}>
                 <div class="relative bg-bg-canvas border border-border-default mb-4">
                   <pre
-                    class="font-mono text-text-secondary"
+                    class="font-mono text-text-secondary text-xs"
                     style={{
-                      padding: "16px 14px 44px", "font-size": "12px",
+                      padding: "16px 14px 44px",
                       "line-height": "1.5", "white-space": "pre", "overflow-x": "auto",
                     }}
                   >
@@ -602,10 +637,10 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
                   </pre>
                   <button
                     onClick={handleCopyConfig}
-                    class="font-mono absolute"
+                    class="font-mono absolute text-xs"
                     style={{
                       bottom: "8px", right: "8px",
-                      padding: "6px 12px", "font-size": "12px", "font-weight": "500",
+                      padding: "6px 12px", "font-weight": "500",
                       color: copied() ? "var(--color-white)" : "var(--color-text-tertiary)",
                       background: copied() ? "var(--color-accent)" : "transparent",
                       border: `1px solid ${copied() ? "var(--color-accent)" : "var(--color-border-default)"}`,
@@ -620,11 +655,11 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
               {/* URL-only clients — show URL to paste */}
               <Show when={activeTab() === "chatgpt" || activeTab() === "claude-web" || activeTab() === "perplexity"}>
                 <div class="bg-bg-canvas border border-border-default mb-4" style={{ padding: "16px" }}>
-                  <span class="text-text-tertiary font-mono block mb-2"
-                    style={{ "font-size": "11px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>
+                  <span class="text-text-tertiary font-mono block mb-2 text-xs"
+                    style={{ "text-transform": "uppercase", "letter-spacing": "0.08em" }}>
                     Ссылка для подключения
                   </span>
-                  <span class="font-mono text-text-secondary" style={{ "font-size": "12px", "word-break": "break-all" }}>
+                  <span class="font-mono text-text-secondary text-xs" style={{ "word-break": "break-all" }}>
                     {mcpUrl()}
                   </span>
                 </div>
@@ -632,8 +667,8 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
 
               {/* Gotcha */}
               <div class="flex items-start" style={{ gap: "8px", "margin-top": "4px" }}>
-                <span class="text-accent shrink-0" style={{ "font-size": "11px", "margin-top": "2px" }}>*</span>
-                <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
+                <span class="text-accent shrink-0 text-xs" style={{ "margin-top": "2px" }}>*</span>
+                <span class="text-text-tertiary text-xs">
                   {activeClient().gotcha}
                 </span>
               </div>
@@ -645,7 +680,7 @@ const ConnectionModal: Component<ConnectionModalProps> = (props) => {
               <div class="flex items-center justify-between">
                 <div class="flex items-center" style={{ gap: "8px" }}>
                   <span class="bg-border-default shrink-0" style={{ width: "8px", height: "8px" }} />
-                  <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
+                  <span class="text-text-tertiary text-xs">
                     Спросите: «Какие документы загружены?»
                   </span>
                 </div>

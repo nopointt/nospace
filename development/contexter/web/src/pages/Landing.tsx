@@ -45,25 +45,25 @@ const LandingNav: Component<{ onCTA: () => void }> = (props) => (
       <div class="hidden md:flex items-center absolute left-1/2 -translate-x-1/2" style={{ gap: "32px" }}>
         <a
           href="#how"
-          class="text-[14px] text-text-tertiary hover:text-black transition-colors duration-[80ms]"
+          class="text-[14px] text-text-tertiary hover:text-text-primary transition-colors duration-[80ms]"
         >
           Как это работает
         </a>
         <a
           href="#features"
-          class="text-[14px] text-text-tertiary hover:text-black transition-colors duration-[80ms]"
+          class="text-[14px] text-text-tertiary hover:text-text-primary transition-colors duration-[80ms]"
         >
           Возможности
         </a>
         <a
           href="#pricing"
-          class="text-[14px] text-text-tertiary hover:text-black transition-colors duration-[80ms]"
+          class="text-[14px] text-text-tertiary hover:text-text-primary transition-colors duration-[80ms]"
         >
           Цены
         </a>
         <a
           href="#faq"
-          class="text-[14px] text-text-tertiary hover:text-black transition-colors duration-[80ms]"
+          class="text-[14px] text-text-tertiary hover:text-text-primary transition-colors duration-[80ms]"
         >
           FAQ
         </a>
@@ -95,7 +95,7 @@ const TrustBar: Component = () => (
   >
     <Container>
       <p
-        class="text-center text-[11px] md:text-[13px] text-text-disabled mb-4 md:mb-5 uppercase tracking-widest"
+        class="text-center text-sm font-medium text-black mb-4 md:mb-5 uppercase tracking-widest"
       >
         Работает со всеми нейросетями, которые вы уже используете
       </p>
@@ -350,12 +350,12 @@ const BeforeAfterSection: Component = () => (
           class="grid grid-cols-2 border-b border-border-subtle bg-bg-surface"
         >
           <div
-            class="px-4 py-3 md:px-8 md:py-4 text-[11px] md:text-[12px] uppercase tracking-[0.12em] font-medium text-text-disabled"
+            class="px-4 py-3 md:px-8 md:py-4 text-xs md:text-[12px] uppercase tracking-[0.12em] font-medium text-text-disabled"
           >
             Без Contexter
           </div>
           <div
-            class="px-4 py-3 md:px-8 md:py-4 text-[11px] md:text-[12px] uppercase tracking-[0.12em] font-medium text-accent border-l border-border-subtle"
+            class="px-4 py-3 md:px-8 md:py-4 text-xs md:text-[12px] uppercase tracking-[0.12em] font-medium text-accent border-l border-border-subtle"
           >
             С Contexter
           </div>
@@ -484,7 +484,7 @@ const FinalCTA: Component<{ onCTA: () => void }> = (props) => (
       >
         Попробовать бесплатно
       </button>
-      <p class="text-[13px] text-text-tertiary">
+      <p class="text-xs text-text-secondary">
         Без банковской карты · Бесплатный тариф
       </p>
     </div>
@@ -511,7 +511,7 @@ const Footer: Component = () => (
       <div class="grid grid-cols-1 md:grid-cols-12" style={{ gap: "40px" }}>
         <div class="md:col-span-4 flex flex-col" style={{ gap: "12px" }}>
           <Logo size="md" variant="inverted" />
-          <p class="text-[13px] text-text-tertiary">
+          <p class="text-xs text-text-tertiary">
             One memory. Every AI.
           </p>
           <p class="text-[12px] text-text-secondary mt-4">
@@ -520,7 +520,7 @@ const Footer: Component = () => (
         </div>
 
         <div class="md:col-span-4 flex flex-col" style={{ gap: "12px" }}>
-          <span class="text-[11px] uppercase tracking-[0.12em] text-text-secondary font-medium">
+          <span class="text-xs uppercase tracking-[0.12em] text-text-secondary font-medium">
             Продукт
           </span>
           <For each={FOOTER_PRODUCT_LINKS}>
@@ -536,7 +536,7 @@ const Footer: Component = () => (
         </div>
 
         <div class="md:col-span-4 flex flex-col" style={{ gap: "12px" }}>
-          <span class="text-[11px] uppercase tracking-[0.12em] text-text-secondary font-medium">
+          <span class="text-xs uppercase tracking-[0.12em] text-text-secondary font-medium">
             Компания
           </span>
           <For each={FOOTER_COMPANY_LINKS}>
@@ -565,7 +565,7 @@ const HeroSection: Component<{ onCTA: () => void }> = (props) => (
         style={{ gap: "24px" }}
       >
         <span
-          class="text-[11px] md:text-[12px] font-medium uppercase tracking-[0.2em] text-accent"
+          class="text-xs md:text-[12px] font-medium uppercase tracking-[0.2em] text-accent"
         >
           ОДНА ПАМЯТЬ · ВСЕ НЕЙРОСЕТИ
         </span>
@@ -594,7 +594,7 @@ const HeroSection: Component<{ onCTA: () => void }> = (props) => (
           >
             Попробовать бесплатно
           </button>
-          <span class="text-[13px] text-text-disabled">
+          <span class="text-xs text-text-secondary">
             Без банковской карты · Бесплатный тариф
           </span>
         </div>

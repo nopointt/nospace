@@ -538,3 +538,7 @@ Backend prod-ready for 50 users. Frontend has white screen issue on /register (d
 **Opened:**
 - Phase 2.2: UX fixes (createEffect cleanup, 401 modal, auth unification, focus traps, error placement)
 - Wave 3: Polish | Wave 4: Verification
+<!-- ENTRY:2026-03-30:CLOSE:218:contexter:contexter-uiux-polish [AXIS] -->
+## 2026-03-30 — сессия 218 CLOSE [Axis]
+
+CTX-09 UI/UX Polish epic complete. Waves 2-4 deployed. Pipeline indicator redesigned (format-specific labels, visual grammar, time estimates, toast, errors, mobile, a11y). deploy-web.sh fixed (branch=main). Hetzner CAX11→CAX21. Docling mem 1.5→3GB. ~35 files, 8 Gropius passes, 2 Bayer/Kandinsky audits.

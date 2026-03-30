@@ -10,49 +10,10 @@ import {
 import Nav from "../components/Nav"
 import Badge from "../components/Badge"
 import Toast, { showToast } from "../components/Toast"
+import ErrorState from "../components/ErrorState"
 import { getDocumentContent } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
-
-/* ── helpers (duplicated from Dashboard to keep files independent) ── */
-
-function formatSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-function formatDateFull(iso: string | null | undefined): string {
-  if (!iso) return "—"
-  const d = new Date(iso)
-  const dd = String(d.getDate()).padStart(2, "0")
-  const mm = String(d.getMonth() + 1).padStart(2, "0")
-  const yyyy = d.getFullYear()
-  return `${dd}.${mm}.${yyyy}`
-}
-
-function statusToVariant(status: string): "processing" | "ready" | "error" | "pending" {
-  if (status === "ready" || status === "completed") return "ready"
-  if (status === "error" || status === "failed") return "error"
-  if (status === "processing") return "processing"
-  return "pending"
-}
-
-function mimeShort(mime: string): string {
-  const map: Record<string, string> = {
-    "application/pdf": "pdf",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
-    "text/plain": "txt",
-    "text/markdown": "md",
-    "text/csv": "csv",
-    "application/json": "json",
-    "audio/mpeg": "mp3",
-    "audio/wav": "wav",
-    "video/mp4": "mp4",
-  }
-  return map[mime] ?? mime.split("/").pop() ?? mime
-}
+import { formatSize, formatDateFull, statusToVariant, mimeShort } from "../lib/helpers"
 
 /* ── page ── */
 
@@ -91,8 +52,8 @@ const DocumentViewer: Component = () => {
       <Toast />
 
       <div
-        class="flex flex-col"
-        style={{ padding: "32px max(16px, min(64px, 5vw))", gap: "24px", "max-width": "900px" }}
+        class="flex flex-col px-4 py-8 md:px-16 max-w-[900px]"
+        style={{ gap: "24px" }}
       >
         {/* ── Back link ── */}
         <button
@@ -129,27 +90,7 @@ const DocumentViewer: Component = () => {
 
         {/* ── Error state ── */}
         <Show when={doc.error && !doc.loading}>
-          <div
-            class="flex flex-col items-start"
-            style={{ gap: "12px", "padding-top": "48px" }}
-          >
-            <p style={{ "font-size": "14px", color: "var(--color-signal-error)" }}>
-              Не удалось загрузить документ
-            </p>
-            <button
-              onClick={() => navigate("/dashboard")}
-              style={{
-                "font-size": "12px",
-                color: "var(--color-accent)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "0",
-              }}
-            >
-              Вернуться к списку
-            </button>
-          </div>
+          <ErrorState message="Не удалось загрузить документ" onRetry={() => navigate(0)} />
         </Show>
 
         {/* ── Document loaded ── */}
@@ -198,7 +139,7 @@ const DocumentViewer: Component = () => {
                     class="flex flex-col items-center justify-center"
                     style={{ padding: "48px 0", gap: "8px" }}
                   >
-                    <p style={{ "font-size": "13px", color: "var(--color-text-tertiary)" }}>
+                    <p class="text-xs" style={{ color: "var(--color-text-tertiary)" }}>
                       Документ ещё обрабатывается — фрагменты недоступны
                     </p>
                   </div>

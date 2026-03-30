@@ -1,4 +1,4 @@
-import { createSignal, type Component } from "solid-js"
+import { createSignal, Show, type Component } from "solid-js"
 import { A, useNavigate } from "@solidjs/router"
 import Logo from "../components/Logo"
 import Button from "../components/Button"
@@ -102,12 +102,16 @@ const Register: Component = () => {
           </div>
 
           {/* Fields */}
+          <Show when={error()}>
+            <p class="text-signal-error text-xs font-mono">{error()}</p>
+          </Show>
           <div class="flex flex-col gap-4">
             <Input
               placeholder="Имя"
               value={name()}
               onInput={setName}
               onKeyDown={handleKeyDown}
+              autocomplete="name"
             />
             <Input
               placeholder="Email"
@@ -115,6 +119,7 @@ const Register: Component = () => {
               value={email()}
               onInput={setEmail}
               onKeyDown={handleKeyDown}
+              autocomplete="email"
             />
             <Input
               placeholder="Пароль"
@@ -122,6 +127,7 @@ const Register: Component = () => {
               value={password()}
               onInput={setPassword}
               onKeyDown={handleKeyDown}
+              autocomplete="new-password"
             />
             <Input
               placeholder="Подтвердите пароль"
@@ -129,7 +135,7 @@ const Register: Component = () => {
               value={confirmPassword()}
               onInput={setConfirmPassword}
               onKeyDown={handleKeyDown}
-              error={error()}
+              autocomplete="new-password"
             />
           </div>
 
@@ -144,7 +150,7 @@ const Register: Component = () => {
               Создать аккаунт
             </Button>
 
-            <p class="text-[10px] text-text-tertiary font-mono leading-[1.6]">
+            <p class="text-[10px] text-text-tertiary font-mono leading-[1.5]">
               Нажимая «Создать аккаунт», вы соглашаетесь с{" "}
               <A href="/terms" class="text-accent hover:text-accent-hover transition-colors duration-[80ms]">
                 Условиями использования

@@ -1,4 +1,4 @@
-import { createSignal, Show, onMount, type Component } from "solid-js"
+import { createSignal, createEffect, onCleanup, Show, onMount, type Component } from "solid-js"
 import Button from "./Button"
 import Input from "./Input"
 import { register } from "../lib/api"
@@ -18,6 +18,46 @@ const AuthModal: Component<AuthModalProps> = (props) => {
   const [error, setError] = createSignal("")
   const [step, setStep] = createSignal<"social" | "email" | "done">("social")
   const [found, setFound] = createSignal(false)
+
+  let modalRef: HTMLDivElement | undefined
+  let previousFocus: Element | null = null
+
+  createEffect(() => {
+    if (!props.open) return
+    previousFocus = document.activeElement
+    queueMicrotask(() => {
+      const focusable = modalRef?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+      focusable?.focus()
+    })
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { props.onClose(); return }
+      if (e.key === "Tab" && modalRef) {
+        const focusable = modalRef.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        if (focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
+    window.addEventListener("keydown", handler)
+    onCleanup(() => {
+      window.removeEventListener("keydown", handler)
+      if (previousFocus instanceof HTMLElement) {
+        previousFocus.focus()
+        previousFocus = null
+      }
+    })
+  })
 
   const handleEmailSubmit = async () => {
     if (!email().trim()) {
@@ -82,7 +122,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
           if (e.target === e.currentTarget) props.onClose()
         }}
       >
-        <div class="bg-bg-canvas border border-border-default p-8 w-full max-w-sm flex flex-col gap-6">
+        <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="authmodal-title" class="bg-bg-canvas border border-border-default p-8 w-full max-w-sm flex flex-col gap-6">
           {/* Done state */}
           <Show when={step() === "done"}>
             <p class="text-sm text-signal-success">
@@ -93,7 +133,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
           {/* Social login buttons */}
           <Show when={step() === "social"}>
             <div class="flex flex-col gap-3">
-              <h2 class="text-[20px] font-medium text-black leading-[1.2]">
+              <h2 id="authmodal-title" class="text-[20px] font-medium text-black leading-[1.2]">
                 Войти
               </h2>
               <p class="text-sm text-text-secondary">
@@ -125,7 +165,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
               {/* Email fallback */}
               <button
                 onClick={() => setStep("email")}
-                class="w-full px-4 py-2.5 text-sm text-text-secondary hover:text-black transition-colors"
+                class="w-full px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary transition-colors"
               >
                 Войти через email
               </button>
@@ -137,7 +177,7 @@ const AuthModal: Component<AuthModalProps> = (props) => {
             <div class="flex flex-col gap-3">
               <button
                 onClick={() => setStep("social")}
-                class="text-xs text-text-secondary hover:text-black self-start"
+                class="text-xs text-text-secondary hover:text-text-primary self-start"
               >
                 ← Назад
               </button>

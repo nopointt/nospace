@@ -10,12 +10,13 @@ import Nav from "../components/Nav"
 import Button from "../components/Button"
 import Badge from "../components/Badge"
 import DropZone from "../components/DropZone"
-import PipelineIndicator from "../components/PipelineIndicator"
+import PipelineIndicator, { getTimeEstimate } from "../components/PipelineIndicator"
 import type { PipelineStage, StageStatus } from "../components/PipelineIndicator"
 import AuthModal from "../components/AuthModal"
 import Toast, { showToast } from "../components/Toast"
 import { uploadText, getDocumentStatus, presignUpload, confirmUpload, uploadToR2 } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
+import { formatSize, humanizeError } from "../lib/helpers"
 
 // --- Types ---
 
@@ -54,12 +55,6 @@ function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
-function formatSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`
@@ -85,6 +80,7 @@ function mapApiStages(
     const statusMap: Record<string, StageStatus> = {
       pending: "pending",
       processing: "active",
+      running: "active",
       completed: "done",
       done: "done",
       error: "error",
@@ -413,6 +409,13 @@ const Upload: Component = () => {
           const hasError = stages.some((s) => s.status === "error")
           const errorStage = stages.find((s) => s.status === "error")
 
+          if (allDone && entry.status === "processing") {
+            const totalDuration = stages.reduce((sum, s) => sum + (s.duration ?? 0), 0)
+            if (totalDuration > 5000) {
+              showToast(`«${data.name || entry.name}» готов к поиску`, "success")
+            }
+          }
+
           setFiles((prev) =>
             updateEntry(prev, entry.id, {
               status: allDone ? "ready" : hasError ? "error" : "processing",
@@ -522,8 +525,8 @@ const Upload: Component = () => {
                           border-b border-border-subtle last:border-b-0
                           transition-colors duration-[80ms]
                           ${selectedId() === entry.id
-                            ? "bg-white"
-                            : "bg-bg-surface hover:bg-white"
+                            ? "bg-bg-canvas"
+                            : "bg-bg-surface hover:bg-bg-canvas"
                           }
                         `}
                         onClick={() => setSelectedId(entry.id)}
@@ -572,15 +575,29 @@ const Upload: Component = () => {
 
                         {/* Row 3: pipeline */}
                         <Show when={entry.status !== "pending"}>
-                          <PipelineIndicator stages={entry.stages} />
+                          <PipelineIndicator stages={entry.stages} mimeType={entry.mimeType} />
+                          <Show when={entry.status === "processing" && getTimeEstimate(entry.mimeType) !== null}>
+                            <span class="font-mono text-[10px] text-text-tertiary mt-1">
+                              ожидаемое время: {getTimeEstimate(entry.mimeType)}
+                            </span>
+                          </Show>
                         </Show>
 
                         {/* Error card */}
                         <Show when={entry.status === "error" && entry.error}>
-                          <div class="flex items-center justify-between gap-4 p-3 border border-signal-error bg-white">
-                            <span class="font-mono text-xs text-signal-error">
-                              {entry.error}
-                            </span>
+                          <div class="flex items-center justify-between gap-4 p-3 border border-signal-error bg-bg-canvas">
+                            <div class="flex flex-col gap-1">
+                              <span class="font-mono text-xs text-signal-error">
+                                {humanizeError(entry.error)}
+                              </span>
+                              <Show when={entry.stages?.find((s) => s.status === "error")}>
+                                {(failedStage) => (
+                                  <span class="font-mono text-[10px] text-text-tertiary">этап: {
+                                    {parse: "распознавание", chunk: "разбивка", embed: "векторизация", index: "сохранение"}[failedStage().name] ?? failedStage().name
+                                  }</span>
+                                )}
+                              </Show>
+                            </div>
                             <Show when={entry.documentId}>
                               <Button
                                 variant="ghost"
@@ -640,7 +657,7 @@ const Upload: Component = () => {
                         Статус
                       </span>
                       <Badge variant={fileBadgeVariant(entry().status)} />
-                      <PipelineIndicator stages={entry().stages} />
+                      <PipelineIndicator stages={entry().stages} mimeType={entry().mimeType} />
                     </div>
 
                     {/* Stats */}
@@ -695,9 +712,9 @@ const Upload: Component = () => {
                       >
                         {(preview) => (
                           <div
-                            class="border border-border-default bg-white p-4 max-h-[400px] overflow-y-auto animate-[fadeIn_250ms_ease-out]"
+                            class="border border-border-default bg-bg-canvas p-4 max-h-[400px] overflow-y-auto animate-[fadeIn_250ms_ease-out]"
                           >
-                            <pre class="font-mono text-xs text-text-secondary whitespace-pre-wrap break-words leading-relaxed">
+                            <pre class="font-mono text-xs text-text-secondary whitespace-pre-wrap break-words leading-[1.5]">
                               {preview()}
                             </pre>
                           </div>

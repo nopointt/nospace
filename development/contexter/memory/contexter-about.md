@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-30 (session 212 — full L0-L3 audit against codebase)
+> Last updated: 2026-03-30 (session 218 — full L0-L3 audit against codebase)
 ---
 
 ## Identity
@@ -79,8 +79,8 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 |---|---|
 | IP | 46.62.220.214 |
 | SSH | root@46.62.220.214 (ed25519 key) |
-| Plan | CAX11 (2 ARM vCPU, 4GB RAM, 40GB NVMe) |
-| Cost | €3.99/mo + €0.73/mo IPv4 = €4.72/mo |
+| Plan | CAX21 (4 ARM vCPU, 8GB RAM, 40GB NVMe) |
+| Cost | €6.99/mo + €0.73/mo IPv4 = €7.72/mo |
 | Location | Helsinki, Finland |
 | Docker services | app, postgres, redis, caddy, docling, netdata (6 running) |
 | Config | /opt/contexter/ (docker-compose.yml, Caddyfile, .env, Dockerfile) |
@@ -207,7 +207,7 @@ Production data: ~756 users, ~744 documents, ~1281 chunks (as of 2026-03-30).
 | CTX-07 Production Hardening | [contexter-production.md](contexter-production.md) | ✅ MLP COMPLETE (2026-03-27) |
 | CTX-08 GTM Strategy | [contexter-gtm.md](contexter-gtm.md) | ✅ CLOSED (2026-03-30, open items → backlog) |
 | **CTX-04 Auth** | [contexter-auth.md](contexter-auth.md) | 🔶 IN PROGRESS |
-| **CTX-09 UI/UX Polish** | [contexter-uiux-polish.md](contexter-uiux-polish.md) | 🔶 IN PROGRESS |
+| **CTX-09 UI/UX Polish** | [contexter-uiux-polish.md](contexter-uiux-polish.md) | ✅ COMPLETE (2026-03-30) |
 
 ## Write Authority
 

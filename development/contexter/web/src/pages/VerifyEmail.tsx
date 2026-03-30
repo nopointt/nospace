@@ -75,7 +75,7 @@ const VerifyEmail: Component = () => {
               <h1 class="text-[24px] font-bold text-text-primary leading-[1.2]">
                 Email подтверждён
               </h1>
-              <p class="text-sm text-text-secondary leading-[1.6]">
+              <p class="text-sm text-text-secondary leading-[1.5]">
                 Ваш email успешно подтверждён. Теперь вы можете пользоваться
                 всеми функциями Contexter.
               </p>
@@ -102,10 +102,10 @@ const VerifyEmail: Component = () => {
               <h1 class="text-[24px] font-bold text-text-primary leading-[1.2]">
                 Ошибка подтверждения
               </h1>
-              <p class="text-sm text-signal-error leading-[1.6]">
+              <p class="text-sm text-signal-error leading-[1.5]">
                 {errorMessage()}
               </p>
-              <p class="text-sm text-text-secondary leading-[1.6]">
+              <p class="text-sm text-text-secondary leading-[1.5]">
                 Ссылка могла истечь. Войдите в аккаунт и запросите
                 новое письмо для подтверждения.
               </p>

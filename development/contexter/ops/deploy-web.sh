@@ -52,12 +52,35 @@ log "  Build complete: $BUILD_SIZE"
 
 # ─── Step 3: Deploy to CF Pages ─────────────────────────────────────
 log "Step 3: Deploying to Cloudflare Pages"
-npx wrangler pages deploy dist/ --project-name=contexter-web --branch=production --commit-dirty=true 2>&1 | tail -10
+npx wrangler pages deploy dist/ --project-name=contexter-web --branch=main --commit-dirty=true 2>&1 | tail -10
 log "  Deploy complete"
 
-# ─── Step 4: Verify ─────────────────────────────────────────────────
-log "Step 4: Verifying production"
-sleep 5
+# ─── Step 4: Purge CF cache ─────────────────────────────────────────
+log "Step 4: Purging Cloudflare cache"
+CF_ZONE="fed8fa9deb10ab0e414ab739da428c03"
+CF_EMAIL="nopointttt@gmail.com"
+CF_KEY_FILE="$HOME/.tLOS/cf-global-key"
+
+if [[ -f "$CF_KEY_FILE" ]]; then
+  CF_KEY=$(cat "$CF_KEY_FILE")
+  PURGE_RESULT=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE}/purge_cache" \
+    -H "X-Auth-Email: ${CF_EMAIL}" \
+    -H "X-Auth-Key: ${CF_KEY}" \
+    -H "Content-Type: application/json" \
+    -d '{"purge_everything":true}' 2>/dev/null)
+  if echo "$PURGE_RESULT" | grep -q '"success":true'; then
+    log "  Cache purged"
+  else
+    log "  ⚠ Cache purge failed: $PURGE_RESULT"
+  fi
+else
+  log "  ⚠ CF key not found at $CF_KEY_FILE — skip purge"
+fi
+
+sleep 8
+
+# ─── Step 5: Verify ─────────────────────────────────────────────────
+log "Step 5: Verifying production"
 
 # Check landing page
 HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" "$PROD_URL" 2>/dev/null || echo "000")
@@ -75,7 +98,31 @@ log "  Privacy page: $HTTP_CODE_PRIV"
 HTTP_CODE_TERMS=$(curl -sf -o /dev/null -w "%{http_code}" "$PROD_URL/terms" 2>/dev/null || echo "000")
 log "  Terms page: $HTTP_CODE_TERMS"
 
-# ─── Step 5: Summary ────────────────────────────────────────────────
+# Verify JS content actually updated (check index.html hash changed)
+PROD_INDEX_HASH=$(curl -s "$PROD_URL/" 2>/dev/null | grep -o 'assets/index-[^"]*\.js' || echo "unknown")
+LOCAL_INDEX_HASH=$(grep -o 'assets/index-[^"]*\.js' "$WEB_DIR/dist/index.html" 2>/dev/null || echo "local-unknown")
+if [[ "$PROD_INDEX_HASH" == "$LOCAL_INDEX_HASH" ]]; then
+  log "  Content verified: $PROD_INDEX_HASH"
+else
+  log "  ⚠ Content mismatch! Prod: $PROD_INDEX_HASH | Local: $LOCAL_INDEX_HASH"
+  log "  Retrying purge..."
+  if [[ -f "$CF_KEY_FILE" ]]; then
+    curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE}/purge_cache" \
+      -H "X-Auth-Email: ${CF_EMAIL}" \
+      -H "X-Auth-Key: ${CF_KEY}" \
+      -H "Content-Type: application/json" \
+      -d '{"purge_everything":true}' > /dev/null 2>&1
+    sleep 10
+    PROD_INDEX_HASH=$(curl -s "$PROD_URL/" 2>/dev/null | grep -o 'assets/index-[^"]*\.js' || echo "unknown")
+    if [[ "$PROD_INDEX_HASH" == "$LOCAL_INDEX_HASH" ]]; then
+      log "  Content verified after retry: $PROD_INDEX_HASH"
+    else
+      log "  ⚠ STILL MISMATCHED — manual purge may be needed"
+    fi
+  fi
+fi
+
+# ─── Step 6: Summary ────────────────────────────────────────────────
 log ""
 log "═══════════════════════════════════════════"
 log "  WEB DEPLOY COMPLETE"

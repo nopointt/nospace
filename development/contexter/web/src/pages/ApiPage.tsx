@@ -64,7 +64,7 @@ function CodeBlock(props: { code: string; label?: string }) {
         </div>
       </Show>
       <div class="relative">
-        <pre class="p-4 font-mono text-[13px] leading-[1.4] text-text-primary whitespace-pre overflow-x-auto">
+        <pre class="p-4 font-mono text-xs leading-[1.4] text-text-primary whitespace-pre overflow-x-auto">
           <code>{props.code}</code>
         </pre>
         <button
@@ -218,12 +218,12 @@ const ApiPage: Component = () => {
     return (
       <div class="min-h-screen bg-bg-canvas">
         <Nav variant="app" />
-        <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-24">
+        <div class="w-full max-w-[1280px] mx-auto px-4 md:px-8 lg:px-16 py-24">
           <div class="flex flex-col items-center gap-6 text-center">
             <p class="text-text-secondary text-sm">
               Войдите, чтобы подключить нейросеть
             </p>
-            <Button variant="primary" onClick={() => navigate("/upload")}>
+            <Button variant="primary" onClick={() => navigate("/login")}>
               Войти
             </Button>
           </div>
@@ -237,7 +237,7 @@ const ApiPage: Component = () => {
     <div class="min-h-screen bg-bg-canvas">
       <Nav variant="app" />
 
-      <div class="w-full max-w-[1280px] mx-auto px-8 lg:px-16 py-12">
+      <div class="w-full max-w-[1280px] mx-auto px-4 md:px-8 lg:px-16 py-12">
         {/* ── page header ── */}
         <h1 class="text-[24px] font-bold leading-[1.2] text-text-primary mb-2">
           Подключение
@@ -294,14 +294,14 @@ const ApiPage: Component = () => {
 
             {/* step 2 */}
             <Step num="2" title="Откройте настройки Claude Desktop">
-              <p class="text-text-secondary text-xs leading-relaxed">
+              <p class="text-text-secondary text-xs leading-[1.5]">
                 settings &rarr; developer &rarr; mcp servers &rarr; add
               </p>
             </Step>
 
             {/* step 3 */}
             <Step num="3" title="Добавьте подключение">
-              <p class="text-text-secondary text-xs leading-relaxed mb-3">
+              <p class="text-text-secondary text-xs leading-[1.5] mb-3">
                 Вставьте этот код в файл настроек:
               </p>
               <CodeBlock
@@ -312,14 +312,14 @@ const ApiPage: Component = () => {
 
             {/* step 4 */}
             <Step num="4" title="Перезапустите Claude Desktop">
-              <p class="text-text-secondary text-xs leading-relaxed">
+              <p class="text-text-secondary text-xs leading-[1.5]">
                 Закройте и откройте Claude Desktop, чтобы применить изменения
               </p>
             </Step>
 
             {/* step 5 */}
             <Step num="5" title="Проверьте подключение">
-              <p class="text-text-secondary text-xs leading-relaxed">
+              <p class="text-text-secondary text-xs leading-[1.5]">
                 В Claude спросите:{" "}
                 <span class="text-text-primary">"Какие документы загружены?"</span>{" "}
                 — должен появиться список
@@ -332,7 +332,7 @@ const ApiPage: Component = () => {
             <h3 class="text-sm font-bold text-text-primary mb-2">
               Другой способ подключения
             </h3>
-            <p class="text-text-secondary text-xs leading-relaxed mb-4">
+            <p class="text-text-secondary text-xs leading-[1.5] mb-4">
               Для Claude.ai и других нейросетей — вставьте ссылку напрямую:
             </p>
             <CopyField
@@ -482,7 +482,7 @@ const ApiPage: Component = () => {
                 <For each={shares()}>
                   {(share) => (
                     <div class="flex items-center justify-between px-4 py-3 border-b border-border-subtle last:border-b-0">
-                      <div class="flex items-center gap-4 min-w-0">
+                      <div class="flex flex-wrap items-center gap-2 md:gap-4 min-w-0">
                         <span class="text-xs text-text-primary font-medium truncate max-w-[200px]">
                           {share.share_token.slice(0, 12)}...
                         </span>

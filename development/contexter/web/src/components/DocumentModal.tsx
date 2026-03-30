@@ -2,57 +2,16 @@ import {
   createSignal,
   createResource,
   createEffect,
+  onCleanup,
   Show,
   For,
   type Component,
 } from "solid-js"
 import Badge from "./Badge"
+import ErrorState from "./ErrorState"
 import { getDocumentContent } from "../lib/api"
 import { getToken } from "../lib/store"
-
-/* ── helpers ── */
-
-function formatSize(bytes: number | null | undefined): string {
-  if (!bytes || isNaN(bytes)) return "—"
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-function formatDateFull(iso: string | null | undefined): string {
-  if (!iso) return "—"
-  const d = new Date(iso)
-  if (isNaN(d.getTime())) return "—"
-  const dd = String(d.getDate()).padStart(2, "0")
-  const mm = String(d.getMonth() + 1).padStart(2, "0")
-  const yyyy = d.getFullYear()
-  return `${dd}.${mm}.${yyyy}`
-}
-
-function statusToVariant(status: string): "processing" | "ready" | "error" | "pending" {
-  if (status === "ready" || status === "completed") return "ready"
-  if (status === "error" || status === "failed") return "error"
-  if (status === "processing") return "processing"
-  return "pending"
-}
-
-function mimeShort(mime: string): string {
-  const map: Record<string, string> = {
-    "application/pdf": "pdf",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
-    "text/plain": "txt",
-    "text/markdown": "md",
-    "text/csv": "csv",
-    "application/json": "json",
-    "audio/mpeg": "mp3",
-    "audio/wav": "wav",
-    "video/mp4": "mp4",
-  }
-  if (!mime) return "файл"
-  return map[mime] ?? mime.split("/").pop() ?? mime
-}
+import { formatSize, formatDateFull, statusToVariant, mimeShort } from "../lib/helpers"
 
 /* ── props ── */
 
@@ -64,14 +23,45 @@ interface DocumentModalProps {
 /* ── component ── */
 
 const DocumentModal: Component<DocumentModalProps> = (props) => {
-  /* close on Escape */
+  let modalRef: HTMLDivElement | undefined
+  let previousFocus: Element | null = null
+
+  /* close on Escape + focus management */
   createEffect(() => {
     if (!props.docId) return
+    previousFocus = document.activeElement
+    queueMicrotask(() => {
+      const focusable = modalRef?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+      focusable?.focus()
+    })
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") props.onClose()
+      if (e.key === "Escape") { props.onClose(); return }
+      if (e.key === "Tab" && modalRef) {
+        const focusable = modalRef.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        if (focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
     }
     window.addEventListener("keydown", handler)
-    return () => window.removeEventListener("keydown", handler)
+    onCleanup(() => {
+      window.removeEventListener("keydown", handler)
+      if (previousFocus instanceof HTMLElement) {
+        previousFocus.focus()
+        previousFocus = null
+      }
+    })
   })
 
   const [doc] = createResource(
@@ -88,12 +78,15 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
     <Show when={props.docId}>
       {/* overlay */}
       <div
-        class="fixed inset-0 z-[250] flex items-center justify-center"
-        style={{ background: "rgba(10, 10, 10, 0.64)" }}
+        class="fixed inset-0 z-[250] flex items-center justify-center bg-black/50"
         onClick={(e) => { if (e.target === e.currentTarget) props.onClose() }}
       >
         {/* panel */}
         <div
+          ref={modalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="documentmodal-title"
           class="flex flex-col bg-bg-canvas border border-border-subtle"
           style={{
             width: "min(720px, 95vw)",
@@ -123,15 +116,14 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
               </Show>
 
               <Show when={doc.error && !doc.loading}>
-                <p class="text-signal-error" style={{ "font-size": "14px" }}>
-                  Не удалось загрузить документ
-                </p>
+                <ErrorState message="Не удалось загрузить документ" />
               </Show>
 
               <Show when={doc() && !doc.loading}>
                 {(d) => (
                   <>
                     <h2
+                      id="documentmodal-title"
                       style={{
                         "font-size": "16px",
                         "font-weight": "700",
@@ -155,12 +147,6 @@ const DocumentModal: Component<DocumentModalProps> = (props) => {
                     </div>
                   </>
                 )}
-              </Show>
-
-              <Show when={doc.error && !doc.loading}>
-                <p style={{ "font-size": "12px", color: "var(--color-signal-error)", margin: "0" }}>
-                  Не удалось загрузить документ
-                </p>
               </Show>
             </div>
 

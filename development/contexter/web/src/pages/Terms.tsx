@@ -23,7 +23,7 @@ const Terms: Component = () => {
           </a>
           <a
             href="/"
-            class="ml-auto text-[14px] text-text-tertiary hover:text-black transition-colors duration-[80ms]"
+            class="ml-auto text-[14px] text-text-tertiary hover:text-text-primary transition-colors duration-[80ms]"
           >
             Back to home
           </a>
@@ -39,7 +39,7 @@ const Terms: Component = () => {
             Legal
           </p>
           <h1
-            class="text-[32px] md:text-[42px] font-bold text-black mb-3 leading-[1.2]"
+            class="text-[32px] md:text-[48px] font-bold text-black mb-3 leading-[1.2]"
             style={{ "letter-spacing": "-0.04em" }}
           >
             Terms of Service

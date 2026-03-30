@@ -10,8 +10,10 @@
   },
   "devDependencies": {
     "@fontsource/jetbrains-mono": "^5.2.8",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/vite": "^4.2.2",
     "lucide-solid": "^0.577.0",
+    "playwright": "^1.58.2",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vite": "^8.0.1",

@@ -12,40 +12,150 @@ export interface PipelineStage {
 
 interface PipelineIndicatorProps {
   stages: PipelineStage[]
+  mimeType?: string
+}
+
+// --- Time estimate for slow formats ---
+
+export function getTimeEstimate(mimeType?: string): string | null {
+  if (!mimeType) return null
+  const m = mimeType.split(";")[0].trim()
+  if (m.startsWith("audio/")) return "~10-120 с"
+  if (m.startsWith("video/")) return "~1-5 мин"
+  if (m === "text/x-youtube-url") return null
+  if (["text/plain", "text/markdown", "text/csv", "application/json", "text/xml"].includes(m)) return null
+  if (m.startsWith("image/")) return "~3-10 с"
+  return "~5-30 с"
+}
+
+// --- Format group detection ---
+
+type FormatGroup = "document" | "text" | "image" | "audio" | "video" | "youtube"
+
+function getFormatGroup(mimeType?: string): FormatGroup {
+  if (!mimeType) return "document"
+  const m = mimeType.split(";")[0].trim()
+  if (m.startsWith("audio/")) return "audio"
+  if (m.startsWith("video/")) return "video"
+  if (m.startsWith("image/")) return "image"
+  if (m === "text/x-youtube-url") return "youtube"
+  if (
+    [
+      "text/plain",
+      "text/markdown",
+      "text/csv",
+      "application/json",
+      "text/xml",
+      "image/svg+xml",
+      "application/vnd.oasis.opendocument.text",
+    ].includes(m)
+  )
+    return "text"
+  return "document"
+}
+
+// --- Labels ---
+
+const PARSE_LABELS: Record<FormatGroup, string> = {
+  document: "распознавание документа",
+  text: "чтение файла",
+  image: "распознавание изображения",
+  audio: "расшифровка аудио",
+  video: "извлечение и расшифровка",
+  youtube: "загрузка субтитров",
 }
 
 const STAGE_LABELS: Record<string, string> = {
-  parse: "Извлечение текста",
-  chunk: "Разбивка на фрагменты",
-  embed: "Создание индекса",
-  index: "Сохранение",
-  transcribe: "Расшифровка аудио",
+  chunk: "разбивка на фрагменты",
+  embed: "векторизация",
+  index: "сохранение",
 }
 
-const statusStyles: Record<StageStatus, { dot: string; text: string; weight: string }> = {
-  pending: { dot: "bg-text-tertiary", text: "text-text-tertiary", weight: "font-normal" },
-  active: { dot: "bg-accent animate-pulse", text: "text-accent", weight: "font-bold" },
-  done: { dot: "bg-black", text: "text-black", weight: "font-medium" },
-  error: { dot: "bg-signal-error", text: "text-signal-error", weight: "font-medium" },
+function getStageLabel(stageName: string, formatGroup: FormatGroup): string {
+  if (stageName === "parse") return PARSE_LABELS[formatGroup]
+  return STAGE_LABELS[stageName] ?? stageName
 }
+
+// --- Short labels (mobile <640px) ---
+
+const PARSE_LABELS_SHORT: Record<FormatGroup, string> = {
+  document: "ocr",
+  text: "файл",
+  image: "ocr",
+  audio: "аудио",
+  video: "видео",
+  youtube: "yt",
+}
+
+const STAGE_LABELS_SHORT: Record<string, string> = {
+  chunk: "фрагм.",
+  embed: "вектор.",
+  index: "сохр.",
+}
+
+function getStageLabelShort(stageName: string, formatGroup: FormatGroup): string {
+  if (stageName === "parse") return PARSE_LABELS_SHORT[formatGroup]
+  return STAGE_LABELS_SHORT[stageName] || stageName
+}
+
+// --- Accessibility state text ---
+
+const STATE_TEXT: Record<string, string> = {
+  pending: "ожидание",
+  active: "выполняется",
+  running: "выполняется",
+  done: "готово",
+  error: "ошибка",
+}
+
+// --- State styles ---
+
+const DOT_CLASS: Record<StageStatus, string> = {
+  pending: "bg-border-default",
+  active: "bg-accent animate-pulse",
+  done: "bg-text-secondary",
+  error: "bg-signal-error",
+}
+
+const LABEL_CLASS: Record<StageStatus, string> = {
+  pending: "text-text-disabled",
+  active: "text-accent font-medium",
+  done: "text-text-secondary font-medium",
+  error: "text-signal-error font-medium",
+}
+
+// --- Component ---
 
 const PipelineIndicator: Component<PipelineIndicatorProps> = (props) => {
+  const formatGroup = () => getFormatGroup(props.mimeType)
+
   return (
-    <div class="flex items-center gap-0">
+    <div class="flex items-center gap-0" role="status" aria-live="polite">
       <For each={props.stages}>
         {(stage, i) => {
-          const style = () => statusStyles[stage.status]
+          const prevDone = () => i() > 0 && props.stages[i() - 1].status === "done"
           return (
             <>
               {i() > 0 && (
-                <div class="w-6 h-px bg-border-subtle" />
+                <div
+                  class={`w-3 sm:w-6 h-px ${prevDone() ? "bg-text-secondary" : "bg-border-subtle"}`}
+                  aria-hidden="true"
+                />
               )}
-              <div class="flex items-center gap-2">
-                <span class={`w-2 h-2 rounded-full shrink-0 ${style().dot}`} />
-                <span class={`font-mono text-xs whitespace-nowrap ${style().text} ${style().weight}`}>
-                  {STAGE_LABELS[stage.name] ?? stage.name}
+              <div
+                class="flex items-center gap-2"
+                aria-label={`${getStageLabel(stage.name, formatGroup())} — ${STATE_TEXT[stage.status] || stage.status}`}
+              >
+                <span class={`w-2 h-2 rounded-full shrink-0 ${DOT_CLASS[stage.status]}`} />
+                <span class={`text-xs whitespace-nowrap ${LABEL_CLASS[stage.status]}`}>
+                  <span class="hidden sm:inline">
+                    {getStageLabel(stage.name, formatGroup())}
+                  </span>
+                  <span class="inline sm:hidden">
+                    {getStageLabelShort(stage.name, formatGroup())}
+                  </span>
                   {stage.status === "done" && stage.duration != null && (
-                    <span class="text-text-tertiary font-normal ml-1">
+                    <span class="font-mono text-text-tertiary font-normal ml-1">
                       {stage.duration < 1000
                         ? `${stage.duration}ms`
                         : `${(stage.duration / 1000).toFixed(1)}s`}

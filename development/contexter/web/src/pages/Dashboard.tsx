@@ -13,8 +13,11 @@ import Badge from "../components/Badge"
 import Input from "../components/Input"
 import Toast, { showToast } from "../components/Toast"
 import DocumentModal from "../components/DocumentModal"
+import ErrorState from "../components/ErrorState"
+import EmptyState from "../components/EmptyState"
 import { listDocuments, query as queryApi, getDocumentStatus, deleteDocument } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
+import { formatSize, formatDate, formatDateFull, statusToVariant, mimeShort } from "../lib/helpers"
 
 /* ── types ── */
 
@@ -41,53 +44,6 @@ interface QuerySource {
 interface QueryResult {
   answer: string
   sources: QuerySource[]
-}
-
-/* ── helpers ── */
-
-function formatSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-function formatDate(iso: string): string {
-  const d = new Date(iso)
-  const dd = String(d.getDate()).padStart(2, "0")
-  const mm = String(d.getMonth() + 1).padStart(2, "0")
-  return `${dd}.${mm}`
-}
-
-function formatDateFull(iso: string): string {
-  const d = new Date(iso)
-  const dd = String(d.getDate()).padStart(2, "0")
-  const mm = String(d.getMonth() + 1).padStart(2, "0")
-  const yyyy = d.getFullYear()
-  return `${dd}.${mm}.${yyyy}`
-}
-
-function statusToVariant(status: string): "processing" | "ready" | "error" | "pending" {
-  if (status === "ready" || status === "completed") return "ready"
-  if (status === "error" || status === "failed") return "error"
-  if (status === "processing") return "processing"
-  return "pending"
-}
-
-function mimeShort(mime: string): string {
-  const map: Record<string, string> = {
-    "application/pdf": "pdf",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
-    "text/plain": "txt",
-    "text/markdown": "md",
-    "text/csv": "csv",
-    "application/json": "json",
-    "audio/mpeg": "mp3",
-    "audio/wav": "wav",
-    "video/mp4": "mp4",
-  }
-  return map[mime] ?? mime.split("/").pop() ?? mime
 }
 
 /* ── confirm dialog ── */
@@ -169,12 +125,7 @@ const Dashboard: Component = () => {
   }
 
   /* load doc detail when selected */
-  createEffect(async () => {
-    const id = selectedId()
-    if (!id) {
-      setSelectedDetail(null)
-      return
-    }
+  async function loadDocDetail(id: string) {
     const token = getToken()
     if (!token) return
     setDetailLoading(true)
@@ -196,6 +147,15 @@ const Dashboard: Component = () => {
     } finally {
       setDetailLoading(false)
     }
+  }
+
+  createEffect(() => {
+    const id = selectedId()
+    if (!id) {
+      setSelectedDetail(null)
+      return
+    }
+    loadDocDetail(id)
   })
 
   /* select doc — click: open modal */
@@ -279,17 +239,15 @@ const Dashboard: Component = () => {
 
       {/* ══════ BODY — horizontal split ══════ */}
       <div
-        class="flex"
+        class="flex flex-col md:flex-row gap-6 md:gap-8 p-4 md:p-8"
         style={{
-          padding: "32px max(16px, min(64px, 5vw))",
-          gap: "32px",
           "min-height": "calc(100vh - 56px)",
         }}
       >
         {/* ── LEFT: fill container — Stats + Documents ── */}
         <div class="flex-1 flex flex-col" style={{ gap: "24px" }}>
           {/* Stats Row — 4 cards */}
-          <div class="flex" style={{ gap: "16px" }}>
+          <div class="flex flex-wrap gap-4">
             <StatCard value={documents().length} label="Документы" />
             <StatCard value={totalChunks()} label="Фрагменты" />
             <StatCard value={totalQueries()} label="Запросы" />
@@ -305,10 +263,10 @@ const Dashboard: Component = () => {
               }}
             >
               <span class="flex-1" style={headerCellStyle}>Документ</span>
-              <span style={{ ...headerCellStyle, width: "80px" }}>Тип</span>
+              <span class="hidden md:inline" style={{ ...headerCellStyle, width: "80px" }}>Тип</span>
               <span style={{ ...headerCellStyle, width: "80px" }}>Фрагменты</span>
               <span style={{ ...headerCellStyle, width: "100px" }}>Статус</span>
-              <span style={{ ...headerCellStyle, width: "80px" }}>Дата</span>
+              <span class="hidden md:inline" style={{ ...headerCellStyle, width: "80px" }}>Дата</span>
             </div>
 
             {/* Loading skeleton */}
@@ -324,7 +282,7 @@ const Dashboard: Component = () => {
                     <div class="flex-1">
                       <div class="h-4 bg-bg-elevated animate-pulse" style={{ width: "60%" }} />
                     </div>
-                    <div style={{ width: "80px" }}>
+                    <div class="hidden md:block" style={{ width: "80px" }}>
                       <div class="h-4 bg-bg-elevated animate-pulse" style={{ width: "40px" }} />
                     </div>
                     <div style={{ width: "60px" }}>
@@ -333,7 +291,7 @@ const Dashboard: Component = () => {
                     <div style={{ width: "100px" }}>
                       <div class="h-4 bg-bg-elevated animate-pulse" style={{ width: "60px" }} />
                     </div>
-                    <div style={{ width: "80px" }}>
+                    <div class="hidden md:block" style={{ width: "80px" }}>
                       <div class="h-4 bg-bg-elevated animate-pulse" style={{ width: "40px" }} />
                     </div>
                   </div>
@@ -343,46 +301,16 @@ const Dashboard: Component = () => {
 
             {/* Error state */}
             <Show when={!loading() && loadError()}>
-              <div
-                class="flex flex-col items-start"
-                style={{ padding: "32px 16px", gap: "12px" }}
-              >
-                <p class="text-signal-error" style={{ "font-size": "12px" }}>
-                  Не удалось загрузить документы
-                </p>
-                <button
-                  onClick={loadDocuments}
-                  class="text-accent"
-                  style={{
-                    "font-size": "12px",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: "0",
-                    "text-decoration": "underline",
-                  }}
-                >
-                  Повторить
-                </button>
-              </div>
+              <ErrorState message="Не удалось загрузить документы" onRetry={loadDocuments} />
             </Show>
 
             {/* Empty state */}
             <Show when={!loading() && !loadError() && documents().length === 0}>
-              <div
-                class="flex flex-col items-center justify-center gap-4"
-                style={{ padding: "48px 16px" }}
-              >
-                <span class="text-sm text-text-primary">
-                  Документов пока нет
-                </span>
-                <span class="text-xs text-text-tertiary">
-                  Загрузите первый файл для начала работы
-                </span>
-                <A href="/">
-                  <Button variant="primary">Загрузить файл</Button>
-                </A>
-              </div>
+              <EmptyState
+                message="Документов пока нет"
+                hint="Загрузите первый файл для начала работы"
+                action={<A href="/"><Button variant="primary">Загрузить файл</Button></A>}
+              />
             </Show>
 
             {/* Data rows */}
@@ -407,7 +335,7 @@ const Dashboard: Component = () => {
                     >
                       {doc.name}
                     </span>
-                    <span class="text-black" style={{ width: "80px", "font-size": "12px" }}>
+                    <span class="hidden md:inline text-black" style={{ width: "80px", "font-size": "12px" }}>
                       {mimeShort(doc.mime_type)}
                     </span>
                     <span class="text-black" style={{ width: "60px", "font-size": "12px" }}>
@@ -417,7 +345,7 @@ const Dashboard: Component = () => {
                       <Badge variant={statusToVariant(doc.status)} />
                     </span>
                     <span
-                      class="text-black"
+                      class="hidden md:inline text-black"
                       style={{ width: "80px", "font-size": "12px" }}
                       title={formatDateFull(doc.created_at)}
                     >
@@ -432,12 +360,7 @@ const Dashboard: Component = () => {
 
         {/* ── RIGHT: 420px fixed — Query Panel ── */}
         <div
-          class="shrink-0 flex flex-col border-l border-border-subtle"
-          style={{
-            width: "420px",
-            padding: "32px 0px 32px 32px",
-            gap: "24px",
-          }}
+          class="w-full md:w-[420px] shrink-0 flex flex-col border-t md:border-t-0 md:border-l border-border-subtle pt-6 md:pt-0 md:pl-8 gap-6"
         >
           {/* ВОПРОС section */}
           <div class="flex flex-col" style={{ gap: "12px" }}>
@@ -460,7 +383,7 @@ const Dashboard: Component = () => {
           </div>
 
           {/* ОТВЕТ section */}
-          <div class="flex flex-col" style={{ gap: "8px" }}>
+          <div class="flex flex-col" aria-live="polite" style={{ gap: "8px" }}>
             <span style={sectionLabelStyle}>ОТВЕТ</span>
             <Show when={queryLoading()}>
               <div class="flex flex-col gap-2">

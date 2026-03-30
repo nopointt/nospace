@@ -69,12 +69,10 @@ const Nav: Component<NavProps> = (props) => {
             >
               <div class="flex items-center" style={{ gap: "12px" }}>
                 <div
-                  class="flex items-center justify-center shrink-0"
+                  class="flex items-center justify-center shrink-0 bg-black text-white"
                   style={{
                     width: "28px",
                     height: "28px",
-                    background: "#0A0A0A",
-                    color: "#FAFAFA",
                     "font-size": "12px",
                     "font-weight": "700",
                   }}
@@ -83,7 +81,7 @@ const Nav: Component<NavProps> = (props) => {
                 </div>
                 <button
                   onClick={handleLogout}
-                  class="text-[13px] text-text-tertiary hover:text-text-primary transition-colors duration-[80ms]"
+                  class="text-xs text-text-tertiary hover:text-text-primary transition-colors duration-[80ms]"
                 >
                   Выход
                 </button>
