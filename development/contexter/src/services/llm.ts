@@ -174,6 +174,7 @@ async function fetchChatCompletion(
       messages: toWireMessages(messages),
       max_tokens: maxTokens,
     }),
+    signal: AbortSignal.timeout(30_000),
   })
 
   if (!res.ok) {
@@ -212,6 +213,7 @@ async function* fetchChatStream(
       max_tokens: maxTokens,
       stream: true,
     }),
+    signal: AbortSignal.timeout(60_000), // streams need longer timeout
   })
 
   if (!res.ok) {

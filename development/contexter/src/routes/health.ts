@@ -3,6 +3,7 @@ import type { Sql } from "postgres"
 import type { Env } from "../types/env"
 import type Redis from "ioredis"
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
+import { getCircuitHealthSnapshot } from "../services/resilience"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
 
@@ -60,4 +61,8 @@ health.get("/", async (c) => {
   const allOk = Object.values(checks).every((v) => v === "ok")
 
   return c.json({ status: allOk ? "healthy" : "degraded", checks }, allOk ? 200 : 503)
+})
+
+health.get("/circuits", (c) => {
+  return c.json(getCircuitHealthSnapshot())
 })

@@ -64,7 +64,16 @@ export function startPipelineWorker(
     async (job: Job<PipelineJobData>) => {
       const { documentId, userId, fileName, mimeType, fileSize, r2Key, fromStage, jobIds } = job.data
 
-      const file = await fetchFromR2(env, r2Key)
+      let file: ArrayBuffer
+      try {
+        file = await fetchFromR2(env, r2Key)
+      } catch (e) {
+        const msg = `R2 fetch failed for ${r2Key}: ${e instanceof Error ? e.message : String(e)}`
+        console.error(JSON.stringify({ event: "pipeline_r2_fetch_error", documentId, r2Key, error: msg }))
+        // Update document status so it doesn't stay "processing" forever
+        await sql`UPDATE documents SET status = 'error', error_message = ${msg}, updated_at = NOW() WHERE id = ${documentId}`.catch(() => {})
+        throw e // re-throw so BullMQ retries
+      }
       const input = { file, fileName, mimeType, fileSize }
 
       if (fromStage) {

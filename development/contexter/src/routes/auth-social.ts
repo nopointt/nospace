@@ -227,6 +227,7 @@ authSocial.get("/google/callback", async (c) => {
       redirect_uri: redirectUri,
       grant_type: "authorization_code",
     }),
+    signal: AbortSignal.timeout(10_000),
   })
 
   if (!tokenRes.ok) {
@@ -239,6 +240,7 @@ authSocial.get("/google/callback", async (c) => {
   // Get user info
   const userInfoRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
     headers: { Authorization: `Bearer ${tokens.access_token}` },
+    signal: AbortSignal.timeout(10_000),
   })
 
   if (!userInfoRes.ok) {

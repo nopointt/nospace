@@ -1,0 +1,33 @@
+Contexter Troubleshooting Guide
+
+Problem: Document stuck in "processing" status
+Cause: Pipeline job may have failed silently or Redis queue is down.
+Fix: Check job status via API (GET /api/status/:documentId). If all stages show "pending", the BullMQ queue may not be running. SSH to server and check: docker logs contexter-redis-1 --tail 20. Restart Redis if needed: docker compose restart redis.
+
+Problem: Query returns empty answer
+Cause: No relevant chunks found, or LLM rate limit hit.
+Fix: Verify the document has chunks (GET /api/documents/:id/content). If chunks exist but answer is empty, check circuit breaker status at /health/circuits. If groq_llm shows "open", the LLM is rate-limited — wait 30 seconds for half-open probe.
+
+Problem: Upload returns 415 Unsupported file type
+Cause: MIME type not in the allowed list, or magic bytes don't match declared type.
+Fix: Ensure the file has a standard extension. Use the presigned upload flow (/api/upload/presign + PUT + /api/upload/confirm) instead of direct POST /api/upload.
+
+Problem: Slow query response (>10 seconds)
+Cause: Groq LLM latency under load, or fallback to NIM provider.
+Fix: Check /health/circuits — if groq_llm fallback is "active", queries are using the slower NIM provider. This is automatic failover and will resolve when Groq recovers.
+
+Problem: Health check shows "degraded"
+Cause: One or more dependencies are down.
+Fix: Check the specific failing service in the health response. Common issues:
+  - postgres: error → restart postgres container
+  - redis: error → restart redis, check memory limits
+  - s3: write-failed → check R2 credentials in .env
+  - groq: missing → GROQ_API_KEY not set in .env
+
+Problem: Netdata alert: "Contexter container down"
+Cause: Docker container crashed (likely OOM for Docling or NLI sidecar).
+Fix: Docker restart policy (unless-stopped) will auto-restart. If recurring, increase memory limit in docker-compose.yml or upgrade server.
+
+Problem: PDF produces only 1 chunk
+Cause: BPE encoder not loaded at pipeline start, falling back to word count heuristic which overestimates token count.
+Fix: The ensureEncoderLoaded() call should warm up the tokenizer before chunking. If issue persists, check server logs for "[tokenizer] gpt-tokenizer failed to load" warnings.

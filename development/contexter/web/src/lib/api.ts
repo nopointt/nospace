@@ -22,6 +22,7 @@ async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
     method: opts.method || "GET",
     headers,
     body: opts.body,
+    credentials: "include", // send better-auth session cookie cross-origin
   })
 
   if (res.status === 401) {

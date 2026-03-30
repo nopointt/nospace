@@ -1,0 +1,25 @@
+Frequently Asked Questions about Contexter
+
+Q: What is Contexter?
+A: Contexter is a RAG-as-a-service platform that lets you upload documents and query them with AI. It works with any LLM that supports MCP protocol.
+
+Q: What file formats are supported?
+A: 15 formats: PDF, DOCX, XLSX, PPTX, ODS, CSV, JSON, TXT, MD, HTML, images, audio, and video.
+
+Q: How much does it cost?
+A: Three tiers: Starter at $9/month, Pro at $29/month, and Team at $79/month. Payments are in cryptocurrency via NOWPayments.
+
+Q: Is my data secure?
+A: Yes. Files are stored in Cloudflare R2 (EU region), encrypted at rest. The server runs in Helsinki, Finland. We never train AI models on your data.
+
+Q: How do I connect Contexter to Claude or ChatGPT?
+A: Use the MCP endpoint at https://api.contexter.cc/sse?token=YOUR_TOKEN. Add it as an MCP server in your AI tool's settings.
+
+Q: What happens if a document fails to process?
+A: The pipeline retries up to 3 times with exponential backoff. If all retries fail, the document status shows "error" with a description of what went wrong.
+
+Q: Can I share my knowledge base with others?
+A: Yes. Create a share link via the API or dashboard. Share links can be read-only or read-write, with optional expiration dates.
+
+Q: What languages does Contexter support?
+A: Contexter supports any language that Jina embeddings and Groq LLMs can handle, which includes most major world languages. Full-text search uses PostgreSQL multilingual tsvector configurations.

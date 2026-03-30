@@ -97,10 +97,10 @@ upload.post("/", async (c) => {
   }
 
   // NEW-004: per-user upload rate limit — max 20 uploads per hour
+  // INCR + EXPIRE on every call (idempotent, prevents orphan keys on crash)
   const uploadRateKey = `rate:upload:${auth.userId}`
   try {
-    const count = await redis.incr(uploadRateKey)
-    if (count === 1) await redis.expire(uploadRateKey, 3600)
+    const [[, count]] = await redis.multi().incr(uploadRateKey).expire(uploadRateKey, 3600).exec() as [[null, number], [null, number]]
     if (count > 20) {
       return c.json({ error: "Upload rate limit exceeded. Maximum 20 uploads per hour." }, 429)
     }
@@ -138,12 +138,25 @@ upload.post("/", async (c) => {
       VALUES (${documentId}, ${auth.userId}, ${"pasted-text.txt"}, ${"text/plain"}, ${blob.size}, ${r2Key}, 'processing')
     `
     const jobIds = await createPendingJobs(sql, documentId, auth.userId)
+    let enqueued = false
     try {
-      const queue = getPipelineQueue(process.env.REDIS_URL ?? "redis://localhost:6379")
+      const queue = getPipelineQueue(process.env.REDIS_URL!)
       await queue.add("process", { documentId, userId: auth.userId, fileName: "pasted-text.txt", mimeType: "text/plain", fileSize: blob.size, r2Key, jobIds })
+      enqueued = true
     } catch (qErr) {
       console.error("BullMQ enqueue failed, falling back to direct run:", qErr instanceof Error ? qErr.message : String(qErr))
-      runPipelineAsync(documentId, { file: await virtualFile.arrayBuffer(), fileName: "pasted-text.txt", mimeType: "text/plain", fileSize: blob.size }, env, sql, auth.userId, jobIds).catch(console.error)
+      try {
+        runPipelineAsync(documentId, { file: await virtualFile.arrayBuffer(), fileName: "pasted-text.txt", mimeType: "text/plain", fileSize: blob.size }, env, sql, auth.userId, jobIds).catch(console.error)
+        enqueued = true
+      } catch (directErr) {
+        console.error("Direct pipeline fallback also failed:", directErr instanceof Error ? directErr.message : String(directErr))
+      }
+    }
+    if (!enqueued) {
+      try { await sql`DELETE FROM documents WHERE id = ${documentId}` } catch (e) {
+        console.error("Rollback failed for text upload:", documentId, e instanceof Error ? e.message : String(e))
+      }
+      return c.json({ error: "Failed to start processing pipeline. Please retry." }, 503)
     }
     return c.json({ documentId, status: "processing" }, 202)
   }

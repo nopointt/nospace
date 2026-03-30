@@ -528,6 +528,14 @@ async function handleToolCall(
           })
         }
 
+        // Guard: base64 string ~33% larger than binary. 280MB base64 ≈ 200MB file (max upload size)
+        if (contentBase64.length > 280 * 1024 * 1024) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "File exceeds 200 MB limit." }],
+            isError: true,
+          })
+        }
+
         let buffer: ArrayBuffer
         try {
           const binary = atob(contentBase64)

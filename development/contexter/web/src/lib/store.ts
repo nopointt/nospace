@@ -4,8 +4,8 @@ const STORAGE_KEY = "contexter_auth"
 
 interface AuthState {
   userId: string
-  apiToken: string
-  mcpUrl: string
+  apiToken?: string  // present for legacy token auth, absent for better-auth cookie sessions
+  mcpUrl?: string
   name?: string
   email?: string
 }

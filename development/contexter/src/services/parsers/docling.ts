@@ -2,6 +2,7 @@ import type { Parser, ParserInput, ParseResult, ParsedImage, DoclingElement } fr
 import { buildMetadata } from "./types"
 import { streamToBuffer } from "./utils"
 import { MistralOcrService, isMimeTypeSupportedByMistral } from "./mistral-ocr"
+import { doclingPolicy } from "../resilience"
 
 /**
  * Document parser using Docling API (IBM, MIT license).
@@ -45,11 +46,14 @@ export class DoclingParser implements Parser {
 
     // P0-003: Docling-serve 1.15.0 API is at /v1/convert/file (no /api prefix)
     // P2-007: 90s timeout — shorter than 120s pipeline timeout to get clean error
-    const res = await fetch(`${this.doclingUrl}/v1/convert/file`, {
-      method: "POST",
-      body: formData,
-      signal: AbortSignal.timeout(90_000),
-    })
+    // doclingPolicy: circuit breaker (3 consecutive failures → open) + retry 2x + bulkhead 1 concurrent
+    const res = await doclingPolicy.execute(() =>
+      fetch(`${this.doclingUrl}/v1/convert/file`, {
+        method: "POST",
+        body: formData,
+        signal: AbortSignal.timeout(90_000),
+      })
+    )
 
     if (!res.ok) {
       const text = await res.text()

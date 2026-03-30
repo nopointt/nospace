@@ -1,0 +1,42 @@
+Contexter Deployment Guide
+
+Prerequisites:
+- SSH access to root@46.62.220.214
+- Bun installed locally
+- Docker and Docker Compose on the server
+
+Step 1: Run the deploy script
+  bash ops/deploy.sh
+
+The script performs these steps automatically:
+  a) Pre-flight checks (SSH connectivity, local files exist)
+  b) Unit tests (chunker, parsers — warns on failure but continues)
+  c) SCP source files to server (/opt/contexter/app/)
+  d) Docker image build (COPY-based, ~2 minutes)
+  e) Container restart (docker compose up -d app)
+  f) Post-deploy health check (30 second retry loop)
+  g) Telegram notification on success or failure
+
+Step 2: Verify deployment
+  curl https://api.contexter.cc/health
+  curl https://api.contexter.cc/health/circuits
+
+Step 3: Monitor logs
+  ssh root@46.62.220.214 "docker logs contexter-app-1 --tail 50"
+
+Emergency hotfix (skip tests):
+  bash ops/deploy.sh --skip-tests
+
+Rollback:
+  bash ops/rollback.sh         (app only)
+  bash ops/rollback.sh --db    (app + database restore from latest backup)
+
+Frontend deploy (Cloudflare Pages):
+  bash ops/deploy-web.sh
+
+Environment variables are in /opt/contexter/.env on the server. Never commit this file.
+
+Automated processes:
+- PostgreSQL backup: daily at 3:00 UTC via cron
+- Health check with Telegram alert: every 5 minutes via cron
+- Netdata monitoring: http://46.62.220.214:19999

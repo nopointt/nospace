@@ -171,10 +171,10 @@ query.post("/", async (c) => {
   }
 
   // NEW-005: per-user rate limit — max 60 queries per minute
+  // MULTI INCR+EXPIRE atomic — prevents orphan keys on crash
   const queryRateKey = `rate:query:${auth.userId}`
   try {
-    const count = await redis.incr(queryRateKey)
-    if (count === 1) await redis.expire(queryRateKey, 60)
+    const [[, count]] = await redis.multi().incr(queryRateKey).expire(queryRateKey, 60).exec() as [[null, number], [null, number]]
     if (count > 60) {
       return c.json({ error: "Query rate limit exceeded. Maximum 60 queries per minute." }, 429)
     }
@@ -269,8 +269,7 @@ query.post("/stream", async (c) => {
   // NEW-005: per-user rate limit — shared with batch endpoint
   const queryRateKey = `rate:query:${auth.userId}`
   try {
-    const count = await redis.incr(queryRateKey)
-    if (count === 1) await redis.expire(queryRateKey, 60)
+    const [[, count]] = await redis.multi().incr(queryRateKey).expire(queryRateKey, 60).exec() as [[null, number], [null, number]]
     if (count > 60) {
       return c.json({ error: "Query rate limit exceeded. Maximum 60 queries per minute." }, 429)
     }

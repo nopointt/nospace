@@ -60,8 +60,7 @@ describe("EmbedderService", () => {
     const body = JSON.parse(callArgs[1].body)
 
     expect(body.model).toBe("jina-embeddings-v4")
-    expect(body.dimensions).toBe(1024)
-    expect(body.truncate_dim).toBe(1024)
+    expect(body.dimensions).toBe(512)
     expect(body.task).toBe("retrieval.passage")
     expect(body.input).toEqual([{ text: "hello world" }])
   })
@@ -141,7 +140,6 @@ describe("EmbedderService", () => {
     const callArgs = (globalThis.fetch as any).mock.calls[0]
     const body = JSON.parse(callArgs[1].body)
     expect(body.dimensions).toBe(512)
-    expect(body.truncate_dim).toBe(512)
   })
 
   test("throws on API error", async () => {

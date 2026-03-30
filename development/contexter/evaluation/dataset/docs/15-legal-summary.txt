@@ -1,0 +1,41 @@
+Contexter Legal Framework Summary
+
+Privacy Policy (https://contexter.cc/privacy)
+Last updated: March 30, 2026
+
+Data collected:
+- Account information (email, name, Google profile via OAuth)
+- Uploaded documents (stored in Cloudflare R2, EU region)
+- Query text (logged for evaluation metrics, aggregated after 90 days)
+- Usage telemetry (IP addresses, timestamps, user agent)
+
+Data processors:
+- Groq Inc. (San Francisco, USA) — LLM inference for query answers and contextual prefixes
+- Jina AI GmbH (Berlin, Germany) — text embeddings for semantic search
+- Cloudflare Inc. (San Francisco, USA) — CDN, R2 file storage, DNS, frontend hosting
+- Hetzner Online GmbH (Gunzenhausen, Germany) — server infrastructure in Helsinki, Finland
+- NOWPayments (Tallinn, Estonia) — cryptocurrency payment processing
+
+User rights under GDPR:
+- Right to access all personal data
+- Right to deletion (documents via API, full account via support email)
+- Right to data portability (export documents)
+- Right to object to evaluation metrics collection
+
+Cross-border transfers:
+- Server located in EU (Finland)
+- API calls to US-based LLM providers (Groq) covered by Standard Contractual Clauses
+- Jina embeddings processed in EU (Germany)
+
+Terms of Service (https://contexter.cc/terms)
+Last updated: March 30, 2026
+
+Key provisions:
+- Users own their data. Contexter does not train models on user content.
+- Service availability is best-effort with no SLA.
+- Liability limited to the amount paid in the last 30 days.
+- RAG answers are informational only — not legal, medical, or financial advice.
+- Cryptocurrency payments via NOWPayments are non-refundable.
+- Governing law: England and Wales. Disputes resolved via online arbitration.
+- Acceptable use: no illegal content, malware, or third-party PII without consent.
+- Termination: users can delete their account at any time. Abuse results in 30-day notice.

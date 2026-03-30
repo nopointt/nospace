@@ -34,4 +34,10 @@ export interface Env {
   NLI_ENABLED?: string
   // Rate limit whitelist — comma-separated IPs that bypass all rate limits (for E2E tests, monitoring)
   RATE_LIMIT_WHITELIST_IPS?: string
+  // CTX-04: better-auth
+  DATABASE_URL: string
+  BETTER_AUTH_SECRET: string
+  RESEND_API_KEY: string
+  GOOGLE_CLIENT_ID: string
+  GOOGLE_CLIENT_SECRET: string
 }

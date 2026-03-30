@@ -36,21 +36,25 @@ import { authSocial } from "./routes/auth-social"
 import { metrics } from "./routes/metrics"
 import { startMaintenanceWorker, shutdownMaintenanceQueue } from "./routes/maintenance"
 import { feedbackRouter } from "./routes/feedback"
+import { createAuth } from "./auth"
+import { setBetterAuth } from "./services/auth"
 import { startFeedbackDecayWorker, scheduleFeedbackDecay } from "./services/feedback-decay"
 import { startLlmEvalWorker, shutdownLlmEvalQueue } from "./services/evaluation/llm-eval"
 
 // P3-015: validate required env vars at startup — fail fast with clear message
 const REQUIRED_ENV = [
   "DATABASE_URL",
+  "REDIS_URL",
   "R2_ENDPOINT",
   "R2_ACCESS_KEY_ID",
   "R2_SECRET_ACCESS_KEY",
   "JINA_API_KEY",
   "GROQ_API_KEY",
+  "BETTER_AUTH_SECRET",
 ]
 for (const key of REQUIRED_ENV) {
-  if (!process.env[key]) {
-    console.error(`FATAL: Missing required env var: ${key}`)
+  if (!process.env[key]?.trim()) {
+    console.error(`FATAL: Missing or empty required env var: ${key}`)
     process.exit(1)
   }
 }
@@ -64,7 +68,7 @@ const sql = postgres(process.env.DATABASE_URL!, {
   connect_timeout: 10,
 })
 
-const redis = new Redis(process.env.REDIS_URL ?? "redis://localhost:6379")
+const redis = new Redis(process.env.REDIS_URL!)
 redis.on("error", (err) => {
   console.error(JSON.stringify({ event: "redis_error", error: err.message }))
 })
@@ -102,10 +106,20 @@ const env: Env = {
   GROQ_ANSWER_MODEL: process.env.GROQ_ANSWER_MODEL,
   // Rate limit whitelist
   RATE_LIMIT_WHITELIST_IPS: process.env.RATE_LIMIT_WHITELIST_IPS,
+  // CTX-04: better-auth
+  DATABASE_URL: process.env.DATABASE_URL!,
+  BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET!,
+  RESEND_API_KEY: process.env.RESEND_API_KEY ?? "",
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? "",
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? "",
 }
 
 type AppEnv = { Variables: { sql: typeof sql; env: Env; redis: typeof redis; requestId: string } }
 const app = new Hono<AppEnv>()
+
+// --- CTX-04: better-auth instance (created early, mounted after CORS) ---
+const betterAuthInstance = createAuth(env)
+setBetterAuth(betterAuthInstance) // inject into resolveAuth for cookie session resolution
 
 app.onError((err, c) => {
   console.error(JSON.stringify({ event: "unhandled_error", error: err.message, stack: err.stack }))
@@ -129,14 +143,17 @@ app.use("*", async (c, next) => {
   }))
 })
 
-// P3-006: restrict CORS to known origins — wildcard allows any site to call authenticated endpoints
-// MCP clients use token auth in query params so they are not browser-origin requests
+// P3-006: restrict CORS — credentials: true required for better-auth Set-Cookie cross-origin
 app.use("*", cors({
   origin: ["https://contexter.cc", "https://www.contexter.cc"],
   allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization"],
   exposeHeaders: ["Mcp-Session-Id"],
+  credentials: true,
 }))
+
+// CTX-04: better-auth routes — AFTER CORS middleware so Set-Cookie headers reach browser
+app.on(["POST", "GET"], "/auth/**", (c) => betterAuthInstance.handler(c.req.raw))
 
 // --- Inject dependencies ---
 app.use("*", async (c, next) => {
@@ -251,7 +268,7 @@ app.route("/", oauth)
 // --- Start BullMQ pipeline worker ---
 let pipelineWorker: Awaited<ReturnType<typeof startPipelineWorker>> | null = null
 try {
-  pipelineWorker = startPipelineWorker(process.env.REDIS_URL ?? "redis://localhost:6379", env, sql)
+  pipelineWorker = startPipelineWorker(process.env.REDIS_URL!, env, sql)
   console.log("Pipeline worker started (concurrency: 2)")
 } catch (e) {
   console.error("Pipeline worker failed to start — jobs will use direct fallback:", e instanceof Error ? e.message : String(e))
@@ -260,7 +277,7 @@ try {
 // F-013: start maintenance worker (retention cron)
 let maintenanceWorker: ReturnType<typeof startMaintenanceWorker> | null = null
 try {
-  maintenanceWorker = startMaintenanceWorker(process.env.REDIS_URL ?? "redis://localhost:6379", sql)
+  maintenanceWorker = startMaintenanceWorker(process.env.REDIS_URL!, sql)
   console.log("Maintenance worker started")
 } catch (e) {
   console.error("Maintenance worker failed to start:", e instanceof Error ? e.message : String(e))
@@ -269,8 +286,8 @@ try {
 // F-030: start feedback decay worker (daily 02:00 UTC cron)
 let feedbackDecayWorker: Awaited<ReturnType<typeof startFeedbackDecayWorker>> | null = null
 try {
-  feedbackDecayWorker = startFeedbackDecayWorker(process.env.REDIS_URL ?? "redis://localhost:6379", sql)
-  await scheduleFeedbackDecay(process.env.REDIS_URL ?? "redis://localhost:6379")
+  feedbackDecayWorker = startFeedbackDecayWorker(process.env.REDIS_URL!, sql)
+  await scheduleFeedbackDecay(process.env.REDIS_URL!)
   console.log("Feedback decay worker started")
 } catch (e) {
   console.error("Feedback decay worker failed to start:", e instanceof Error ? e.message : String(e))
@@ -279,7 +296,7 @@ try {
 // F-031: start LLM eval worker (sampled evaluation — concurrency 1, Groq rate-limit aware)
 let llmEvalWorker: ReturnType<typeof startLlmEvalWorker> | null = null
 try {
-  llmEvalWorker = startLlmEvalWorker(process.env.REDIS_URL ?? "redis://localhost:6379", sql)
+  llmEvalWorker = startLlmEvalWorker(process.env.REDIS_URL!, sql)
   console.log("LLM eval worker started (concurrency: 1)")
 } catch (e) {
   console.error("LLM eval worker failed to start:", e instanceof Error ? e.message : String(e))

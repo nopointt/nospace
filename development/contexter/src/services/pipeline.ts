@@ -14,6 +14,7 @@ import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 import { addContextualPrefixes } from "./chunker/contextual"
 import { ensureEncoderLoaded } from "./chunker/tokenizer"
 import { findNearDuplicate } from "./embedder/dedup"
+import { scanForInjection } from "./content-filter"
 
 export interface PipelineStageResult {
   stage: string
@@ -442,6 +443,30 @@ export async function runPipelineAsync(
     return
   }
 
+  // Content filter: scan for prompt injection patterns (non-blocking, flag only)
+  const filterResult = scanForInjection(parseResult.content)
+  if (filterResult.flagged) {
+    console.log(JSON.stringify({
+      event: "content_filter_flagged",
+      documentId,
+      riskScore: filterResult.riskScore,
+      matchCount: filterResult.matches.length,
+      categories: [...new Set(filterResult.matches.map((m) => m.category))],
+      patterns: filterResult.matches.map((m) => m.pattern),
+    }))
+    // Store flag in document metadata for admin review
+    const filterMeta = {
+      injectionRiskScore: filterResult.riskScore,
+      injectionPatterns: filterResult.matches.map((m) => m.pattern),
+      injectionFlaggedAt: new Date().toISOString(),
+    }
+    await sql`
+      UPDATE documents
+      SET metadata = ${sql.json(filterMeta)}
+      WHERE id = ${documentId}
+    `
+  }
+
   // Store extracted images to R2 (non-fatal, best-effort)
   const storedImages = await storeImagesToR2(parseResult, documentId, userId, env)
 
@@ -517,6 +542,44 @@ export async function runPipelineAsync(
       embeddings: [...textEmbedResult.embeddings, ...imageEmbedResult.embeddings],
       totalTokens: textEmbedResult.totalTokens + imageEmbedResult.totalTokens,
     }
+
+    // Semantic anomaly detection: flag documents with outlier L2 norms
+    // Normal Jina v4 512-dim embeddings have L2 norms ~1.0 (±0.3).
+    // Outliers (>2.0 or <0.3) indicate garbage content, encoding errors, or injection payloads.
+    if (embedResult.embeddings.length > 0) {
+      const norms = embedResult.embeddings.map((e) => {
+        const sumSq = e.vector.reduce((acc, x) => acc + x * x, 0)
+        return Math.sqrt(sumSq)
+      })
+      const meanNorm = norms.reduce((a, b) => a + b, 0) / norms.length
+      const maxNorm = Math.max(...norms)
+      const minNorm = Math.min(...norms)
+      const outlierCount = norms.filter((n) => n > 2.0 || n < 0.3).length
+
+      if (outlierCount > 0 || meanNorm > 1.5 || meanNorm < 0.5) {
+        console.log(JSON.stringify({
+          event: "embedding_anomaly_detected",
+          documentId,
+          meanNorm: +meanNorm.toFixed(4),
+          minNorm: +minNorm.toFixed(4),
+          maxNorm: +maxNorm.toFixed(4),
+          outlierCount,
+          totalChunks: norms.length,
+        }))
+        // Update document metadata with anomaly flag (non-blocking)
+        const anomalyMeta = JSON.stringify({
+          embeddingAnomalyDetected: true,
+          embeddingMeanNorm: +meanNorm.toFixed(4),
+          embeddingOutlierCount: outlierCount,
+        })
+        await sql`
+          UPDATE documents
+          SET metadata = COALESCE(metadata, '{}'::jsonb) || ${anomalyMeta}::jsonb
+          WHERE id = ${documentId}
+        `.catch(() => {}) // non-fatal
+      }
+    }
+
     await updateJobStatus(sql, jobIds.embed, "done", 100)
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)

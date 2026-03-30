@@ -1,0 +1,15 @@
+# Patch for docker-compose.yml app service
+# Remove bind mount, rely on Dockerfile COPY instead
+#
+# Before:
+#   volumes:
+#     - ./app:/app
+#
+# After:
+#   (no volumes for app service — code baked into image)
+#
+# Apply manually on server:
+#   1. Backup: cp docker-compose.yml docker-compose.yml.bak
+#   2. Remove the "volumes: - ./app:/app" section from app service
+#   3. Rebuild: docker compose build --no-cache app
+#   4. Restart: docker compose up -d app

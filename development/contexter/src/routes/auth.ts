@@ -4,6 +4,7 @@ import type { Env } from "../types/env"
 import type Redis from "ioredis"
 import { generateToken, resolveAuth } from "../services/auth"
 import { getClientIp, checkRateLimit } from "../services/rate-limit"
+import { DeleteObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis } }
 
@@ -187,4 +188,91 @@ auth.delete("/shares/:shareId", async (c) => {
 
   // P2-011: frontend expects { success: boolean }
   return c.json({ success: true, deleted: shareId })
+})
+
+/**
+ * DELETE /api/auth/account
+ * GDPR Article 17: Right to Erasure.
+ * Permanently deletes: user account, all documents, chunks, embeddings,
+ * jobs, shares, subscriptions, payments, R2 files.
+ * Requires Bearer token (owner only). Irreversible.
+ */
+auth.delete("/account", async (c) => {
+  const sql = c.get("sql")
+  const env = c.get("env")
+  const authCtx = await resolveAuth(sql, c.req.raw)
+  if (!authCtx) return c.json({ error: "Unauthorized." }, 401)
+  if (!authCtx.isOwner) return c.json({ error: "Only account owners can delete their account." }, 403)
+
+  const userId = authCtx.userId
+
+  console.log(JSON.stringify({ event: "account_deletion_start", userId }))
+
+  // 1. Collect R2 keys before deleting DB rows
+  const r2Keys = await sql<{ r2_key: string }[]>`
+    SELECT r2_key FROM documents WHERE user_id = ${userId}
+  `
+
+  // 2. Atomic delete in FK-safe order within transaction
+  await sql.begin(async (tx) => {
+    await tx`DELETE FROM shares WHERE owner_id = ${userId} OR shared_with_id = ${userId}`
+    await tx`DELETE FROM payments WHERE user_id = ${userId}`
+    await tx`DELETE FROM subscriptions WHERE user_id = ${userId}`
+    // documents CASCADE → chunks + jobs
+    await tx`DELETE FROM documents WHERE user_id = ${userId}`
+    // user CASCADE → eval_metrics + eval_metrics_daily_agg + feedback
+    await tx`DELETE FROM users WHERE id = ${userId}`
+  })
+
+  // 3. R2 cleanup (best-effort, async — don't block response)
+  const r2Cleanup = async () => {
+    // Delete individual document files
+    for (const { r2_key } of r2Keys) {
+      try {
+        await env.storage.send(new DeleteObjectCommand({ Bucket: env.storageBucket, Key: r2_key }))
+      } catch (e) {
+        console.error(`R2 delete failed for ${r2_key}:`, e instanceof Error ? e.message : String(e))
+      }
+    }
+
+    // Delete user's image folder (PDF image chunks: {userId}/*/images/*) — paginated
+    try {
+      let continuationToken: string | undefined
+      do {
+        const listCmd = new ListObjectsV2Command({
+          Bucket: env.storageBucket,
+          Prefix: `${userId}/`,
+          ContinuationToken: continuationToken,
+        })
+        const listed = await env.storage.send(listCmd)
+        for (const obj of listed.Contents ?? []) {
+          if (obj.Key) {
+            await env.storage.send(new DeleteObjectCommand({ Bucket: env.storageBucket, Key: obj.Key }))
+          }
+        }
+        continuationToken = listed.IsTruncated ? listed.NextContinuationToken : undefined
+      } while (continuationToken)
+    } catch (e) {
+      console.error(`R2 prefix cleanup failed for ${userId}/:`, e instanceof Error ? e.message : String(e))
+    }
+  }
+
+  r2Cleanup().catch((e) =>
+    console.error("R2 cleanup error (non-fatal):", e instanceof Error ? e.message : String(e))
+  )
+
+  console.log(JSON.stringify({
+    event: "account_deleted",
+    userId,
+    documentsDeleted: r2Keys.length,
+  }))
+
+  return c.json({
+    success: true,
+    deleted: {
+      userId,
+      documents: r2Keys.length,
+    },
+    message: "Account and all associated data have been permanently deleted.",
+  })
 })

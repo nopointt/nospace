@@ -35,6 +35,7 @@ export const documents = pgTable("documents", {
   status: text("status", { enum: ["pending", "processing", "ready", "error"] }).notNull().default("pending"),
   markdown: text("markdown"),
   errorMessage: text("error_message"),
+  metadata: jsonb("metadata").default({}),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 })

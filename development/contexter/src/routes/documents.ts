@@ -20,11 +20,24 @@ interface ChunkRow {
  */
 documents.delete("/", async (c) => {
   const sql = c.get("sql")
+  const env = c.get("env")
   const auth = await resolveAuth(sql, c.req.raw)
   if (!auth) return c.json({ error: "Unauthorized." }, 401)
   if (!auth.isOwner) return c.json({ error: "Forbidden." }, 403)
 
+  // Collect R2 keys before deleting DB rows
+  const r2Keys = await sql<{ r2_key: string }[]>`SELECT r2_key FROM documents WHERE user_id = ${auth.userId}`
+
   const result = await sql`DELETE FROM documents WHERE user_id = ${auth.userId}`
+
+  // Async R2 cleanup (non-blocking, best-effort)
+  if (r2Keys.length > 0) {
+    const { DeleteObjectCommand } = await import("@aws-sdk/client-s3")
+    Promise.all(r2Keys.map(({ r2_key }) =>
+      env.storage.send(new DeleteObjectCommand({ Bucket: env.storageBucket, Key: r2_key })).catch(() => {})
+    )).catch(() => {})
+  }
+
   return c.json({ success: true, deleted: result.count })
 })
 

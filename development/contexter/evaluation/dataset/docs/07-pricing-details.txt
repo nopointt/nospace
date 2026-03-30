@@ -1,0 +1,44 @@
+Contexter Pricing — Detailed Breakdown
+
+All payments are in cryptocurrency via NOWPayments. No credit card payments currently available (no KYB entity for card processing).
+
+Starter Tier ($9/month):
+  Storage: 1 GB
+  Queries: 100 per day
+  Uploads: 50 per day
+  Formats: All 15 supported formats
+  MCP: Yes, full access
+  Share links: 5 active
+  Support: Email (nopoint@contexter.cc)
+
+Pro Tier ($29/month):
+  Storage: 10 GB
+  Queries: 1,000 per day
+  Uploads: 200 per day
+  Formats: All 15 supported formats
+  MCP: Yes, full access
+  Share links: 25 active
+  Priority pipeline: Yes
+  Support: Email with 24-hour response
+
+Team Tier ($79/month):
+  Storage: 50 GB
+  Queries: 5,000 per day
+  Uploads: 500 per day
+  Formats: All 15 supported formats
+  MCP: Yes, full access
+  Share links: Unlimited
+  Priority pipeline: Yes
+  API rate limit: 120 QPM (double standard)
+  Support: Priority email
+
+Free Usage:
+  No free tier currently. Considering a limited trial (7 days, 100 MB, 50 queries/day).
+
+Refund Policy:
+  Cryptocurrency payments are non-refundable due to the nature of blockchain transactions. Users can downgrade or cancel at any time. Cancellation takes effect at the end of the current billing period.
+
+Cost Structure (our costs per user):
+  At 10,000 users with DeepInfra: approximately $0.075 per user per month.
+  Primary cost driver: LLM inference (Groq/DeepInfra) at ~93% of total API costs.
+  Server: Hetzner CAX41 at €30/month scales to 10,000 users.

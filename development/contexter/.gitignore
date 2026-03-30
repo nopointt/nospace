@@ -33,3 +33,18 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 # Finder (MacOS) folder config
 .DS_Store
 development/contexter/.dev.vars
+
+# Database exports with production credentials/PII (migration artifacts)
+import.sql
+d1-export.sql
+d1-*.json
+
+# Ops configs with hardcoded secrets (Telegram bot token, chat ID)
+ops/netdata/health_alarm_notify.conf
+
+# k6 test environment (API tokens)
+k6/k6-env.json
+
+# Test results (machine-specific)
+test-results/
+evaluation/results/

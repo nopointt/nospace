@@ -1,0 +1,48 @@
+{
+  "title": "Contexter Supported Formats",
+  "version": "1.0",
+  "totalFormats": 15,
+  "categories": [
+    {
+      "name": "Documents",
+      "formats": [
+        {"extension": "pdf", "mimeType": "application/pdf", "parser": "Docling", "maxSize": "200MB"},
+        {"extension": "docx", "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "parser": "Docling", "maxSize": "200MB"},
+        {"extension": "xlsx", "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "parser": "Docling", "maxSize": "200MB"},
+        {"extension": "pptx", "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation", "parser": "Docling", "maxSize": "200MB"},
+        {"extension": "ods", "mimeType": "application/vnd.oasis.opendocument.spreadsheet", "parser": "Docling", "maxSize": "200MB"}
+      ]
+    },
+    {
+      "name": "Text",
+      "formats": [
+        {"extension": "txt", "mimeType": "text/plain", "parser": "TextParser", "maxSize": "200MB"},
+        {"extension": "md", "mimeType": "text/markdown", "parser": "TextParser", "maxSize": "200MB"},
+        {"extension": "csv", "mimeType": "text/csv", "parser": "TextParser", "maxSize": "200MB"},
+        {"extension": "json", "mimeType": "application/json", "parser": "TextParser", "maxSize": "200MB"},
+        {"extension": "html", "mimeType": "text/html", "parser": "Docling", "maxSize": "200MB"}
+      ]
+    },
+    {
+      "name": "Images",
+      "formats": [
+        {"extension": "png", "mimeType": "image/png", "parser": "Docling + Jina CLIP v2", "maxSize": "200MB"},
+        {"extension": "jpg", "mimeType": "image/jpeg", "parser": "Docling + Jina CLIP v2", "maxSize": "200MB"},
+        {"extension": "webp", "mimeType": "image/webp", "parser": "Docling + Jina CLIP v2", "maxSize": "200MB"}
+      ]
+    },
+    {
+      "name": "Audio",
+      "formats": [
+        {"extension": "mp3", "mimeType": "audio/mpeg", "parser": "Groq Whisper Large v3", "maxSize": "unlimited (segmented)"},
+        {"extension": "wav", "mimeType": "audio/wav", "parser": "Groq Whisper Large v3", "maxSize": "unlimited (segmented)"}
+      ]
+    },
+    {
+      "name": "Video",
+      "formats": [
+        {"extension": "mp4", "mimeType": "video/mp4", "parser": "ffmpeg → Groq Whisper", "maxSize": "unlimited (audio extracted)"}
+      ]
+    }
+  ]
+}

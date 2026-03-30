@@ -5,6 +5,7 @@ import { randomUUID } from "crypto"
 import { writeFile, unlink } from "fs/promises"
 import { existsSync } from "fs"
 import { segmentAndTranscribe } from "./audio-segmenter"
+import { groqWhisperPolicy } from "../resilience"
 
 const MAX_DIRECT_BYTES = 23 * 1024 * 1024
 
@@ -46,14 +47,17 @@ export class AudioParser implements Parser {
     formData.append("model", "whisper-large-v3")
     formData.append("response_format", "verbose_json")
 
-    const response = await fetch(this.groqApiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.groqApiKey}`,
-      },
-      body: formData,
-      signal: AbortSignal.timeout(110_000),
-    })
+    // groqWhisperPolicy: circuit breaker (3 consecutive failures → open) + retry 2x + bulkhead 1 concurrent
+    const response = await groqWhisperPolicy.execute(() =>
+      fetch(this.groqApiUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.groqApiKey}`,
+        },
+        body: formData,
+        signal: AbortSignal.timeout(110_000),
+      })
+    )
 
     if (!response.ok) {
       const error = await response.text()

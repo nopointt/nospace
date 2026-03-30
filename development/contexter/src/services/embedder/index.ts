@@ -1,6 +1,6 @@
 import type { EmbeddingResult, BatchEmbeddingResult, EmbedderOptions } from "./types"
 import { JINA_MODEL, JINA_DIMENSIONS, JINA_MAX_BATCH } from "./types"
-import { jinaRateLimiter } from "../resilience"
+import { jinaRateLimiter, jinaPolicy } from "../resilience"
 import { countTokensSync } from "../chunker/tokenizer"
 
 export type { EmbeddingResult, BatchEmbeddingResult, EmbedderOptions }
@@ -59,20 +59,21 @@ export class EmbedderService {
       ? this.buildLateChunkingBatches(texts)
       : this.buildStandardBatches(texts)
 
-    const batchPromises = batches.map((batch) => {
+    const makeBatchCall = (batch: EmbedBatch) => {
       const batchOptions = batch.useLateChunking
         ? options
         : { ...options, lateChunking: false }
-      return this.callApi(batch.texts, model, dimensions, task, batchOptions)
-    })
+      // Wrap each API call with jinaPolicy (circuit breaker + bulkhead + retry)
+      return jinaPolicy.execute(() => this.callApi(batch.texts, model, dimensions, task, batchOptions))
+    }
 
     // Process in groups of 3 concurrent batches to respect Jina rate limits
     const CONCURRENCY = 3
     const allEmbeddings: EmbeddingResult[] = []
     let totalTokens = 0
 
-    for (let i = 0; i < batchPromises.length; i += CONCURRENCY) {
-      const group = batchPromises.slice(i, i + CONCURRENCY)
+    for (let i = 0; i < batches.length; i += CONCURRENCY) {
+      const group = batches.slice(i, i + CONCURRENCY).map(makeBatchCall)
       const results = await Promise.all(group)
       for (const result of results) {
         allEmbeddings.push(...result.embeddings)

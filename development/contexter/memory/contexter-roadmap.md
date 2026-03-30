@@ -1,7 +1,7 @@
 ---
 # contexter-roadmap.md — Contexter Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start
-> Last updated: 2026-03-27 (session 194 — MLP complete, CTX-01+CTX-07 closed)
+> Last updated: 2026-03-30 (session 212 — Pre-launch QA Phases 1-4 complete, legal pages, deploy automation)
 ---
 
 ## Current Focus: MLP COMPLETE
@@ -18,7 +18,7 @@
 | CTX-01 | MVP Pipeline + API + Frontend | ✅ MLP COMPLETE (2026-03-27) | `contexter-mvp.md` |
 | CTX-02 | Design System + Pencil Screens | ✅ DONE | — |
 | CTX-03 | Frontend (SolidJS SPA) | ✅ DEPLOYED (CF Pages, contexter.cc) | — |
-| **CTX-04** | **Auth (OAuth: Google/Telegram/Yandex)** | **🔜 NEXT** | — |
+| **CTX-04** | **Auth (OAuth: Google + Email, Telegram deferred)** | **🔜 NEXT** | — |
 | CTX-05 | Benchmarks + Pricing + Billing | ⬜ PLANNED | — |
 | CTX-06 | Production Migration (CF Workers → Hetzner) | ✅ CLOSED (2026-03-27) | `contexter-migration.md` |
 | CTX-07 | Production Hardening | ✅ MLP COMPLETE (2026-03-27) | `contexter-production.md` |
@@ -60,7 +60,6 @@
 
 ### From CTX-01
 - Pipeline progress UI (4-stage visual bar)
-- RAG quality tuning (query rewriter, domain terms)
 - Document viewer content empty for some docs
 - ConnectionModal UX improvements
 - Responsive mobile/tablet
@@ -70,9 +69,12 @@
 - P2-004: Parallel embed batches (perf optimization)
 - NEW-024: HNSW index tuning (at scale)
 - NEW-025: Upload streaming to R2 (at scale)
-- NEW-027: Error aggregation/alerting
-- NEW-028: Pipeline latency metrics (p50/p95/p99)
-- NEW-029: Groq/Jina API call logging
+
+### From CTX-08
+- F-029: BM25 conditional (blocked: needs PG 17+, current: 16.13)
+- Direct upload 415 bug (resolveMimeType for multipart)
+- PDF 22K→1 chunk bug (BPE encoder not loaded in some cases)
+- Rotate 54 API tokens (security, deferred — no evidence of leak)
 
 ## Prod Roadmap
 
@@ -81,7 +83,7 @@
 | MLP | Hetzner + CF Pages, all formats, MCP, frontend SPA, security hardened | **✅ DONE** |
 | Pricing model | Usage-based per-GB, credit system, 6 tiers | **decided** |
 | Production stack | Hetzner CAX11 + pgvector + Groq + Docling | **deployed** |
-| **GTM Strategy** | **Positioning, messaging, copy, competitive analysis** | **🔶 IN PROGRESS (CTX-08)** |
-| Auth | OAuth (Google/Telegram/Yandex), magic link, proper login | 🔜 NEXT (CTX-04) |
-| Billing | LemonSqueezy integration, prepaid + usage | after auth |
-| Benchmarks | Latency, cost per doc, cost per query, throughput | after billing |
+| **GTM Strategy** | **Pre-launch QA Phases 1-4 complete. Landing, legal, billing, RAG quality, chunking overhaul, deploy automation, monitoring, security hardening.** | **🔶 CTX-08 (iteration phase open)** |
+| Auth | Google OAuth done. Email auth in progress. Telegram deferred. | 🔜 NEXT (CTX-04) |
+| Billing | NOWPayments crypto ($9/$29/$79). Card payments blocked (no KYB). | after auth |
+| Benchmarks | k6 baseline done. Capacity model: 50 users comfortable, 10K = $746/mo (DeepInfra). | after billing |

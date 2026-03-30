@@ -3,6 +3,7 @@ import { buildMetadata } from "./types"
 import { streamToBuffer } from "./utils"
 import { randomUUID } from "crypto"
 import { unlink, writeFile, stat } from "fs/promises"
+import { groqWhisperPolicy } from "../resilience"
 import { existsSync } from "fs"
 import { segmentAndTranscribe } from "./audio-segmenter"
 
@@ -125,13 +126,15 @@ export class VideoParser implements Parser {
     formData.append("model", "whisper-large-v3")
     formData.append("response_format", "verbose_json")
 
-    const response = await fetch(this.groqApiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.groqApiKey}`,
-      },
-      body: formData,
-    })
+    const response = await groqWhisperPolicy.execute(() =>
+      fetch(this.groqApiUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.groqApiKey}`,
+        },
+        body: formData,
+      })
+    )
 
     if (!response.ok) {
       const error = await response.text()

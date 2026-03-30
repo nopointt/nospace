@@ -503,8 +503,8 @@ const FOOTER_PRODUCT_LINKS = [
 ]
 
 const FOOTER_COMPANY_LINKS = [
-  { label: "Политика конфиденциальности", href: "#" },
-  { label: "Условия использования", href: "#" },
+  { label: "Политика конфиденциальности", href: "/privacy" },
+  { label: "Условия использования", href: "/terms" },
 ]
 
 const Footer: Component = () => (

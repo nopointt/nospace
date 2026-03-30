@@ -467,3 +467,53 @@ Presigned R2 upload + audio segmentation + PDF image extraction + multimodal emb
 **Epic:** CTX-08 GTM — Chunking Overhaul + Pre-launch QA
 
 **Summary:** Chunking overhaul Waves 0-5 deployed. Pre-launch Phase 1 complete (backups, canary, alerts, smoke). Phase 2: 106 E2E tests, Docker memory fix, LLM provider chain Groq→NIM→DeepInfra, 25 golden pairs, deploy docs. 6 bugs found+fixed.
+
+<!-- ENTRY:2026-03-30:CHECKPOINT:212:contexter:contexter-gtm [AXIS] -->
+## 2026-03-30 — сессия 212 CHECKPOINT [Axis]
+
+**Epic:** CTX-08 GTM — All 4 Pre-launch QA Phases COMPLETE
+
+**Pre-launch Phase 2 (finished this session):**
+- k6 load test baseline: 4 scripts, 3 scenarios. Key finding: Groq LLM = bottleneck (6s idle → 13s at 20 VUs)
+- Netdata alerting: 5 custom alerts (disk/CPU/container/OOM/swap) → Telegram. Test delivery 3/3 OK. Docling at 99.2% RAM found.
+- Content filter: 22 regex patterns, 5 categories, flag-not-block. Deployed + verified (injection doc flagged, normal doc clean)
+
+**Pre-launch Phase 3 (Medium-term):**
+- Deploy automation: ops/deploy.sh + rollback.sh + Dockerfile COPY (no more bind mount). deploy-web.sh for frontend.
+- Privacy Policy + Terms of Service: 2 SolidJS pages, EN, global coverage (KZ/AR/FI), GDPR, England & Wales jurisdiction
+- Unit tests: fixed 4 broken (async tokenizer + 512-dim embeddings) + 12 new content-filter tests = 52 pass / 0 fail
+- Graceful degradation: 3 unwired circuit breakers wired (Jina/Docling/Whisper). /health/circuits endpoint. Runbook written. Key finding: DeepInfra key not configured.
+- Regression fixtures: 15 docs (md/txt/json) + 17 QA pairs + chunking eval baseline
+- Drift detection baseline: 500 embeddings sampled, JL 32d projection, stored in eval_drift_baseline
+- Backward compat: flat chunks query correctly with hierarchical RAG pipeline ✅
+
+**Pre-launch Phase 4 (Long-term):**
+- GDPR account deletion: DELETE /api/auth/account — cascading delete (shares/payments/subscriptions/documents/user) + async R2 cleanup
+- WAL archiving: archive_mode=on, archive_timeout=300 (5 min RPO), hourly R2 upload via cron
+- Semantic anomaly detection: L2 norm outlier check after embed stage, metadata flag
+- Maintenance procedures documented: golden set growth + monthly k6
+- Loki+Grafana skipped (4GB RAM, AI-driven)
+
+**Capacity model created:** k6/capacity-model.ts + k6/deepinfra-model.ts
+- 50 users = comfortable, 100 = edge, 10K = CAX41 + $746/mo (DeepInfra)
+- DeepInfra 52% cheaper than Groq, no TPM limits
+- Revenue at 10K users (30% paid): $57K/mo, margin 99%
+
+**Files created/modified:**
+- k6/: setup.js, scenario-1-queries.js, scenario-2-uploads.js, scenario-3-mixed.js, smoke.js, BASELINE-2026-03-30.md, capacity-model.ts, deepinfra-model.ts
+- ops/: deploy.sh, deploy-web.sh, rollback.sh, Dockerfile, netdata/contexter.conf, netdata/health_alarm_notify.conf
+- src/services/content-filter.ts (new), pipeline.ts (content filter + anomaly detection), embedder/index.ts (jinaPolicy), parsers/docling.ts (doclingPolicy), parsers/audio.ts + video.ts (groqWhisperPolicy), routes/health.ts (/circuits), routes/auth.ts (DELETE /account)
+- web/src/pages/Privacy.tsx + Terms.tsx (new), App.tsx + Landing.tsx (routes + footer)
+- tests/content-filter.test.ts (new), chunker.test.ts + embedder.test.ts (fixed)
+- drizzle-pg/0012_content_filter.sql (metadata jsonb column)
+- docs/degradation-runbook.md, docs/maintenance-procedures.md
+- evaluation/dataset/docs/ (15 fixtures), evaluation/dataset/eval.json (17 QA pairs)
+- Server: Dockerfile COPY, docker-compose WAL config, Netdata alerts, drift baseline, PG metadata column
+<!-- ENTRY:2026-03-30:CLOSE:213:contexter:contexter-auth [AXIS] -->
+## 2026-03-30 — сессия 213 CLOSE [Axis]
+
+**Epic:** CTX-08 CLOSED + CTX-04 Auth (Waves 1-5 complete)
+
+**Summary:** Massive session — 4 pre-launch QA phases completed (28 tasks), CTX-08 closed, CTX-04 Auth epic opened and completed (better-auth v1.5.6, email+password, Google OAuth, hybrid resolveAuth, 5 frontend pages, Resend domain verified). Deploy automation (ops/deploy.sh, Dockerfile COPY). Full L0-L3 audit (15 factual corrections). Production readiness audit (13 issues found and fixed). k6 load test baseline. Capacity model for 10K users. Netdata alerts. Content filter. Circuit breakers. GDPR deletion. WAL archiving. Legal pages. Product backlog (14 tickets).
+
+Backend prod-ready for 50 users. Frontend has white screen issue on /register (deferred to frontend audit session).

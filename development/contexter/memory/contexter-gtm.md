@@ -1,7 +1,7 @@
 ---
 # contexter-gtm.md — CTX-08 GTM Strategy & Positioning
-> Layer: L3 | Epic: CTX-08 | Status: 🔶 IN PROGRESS
-> Last updated: 2026-03-29 (session 209 — pipeline infinite loop fix, E2E suites 1-6 PASS, 8 chunking research files)
+> Layer: L3 | Epic: CTX-08 | Status: ✅ CLOSED (2026-03-30, open items → contexter-backlog.md)
+> Last updated: 2026-03-30 (session 212 — ALL 4 pre-launch phases COMPLETE: 27/28 tasks done, deploy automation, circuit breakers, GDPR, WAL archiving, legal pages)
 ---
 
 ## Goal
@@ -133,7 +133,7 @@ People don't understand what Contexter is on the first screen. Need positioning,
 **Known bugs:**
 - [ ] Direct upload (`POST /api/upload`) returns 415 for multipart — `resolveMimeType()` issue
 - [ ] PDF 22K chars → 1 chunk (BPE encoder not loaded, splitParagraphs may not split Docling output)
-- [ ] Debug logging in pipeline.ts — temporary, remove after stabilization
+- [ ] Debug logging in upload.ts:167 (`upload_debug` event) — temporary, remove after 415 bug fixed
 - [ ] Git: changes not committed
 
 ### Phase 7: Unlimited Upload + Audio Segmentation + PDF Images (session 208)
@@ -222,6 +222,13 @@ People don't understand what Contexter is on the first screen. Need positioning,
 **Bug fixing methodology (1 file, session 209):**
 - `ai-bug-fixing-methodology-research.md` — SOTA AI debugging, 741 lines
 
+### Phase 8.5: Security Hardening (session 212)
+- [x] Vuln 1: import.sql + d1-export.sql + d1-*.json → .gitignore. Verified never committed. ✅
+- [x] Vuln 2: ops/netdata/health_alarm_notify.conf → .gitignore ✅
+- [x] k6/k6-env.json (API tokens) → .gitignore ✅
+- [x] test-results/ + evaluation/results/ → .gitignore ✅
+- [ ] Rotate 54 API tokens in production DB (deferred — no evidence of leak)
+
 ### Phase 8: Chunking Overhaul + Pre-launch QA (sessions 210)
 
 **Goal:** Structure-aware chunking, pre-launch safety, comprehensive E2E.
@@ -242,7 +249,7 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - [x] Golden test pairs (10 manual canary)
 - [x] Canary baseline (10/10 PASS)
 
-**Pre-launch Phase 2 (in progress):**
+**Pre-launch Phase 2 (complete):**
 - [x] Docker memory fix (swap 1.6GB → 12MB)
 - [x] E2E suites 5-21 (106 tests, 97%+ pass rate)
 - [x] Cross-user data isolation (9/9 PASS)
@@ -251,12 +258,32 @@ People don't understand what Contexter is on the first screen. Need positioning,
 - [x] LLM provider chain: Groq → NIM → DeepInfra
 - [x] Rate limit whitelist for E2E tests
 - [x] Bug fixes: subscription race, double confirm 500, cache_control, env mapping
-- [ ] k6 load test baseline
-- [ ] Netdata alerting rules
+- [x] k6 load test baseline (4 scripts, 3 scenarios, Groq LLM = bottleneck at 13s avg under load) ✅ session 212
+- [x] Netdata alerting rules (5 custom: disk/CPU/container/OOM/swap → Telegram) ✅ session 212
+- [x] Content filtering for prompt injection at upload (22 patterns, 5 categories, flag-not-block) ✅ session 212
 
 **Research (2 files):**
 - `pre-release-qa-strategy-research.md` — 13 sections, Opus
 - `chunking-implementation-plan.md` — 6 waves, AC table
+
+### Pre-launch Phase 3: Medium-term Stabilization (session 212)
+
+- [x] #17: Deploy automation — deploy.sh + rollback.sh + Dockerfile COPY (no bind mount) ✅
+- [x] #21: Privacy Policy + Terms of Service — 2 SolidJS pages, routes, footer links ✅
+- [x] #20: Unit tests — fixed 4 failing + 12 new content-filter tests (52 pass / 0 fail) ✅
+- [x] #19: Graceful degradation — runbook + 3 circuit breakers wired (Jina/Docling/Whisper) + /health/circuits ✅
+- [x] #16: Regression fixtures — 15 docs + 17 QA pairs + chunking eval baseline ✅
+- [x] #18: Drift detection baseline — 500 embeddings, JL projection, expires 2026-04-29 ✅
+- [x] #22: Backward compatibility — flat chunks query correctly with hierarchical RAG ✅
+
+### Pre-launch Phase 4: Long-term Maturity (session 212)
+
+- [x] #27: GDPR account deletion — DELETE /api/auth/account, cascading + R2 cleanup ✅
+- [x] #25: WAL archiving — archive_mode=on, RPO ~5 min, hourly R2 upload ✅
+- [x] #28: Semantic anomaly detection — L2 norm outlier check in pipeline, metadata flag ✅
+- [x] #23: Golden set growth procedure — documented in docs/maintenance-procedures.md ✅
+- [x] #24: Monthly k6 procedure — documented with baseline comparison ✅
+- [x] #26: Loki + Grafana — SKIPPED (4GB RAM ceiling, AI-driven = human dashboards unnecessary)
 
 ## Blockers
 

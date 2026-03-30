@@ -29,6 +29,7 @@ export async function createInvoice(
       "x-api-key": apiKey,
       "Content-Type": "application/json",
     },
+    signal: AbortSignal.timeout(10_000),
     body: JSON.stringify({
       price_amount: tierDef.priceUsd,
       price_currency: "usd",
@@ -109,42 +110,40 @@ export async function activateSubscription(
   sql: Sql,
   opts: { invoiceId: string; paymentId: string; payCurrency: string; actuallyPaid: string }
 ) {
-  // Find payment by invoice ID
-  const [payment] = await sql`
-    SELECT id, user_id, subscription_id, tier FROM payments
-    WHERE nowpayments_invoice_id = ${opts.invoiceId} AND status = 'pending'
-  `
-  if (!payment) return null
+  // Atomic: find pending payment + mark completed + activate subscription in one transaction
+  // Prevents: crash between payment update and subscription update, webhook replay double-activation
+  return sql.begin(async (tx) => {
+    // RETURNING ensures idempotency: if payment already completed, no row returned → null
+    const [payment] = await tx`
+      UPDATE payments SET
+        status = 'completed',
+        nowpayments_payment_id = ${opts.paymentId},
+        pay_currency = ${opts.payCurrency},
+        actually_paid = ${opts.actuallyPaid},
+        updated_at = NOW()
+      WHERE nowpayments_invoice_id = ${opts.invoiceId} AND status = 'pending'
+      RETURNING id, user_id, subscription_id, tier
+    `
+    if (!payment) return null
 
-  const tier = payment.tier as TierKey
-  const tierDef = TIERS[tier]
-  const now = new Date()
-  const periodEnd = new Date(now.getTime() + tierDef.intervalDays * 24 * 60 * 60 * 1000)
+    const tier = payment.tier as TierKey
+    const tierDef = TIERS[tier]
+    const now = new Date()
+    const periodEnd = new Date(now.getTime() + tierDef.intervalDays * 24 * 60 * 60 * 1000)
 
-  // Update payment status
-  await sql`
-    UPDATE payments SET
-      status = 'completed',
-      nowpayments_payment_id = ${opts.paymentId},
-      pay_currency = ${opts.payCurrency},
-      actually_paid = ${opts.actuallyPaid},
-      updated_at = NOW()
-    WHERE id = ${payment.id}
-  `
+    await tx`
+      UPDATE subscriptions SET
+        tier = ${tier},
+        status = 'active',
+        storage_limit_bytes = ${tierDef.storageLimitBytes},
+        current_period_start = ${now.toISOString()},
+        current_period_end = ${periodEnd.toISOString()},
+        updated_at = NOW()
+      WHERE id = ${payment.subscription_id}
+    `
 
-  // Activate subscription
-  await sql`
-    UPDATE subscriptions SET
-      tier = ${tier},
-      status = 'active',
-      storage_limit_bytes = ${tierDef.storageLimitBytes},
-      current_period_start = ${now.toISOString()},
-      current_period_end = ${periodEnd.toISOString()},
-      updated_at = NOW()
-    WHERE id = ${payment.subscription_id}
-  `
-
-  return { userId: payment.user_id, tier, periodEnd }
+    return { userId: payment.user_id, tier, periodEnd }
+  })
 }
 
 export async function getExpiringSoon(sql: Sql, daysAhead: number = 3) {
