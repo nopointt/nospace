@@ -21,7 +21,7 @@ export class ParserService {
       new TextParser(),
       new AudioParser(config.groqApiUrl, config.groqApiKey),
       new VideoParser(config.groqApiUrl, config.groqApiKey),
-      new YouTubeParser(),
+      new YouTubeParser(config.groqApiUrl, config.groqApiKey),
     ]
   }
 

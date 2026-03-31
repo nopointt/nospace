@@ -68,8 +68,9 @@ const ALLOWED_MIME_TYPES = new Set([
   "application/vnd.oasis.opendocument.spreadsheet",
   // ODT — text document handled by TextParser
   "application/vnd.oasis.opendocument.text",
-  // YouTube URLs processed as text/plain internally
+  // YouTube URLs
   "text/plain",
+  "text/x-youtube-url",
 ])
 
 upload.post("/", async (c) => {
@@ -118,35 +119,40 @@ upload.post("/", async (c) => {
     if (!body.text || body.text.trim().length === 0) {
       return c.json({ error: "поле text обязательно" }, 400)
     }
-    // Handle text upload inline — create a virtual file
+    // Handle text upload inline — detect YouTube URLs
     const text = body.text.trim()
-    const blob = new Blob([text], { type: "text/plain" })
+    const youtubeRegex = /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)/
+    const isYouTube = youtubeRegex.test(text)
+    const fileMime = isYouTube ? "text/x-youtube-url" : "text/plain"
+    const fileName = isYouTube ? "youtube-video.url" : "pasted-text.txt"
+
+    const blob = new Blob([text], { type: fileMime })
     const buffer = await blob.arrayBuffer()
-    const virtualFile = new File([blob], "pasted-text.txt", { type: "text/plain" })
+    const virtualFile = new File([blob], fileName, { type: fileMime })
 
     // P3-013: use 16-char documentId
     const documentId = crypto.randomUUID().slice(0, 16)
-    const r2Key = `${auth.userId}/${documentId}/pasted-text.txt`
+    const r2Key = `${auth.userId}/${documentId}/${fileName}`
     await env.storage.send(new PutObjectCommand({
       Bucket: env.storageBucket,
       Key: r2Key,
       Body: Buffer.from(buffer),
-      ContentType: "text/plain",
+      ContentType: fileMime,
     }))
     await sql`
       INSERT INTO documents (id, user_id, name, mime_type, size, r2_key, status)
-      VALUES (${documentId}, ${auth.userId}, ${"pasted-text.txt"}, ${"text/plain"}, ${blob.size}, ${r2Key}, 'processing')
+      VALUES (${documentId}, ${auth.userId}, ${fileName}, ${fileMime}, ${blob.size}, ${r2Key}, 'processing')
     `
     const jobIds = await createPendingJobs(sql, documentId, auth.userId)
     let enqueued = false
     try {
       const queue = getPipelineQueue(process.env.REDIS_URL!)
-      await queue.add("process", { documentId, userId: auth.userId, fileName: "pasted-text.txt", mimeType: "text/plain", fileSize: blob.size, r2Key, jobIds })
+      await queue.add("process", { documentId, userId: auth.userId, fileName, mimeType: fileMime, fileSize: blob.size, r2Key, jobIds })
       enqueued = true
     } catch (qErr) {
       console.error("BullMQ enqueue failed, falling back to direct run:", qErr instanceof Error ? qErr.message : String(qErr))
       try {
-        runPipelineAsync(documentId, { file: await virtualFile.arrayBuffer(), fileName: "pasted-text.txt", mimeType: "text/plain", fileSize: blob.size }, env, sql, auth.userId, jobIds).catch(console.error)
+        runPipelineAsync(documentId, { file: await virtualFile.arrayBuffer(), fileName, mimeType: fileMime, fileSize: blob.size }, env, sql, auth.userId, jobIds).catch(console.error)
         enqueued = true
       } catch (directErr) {
         console.error("Direct pipeline fallback also failed:", directErr instanceof Error ? directErr.message : String(directErr))
@@ -313,23 +319,24 @@ upload.post("/presign", async (c) => {
   if (typeof fileSize !== "number" || fileSize <= 0) {
     return c.json({ error: "fileSize must be a positive number." }, 400)
   }
-  if (!ALLOWED_MIME_TYPES.has(mimeType)) {
-    return c.json({ error: `Unsupported MIME type: ${mimeType}` }, 415)
+  const safeFileName = sanitizeFileName(fileName)
+  const resolvedMime = resolveMimeType(mimeType, safeFileName)
+  if (!ALLOWED_MIME_TYPES.has(resolvedMime)) {
+    return c.json({ error: `Unsupported MIME type: ${resolvedMime}` }, 415)
   }
 
-  const safeFileName = sanitizeFileName(fileName)
   const documentId = crypto.randomUUID().slice(0, 16)
   const r2Key = `${auth.userId}/${documentId}/${safeFileName}`
 
   const cmd = new PutObjectCommand({
     Bucket: env.storageBucket,
     Key: r2Key,
-    ContentType: mimeType,
+    ContentType: resolvedMime,
   })
 
   const uploadUrl = await getSignedUrl(env.storage, cmd, { expiresIn: PRESIGN_EXPIRES_IN })
 
-  return c.json({ uploadUrl, documentId, r2Key, expiresIn: PRESIGN_EXPIRES_IN }, 200)
+  return c.json({ uploadUrl, documentId, r2Key, expiresIn: PRESIGN_EXPIRES_IN, mimeType: resolvedMime }, 200)
 })
 
 upload.post("/confirm", async (c) => {

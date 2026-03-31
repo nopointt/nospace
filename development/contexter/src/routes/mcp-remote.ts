@@ -3,10 +3,9 @@ import type { Sql } from "postgres"
 import type { Env } from "../types/env"
 import type Redis from "ioredis"
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
-import { RagService } from "../services/rag"
 import { EmbedderService } from "../services/embedder"
 import { VectorStoreService } from "../services/vectorstore"
-import { LlmService } from "../services/llm"
+import { RerankerService } from "../services/reranker"
 import { resolveAuth, type AuthContext } from "../services/auth"
 import { runPipelineAsync, createPendingJobs } from "../services/pipeline"
 import { getPipelineQueue } from "../services/queue"
@@ -25,7 +24,7 @@ const SERVER_INFO = {
 const TOOLS = [
   {
     name: "search_knowledge",
-    description: "Search the Contexter knowledge base using natural language. Returns relevant document chunks with sources and an AI-generated answer.",
+    description: "Search the Contexter knowledge base using natural language. Returns relevant document chunks with sources and formatting instructions. Your LLM should synthesize the answer from the returned chunks.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -103,7 +102,7 @@ const TOOLS = [
   },
   {
     name: "ask_about_document",
-    description: "Ask a question about a specific document. Searches only within that document's chunks, not the entire knowledge base.",
+    description: "Get all chunks from a specific document with a question context. Returns document content and formatting instructions for your LLM to answer the question.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -134,7 +133,7 @@ const TOOLS = [
   },
   {
     name: "summarize_document",
-    description: "Generate a concise summary of a document using AI. Works best with text documents, PDFs, and markdown.",
+    description: "Get all chunks from a document with summarization instructions. Returns document content for your LLM to create a summary.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -315,7 +314,7 @@ async function handleToolCall(
           })
         }
 
-        // NEW-005: per-user rate limit — max 60 queries per minute
+        // Per-user rate limit — max 60 queries per minute
         const queryRateKey = `rate:query:${authCtx.userId}`
         try {
           const count = await redis.incr(queryRateKey)
@@ -330,32 +329,77 @@ async function handleToolCall(
           console.error("Redis rate limit check failed for search_knowledge:", e instanceof Error ? e.message : String(e))
         }
 
+        // Direct search: embed → hybrid search → rerank (no LLM)
         const embedder = new EmbedderService(env.JINA_API_URL, env.JINA_API_KEY)
         const vectorStore = new VectorStoreService({ sql })
         await vectorStore.initialize()
-        const llm = new LlmService({ apiKey: env.GROQ_API_KEY, model: env.GROQ_LLM_MODEL ?? "llama-3.1-8b-instant" })
-        const rag = new RagService({ llm, embedder, vectorStore })
+        const reranker = new RerankerService({ apiKey: env.JINA_API_KEY })
 
-        // P1-003: pass userId to scope search to this user's documents only
-        const result = await rag.query({
-          query: rawQuery,
-          topK: Math.min((args.topK as number) ?? 5, 20),
-          scoreThreshold: 0,
-          userId: authCtx.userId,
-        })
+        const topK = Math.min((args.topK as number) ?? 5, 20)
 
-        // Filter sources by share scope (if using share token with limited scope)
-        const filteredSources = authCtx.scope === "all"
-          ? result.sources
-          : result.sources.filter((s) => (authCtx.scope as string[]).includes(s.documentId))
+        // Embed query
+        const queryEmbedding = await embedder.embed(rawQuery)
 
-        let text = `**Answer:** ${result.answer}\n\n`
-        if (filteredSources.length > 0) {
-          text += `**Sources (${filteredSources.length}):**\n`
-          for (const src of filteredSources) {
-            text += `- [${src.documentId}] ${src.content.slice(0, 200)}\n`
-          }
+        // Hybrid search (pgvector cosine + tsvector BM25)
+        const searchResults = await vectorStore.search(
+          queryEmbedding.vector,
+          rawQuery,
+          { topK: topK * 2, scoreThreshold: 0, userId: authCtx.userId },
+        )
+
+        // Rerank with cross-encoder
+        let rankedResults = searchResults
+        if (searchResults.length > 1) {
+          const candidates = searchResults.map((r) => ({
+            id: r.id,
+            text: r.metadata.content,
+            originalScore: r.score,
+          }))
+          const reranked = await reranker.rerank(rawQuery, candidates)
+          rankedResults = reranked.slice(0, topK).map((rr) => {
+            const original = searchResults.find((s) => s.id === rr.id)!
+            return { ...original, score: rr.relevanceScore }
+          })
+        } else {
+          rankedResults = searchResults.slice(0, topK)
         }
+
+        // Filter by share scope
+        const filteredResults = authCtx.scope === "all"
+          ? rankedResults
+          : rankedResults.filter((r) => (authCtx.scope as string[]).includes(r.metadata.documentId))
+
+        // Resolve document names
+        const docIds = [...new Set(filteredResults.map((r) => r.metadata.documentId))]
+        const docNames: Record<string, string> = {}
+        if (docIds.length > 0) {
+          const docs = await sql<{ id: string; name: string }[]>`
+            SELECT id, name FROM documents WHERE id = ANY(${docIds})
+          `
+          for (const d of docs) docNames[d.id] = d.name
+        }
+
+        // Format response: instruction + sources
+        const instruction = [
+          "## Instructions for answering",
+          "Use ONLY the sources below to answer the user's question.",
+          "Cite sources by their number [1], [2], etc.",
+          "If the sources do not contain enough information, say so explicitly.",
+          "Do not invent or assume information not present in the sources.",
+          "Respond in the same language as the user's question.",
+        ].join("\n")
+
+        let sourcesText = ""
+        if (filteredResults.length > 0) {
+          sourcesText = filteredResults.map((r, i) => {
+            const docName = docNames[r.metadata.documentId] ?? r.metadata.documentId
+            return `[${i + 1}] **${docName}** (score: ${r.score.toFixed(3)})\n${r.metadata.content}`
+          }).join("\n\n")
+        } else {
+          sourcesText = "No relevant sources found for this query."
+        }
+
+        const text = `${instruction}\n\n## Sources (${filteredResults.length})\n\n${sourcesText}`
 
         return makeResult(req.id, {
           content: [{ type: "text", text }],
@@ -739,16 +783,16 @@ async function handleToolCall(
         `
 
         const context = chunks.map((c, i) => `[${i + 1}] ${c.content}`).join("\n\n")
-
-        // Ask LLM with document context
-        const llm = new LlmService({ apiKey: env.GROQ_API_KEY, model: env.GROQ_LLM_MODEL ?? "llama-3.1-8b-instant" })
-        const answer = await llm.chat([
-          { role: "system", content: `Answer the question using ONLY the provided document context. Document: "${doc.name}". If the answer is not in the context, say so. Answer in the user's language.` },
-          { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` },
-        ], 1024)
+        const instruction = [
+          "## Instructions for answering",
+          `Answer the question using ONLY the document context below from "${doc.name}".`,
+          "Cite chunks by their number [1], [2], etc.",
+          "If the answer is not in the context, say so explicitly.",
+          "Respond in the same language as the user's question.",
+        ].join("\n")
 
         return makeResult(req.id, {
-          content: [{ type: "text", text: `**${doc.name}** — ${question}\n\n${answer.response ?? "No answer generated."}` }],
+          content: [{ type: "text", text: `${instruction}\n\n## Question\n${question}\n\n## Document: ${doc.name} (${chunks.length} chunks)\n\n${context}` }],
         })
       }
 
@@ -844,18 +888,18 @@ async function handleToolCall(
           SELECT content FROM chunks WHERE document_id = ${docId} ORDER BY chunk_index
         `
 
-        const fullText = chunks.map((c) => c.content).join("\n\n")
-        // Truncate to ~6000 tokens for LLM context
-        const truncated = fullText.slice(0, 24000)
+        const fullText = chunks.map((c, i) => `[${i + 1}] ${c.content}`).join("\n\n")
 
-        const llm = new LlmService({ apiKey: env.GROQ_API_KEY, model: env.GROQ_LLM_MODEL ?? "llama-3.1-8b-instant" })
-        const summary = await llm.chat([
-          { role: "system", content: "Create a concise summary of the document. Include key points, main topics, and important details. Answer in the same language as the document." },
-          { role: "user", content: truncated },
-        ], 1024)
+        const instruction = [
+          "## Instructions for summarizing",
+          `Create a concise summary of the document "${doc.name}".`,
+          "Include key points, main topics, and important details.",
+          "Cite chunks by their number [1], [2], etc. for key claims.",
+          "Respond in the same language as the document content.",
+        ].join("\n")
 
         return makeResult(req.id, {
-          content: [{ type: "text", text: `**Summary: ${doc.name}**\n\n${summary.response ?? "Could not generate summary."}` }],
+          content: [{ type: "text", text: `${instruction}\n\n## Document: ${doc.name} (${chunks.length} chunks)\n\n${fullText}` }],
         })
       }
 

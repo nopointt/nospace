@@ -84,7 +84,7 @@ export function startPipelineWorker(
     },
     {
       connection: { url: redisUrl },
-      concurrency: 2,
+      concurrency: 4,
     }
   )
 

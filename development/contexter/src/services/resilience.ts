@@ -67,7 +67,7 @@ const jinaRetry = retry(handleAll, {
   backoff: new ExponentialBackoff({ initialDelay: 1_000, maxDelay: 4_000 }),
 })
 
-const jinaBulkhead = bulkhead(3, 10)
+const jinaBulkhead = bulkhead(10, 20)
 
 export const jinaPolicy = wrap(jinaBulkhead, jinaRetry, jinaBreaker)
 
@@ -87,7 +87,7 @@ const groqLlmRetry = retry(handleAll, {
   backoff: new ExponentialBackoff({ initialDelay: 1_000, maxDelay: 4_000 }),
 })
 
-const groqLlmBulkhead = bulkhead(2, 5)
+const groqLlmBulkhead = bulkhead(10, 20)
 
 export const groqLlmPolicy = wrap(groqLlmBulkhead, groqLlmRetry, groqLlmBreaker)
 
@@ -108,7 +108,7 @@ const groqWhisperRetry = retry(handleAll, {
   backoff: new ExponentialBackoff({ initialDelay: 2_000, maxDelay: 8_000 }),
 })
 
-const groqWhisperBulkhead = bulkhead(1, 3)
+const groqWhisperBulkhead = bulkhead(2, 5)
 
 // TODO: wire groqWhisperPolicy into src/services/parsers/audio.ts and src/services/parsers/video.ts
 export const groqWhisperPolicy = wrap(groqWhisperBulkhead, groqWhisperRetry, groqWhisperBreaker)
@@ -130,7 +130,7 @@ const doclingRetry = retry(handleAll, {
   backoff: new ExponentialBackoff({ initialDelay: 2_000, maxDelay: 8_000 }),
 })
 
-const doclingBulkhead = bulkhead(1, 3)
+const doclingBulkhead = bulkhead(2, 5)
 
 // TODO: wire doclingPolicy into src/services/parsers/docling.ts
 export const doclingPolicy = wrap(doclingBulkhead, doclingRetry, doclingBreaker)

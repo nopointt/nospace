@@ -83,8 +83,10 @@
 |---|---|---|
 | MLP | Hetzner + CF Pages, all formats, MCP, frontend SPA, security hardened | **✅ DONE** |
 | Pricing model | Usage-based per-GB, credit system, 6 tiers | **decided** |
-| Production stack | Hetzner CAX11 + pgvector + Groq + Docling | **deployed** |
-| **GTM Strategy** | **Pre-launch QA Phases 1-4 complete. Landing, legal, billing, RAG quality, chunking overhaul, deploy automation, monitoring, security hardening.** | **🔶 CTX-08 (iteration phase open)** |
+| Production stack | Hetzner CAX21 + pgvector + Jina + Docling | **deployed** |
+| **MCP Pivot** | **Groq removed from query path. MCP search_knowledge = chunks + instruction. Chat UI removed.** | **✅ DONE (2026-03-31)** |
+| **Stress Testing** | **k6 infra, 6 runs, 118 VUs / 11 RPS / 14 min. Infra scaled for 100 concurrent.** | **✅ DONE (2026-03-31)** |
+| GTM Strategy | Pre-launch QA Phases 1-4 complete. | ✅ CTX-08 closed |
 | Auth | Google OAuth done. Email auth in progress. Telegram deferred. | 🔜 NEXT (CTX-04) |
 | Billing | NOWPayments crypto ($9/$29/$79). Card payments blocked (no KYB). | after auth |
-| Benchmarks | k6 baseline done. Capacity model: 50 users comfortable, 10K = $746/mo (DeepInfra). | after billing |
+| Benchmarks | k6 stress test done. 100 concurrent OK. 500 registered target. | after billing |

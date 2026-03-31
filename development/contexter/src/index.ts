@@ -20,7 +20,7 @@ import type { Env } from "./types/env"
 import { startPipelineWorker, shutdownQueue } from "./services/queue"
 import { health } from "./routes/health"
 import { upload } from "./routes/upload"
-import { query } from "./routes/query"
+// query route removed — MCP search_knowledge is the primary query path
 import { status } from "./routes/status"
 import { documents } from "./routes/documents"
 // P1-010: mcp.ts (CF Workers pattern legacy scaffold) removed — use mcpRemote instead
@@ -63,7 +63,7 @@ for (const key of REQUIRED_ENV) {
 // P2-015: add idle_timeout + connect_timeout so stalled connections don't hold pool slots
 // P4-006: pool size configurable via PG_POOL_MAX env var
 const sql = postgres(process.env.DATABASE_URL!, {
-  max: parseInt(process.env.PG_POOL_MAX ?? "10", 10),
+  max: parseInt(process.env.PG_POOL_MAX ?? "100", 10),
   idle_timeout: 30,
   connect_timeout: 10,
 })
@@ -249,7 +249,7 @@ app.post("/register", async (c) => {
 
 app.route("/health", health)
 app.route("/api/upload", upload)
-app.route("/api/query", query)
+// /api/query removed — MCP search_knowledge is the primary query path
 app.route("/api/status", status)
 app.route("/api/documents", documents)
 // P1-010: /mcp route removed (legacy CF Workers scaffold)
@@ -269,7 +269,7 @@ app.route("/", oauth)
 let pipelineWorker: Awaited<ReturnType<typeof startPipelineWorker>> | null = null
 try {
   pipelineWorker = startPipelineWorker(process.env.REDIS_URL!, env, sql)
-  console.log("Pipeline worker started (concurrency: 2)")
+  console.log("Pipeline worker started (concurrency: 4)")
 } catch (e) {
   console.error("Pipeline worker failed to start — jobs will use direct fallback:", e instanceof Error ? e.message : String(e))
 }

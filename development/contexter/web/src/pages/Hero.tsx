@@ -19,7 +19,6 @@ import {
   uploadText,
   getDocumentStatus,
   listDocuments,
-  query as queryApi,
   presignUpload,
   confirmUpload,
   uploadToR2,
@@ -130,11 +129,6 @@ const Hero: Component = () => {
     { id: string; name: string; status: string; chunk_count: number }[]
   >([])
   const [landingChunks, setLandingChunks] = createSignal(0)
-  const [qText, setQText] = createSignal("")
-  const [qLoading, setQLoading] = createSignal(false)
-  const [qResult, setQResult] = createSignal<{
-    answer: string; sources: { content: string; document_name: string; score: number }[]
-  } | null>(null)
 
   // Load docs + resume polling
   async function loadInitialDocs() {
@@ -349,18 +343,6 @@ const Hero: Component = () => {
   })
   onCleanup(() => { if (pollTimer) { clearInterval(pollTimer); pollTimer = undefined } })
 
-  // Query
-  async function handleQuery() {
-    const q = qText().trim()
-    if (!q) return
-    const t = getToken()
-    if (!t) return
-    setQLoading(true); setQResult(null)
-    try { setQResult(await queryApi(q, t)) }
-    catch { showToast("Ошибка запроса", "error") }
-    finally { setQLoading(false) }
-  }
-
   // Derived
   const processingCount = () => files().filter((f) => f.status === "processing" || f.status === "uploading").length
   const readyCount = () => files().filter((f) => f.status === "ready").length
@@ -573,46 +555,6 @@ const Hero: Component = () => {
             </For>
           </div>
 
-          {/* Query */}
-          <div class="flex flex-col" aria-live="polite" style={{ "margin-top": "24px", gap: "8px" }}>
-            <div class="flex" style={{ gap: "8px" }}>
-              <input
-                type="text"
-                value={qText()}
-                onInput={(e) => setQText(e.currentTarget.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") handleQuery() }}
-                placeholder="Задайте вопрос по документам..."
-                disabled={qLoading()}
-                class="flex-1 px-4 py-3 text-sm border border-border-default bg-bg-canvas text-text-primary placeholder:text-text-disabled focus:outline-hidden focus:border-accent"
-              />
-              <Button
-                variant={qText().trim() ? "primary" : "ghost"}
-                disabled={!qText().trim() || qLoading()}
-                loading={qLoading()}
-                onClick={handleQuery}
-              >Спросить</Button>
-            </div>
-            <Show when={qResult()}>
-              {(r) => (
-                <div class="flex flex-col gap-3 bg-bg-canvas border border-border-subtle" style={{ padding: "16px" }}>
-                  <p class="whitespace-pre-wrap text-black" style={{ "font-size": "14px", "line-height": "1.5" }}>
-                    {r().answer}
-                  </p>
-                  <Show when={r().sources.length > 0}>
-                    <div class="flex flex-wrap border-t border-border-subtle" style={{ gap: "6px", "padding-top": "8px" }}>
-                      <For each={r().sources}>
-                        {(s) => (
-                          <span class="text-accent border border-border-default bg-bg-surface" style={{ "font-size": "10px", padding: "2px 8px" }}>
-                            {s.document_name} · {(s.score * 100).toFixed(0)}%
-                          </span>
-                        )}
-                      </For>
-                    </div>
-                  </Show>
-                </div>
-              )}
-            </Show>
-          </div>
         </Show>
       </section>
 

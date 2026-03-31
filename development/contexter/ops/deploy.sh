@@ -119,10 +119,19 @@ scp -r "$LOCAL_DIR/drizzle-pg/" "$SERVER:$REMOTE_DIR/app/drizzle-pg/"
 log "  Syncing Dockerfile..."
 scp "$LOCAL_DIR/ops/Dockerfile" "$SERVER:$REMOTE_DIR/Dockerfile"
 
-# Verify critical file exists on server
+# Sync docker-compose.yml (mem limits, service config)
+log "  Syncing docker-compose.yml..."
+scp "$LOCAL_DIR/docker-compose.yml" "$SERVER:$REMOTE_DIR/docker-compose.yml"
+
+# Verify critical files exist on server
 log "  Verifying sync..."
 ssh "$SERVER" "test -f $REMOTE_DIR/app/src/index.ts" || fail "src/index.ts not found on server after sync"
 ssh "$SERVER" "test -f $REMOTE_DIR/app/src/services/content-filter.ts" || fail "content-filter.ts not found on server after sync"
+ssh "$SERVER" "test -f $REMOTE_DIR/docker-compose.yml" || fail "docker-compose.yml not found on server after sync"
+
+# Verify REDIS_PASSWORD is set in .env
+log "  Checking REDIS_PASSWORD in .env..."
+ssh "$SERVER" "grep -q REDIS_PASSWORD $REMOTE_DIR/.env" || log "  ⚠ REDIS_PASSWORD not found in .env — Redis healthcheck may fail"
 
 log "  Sync complete"
 

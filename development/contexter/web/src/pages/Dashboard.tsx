@@ -10,12 +10,11 @@ import {
 import Nav from "../components/Nav"
 import Button from "../components/Button"
 import Badge from "../components/Badge"
-import Input from "../components/Input"
 import Toast, { showToast } from "../components/Toast"
 import DocumentModal from "../components/DocumentModal"
 import ErrorState from "../components/ErrorState"
 import EmptyState from "../components/EmptyState"
-import { listDocuments, query as queryApi, getDocumentStatus, deleteDocument } from "../lib/api"
+import { listDocuments, getDocumentStatus, deleteDocument } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
 import { formatSize, formatDate, formatDateFull, statusToVariant, mimeShort } from "../lib/helpers"
 
@@ -35,16 +34,6 @@ interface DocumentDetail extends Document {
   stages: { type: string; status: string; progress: number; error_message?: string }[]
 }
 
-interface QuerySource {
-  content: string
-  document_name: string
-  score: number
-}
-
-interface QueryResult {
-  answer: string
-  sources: QuerySource[]
-}
 
 /* ── confirm dialog ── */
 
@@ -77,18 +66,11 @@ const Dashboard: Component = () => {
   const [documents, setDocuments] = createSignal<Document[]>([])
   const [totalChunks, setTotalChunks] = createSignal(0)
   const [totalVectors, setTotalVectors] = createSignal(0)
-  const [totalQueries, setTotalQueries] = createSignal(0)
   const [loading, setLoading] = createSignal(true)
   const [loadError, setLoadError] = createSignal(false)
   const [selectedId, setSelectedId] = createSignal<string | null>(null)
   const [selectedDetail, setSelectedDetail] = createSignal<DocumentDetail | null>(null)
   const [detailLoading, setDetailLoading] = createSignal(false)
-
-  /* query state */
-  const [queryText, setQueryText] = createSignal("")
-  const [queryLoading, setQueryLoading] = createSignal(false)
-  const [queryResult, setQueryResult] = createSignal<QueryResult | null>(null)
-  const [queryError, setQueryError] = createSignal<string | null>(null)
 
   /* document modal */
   const [viewDocId, setViewDocId] = createSignal<string | null>(null)
@@ -163,38 +145,6 @@ const Dashboard: Component = () => {
     setViewDocId(doc.id)
   }
 
-  /* query */
-  async function handleQuery() {
-    const q = queryText().trim()
-    if (!q) return
-    const token = getToken()
-    if (!token) return
-
-    setQueryLoading(true)
-    setQueryResult(null)
-    setQueryError(null)
-
-    try {
-      const res = await queryApi(q, token)
-      setTotalQueries((prev) => prev + 1)
-      if (res.sources.length === 0 && !res.answer) {
-        setQueryError("По вашему запросу ничего не найдено.")
-      } else {
-        setQueryResult({ answer: res.answer, sources: res.sources })
-      }
-    } catch {
-      setQueryError("Не удалось получить ответ. Повторите запрос.")
-    } finally {
-      setQueryLoading(false)
-    }
-  }
-
-  function handleQueryKeyDown(e: KeyboardEvent) {
-    if (e.key === "Enter" && queryText().trim()) {
-      handleQuery()
-    }
-  }
-
   /* delete */
   async function handleDelete() {
     const token = getToken()
@@ -250,7 +200,6 @@ const Dashboard: Component = () => {
           <div class="flex flex-wrap gap-4">
             <StatCard value={documents().length} label="Документы" />
             <StatCard value={totalChunks()} label="Фрагменты" />
-            <StatCard value={totalQueries()} label="Запросы" />
           </div>
 
           {/* Documents Table */}
@@ -358,109 +307,8 @@ const Dashboard: Component = () => {
           </div>
         </div>
 
-        {/* ── RIGHT: 420px fixed — Query Panel ── */}
-        <div
-          class="w-full md:w-[420px] shrink-0 flex flex-col border-t md:border-t-0 md:border-l border-border-subtle pt-6 md:pt-0 md:pl-8 gap-6"
-        >
-          {/* ВОПРОС section */}
-          <div class="flex flex-col" style={{ gap: "12px" }}>
-            <span style={sectionLabelStyle}>ВОПРОС</span>
-            <Input
-              value={queryText()}
-              onInput={setQueryText}
-              onKeyDown={handleQueryKeyDown}
-              placeholder="Задайте вопрос по документам..."
-              disabled={queryLoading()}
-            />
-            <Button
-              variant={queryText().trim() ? "primary" : "ghost"}
-              disabled={!queryText().trim() || queryLoading()}
-              loading={queryLoading()}
-              onClick={handleQuery}
-            >
-              Спросить
-            </Button>
-          </div>
-
-          {/* ОТВЕТ section */}
-          <div class="flex flex-col" aria-live="polite" style={{ gap: "8px" }}>
-            <span style={sectionLabelStyle}>ОТВЕТ</span>
-            <Show when={queryLoading()}>
-              <div class="flex flex-col gap-2">
-                <div class="h-3 bg-bg-elevated animate-pulse w-full" />
-                <div class="h-3 bg-bg-elevated animate-pulse w-[90%]" />
-                <div class="h-3 bg-bg-elevated animate-pulse w-[75%]" />
-              </div>
-            </Show>
-            <Show when={queryError()}>
-              <p class="text-signal-error" style={{ "font-size": "12px" }}>{queryError()}</p>
-            </Show>
-            <Show when={queryResult()}>
-              {(result) => (
-                <p
-                  class="whitespace-pre-wrap text-black"
-                  style={{
-                    "font-size": "12px",
-                    "line-height": "1.5",
-                  }}
-                >
-                  {result().answer}
-                </p>
-              )}
-            </Show>
-            <Show when={!queryLoading() && !queryError() && !queryResult()}>
-              <p style={{ "font-size": "12px", color: "var(--color-text-tertiary)" }}>
-                Ответ появится здесь после запроса
-              </p>
-            </Show>
-          </div>
-
-          {/* ИСТОЧНИКИ section */}
-          <div class="flex flex-col" style={{ gap: "8px" }}>
-            <span style={sectionLabelStyle}>ИСТОЧНИКИ</span>
-            <Show when={queryResult()}>
-              {(result) => (
-                <Show
-                  when={result().sources.length > 0}
-                  fallback={
-                    <p style={{ "font-size": "10px", color: "var(--color-text-tertiary)" }}>
-                      Нет источников
-                    </p>
-                  }
-                >
-                  <For each={result().sources}>
-                    {(source) => (
-                      <div
-                        class="flex items-center bg-bg-surface"
-                        style={{
-                          padding: "8px 12px",
-                          gap: "8px",
-                        }}
-                      >
-                        <span
-                          class="shrink-0 bg-accent"
-                          style={{
-                            width: "6px",
-                            height: "6px",
-                          }}
-                        />
-                        <span class="text-black" style={{ "font-size": "10px" }}>
-                          {source.document_name} ({(source.score * 100).toFixed(0)}%)
-                        </span>
-                      </div>
-                    )}
-                  </For>
-                </Show>
-              )}
-            </Show>
-            <Show when={!queryResult()}>
-              <p style={{ "font-size": "10px", color: "var(--color-text-tertiary)" }}>
-                Источники появятся после запроса
-              </p>
-            </Show>
-          </div>
-
-          {/* Developer link */}
+        {/* Developer link */}
+        <div class="mt-6">
           <A href="/api" class="text-accent" style={{ "font-size": "12px" }}>
             Для разработчиков → /api
           </A>

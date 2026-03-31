@@ -82,7 +82,7 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Plan | CAX21 (4 ARM vCPU, 8GB RAM, 40GB NVMe) |
 | Cost | €6.99/mo + €0.73/mo IPv4 = €7.72/mo |
 | Location | Helsinki, Finland |
-| Docker services | app, postgres, redis, caddy, docling, netdata (6 running) |
+| Docker services | app (1536m), postgres (1536m), redis (384m), caddy (128m), docling (3072m), netdata (256m) — 6 running |
 | Config | /opt/contexter/ (docker-compose.yml, Caddyfile, .env, Dockerfile) |
 | App code | /opt/contexter/app/ (baked into Docker image via COPY, no bind mount) |
 | Cron jobs | backup.sh (daily 3:00), health-check.sh (*/5 min), wal-upload.sh (hourly) |
@@ -168,7 +168,8 @@ Jurisdiction: user KZ, billing entity AR (RU citizen), server FI (EU). Contact: 
 
 ```
 upload → content filter (22 patterns, flag-not-block) → parse (Docling/TextParser/AudioParser/VideoParser) → chunk (hierarchical/semantic/table/timestamp, structure-aware block classifier, auto-merge 0.4) → contextual prefix (Groq 8B) → dedup check (pgvector 0.98 cosine) → embed (Jina v4 512d, late chunking, CachedEmbedderService) → anomaly check (L2 norm outliers) → index (pgvector HNSW + tsvector GIN)
-query → rewrite (Groq 8B) → embed (Jina v4 512d) → hybrid search (tsvector ∥ pgvector → convex fusion α=0.5) → rerank (Jina cross-encoder) → MMR diversity (λ=0.7) → resolveParents → context assembly → Groq 70B → answer (SSE stream)
+MCP query → embed (Jina v4 512d) → hybrid search (tsvector ∥ pgvector → convex fusion α=0.5) → rerank (Jina cross-encoder) → return chunks + system instruction (client LLM generates answer)
+NOTE: /api/query archived (2026-03-31). Groq removed from query path. MCP search_knowledge is the primary query interface.
 eval: proxy metrics (per-query) + LLM eval (RAGAS: claim→verdict→relevancy) + chunking eval (intrinsic + retrieval + Wilcoxon A/B) + drift detection (MMD)
 ```
 

@@ -1,0 +1,21 @@
+id,name,category,price,stock,rating,description
+1,Widget Alpha,Electronics,29.99,150,4.5,High-performance widget for everyday use
+2,Gadget Beta,Electronics,49.99,75,4.2,Advanced gadget with smart features
+3,Tool Gamma,Hardware,19.99,200,4.8,Durable tool for professionals
+4,Device Delta,Electronics,99.99,50,4.0,Premium device with extended warranty
+5,Part Epsilon,Hardware,9.99,500,4.6,Essential replacement part
+6,Module Zeta,Software,39.99,1000,4.3,Modular software component
+7,System Eta,Software,149.99,25,4.7,Complete system solution
+8,Kit Theta,Hardware,59.99,100,4.1,Comprehensive starter kit
+9,Pack Iota,Accessories,14.99,300,4.4,Value pack with multiple items
+10,Set Kappa,Accessories,24.99,200,4.5,Matching set for professionals
+11,Unit Lambda,Electronics,79.99,60,4.2,Compact unit for mobile use
+12,Block Mu,Hardware,34.99,150,4.6,Building block for custom setups
+13,Array Nu,Software,44.99,500,4.0,Data processing array module
+14,Frame Xi,Hardware,89.99,40,4.8,Structural frame component
+15,Core Omicron,Electronics,199.99,20,4.9,High-end processing core
+16,Shell Pi,Accessories,12.99,400,4.3,Protective shell casing
+17,Link Rho,Hardware,7.99,600,4.5,Connector link adapter
+18,Node Sigma,Software,54.99,200,4.4,Network node software
+19,Gate Tau,Electronics,119.99,35,4.1,Logic gate controller
+20,Wave Upsilon,Accessories,29.99,250,4.7,Wave pattern generator

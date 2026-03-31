@@ -174,7 +174,7 @@ export class EmbedderService {
         await new Promise((r) => setTimeout(r, jinaRateLimiter.remainingMs()))
       }
 
-      const signal = AbortSignal.timeout(30_000)
+      const signal = AbortSignal.timeout(10_000)
 
       let response: Response
       try {

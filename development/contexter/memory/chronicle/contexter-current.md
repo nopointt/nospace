@@ -542,3 +542,18 @@ Backend prod-ready for 50 users. Frontend has white screen issue on /register (d
 ## 2026-03-30 — сессия 218 CLOSE [Axis]
 
 CTX-09 UI/UX Polish epic complete. Waves 2-4 deployed. Pipeline indicator redesigned (format-specific labels, visual grammar, time estimates, toast, errors, mobile, a11y). deploy-web.sh fixed (branch=main). Hetzner CAX11→CAX21. Docling mem 1.5→3GB. ~35 files, 8 Gropius passes, 2 Bayer/Kandinsky audits.
+<!-- ENTRY:2026-03-31:CLOSE:220:contexter:contexter-auth [AXIS] -->
+## 2026-03-31 — сессия 220 CLOSE [Axis]
+
+**Scope:** Architecture stress testing, MCP-only pivot, infra scaling to 100 concurrent
+
+**Key results:**
+- Groq removed from query path → MCP search p50: 7.6s → 110ms (66x)
+- Chat UI removed from frontend
+- Infra scaled: app 1536m, PG 1536m pool 100, BullMQ 4, Docling 3072m
+- 6 stress test runs, server sustains 118 VUs / 11 RPS / 14 min
+- YouTube audio fallback via yt-dlp added
+- Deploy script fixed (docker-compose.yml sync)
+- Presign MIME resolution bug fixed (.md files)
+
+**Open:** yt-dlp verification, pipeline failures from external API rate limits, Groq paid tier for contextual prefix at scale

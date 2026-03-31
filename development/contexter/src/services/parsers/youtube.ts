@@ -1,9 +1,22 @@
 import type { Parser, ParserInput, ParseResult } from "./types"
 import { buildMetadata } from "./types"
 import { streamToBuffer } from "./utils"
+import { AudioParser } from "./audio"
+import { existsSync } from "fs"
+import { unlink, mkdtemp, readFile } from "fs/promises"
+import { tmpdir } from "os"
+import { join } from "path"
 
 export class YouTubeParser implements Parser {
   readonly formats = ["text/x-youtube-url"]
+
+  private groqApiUrl: string
+  private groqApiKey: string
+
+  constructor(groqApiUrl: string, groqApiKey: string) {
+    this.groqApiUrl = groqApiUrl
+    this.groqApiKey = groqApiKey
+  }
 
   async parse(input: ParserInput): Promise<ParseResult> {
     const buffer =
@@ -18,23 +31,78 @@ export class YouTubeParser implements Parser {
       throw new Error(`Invalid YouTube URL: ${url}`)
     }
 
-    const transcript = await fetchTranscript(videoId)
-    const warnings: string[] = []
-
-    if (!transcript.text || transcript.text.trim().length === 0) {
-      warnings.push("No subtitles available for this video")
+    // Try captions first (fast, no Whisper needed)
+    try {
+      const transcript = await fetchTranscript(videoId)
+      if (transcript.text && transcript.text.trim().length > 0) {
+        return {
+          content: transcript.text,
+          metadata: buildMetadata(input, transcript.text, "youtube", {
+            duration: transcript.duration,
+            language: transcript.language,
+            warnings: [],
+          }),
+        }
+      }
+    } catch {
+      // Captions not available — fall through to audio extraction
     }
 
-    const content = transcript.text || ""
+    // Fallback: download audio via yt-dlp → transcribe via Whisper
+    console.log(JSON.stringify({ event: "youtube_audio_fallback", videoId }))
+    const audioBuffer = await downloadAudio(videoId)
+    const audioParser = new AudioParser(this.groqApiUrl, this.groqApiKey)
+    const audioInput: ParserInput = {
+      file: audioBuffer,
+      fileName: `youtube-${videoId}.mp3`,
+      mimeType: "audio/mpeg",
+      fileSize: audioBuffer.byteLength,
+    }
 
+    const result = await audioParser.parse(audioInput)
     return {
-      content,
-      metadata: buildMetadata(input, content, "youtube", {
-        duration: transcript.duration,
-        language: transcript.language,
-        warnings,
+      content: result.content,
+      metadata: buildMetadata(input, result.content, "youtube", {
+        duration: result.metadata.duration,
+        language: result.metadata.language,
+        warnings: ["Transcribed from audio (no subtitles available)"],
       }),
     }
+  }
+}
+
+async function downloadAudio(videoId: string): Promise<ArrayBuffer> {
+  const dir = await mkdtemp(join(tmpdir(), "yt-"))
+  const outPath = join(dir, "audio.mp3")
+
+  try {
+    const proc = Bun.spawn([
+      "yt-dlp",
+      "--extract-audio",
+      "--audio-format", "mp3",
+      "--audio-quality", "5",  // medium quality, smaller file
+      "--no-playlist",
+      "--max-filesize", "50m",
+      "-o", outPath,
+      `https://www.youtube.com/watch?v=${videoId}`,
+    ], { stdout: "pipe", stderr: "pipe" })
+
+    const exitCode = await proc.exited
+    if (exitCode !== 0) {
+      const stderr = await new Response(proc.stderr).text()
+      throw new Error(`yt-dlp failed (exit ${exitCode}): ${stderr.slice(0, 200)}`)
+    }
+
+    if (!existsSync(outPath)) {
+      throw new Error("yt-dlp produced no output file")
+    }
+
+    const audioBytes = await readFile(outPath)
+    return audioBytes.buffer.slice(audioBytes.byteOffset, audioBytes.byteOffset + audioBytes.byteLength) as ArrayBuffer
+  } finally {
+    // Cleanup temp files
+    try { await unlink(outPath) } catch {}
+    try { await unlink(dir) } catch {}
   }
 }
 

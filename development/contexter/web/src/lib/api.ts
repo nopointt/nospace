@@ -123,39 +123,6 @@ export async function listDocuments(token: string) {
   }
 }
 
-export async function query(q: string, token: string) {
-  const raw = await api<{
-    answer: string
-    sources: {
-      documentId?: string
-      document_name?: string
-      content: string
-      score: number
-      source?: string
-    }[]
-    queryVariants?: string[]
-    query_variants?: string[]
-    usage?: { embeddingTokens: number; llmPromptTokens: number; llmCompletionTokens: number }
-    token_usage?: { input: number; output: number }
-  }>("/api/query", {
-    method: "POST",
-    body: JSON.stringify({ query: q }),
-    token,
-  })
-
-  return {
-    answer: raw.answer,
-    sources: raw.sources.map((s) => ({
-      content: s.content,
-      document_name: s.document_name || s.documentId || "unknown",
-      score: s.score,
-    })),
-    query_variants: raw.query_variants ?? raw.queryVariants,
-    token_usage: raw.token_usage ?? (raw.usage
-      ? { input: raw.usage.llmPromptTokens, output: raw.usage.llmCompletionTokens }
-      : undefined),
-  }
-}
 
 export async function getDocumentContent(documentId: string, token: string) {
   const raw = await api<{

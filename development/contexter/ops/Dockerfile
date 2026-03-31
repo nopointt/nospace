@@ -1,6 +1,6 @@
 FROM oven/bun:1-alpine
 
-RUN apk add --no-cache ffmpeg
+RUN apk add --no-cache ffmpeg python3 py3-pip nodejs && pip3 install --break-system-packages yt-dlp
 
 RUN addgroup -S app && adduser -S app -G app
 
