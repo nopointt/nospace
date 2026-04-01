@@ -1,47 +1,57 @@
 # STATE — Contexter
 
 ## Position
-- **Phase:** MCP-only pivot complete. Stress tested for 100 concurrent.
-- **Status:** Backend MCP-native (no Groq in query path). Frontend chat removed. Infra scaled for 500 registered / 100 concurrent.
-- **Last session:** 2026-03-31 (Axis, session 220 — stress test + MCP pivot)
-- **Sessions total:** 220
+- **Phase:** GTM Launch (CTX-10) — 100 paying supporters by April 8
+- **Status:** Product ready. Research plan restructured (4 SEED done, 2 DEEP pending). LemonSqueezy pending approval. MCP connection fixed.
+- **Last session:** 2026-04-01 (Axis, session 227 — 4 SEED researches, synthesis, MCP fix, LS email, demo video)
+- **Sessions total:** 227
 
 ## Key Completions
-- MCP-only pivot: Groq removed from query path, search_knowledge returns chunks + instruction
-- Stress testing: k6 infrastructure, 6 test runs, 118 VUs / 11 RPS sustained 14 min
-- Infra scaling: PG pool 100, BullMQ 4, app 1536m, PG 1536m, Docling 3072m
-- YouTube audio fallback: yt-dlp + Whisper when no captions
-- Deploy script fix: docker-compose.yml sync + REDIS_PASSWORD check
-- Presign MIME bug fix: .md and other text files now resolve correctly
-- Docker volume fix: named external volumes prevent data loss on compose changes
+- i18n: EN/RU toggle, 500+ translation keys, all 24 pages/components
+- Pricing: Free ($0) / Starter ($9) / Pro ($29) based on verified unit economics
+- Pre-order: dynamic NOWPayments invoices + bank transfer (Halyk SWIFT)
+- DB cleanup: 871→2 users, 1260→26 docs, 3305→519 chunks (2026-04-01)
+- Auth: email+password (better-auth) + Google OAuth + Resend DNS verified
+- Pipeline: 23 formats, MCP 12 tools, Streamable HTTP
+- Landing: 12+ sections (EN/RU), fully bilingual
+- 14 GTM research files (market, competitors, positioning, copy, pain)
+- Copy audit: 50+ jargon issues found (NOT YET APPLIED)
 
 ## Active Decisions
-- D-01: Best RAG in the world — no shortcuts, category-defining quality
-- D-02: Hetzner CAX21 (API) + CF Pages (frontend SPA)
-- D-03: MCP-native (Streamable HTTP, 12 tools) — PRIMARY query path
-- D-04: Swiss/Bauhaus design, Inter primary, JetBrains Mono code only
-- D-05: Jina v4 embeddings (512d MRL, late chunking)
-- D-06: Groq ONLY in pipeline (contextual prefix 8B + Whisper). NOT in query path.
-- D-07: better-auth v1.5.6 + Google OAuth + OAuth 2.1 PKCE
-- D-08: Docling from registry image (quay.io), 3GB RAM
-- D-09: /api/query archived — MCP search_knowledge is the query interface
-- D-10: Chat UI removed from frontend — Contexter = pipeline + MCP, not chatbot
+- D-01 through D-25: unchanged from previous
+- D-26: $10 = support donation (not subscription). Supporters get Pro manually after launch.
+- D-27: EN global market primary. Launch content EN.
+- D-28: All free channels: PH, HN, Reddit, Twitter/X, MCP dirs, IndieHackers, Dev.to
+- D-29: Co-founder search: revenue share (% of LTV from attracted users)
+- D-30: Copy audit MUST be applied before public launch
+- D-31: Analytics = separate epic (CTX-11), basic tracking in CTX-10
+- D-32: Research plan restructured — 11 R-topics → 4 SEED domains + 2 targeted DEEPs
+- D-33: 2 DEEP needed: Reddit post anatomy (r/ChatGPT, r/ClaudeAI) + HN Show HN optimization
+- D-34: LemonSqueezy = primary payment (MoR, KZ+AR payouts, no entity). Crypto-only kills 93% conversion.
+- D-35: "Founding Supporter" framing for $10 (20-30% lift). Counter "X/100 spots".
+- D-36: HN > PH as primary launch channel. Stagger: HN Day 1 → Reddit Day 2 → PH Day 3.
+- D-37: First 100 audience = 70-80 developers + 20-30 knowledge workers
+- D-38: MCP directories (7+) + GitHub awesome-mcp PRs = submit before launch
 
 ## Blockers
-- YouTube yt-dlp audio fallback needs end-to-end verification
-- Pipeline failures under heavy load = external API rate limits (Jina reranker 2 concurrent, Groq 6K TPM free tier)
-- Groq paid tier needed for contextual prefix at scale
+- Copy audit not applied — jargon kills non-tech conversion (CTX-10 W1-01)
+- No social accounts / marketing channels
+- LemonSqueezy approval pending (email sent with demo video, pricing, overview)
+- Perplexity MCP URL still on old workers.dev (needs same fix as Claude.ai)
+- Solo founder bandwidth
 
 ## Deferred
-- Mobile UX (research done, implementation pending)
-- NLI hallucination detection container NOT deployed (code exists)
-- DeepInfra key not configured (blocks paid user LLM fallback)
+- YouTube + Instagram download (roadmap: after launch)
+- NOWPayments fiat on-ramp (no KYB)
+- NLI hallucination detection container
+- Card payments (no legal entity)
+- Full analytics suite (CTX-11)
 
 ## Metrics
-- Sessions: 220
-- MCP search p50: 110ms (was 7.6s with Groq — 66x improvement)
-- Stress test: 118 VUs, 11 RPS, 14 min sustained, 4.9% error rate
-- Pipeline: 160 completions / 210 failures under 100 concurrent (external API limits)
+- Sessions: 227
+- Real users: 2 (nopointttt@gmail.com, danchoachona@gmail.com)
+- Documents: 26, Chunks: 519
+- MCP search p50: 110ms
 - GitHub: github.com/nopointt/contexter
 - Deployed: contexter.cc + api.contexter.cc
-- Server: Hetzner CAX21 (Helsinki), 100 concurrent comfortable
+- Server: Hetzner CAX21 (Helsinki)
