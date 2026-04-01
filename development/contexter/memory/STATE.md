@@ -38,6 +38,7 @@
 - No social accounts / marketing channels
 - LemonSqueezy approval pending (email sent with demo video, pricing, overview)
 - Perplexity MCP URL still on old workers.dev (needs same fix as Claude.ai)
+- Reddit account u/Cute_Baseball2875: 7 months old, karma=1, 0 posts/comments. Needs warmup (50-100 karma in r/ChatGPT, r/ClaudeAI, r/artificial) before launch posts.
 - Solo founder bandwidth
 
 ## Deferred

@@ -144,6 +144,7 @@ Restructured from 11 R-topics → 4 SEED domains + 2 targeted DEEPs.
 **DEEP (planned for 2026-04-01 night):**
 - [ ] D-DEEP-1: Reddit post anatomy — r/ChatGPT, r/ClaudeAI successful product posts, format, rules
 - [ ] D-DEEP-2: HN Show HN optimization — top 20 MCP/RAG Show HN posts, title patterns, timing
+- [ ] Reddit warmup: u/Cute_Baseball2875 (7mo, karma=1). Target 50-100 karma via helpful comments in r/ChatGPT, r/ClaudeAI, r/artificial before launch posts
 
 ### Wave 1: Product Readiness (April 1-2)
 Fix everything that blocks conversion before going public.
