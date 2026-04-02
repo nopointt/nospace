@@ -18,7 +18,8 @@
 | CTX-01 | MVP Pipeline + API + Frontend | ✅ MLP COMPLETE (2026-03-27) | `contexter-mvp.md` |
 | CTX-02 | Design System + Pencil Screens | ✅ DONE | — |
 | CTX-03 | Frontend (SolidJS SPA) | ✅ DEPLOYED (CF Pages, contexter.cc) | — |
-| **CTX-04** | **Auth (OAuth: Google + Email, Telegram deferred)** | **🔜 NEXT** | `contexter-auth.md` |
+| **CTX-04** | **Auth (OAuth: Google + Email, Telegram deferred)** | **🔶 IN PROGRESS** | `contexter-auth.md` |
+| **CTX-10** | **GTM Launch — 100 supporters × $10, all free channels, EN global** | **🔶 IN PROGRESS** | `contexter-gtm-launch.md` |
 | CTX-05 | Benchmarks + Pricing + Billing | ⬜ PLANNED | — |
 | CTX-09 | UI/UX Polish (design system, responsive, a11y, pipeline indicator) | ✅ COMPLETE (2026-03-30) | `contexter-uiux-polish.md` |
 | CTX-06 | Production Migration (CF Workers → Hetzner) | ✅ CLOSED (2026-03-27) | `contexter-migration.md` |
@@ -77,6 +78,10 @@
 - PDF 22K→1 chunk bug (BPE encoder not loaded in some cases)
 - Rotate 54 API tokens (security, deferred — no evidence of leak)
 
+### Brand & Design (deferred)
+- Create Contexter brand guidelines document (brand-guidelines.md) — TOV, writing rules, messaging framework
+- Create Contexter design guidelines (project-specific adaptations from tLOS Bauhaus system) — currently inherits tLOS defaults
+
 ## Prod Roadmap
 
 | Phase | What | Status |
@@ -87,6 +92,7 @@
 | **MCP Pivot** | **Groq removed from query path. MCP search_knowledge = chunks + instruction. Chat UI removed.** | **✅ DONE (2026-03-31)** |
 | **Stress Testing** | **k6 infra, 6 runs, 118 VUs / 11 RPS / 14 min. Infra scaled for 100 concurrent.** | **✅ DONE (2026-03-31)** |
 | GTM Strategy | Pre-launch QA Phases 1-4 complete. | ✅ CTX-08 closed |
-| Auth | Google OAuth done. Email auth in progress. Telegram deferred. | 🔜 NEXT (CTX-04) |
-| Billing | NOWPayments crypto ($9/$29/$79). Card payments blocked (no KYB). | after auth |
+| Auth | Google OAuth done. Email auth done. Telegram deferred. | ✅ (CTX-04, waves 1-5 deployed) |
+| **GTM Launch** | **100 supporters × $10 in 7 days. All free channels. EN global.** | **🔶 IN PROGRESS (CTX-10, deadline 2026-04-08)** |
+| Billing | NOWPayments crypto ($9/$29/$79). Card payments blocked (no KYB). | after GTM launch |
 | Benchmarks | k6 stress test done. 100 concurrent OK. 500 registered target. | after billing |

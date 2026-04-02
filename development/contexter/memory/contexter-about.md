@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-03-30 (session 218 — full L0-L3 audit against codebase)
+> Last updated: 2026-04-02 (session 229 — quality system, reglaments, orch skills alignment)
 ---
 
 ## Identity
@@ -209,6 +209,7 @@ Production data: ~756 users, ~744 documents, ~1281 chunks (as of 2026-03-30).
 | CTX-08 GTM Strategy | [contexter-gtm.md](contexter-gtm.md) | ✅ CLOSED (2026-03-30, open items → backlog) |
 | **CTX-04 Auth** | [contexter-auth.md](contexter-auth.md) | 🔶 IN PROGRESS |
 | **CTX-09 UI/UX Polish** | [contexter-uiux-polish.md](contexter-uiux-polish.md) | ✅ COMPLETE (2026-03-30) |
+| **CTX-10 GTM Launch** | [contexter-gtm-launch.md](contexter-gtm-launch.md) | 🔶 IN PROGRESS (deadline: 2026-04-08) |
 
 ## Write Authority
 
