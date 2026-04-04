@@ -2,7 +2,7 @@
 # provizor-unit-economics.md — APT-13 Unit Economics
 > Layer: L3 | Epic: APT-13 | Status: 🔶 IN PROGRESS
 > Created: 2026-04-04 (session 231)
-> Last updated: 2026-04-04 (session 232 — v1 demo built, competitive research, TrueProfit UI audit, V2 decided)
+> Last updated: 2026-04-04 (session 5 — V2 full build, 16 tasks, date range picker, closeaxis safety rules)
 > Deadline: 2026-04-05 (встреча с Алимханом)
 ---
 
@@ -67,10 +67,10 @@
 - [x] DEEP-5: Global Unit Economics Services (top 10, positioning matrix) → `provizor-deep-global-unit-economics.md`
 - [x] SmartApteka 2025 presentation analyzed (28 slides, all modules mapped)
 
-### Phase 1: Build Demo ✅ BUILT (local, pending review + deploy)
+### Phase 1: Build Demo ✅ BUILT (V2 complete, pending deploy)
 
-Стек: React 19 + Vite + Tailwind CSS 4 + Recharts. Статический SPA, без бэкенда.
-Code: `apps/demo/` (builds successfully, dev server on localhost:5173)
+V1 (DEPRECATED): `apps/demo/` — light theme, 15 files
+V2 (ОСНОВНОЙ): `apps/v2/` — dark navy theme, 17 source files, 2537 lines, 516ms build
 
 4 секции:
 - [x] Hero: CIS Profitability % (F-18) + таблица turnover→profitability
@@ -84,8 +84,12 @@ Code: `apps/demo/` (builds successfully, dev server on localhost:5173)
 - [x] `benchmarks.ts` — RAG thresholds из DEEP-0 section 6E
 - [x] `format.ts` + `chart-helpers.ts` — formatting utilities
 - [x] Предзаполнение бенчмарками (Алматы avg 17.5M₸/мес)
+- [x] V2 full build: 6 pages, 9 metric cards, charts, summaries, CSV export
+- [x] Date range picker (6 presets), pharmacy switcher, action menus
+- [x] Horizontal scroll, pagination, column customize
 - [ ] Visual review + polish с nopoint
 - [ ] Deploy на Hetzner (static через Caddy)
+- [ ] Custom date range input (пока placeholder)
 
 ### Phase 2: Production MVP (2-4 weeks after meeting)
 
@@ -127,9 +131,9 @@ Reference: `STATE.md` → V2 Direction section (полная спека + пут
 
 ## Blockers
 
-- V2 build (next session)
+- ✅ V2 build — completed (session 5)
 - Deploy на Hetzner
-- Tight deadline (встреча Алимхан)
+- ✅ Tight deadline (встреча Алимхан) — V2 ready
 
 ## AC
 

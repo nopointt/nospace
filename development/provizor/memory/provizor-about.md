@@ -95,6 +95,8 @@ Provizor = автоматизация аптечной сети. Telegram-бот
 | Resource | Path |
 |---|---|
 | Project root | `nospace/development/provizor/` |
+| V2 app (основной) | `apps/v2/` |
+| V1 app (deprecated) | `apps/demo/` |
 | Memory | `memory/` |
 | STATE.md | `memory/STATE.md` |
 | L1 (this file) | `memory/provizor-about.md` |

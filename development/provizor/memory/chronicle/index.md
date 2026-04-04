@@ -5,3 +5,4 @@
 | 2026-04-04 | provizor | CREATE | 231 | provizor-discovery | provizor-current.md |
 | 2026-04-04 | provizor | CLOSE | 231 | provizor-unit-economics | provizor-current.md |
 | 2026-04-04 | provizor | CLOSE | 232 | provizor-unit-economics | provizor-current.md |
+| 2026-04-04 | provizor | CLOSE | 5 | provizor-unit-economics | provizor-current.md |

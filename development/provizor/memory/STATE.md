@@ -2,10 +2,10 @@
 
 ## Position
 - **Phase:** Unit Economics (APT-13) — сервис юнит-экономики, первый deliverable
-- **Status:** V1 demo built (light theme). V2 = полный редизайн под TrueProfit.
-- **Next:** V2 — from scratch, dark theme, sidebar, TrueProfit-style Dashboard + P&L + Product Analytics
-- **Last session:** 2026-04-04 (Axis, session 232 — v1 demo + competitive research + TrueProfit UI audit)
-- **Sessions total:** 2
+- **Status:** V2 built (dark theme, TrueProfit-level UI). 6 pages, 17 source files, 2537 lines, 516ms build. V1 deprecated (D-16).
+- **Next:** Deploy V2 на Hetzner, visual polish, custom date range input
+- **Last session:** 2026-04-04 (Axis, session 5 — V2 full build + 16 tasks completed)
+- **Sessions total:** 3
 
 ## Key Completions
 - Вводные от nopoint собраны (5 голосовых → транскрипция → структура)
@@ -26,6 +26,10 @@
 - Insights blocks (actionable recommendations)
 - SmartApteka 2025 presentation analyzed (28 slides)
 - TrueProfit UI fully audited (30 screenshots + HTML saved)
+- V2 built: `apps/v2/` — 17 source files, 2537 lines, 516ms build
+- V2 pages: Dashboard (9 metric cards + charts + summaries), P&L (expandable + по аптекам/месяцам + CSV), SKU Analytics (pagination + column customize + CSV), Channels, Markup, Roadmap
+- V2 UX: dark navy theme, sidebar nav, pharmacy switcher, date range picker (6 presets), notification bell, user profile dropdown, action menus, horizontal scroll
+- V1 deprecated (D-16), V2 = основной
 
 ## V2 Direction — TrueProfit-inspired redesign
 
@@ -76,6 +80,7 @@
 - D-13: OTC деругулируются с июля 2025 (5,936 → 5,408 регулируемых SKU)
 - D-14: V2 = TrueProfit-style dark theme UI, from scratch, V1 stays as-is
 - D-15: TrueProfit = design reference (UI only, не бизнес-логика)
+- D-16: V1 (`apps/demo/`) = DEPRECATED. V2 (`apps/v2/`) = основной. V1 не удалять, но не развивать.
 
 ## Blockers
 - Нет доступа к данным Алимхана (1С, прайсы, ассортимент) — action item для встречи
@@ -103,7 +108,7 @@
 | `docs/research/provizor-deep-global-unit-economics.md` | DEEP-5: Global Unit Economics Services (top 10, positioning) |
 
 ## Metrics
-- Sessions: 2
+- Sessions: 3
 - Аптеки: 5 (сеть Алимхана)
 - Оффлайн трафик: 200 входящих/день → 70-150 продаж (1 аптека)
 - Halyk Market: ~43 продажи/день (~960/мес)
@@ -111,4 +116,5 @@
 - iTeka WhatsApp: ~30 обращений/день (1 аптека)
 - Ассортимент: 6-7 тысяч позиций
 - Research files: 8 (~5,000+ строк)
-- V1 demo: 15 source files, builds in 500ms
+- V1 demo: 15 source files, builds in 500ms (DEPRECATED — D-16)
+- V2: 17 source files, 2537 lines, builds in 516ms (основной)
