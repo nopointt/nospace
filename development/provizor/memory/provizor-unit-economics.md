@@ -2,7 +2,7 @@
 # provizor-unit-economics.md — APT-13 Unit Economics
 > Layer: L3 | Epic: APT-13 | Status: 🔶 IN PROGRESS
 > Created: 2026-04-04 (session 231)
-> Last updated: 2026-04-04 (session 231 — research complete, ready for Phase 0 build)
+> Last updated: 2026-04-04 (session 232 — v1 demo built, competitive research, TrueProfit UI audit, V2 decided)
 > Deadline: 2026-04-05 (встреча с Алимханом)
 ---
 
@@ -63,21 +63,28 @@
 - [x] DEEP-0: Complete Formula Model (40 формул, 12 таблиц PG, UI hierarchy) → `provizor-deep-ue-model.md`
 - [x] DEEP-1: KZ Price Regulation Impact Modeling → `provizor-deep-kz-regulation.md`
 - [x] DEEP-3: Competitive Audit (InfoApteka_Prof + SmartApteka) → `provizor-deep-competitive-audit.md`
+- [x] DEEP-4: UX Review Analysis (12 reviews, 30+ sources, pain taxonomy) → `provizor-deep-ux-reviews.md`
+- [x] DEEP-5: Global Unit Economics Services (top 10, positioning matrix) → `provizor-deep-global-unit-economics.md`
+- [x] SmartApteka 2025 presentation analyzed (28 slides, all modules mapped)
 
-### Phase 1: Build Demo (NEXT — for 2026-04-05 meeting)
+### Phase 1: Build Demo ✅ BUILT (local, pending review + deploy)
 
-Стек: React 19 + Vite + Tailwind CSS 4 + TailAdmin + Recharts. Статический SPA, без бэкенда.
+Стек: React 19 + Vite + Tailwind CSS 4 + Recharts. Статический SPA, без бэкенда.
+Code: `apps/demo/` (builds successfully, dev server on localhost:5173)
 
 4 секции:
-- [ ] Hero: CIS Profitability % (F-18) + таблица turnover→profitability
-- [ ] P&L Calculator (F-01..F-08) + waterfall chart + RAG indicators
-- [ ] KZ Markup Checker (F-17) + регрессивная шкала + сценарии блендированной маржи (F-39)
-- [ ] Channel Margin Comparison (F-27..F-30) + unprofitable SKU flag
+- [x] Hero: CIS Profitability % (F-18) + таблица turnover→profitability
+- [x] P&L Calculator (F-01..F-08) + waterfall chart + RAG indicators
+- [x] KZ Markup Checker (F-17) + регрессивная шкала + сценарии блендированной маржи (F-39)
+- [x] Channel Margin Comparison (F-27..F-30) + unprofitable channel flag
+- [x] Roadmap page — 6 фаз, визуальный для не-технического партнёра
 
 Инфра:
-- [ ] `formulas.ts` — pure functions F-01..F-18, F-17, F-27..F-30, F-39
-- [ ] `benchmarks.ts` — RAG thresholds из DEEP-0 section 6E
-- [ ] Предзаполнение бенчмарками (Алматы avg 17.5M₸/мес)
+- [x] `formulas.ts` — pure functions F-01..F-18, F-17, F-27..F-30, F-39
+- [x] `benchmarks.ts` — RAG thresholds из DEEP-0 section 6E
+- [x] `format.ts` + `chart-helpers.ts` — formatting utilities
+- [x] Предзаполнение бенчмарками (Алматы avg 17.5M₸/мес)
+- [ ] Visual review + polish с nopoint
 - [ ] Deploy на Hetzner (static через Caddy)
 
 ### Phase 2: Production MVP (2-4 weeks after meeting)
@@ -101,11 +108,28 @@
 - [ ] Минимальный бот — conversational UX, знает ассортимент
 - [ ] Интеграция с данными сервиса
 
+## Key Research Findings (DEEP-4: UX Reviews + DEEP-5: Global)
+
+- **Confirmed white spaces (0 of 7 competitors):** multichannel margin, CIS Profitability, per-SKU channel profitability
+- **Top pain:** техподдержка не отвечает → касса встаёт (Опора, SmartApteka). Lock-in (не дают данные).
+- **Analytics gap:** руководители не видят данных, нет дефектуры, скидки незаметно съедают маржу (30%→26%)
+- **Hidden losses:** 4,755 партий без сроков на 13M₽, дефектура = 43% уходят к конкуренту
+- **What works:** автозаказ, real-time KPI (+20% чек), облако, быстрый перевод
+- **Anti-patterns:** lock-in, 1С yellow UI, ТП 9-18, лишние шаги
+- **Global positioning:** Provizor = GrowthFactor mindset + TrueProfit UX + pharmacy domain + KZ regulatory
+- **TrueProfit = UI reference:** dark theme, sidebar, metric cards with deltas, combo charts, P&L by period, product analytics table
+- **SmartApteka analyzed (28 slides):** ERP для операций, не analytics. Windows desktop, 1С-style. Наш уровень = dashboard для владельца.
+
+## V2 Decision
+
+V1 (`apps/demo/`) остаётся как есть. V2 = новый проект from scratch, TrueProfit-inspired.
+Reference: `STATE.md` → V2 Direction section (полная спека + пути к скринам).
+
 ## Blockers
 
-- Нет точных данных по расходам (аренда, ЗП) — ресёрч бенчмарки
-- Стек сервиса не определён
-- Tight deadline (1 день)
+- V2 build (next session)
+- Deploy на Hetzner
+- Tight deadline (встреча Алимхан)
 
 ## AC
 

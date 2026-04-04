@@ -34,3 +34,12 @@
 - Phase 1: Build Demo (React 19 + TailAdmin SPA)
 - Deploy на Hetzner
 <!-- /ENTRY -->
+
+<!-- ENTRY:2026-04-04:CLOSE:4:provizor:provizor-unit-economics [AXIS] -->
+## 2026-04-04 — сессия 4 CLOSE [Axis]
+
+**Decisions:** D-14 (V2 = TrueProfit-style), D-15 (TrueProfit = UI reference only)
+**Created:** V1 demo (15 files), DEEP-4, DEEP-5
+**Completed:** V1 demo + 2 research files + SmartApteka analysis + TrueProfit UI audit + dashboard-first refactor
+**Opened:** V2 build from scratch, deploy to Hetzner
+<!-- /ENTRY -->
