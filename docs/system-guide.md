@@ -101,14 +101,14 @@ Chronicle index: index.md ← row per entry (date, type, N, epic)
 
 ### File Locations
 
-| Layer | tLOS | Harkly | Contexter | Nomos |
-|---|---|---|---|---|
-| STATE | `development/tLOS/memory/STATE.md` | `development/harkly/memory/STATE.md` | `development/contexter/memory/STATE.md` | `finance/nomos/memory/STATE.md` |
-| L1 | `tlos-about.md` | `harkly-about.md` | `contexter-about.md` | `nomos-about.md` |
-| L2 | `tlos-roadmap.md` | `harkly-roadmap.md` | `contexter-roadmap.md` | `nomos-roadmap.md` |
-| L3 | `tlos-phase*.md` | `harkly-{epic}.md` | `contexter-{epic}.md` | `nomos-{epic}.md` |
-| L4 | `scratches/{id}+{N}-scratch.md` | `session-scratch.md` | `session-scratch.md` | `scratches/{id}+{N}-scratch.md` |
-| Chronicle | `chronicle/tlos-current.md` | `chronicle/harkly-current.md` | `chronicle/contexter-current.md` | `chronicle/nomos-current.md` |
+| Layer | tLOS | Harkly | Contexter | Nomos | Provizor |
+|---|---|---|---|---|---|
+| STATE | `development/tLOS/memory/STATE.md` | `development/harkly/memory/STATE.md` | `development/contexter/memory/STATE.md` | `finance/nomos/memory/STATE.md` | `development/provizor/memory/STATE.md` |
+| L1 | `tlos-about.md` | `harkly-about.md` | `contexter-about.md` | `nomos-about.md` | `provizor-about.md` |
+| L2 | `tlos-roadmap.md` | `harkly-roadmap.md` | `contexter-roadmap.md` | `nomos-roadmap.md` | `provizor-roadmap.md` |
+| L3 | `tlos-phase*.md` | `harkly-{epic}.md` | `contexter-{epic}.md` | `nomos-{epic}.md` | `provizor-{epic}.md` |
+| L4 | `scratches/{id}+{N}-scratch.md` | `session-scratch.md` | `session-scratch.md` | `scratches/{id}+{N}-scratch.md` | `session-scratch.md` |
+| Chronicle | `chronicle/tlos-current.md` | `chronicle/harkly-current.md` | `chronicle/contexter-current.md` | `chronicle/nomos-current.md` | `chronicle/provizor-current.md` |
 
 All paths relative to `nospace/{project_dir}/memory/`.
 
@@ -373,6 +373,7 @@ Constitutions are loaded by start/continue skills based on active project.
 | Harkly | `nospace/development/harkly/rules/harkly-constitution.md` | Web2 OK, CX Intelligence |
 | Contexter | (no constitution) | Best RAG, no shortcuts, MCP-native |
 | Nomos | (no constitution) | Beginner-safe, DCA > timing |
+| Provizor | (no constitution, planned) | Care as a Service, pharmacy automation, KZ market |
 
 ### Design Guidelines (per project)
 
@@ -384,6 +385,7 @@ Full index in `~/.claude/reglaments/design-transfer.md`
 | Harkly | Adapted Bauhaus, warm palette | `nospace/design/harkly/` |
 | Contexter | Inherits tLOS, no project-specific | Deferred task in L2 |
 | Nomos | No design system | — |
+| Provizor | No design system | — |
 
 ### Brand Guidelines (per project)
 
@@ -395,6 +397,7 @@ Full index in `~/.claude/reglaments/brand-voice.md`
 | Harkly | Brand bible, TOV, values | `nospace/development/harkly/brand/` |
 | Contexter | Partial (copy audit, positioning) | Deferred task in L2 |
 | Nomos | No brand | — |
+| Provizor | No brand | — |
 
 ---
 
