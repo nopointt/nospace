@@ -1,11 +1,11 @@
 # STATE — Provizor
 
 ## Position
-- **Phase:** Unit Economics (APT-13) — сервис юнит-экономики, первый deliverable
-- **Status:** V2 built (dark theme, TrueProfit-level UI). 6 pages, 17 source files, 2537 lines, 516ms build. V1 deprecated (D-16).
-- **Next:** Deploy V2 на Hetzner, visual polish, custom date range input
-- **Last session:** 2026-04-04 (Axis, session 5 — V2 full build + 16 tasks completed)
-- **Sessions total:** 3
+- **Phase:** APT-10 COMPLETE → APT-16 Finmodel Polish next
+- **Status:** APT-10 done. Дефектура + Оборачиваемость + Roadmap + Deploy. V2 live на provizor.contexter.cc
+- **Next:** APT-16 (Finmodel Polish — UX/UI/Code audit, 48 checklist items)
+- **Last session:** 2026-04-05 (Axis, session 6 — APT-10 complete, deploy CF Pages, 8 pages live)
+- **Sessions total:** 5
 
 ## Key Completions
 - Вводные от nopoint собраны (5 голосовых → транскрипция → структура)
@@ -26,10 +26,17 @@
 - Insights blocks (actionable recommendations)
 - SmartApteka 2025 presentation analyzed (28 slides)
 - TrueProfit UI fully audited (30 screenshots + HTML saved)
-- V2 built: `apps/v2/` — 17 source files, 2537 lines, 516ms build
+- V2 built: `apps/v2/` — 17 source files, 2537 lines, 550ms build
 - V2 pages: Dashboard (9 metric cards + charts + summaries), P&L (expandable + по аптекам/месяцам + CSV), SKU Analytics (pagination + column customize + CSV), Channels, Markup, Roadmap
 - V2 UX: dark navy theme, sidebar nav, pharmacy switcher, date range picker (6 presets), notification bell, user profile dropdown, action menus, horizontal scroll
 - V1 deprecated (D-16), V2 = основной
+- APT-13 CLOSED (session 6): full audit passed, remaining items → APT-16
+- APT-16 created: UX/UI/Code audit (48 checklist items) + visual polish + deploy + functional gaps
+- APT-10 CLOSED (session 6): Дефектура + Оборачиваемость pages + RoadmapPage rewrite + Deploy CF Pages
+- V2 deployed: https://provizor.contexter.cc (CF Pages + CNAME + SSL)
+- Info tooltips added to all 13 metric cards across 3 pages
+- "К выводу (FCFE)" metric added to Dashboard (Net Profit + Depreciation)
+- CIS Profitability renamed → "Рентабельность (РВС)"
 
 ## V2 Direction — TrueProfit-inspired redesign
 
@@ -108,7 +115,7 @@
 | `docs/research/provizor-deep-global-unit-economics.md` | DEEP-5: Global Unit Economics Services (top 10, positioning) |
 
 ## Metrics
-- Sessions: 3
+- Sessions: 5
 - Аптеки: 5 (сеть Алимхана)
 - Оффлайн трафик: 200 входящих/день → 70-150 продаж (1 аптека)
 - Halyk Market: ~43 продажи/день (~960/мес)
@@ -117,4 +124,4 @@
 - Ассортимент: 6-7 тысяч позиций
 - Research files: 8 (~5,000+ строк)
 - V1 demo: 15 source files, builds in 500ms (DEPRECATED — D-16)
-- V2: 17 source files, 2537 lines, builds in 516ms (основной)
+- V2: 22 source files, ~3500 lines, builds in 510ms (основной), deployed at provizor.contexter.cc

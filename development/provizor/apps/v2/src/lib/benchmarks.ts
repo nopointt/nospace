@@ -68,6 +68,60 @@ export const BENCHMARKS: Record<string, Benchmark> = {
     source: 'FarmBazis + CIS target',
     higherIsBetter: false,
   },
+  defecturaRate: {
+    label: 'Уровень дефектуры',
+    unit: '%',
+    red: { max: Infinity },
+    yellow: { min: 3, max: 7 },
+    green: { min: 0 },
+    source: 'ECR + KPI Depot',
+    higherIsBetter: false,
+  },
+  fillRate: {
+    label: 'Fill Rate',
+    unit: '%',
+    red: { max: 93 },
+    yellow: { min: 93, max: 97 },
+    green: { min: 97 },
+    source: 'Industry consensus',
+    higherIsBetter: true,
+  },
+  doiKZ: {
+    label: 'Дни запаса (DOI, KZ)',
+    unit: 'дн.',
+    red: { max: Infinity },
+    yellow: { min: 35, max: 55 },
+    green: { min: 0 },
+    source: 'DEEP-7',
+    higherIsBetter: false,
+  },
+  itr: {
+    label: 'Оборачиваемость запасов (ITR)',
+    unit: 'раз/год',
+    red: { max: 9 },
+    yellow: { min: 9, max: 14 },
+    green: { min: 14 },
+    source: 'DEEP-7',
+    higherIsBetter: true,
+  },
+  deadStock: {
+    label: 'Мёртвый запас',
+    unit: '%',
+    red: { max: Infinity },
+    yellow: { min: 5, max: 15 },
+    green: { min: 0 },
+    source: 'DEEP-7',
+    higherIsBetter: false,
+  },
+  gmroi: {
+    label: 'GMROI',
+    unit: '',
+    red: { max: 2 },
+    yellow: { min: 2, max: 3 },
+    green: { min: 3 },
+    source: 'DEEP-7',
+    higherIsBetter: true,
+  },
 };
 
 /** Determine RAG level for a metric value */
@@ -83,6 +137,21 @@ export function getRAGLevel(benchmarkKey: string, value: number): RAGLevel {
     if (benchmarkKey === 'daysOfInventory') {
       if (value < 25) return 'green';
       if (value <= 40) return 'yellow';
+      return 'red';
+    }
+    if (benchmarkKey === 'defecturaRate') {
+      if (value < 3) return 'green';
+      if (value <= 7) return 'yellow';
+      return 'red';
+    }
+    if (benchmarkKey === 'doiKZ') {
+      if (value < 35) return 'green';
+      if (value <= 55) return 'yellow';
+      return 'red';
+    }
+    if (benchmarkKey === 'deadStock') {
+      if (value < 5) return 'green';
+      if (value <= 15) return 'yellow';
       return 'red';
     }
     return 'yellow';

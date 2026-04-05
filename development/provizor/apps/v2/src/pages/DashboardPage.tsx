@@ -74,7 +74,7 @@ export function DashboardPage({ data, allPharmacies, period }: DashboardPageProp
       items.push(`Чистая маржа ${formatPct(pnl.netMarginPct)} — в зелёной зоне. Текущий OPEX: ${formatCompact(pnl.opexTotal)}.`);
     }
     if (cisProf < 25) {
-      items.push(`CIS Profitability ${formatPct(cisProf)} ниже целевой (25%). Ускорение оборачиваемости с ${data.daysOfInventory.toFixed(0)} до 20 дней даст ${formatPct(cisProfitability(data.markupPct, 20, data.creditorDays, data.debtorDays))}.`);
+      items.push(`Рентабельность (РВС) ${formatPct(cisProf)} ниже целевой (25%). Ускорение оборачиваемости с ${data.daysOfInventory.toFixed(0)} до 20 дней даст ${formatPct(cisProfitability(data.markupPct, 20, data.creditorDays, data.debtorDays))}.`);
     }
     items.push(`Скидки могут незаметно снизить реальную наценку с ${data.markupPct.toFixed(0)}% до ${(data.markupPct - 4).toFixed(0)}%. Отслеживание фактической УТН — критично.`);
     const worstP = allPharmacies.reduce((w, p) => {
@@ -100,6 +100,7 @@ export function DashboardPage({ data, allPharmacies, period }: DashboardPageProp
           subtitle={data.id === 0 ? `5 аптек${suffix}` : suffix}
           color="#38bdf8"
           delta={0}
+          info="Общий объём продаж за период. Включает все каналы: оффлайн, Halyk, Wolt, iTeka."
         />
         <MetricCard
           title="COGS"
@@ -107,6 +108,7 @@ export function DashboardPage({ data, allPharmacies, period }: DashboardPageProp
           subtitle={`${formatPct(pnl.cogs / pnl.revenue * 100)} от выручки`}
           color="#f97316"
           delta={-((pnl.cogs / pnl.revenue * 100) - 77)}
+          info="Себестоимость проданных товаров. Закупочная стоимость по средневзвешенной цене (WAC)."
         />
         <MetricCard
           title="Валовая маржа"
@@ -115,6 +117,7 @@ export function DashboardPage({ data, allPharmacies, period }: DashboardPageProp
           benchmarkKey="grossMargin"
           numericValue={pnl.grossMarginPct}
           delta={pnl.grossMarginPct - TARGETS.grossMarginPct}
+          info="Процент выручки после вычета себестоимости. Цель для КЗ аптеки с OTC-миксом: >22%."
         />
         <MetricCard
           title="EBITDA"
@@ -123,6 +126,7 @@ export function DashboardPage({ data, allPharmacies, period }: DashboardPageProp
           benchmarkKey="ebitda"
           numericValue={pnl.ebitdaPct}
           delta={pnl.ebitdaPct - TARGETS.ebitdaPct}
+          info="Прибыль до амортизации, процентов и налогов. Операционная эффективность бизнеса. Цель: >6%."
         />
         <MetricCard
           title="Чистая прибыль"
@@ -131,18 +135,20 @@ export function DashboardPage({ data, allPharmacies, period }: DashboardPageProp
           benchmarkKey="netMargin"
           numericValue={pnl.netMarginPct}
           delta={pnl.netMarginPct - TARGETS.netMarginPct}
+          info="Финальная прибыль после всех расходов, амортизации и налогов."
         />
       </div>
 
-      {/* Row 2: Operational Metrics — 4 cards, scrollable on small screens */}
-      <div className="flex gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-4 lg:overflow-visible">
+      {/* Row 2: Operational Metrics — 5 cards, scrollable on small screens */}
+      <div className="flex gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-5 lg:overflow-visible">
         <MetricCard
-          title="CIS Profitability"
+          title="Рентабельность (РВС)"
           value={formatPct(cisProf)}
           subtitle={`Наценка ${data.markupPct.toFixed(0)}% × DOI ${data.daysOfInventory.toFixed(0)} дн.`}
           benchmarkKey="cisProfitability"
           numericValue={cisProf}
           delta={cisProf - TARGETS.cisProfitability}
+          info="Рентабельность вложенных средств = Наценка × (365/DOI) × Коэф.кредита. Эффективность использования капитала. Цель: >25%."
         />
         <MetricCard
           title="Оборачиваемость"
@@ -151,6 +157,7 @@ export function DashboardPage({ data, allPharmacies, period }: DashboardPageProp
           benchmarkKey="daysOfInventory"
           numericValue={data.daysOfInventory}
           delta={TARGETS.daysOfInventory - data.daysOfInventory}
+          info="Дни запаса — за сколько дней продаётся средний запас. Меньше = лучше. Цель для КЗ: <30 дней."
         />
         <MetricCard
           title="Средний чек"
@@ -158,6 +165,7 @@ export function DashboardPage({ data, allPharmacies, period }: DashboardPageProp
           subtitle={`${monthlySales.toLocaleString('ru-RU')} продаж/мес`}
           color="#a78bfa"
           delta={((data.avgCheckTenge - TARGETS.avgCheck) / TARGETS.avgCheck) * 100}
+          info="Средняя сумма одной покупки. Рост ср.чека — ключевой рычаг увеличения выручки без роста трафика."
         />
         <MetricCard
           title="Конверсия"
@@ -165,6 +173,14 @@ export function DashboardPage({ data, allPharmacies, period }: DashboardPageProp
           subtitle={`${data.dailyTraffic} вход. → ${data.dailySales} продаж/день`}
           color={conversionPct >= 65 ? '#22c55e' : '#eab308'}
           delta={conversionPct - TARGETS.conversionPct}
+          info="Процент входящих посетителей, совершивших покупку. Низкая конверсия = дефектура, очереди или слабая консультация."
+        />
+        <MetricCard
+          title="К выводу (FCFE)"
+          value={formatCompact(s(pnl.netProfit + pnl.depreciation))}
+          subtitle={`${formatPct((pnl.netProfit + pnl.depreciation) / pnl.revenue * 100)} от выручки`}
+          color="#2dd4bf"
+          info="Свободный денежный поток собственника. Чистая прибыль + амортизация. Сколько денег можно безопасно забрать из бизнеса без ущерба операциям."
         />
       </div>
 

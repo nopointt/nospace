@@ -1,15 +1,16 @@
 ---
 # provizor-roadmap.md — Provizor Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start
-> Last updated: 2026-04-04 (session 231 — epics prioritized via ICE)
+> Last updated: 2026-04-05 (session 6 — APT-10 COMPLETE)
 ---
 
-## Current Focus: Unit Economics (APT-13)
+## Current Focus: APT-16 Finmodel Polish (next)
 
-**Scope:** Финмодель аптечной сети Алимхана. Выручка, себестоимость, расходы, маржа, кассовые разрывы. Фундамент для всех остальных решений.
+**Scope:** UX/UI/Code audit (48 checklist items) + visual polish + functional gaps.
 
-**Prioritization:** ICE framework. APT-13 (648) → APT-01 (392) → APT-02 (180).
-**Rationale:** Данные есть, код не нужен, результат даёт базу для ценообразования, ассортимента, SaaS pricing.
+**Previous:** APT-10 (Дефектура + Оборачиваемость) ✅ COMPLETE — deployed at provizor.contexter.cc, 8 pages, 22 source files.
+**Previous:** APT-13 (Unit Economics) ✅ COMPLETE — V2 built, 6 pages.
+**Next after APT-16:** APT-01 → APT-02.
 
 ---
 
@@ -38,7 +39,7 @@
 
 | Epic | Description | Status | L3 File | Depends |
 |---|---|---|---|---|
-| APT-10 | Assortment Analytics MVP — дефектура, упущенная прибыль, оборачиваемость, сроки годности | ⬜ PLANNED | — | APT-03 |
+| **APT-10** | **Дефектура и оборачиваемость — страницы в dashboard + deploy** | **✅ COMPLETE** | `provizor-defectura.md` | APT-13 |
 | APT-11 | Inventory Revision — автоматизация ревизии факт/план (RFID/NFC ресёрч) | ⬜ PLANNED | — | APT-10 |
 
 ### Domain 3: Ценообразование
@@ -51,7 +52,8 @@
 
 | Epic | Description | Status | L3 File | Depends |
 |---|---|---|---|---|
-| **APT-13** | **Unit Economics — финмодель, P&L, маржа, кассовые разрывы** | **🔶 IN PROGRESS** | `provizor-unit-economics.md` | — (данные от Алимхана) |
+| APT-13 | Unit Economics — финмодель, P&L, маржа, кассовые разрывы | ✅ COMPLETE | `provizor-unit-economics.md` | — |
+| APT-16 | Finmodel Polish — UX/UI/Code audit | ⬜ PLANNED | `provizor-finmodel-polish.md` | APT-10 |
 
 ### Кросс-доменные
 
@@ -63,7 +65,7 @@
 ## Critical Path
 
 ```
-APT-13 (NOW) → APT-01 → APT-02 → APT-03 → (APT-04, APT-05, APT-06, APT-10, APT-12, APT-14 параллельно)
+APT-10 (NOW) → APT-16 → APT-01 → APT-02 → APT-03 → (APT-04, APT-05, APT-06, APT-10, APT-12, APT-14 параллельно)
                                               APT-06 → (APT-07, APT-08, APT-09)
                                               APT-10 → APT-11
                                               All → APT-15

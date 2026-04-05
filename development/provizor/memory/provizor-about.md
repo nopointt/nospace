@@ -108,7 +108,9 @@ Provizor = автоматизация аптечной сети. Telegram-бот
 | Epic | File | Status |
 |---|---|---|
 | APT-01 Discovery | [provizor-discovery.md](provizor-discovery.md) | ⏸ PAUSED |
-| **APT-13 Unit Economics** | [provizor-unit-economics.md](provizor-unit-economics.md) | **🔶 IN PROGRESS** |
+| **APT-10 Дефектура** | [provizor-defectura.md](provizor-defectura.md) | **✅ COMPLETE** |
+| APT-13 Unit Economics | [provizor-unit-economics.md](provizor-unit-economics.md) | ✅ COMPLETE |
+| APT-16 Finmodel Polish | [provizor-finmodel-polish.md](provizor-finmodel-polish.md) | ⬜ PLANNED |
 
 ## Write Authority
 
@@ -117,7 +119,9 @@ Provizor = автоматизация аптечной сети. Telegram-бот
 | `memory/provizor-about.md` (L1) | Axis — structural changes |
 | `memory/provizor-roadmap.md` (L2) | Axis — epic/stage status |
 | `memory/provizor-discovery.md` (L3) | Axis — APT-01 Discovery |
-| `memory/provizor-unit-economics.md` (L3) | Axis — APT-13 Unit Economics |
+| `memory/provizor-unit-economics.md` (L3) | Axis — APT-13 Unit Economics (CLOSED) |
+| `memory/provizor-defectura.md` (L3) | Axis — APT-10 Дефектура |
+| `memory/provizor-finmodel-polish.md` (L3) | Axis — APT-16 Finmodel Polish |
 | `memory/chronicle/provizor-current.md` | Axis — append only |
 | `memory/chronicle/index.md` | Axis — append only |
 | `memory/session-scratch.md` (L4) | Axis — write during session |

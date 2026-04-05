@@ -9,6 +9,8 @@ import { SkuAnalyticsPage } from './pages/SkuAnalyticsPage';
 import { ChannelsPage } from './pages/ChannelsPage';
 import { MarkupPage } from './pages/MarkupPage';
 import { RoadmapPage } from './pages/RoadmapPage';
+import { DefecturaPage } from './pages/DefecturaPage';
+import { TurnoverPage } from './pages/TurnoverPage';
 import './index.css';
 
 const PAGE_TITLES: Record<Page, string> = {
@@ -17,6 +19,8 @@ const PAGE_TITLES: Record<Page, string> = {
   sku: 'Аналитика SKU',
   channels: 'Каналы продаж',
   markup: 'Наценки КЗ',
+  defectura: 'Дефектура',
+  turnover: 'Оборачиваемость',
   roadmap: 'Roadmap',
 };
 
@@ -59,6 +63,8 @@ function App() {
       sku: [filterAction, exportAction],
       channels: [exportAction],
       markup: [],
+      defectura: [exportAction],
+      turnover: [exportAction],
       roadmap: [],
     };
 
@@ -89,6 +95,8 @@ function App() {
           {activePage === 'sku' && <SkuAnalyticsPage period={period} />}
           {activePage === 'channels' && <ChannelsPage data={activeData} period={period} />}
           {activePage === 'markup' && <MarkupPage />}
+          {activePage === 'defectura' && <DefecturaPage data={activeData} allPharmacies={PHARMACIES} period={period} />}
+          {activePage === 'turnover' && <TurnoverPage data={activeData} allPharmacies={PHARMACIES} period={period} />}
           {activePage === 'roadmap' && <RoadmapPage />}
         </main>
       </div>

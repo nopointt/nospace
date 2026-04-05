@@ -66,3 +66,25 @@
 - Visual polish
 - Custom date range input
 <!-- /ENTRY -->
+
+<!-- ENTRY:2026-04-05:CLOSE:6:provizor:provizor-defectura [AXIS] -->
+## 2026-04-05 — сессия 6 CLOSE [Axis]
+
+**Decisions:**
+- CIS Profitability → "Рентабельность (РВС)"
+- FCFE = Net Profit + Depreciation
+- Deploy via CF Pages — provizor.contexter.cc
+- ABC/XYZ distribution = 80/15/5
+- DOI benchmarks КЗ = 35/55 (doiKZ)
+
+**Completed:**
+- Дефектура page — 4 дефекта исправлены
+- Оборачиваемость page — полная реализация
+- RoadmapPage — переработка из 11 research files
+- Info tooltips на 13 metric cards
+- Метрика "К выводу (FCFE)"
+- Deploy CF Pages — provizor.contexter.cc
+- APT-10 = COMPLETE
+
+**Files:** turnover-mock.ts, TurnoverPage.tsx, DefecturaPage.tsx, DashboardPage.tsx, RoadmapPage.tsx, MetricCard.tsx, Sidebar.tsx, App.tsx, benchmarks.ts
+<!-- /ENTRY -->
