@@ -2,7 +2,7 @@
 # contexter-gtm-launch.md — CTX-10 GTM Launch
 > Layer: L3 | Epic: CTX-10 | Status: 🔶 IN PROGRESS
 > Created: 2026-04-01 (session 225)
-> Last updated: 2026-04-01 (session 227 — SEED researches done, plan restructured)
+> Last updated: 2026-04-05 (session 231 — co-founder briefing, knowledge hub, nav fix, Reddit guide)
 > Deadline: 2026-04-08 (7 days)
 > Predecessor: CTX-08 GTM Strategy (CLOSED — positioning + research + landing page)
 ---
@@ -172,7 +172,7 @@ Create all accounts and prepare launch assets.
 - [ ] W2-07: Dev.to — article "I built an AI memory that works with every LLM"
 - [ ] W2-08: GitHub README optimization — add badges, demo GIF, clear value prop
 - [ ] W2-09: Co-founder search — post on YC Co-Founder Matching, IndieHackers, Twitter
-- [ ] W2-10: Email to Artem (ProxyMarket CPO) — demo follow-up, ask for testimonial
+- [x] W2-10: Artem co-founder engagement — briefing doc + knowledge hub (cdn.contexter.cc/public/artem/) created
 
 ### Wave 3: Launch Execution (April 3-5)
 Simultaneous launch across all channels.
@@ -210,7 +210,11 @@ Iterate based on feedback, optimize conversion, push to 100.
 - **Copy audit not applied:** W1-01 is critical-path — 50+ jargon items on landing page kill non-tech conversion.
 - **Solo founder:** All execution on nopoint. Bandwidth = bottleneck.
 
-**Resolved this session:**
+**Resolved this session (231):**
+- ~~Nav overlap on landing~~ → flex justify-between fix deployed
+- ~~No co-founder materials~~ → Full briefing + knowledge hub at cdn.contexter.cc/public/artem/
+
+**Resolved earlier:**
 - ~~Payment friction: Crypto-only~~ → LemonSqueezy (D-33)
 - ~~No video demo~~ → Demo video recorded and sent to LemonSqueezy
 - ~~MCP connection broken (Claude.ai on workers.dev)~~ → Fixed to api.contexter.cc

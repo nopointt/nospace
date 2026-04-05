@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-competitor-langbase — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Competitive Intelligence: Langbase Memory vs Contexter</h1>
+<p><strong>Analyst:</strong> Lead/MarketAnalysis
+<strong>Date:</strong> 2026-03-27
+<strong>Subject:</strong> Langbase Memory (RAG/vector knowledge base product)
+<strong>Comparison lens:</strong> Contexter — &quot;Context Storage for AI&quot; (upload docs → parse/chunk/embed/index → query via REST + MCP → answers with sources; self-hosted Hetzner, €4.72/mo, developer-first)</p>
+<hr>
+<h2>Document 1: Positioning (Landing Page Teardown)</h2>
+<h3>1. Hero Verbatim</h3>
+<p><strong>Source:</strong> <a href="https://langbase.com">https://langbase.com</a> (fetched 2026-03-27)</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Text</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>H1</td>
+<td>&quot;AI Cloud in one line of code.&quot;</td>
+</tr>
+<tr>
+<td>Subheadline</td>
+<td>&quot;The most powerful serverless platform for building AI agents. Build. Deploy. Scale.&quot;</td>
+</tr>
+<tr>
+<td>CTA</td>
+<td>&quot;Start building&quot;</td>
+</tr>
+</tbody></table>
+<p><strong>Memory-specific sub-hero</strong> (from <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a>):
+&quot;AI agents that have human like long-term memory&quot; / &quot;train AI agents with your data and knowledge base without having to manage vector storage, servers, or infrastructure.&quot;</p>
+<hr>
+<h3>2. Five-Second Test</h3>
+<p><strong>Clear what Memory does?</strong> Partially. On the main homepage the hero addresses the full platform (&quot;AI Cloud&quot;), not Memory specifically. A first-time visitor cannot identify the Memory product in 5 seconds without navigating to Docs. On the <code>/docs/memory</code> page the sub-hero is clear: a serverless RAG API that stores your documents and makes them queryable by AI agents. No homepage product card for &quot;Memory&quot; is surfaced above the fold.</p>
+<p><strong>Why:</strong> Memory is positioned as one primitive inside a larger &quot;AI Cloud&quot; platform (Pipes + Threads + Memory). It is not a standalone product entry point.</p>
+<hr>
+<h3>3. Category Claim</h3>
+<p>&quot;AI Cloud&quot; at the platform level. At the Memory level: &quot;Semantic RAG as a serverless API&quot; / &quot;Agentic RAG.&quot; The claim &quot;30-50x less expensive than the competition, with industry-leading accuracy in advanced agentic routing and intelligent reranking&quot; (source: <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a>) is the primary category-differentiation statement. No external benchmark cited in support of this number.</p>
+<hr>
+<h3>4. ICP — Who and Evidence</h3>
+<p><strong>Primary ICP:</strong> JavaScript/TypeScript developers building AI-powered products, teams at startups and mid-market companies wanting managed LLM infrastructure without DevOps overhead.</p>
+<p><strong>Evidence from landing page and trust signals:</strong></p>
+<ul>
+<li>Testimonials are from developer-adjacent founders and CTOs: Zeno Rocha (Founder, Resend — a developer email API), Feross Aboukhadijeh (CEO, Socket.dev — an npm security tool), Guy Podjarny (Founder, Snyk — developer security), Evil Rabbit (Founding Designer, Vercel — developer tooling platform). All are developer-ecosystem figures, not enterprise IT buyers.</li>
+<li>SDK is TypeScript-first (82.4% of example repo is TypeScript per GitHub repo analysis).</li>
+<li>Langbase&#39;s own &quot;State of AI Agents&quot; survey (3,400 respondents, 184B tokens processed, 36K developers — source: <a href="https://langbase.com/state-of-ai-agents">https://langbase.com/state-of-ai-agents</a>) shows developer-native community.</li>
+<li>Marketing claim: &quot;transforming 50 million developers into AI engineers&quot; (source: <a href="https://www.startuphub.ai/open-source-agentic-ai-langbase-makes-ai-composable-transforming-50-million-developers-into-ai-engineers/">https://www.startuphub.ai/open-source-agentic-ai-langbase-makes-ai-composable-transforming-50-million-developers-into-ai-engineers/</a>).</li>
+</ul>
+<p><strong>Secondary ICP:</strong> Enterprises seeking production RAG. Custom plan language includes &quot;SAML/SSO,&quot; &quot;dedicated engineers,&quot; &quot;enterprise features&quot; — signaling an upmarket motion exists but is not primary.</p>
+<hr>
+<h3>5. Value Proposition Decomposition</h3>
+<p><strong>VP 1: Zero infrastructure for RAG</strong></p>
+<ul>
+<li>Pain: Developers must provision vector databases, embedding pipelines, and retrieval servers to use RAG.</li>
+<li>Result: &quot;train AI agents with your data...without having to manage vector storage, servers, or infrastructure.&quot;</li>
+<li>Mechanism: Fully serverless; upload a file, query the API — no Pinecone/Weaviate setup.</li>
+<li>Proof: Quickstart guide shows working RAG in 8 steps using only SDK calls. No infrastructure config shown.</li>
+<li>Source: <a href="https://langbase.com/docs/memory/quickstart">https://langbase.com/docs/memory/quickstart</a></li>
+</ul>
+<p><strong>VP 2: Cost superiority</strong></p>
+<ul>
+<li>Pain: Vector search and LLM context are expensive at scale.</li>
+<li>Result: &quot;30-50x less expensive than the competition.&quot;</li>
+<li>Mechanism: &quot;limits what gets sent to the model, reducing costs and latency&quot; (chunked retrieval vs. full-context injection); serverless pricing model.</li>
+<li>Proof: UNVERIFIED. Claim appears verbatim in docs but no methodology, benchmark, or comparison table is published. An independent review (bestaitools.com) cites &quot;cost savings 60-90%&quot; and &quot;50-100 times less than alternatives&quot; — these numbers are derived from Langbase&#39;s own marketing, not independent testing.</li>
+<li>Source: <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a> / <a href="https://www.bestaitools.com/tool/langbase/">https://www.bestaitools.com/tool/langbase/</a></li>
+</ul>
+<p><strong>VP 3: Accuracy / hallucination reduction</strong></p>
+<ul>
+<li>Pain: LLMs hallucinate when lacking relevant context.</li>
+<li>Result: &quot;Near Zero Hallucinations.&quot;</li>
+<li>Mechanism: Reranking retrieved chunks before sending to LLM; hybrid similarity search.</li>
+<li>Proof: UNVERIFIED. bestaitools.com cites &quot;reduces hallucinations by 97 percent&quot; — source of this number not traceable to Langbase&#39;s own published benchmarks.</li>
+<li>Source: <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a></li>
+</ul>
+<p><strong>VP 4: Scale — millions of personalized RAG stores</strong></p>
+<ul>
+<li>Pain: Traditional vector DBs cannot cost-effectively support per-user RAG at scale.</li>
+<li>Result: &quot;every Langbase org/user can have millions of personalized RAG knowledge bases.&quot;</li>
+<li>Mechanism: Serverless, multi-tenant architecture where Memory Sets are lightweight objects.</li>
+<li>Proof: Architectural claim, not validated by case study or benchmark.</li>
+<li>Source: <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a></li>
+</ul>
+<p><strong>VP 5: Composability within an AI ecosystem</strong></p>
+<ul>
+<li>Pain: RAG systems built on standalone vector DBs require custom integration work to connect to LLM agents.</li>
+<li>Result: Memory attaches natively to Pipes (Langbase&#39;s agent primitive), enabling end-to-end RAG → generation without glue code.</li>
+<li>Mechanism: <code>memory</code> array parameter in Pipe configuration; SDK-native.</li>
+<li>Proof: Code examples in quickstart and freecodecamp tutorial demonstrate 8-step working RAG pipeline.</li>
+<li>Source: <a href="https://langbase.com/docs/memory/quickstart">https://langbase.com/docs/memory/quickstart</a>, <a href="https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/">https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/</a></li>
+</ul>
+<hr>
+<h3>6. Pricing Teardown</h3>
+<p><strong>Source:</strong> <a href="https://langbase.com/pricing">https://langbase.com/pricing</a> (fetched 2026-03-27)</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Price</th>
+<th>Memory Storage</th>
+<th>Memory Files</th>
+<th>Agent Runs</th>
+<th>Private Pipes</th>
+<th>Credits</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free</td>
+<td>$0/mo</td>
+<td><strong>5 MB</strong></td>
+<td>2</td>
+<td>500</td>
+<td>0</td>
+<td>500</td>
+</tr>
+<tr>
+<td>Individual</td>
+<td>$100/mo</td>
+<td><strong>20 MB</strong></td>
+<td>20</td>
+<td>Unlimited</td>
+<td>10</td>
+<td>20K</td>
+</tr>
+<tr>
+<td>Growth</td>
+<td>$250/mo</td>
+<td><strong>50 MB</strong></td>
+<td>50</td>
+<td>Unlimited</td>
+<td>30</td>
+<td>75K</td>
+</tr>
+<tr>
+<td>Custom (Enterprise)</td>
+<td>Contact sales</td>
+<td>Unlimited</td>
+<td>Unlimited</td>
+<td>Unlimited</td>
+<td>Unlimited</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p><strong>Key observations:</strong></p>
+<ul>
+<li>Memory storage limits are strikingly small. 5 MB free, 50 MB at $250/mo. For context, a typical corporate knowledge base of 500 PDF pages (200 KB each) = 100 MB — exceeds the Growth tier.</li>
+<li>&quot;Memory Files&quot; count (not just storage) is a separate constraint: 2 files free, 50 at $250/mo.</li>
+<li>The free tier is essentially a demo. 5 MB and 2 files does not support any real-world knowledge base.</li>
+<li>Growth plan ($250/mo) provides only 50 MB and 50 files — a significant constraint relative to price.</li>
+<li>Price jumps from Growth ($250/mo) to Custom (sales call) with no intermediate tier.</li>
+<li>&quot;Unlimited Memory Retrieval&quot; is listed as a feature of paid plans, suggesting retrieval calls may be limited or throttled on free.</li>
+<li>Additional org seats on Growth: $30/seat.</li>
+<li>Run limit mechanic: 1 run = up to 1,000 tokens; requests exceeding 1,000 tokens count proportionally as multiple runs.</li>
+</ul>
+<p><strong>Comparison to Contexter:</strong> Contexter at €4.72/mo self-hosted has no MB storage limit in the same sense (infrastructure cost scales with actual usage). Langbase&#39;s storage-based pricing at $100-$250/mo for 20-50 MB positions it significantly higher cost for storage-intensive use cases.</p>
+<hr>
+<h3>7. Brand Voice</h3>
+<p><strong>Technical level:</strong> 3/5. Language is developer-oriented but avoids deep infrastructure jargon. Words like &quot;serverless,&quot; &quot;RAG,&quot; &quot;embeddings,&quot; &quot;vector storage&quot; are used without explanation, assuming baseline AI developer literacy. Not academic. Not enterprise-sanitized.</p>
+<p><strong>Tone:</strong> Confident, ambitious, founder-voice. &quot;The most powerful serverless platform.&quot; &quot;AI Cloud.&quot; &quot;Near Zero Hallucinations.&quot; Superlatives are common and uncaveated. There is a Silicon Valley startup energy to the copy — direct, bold, slightly hyperbolic.</p>
+<p><strong>vs. Contexter:</strong> Contexter&#39;s positioning (&quot;Context Storage for AI&quot;) is more understated and descriptive. Where Langbase leads with vision and superlatives, Contexter leads with function. Langbase&#39;s brand voice prioritizes excitement; Contexter&#39;s should prioritize precision and trust (which fits the &quot;developer-first, self-hosted, €4.72/mo&quot; positioning better).</p>
+<hr>
+<h3>8. Trust Signals</h3>
+<p><strong>Source:</strong> <a href="https://langbase.com">https://langbase.com</a> (fetched 2026-03-27)</p>
+<ul>
+<li>Named testimonials from: Zeno Rocha (Resend), Logan Kilpatrick (Google/OpenAI/Harvard), Ian Livingstone (CTO Manifold/Snyk/Salesforce), Guy Podjarny (Snyk), Feross Aboukhadijeh (Socket.dev), Evil Rabbit (Vercel).</li>
+<li>Named customers: FirstQuadrant AI, Ignition, Liquid Web.</li>
+<li>Self-reported stats: 36K developers, 184 billion tokens processed, 786 million API requests (source: <a href="https://langbase.com/state-of-ai-agents">https://langbase.com/state-of-ai-agents</a> — Langbase&#39;s own research report, not independently verified).</li>
+<li>Claimed rating: 5/5 from 4,675 reviews — source is aggregator directories; no primary review platform (G2, Capterra) shows this number with traceability.</li>
+<li>GitHub: <a href="https://github.com/LangbaseInc">https://github.com/LangbaseInc</a> — minimal issue/discussion activity (2 issues, 21 PRs in examples repo as of research date).</li>
+</ul>
+<hr>
+<h3>9. Source URLs — Document 1</h3>
+<ul>
+<li><a href="https://langbase.com">https://langbase.com</a></li>
+<li><a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a></li>
+<li><a href="https://langbase.com/pricing">https://langbase.com/pricing</a></li>
+<li><a href="https://langbase.com/docs/memory/quickstart">https://langbase.com/docs/memory/quickstart</a></li>
+<li><a href="https://langbase.com/docs/memory/faqs">https://langbase.com/docs/memory/faqs</a></li>
+<li><a href="https://langbase.com/state-of-ai-agents">https://langbase.com/state-of-ai-agents</a></li>
+<li><a href="https://www.bestaitools.com/tool/langbase/">https://www.bestaitools.com/tool/langbase/</a></li>
+<li><a href="https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/">https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/</a></li>
+<li><a href="https://www.startuphub.ai/open-source-agentic-ai-langbase-makes-ai-composable-transforming-50-million-developers-into-ai-engineers/">https://www.startuphub.ai/open-source-agentic-ai-langbase-makes-ai-composable-transforming-50-million-developers-into-ai-engineers/</a></li>
+</ul>
+<hr>
+<h2>Document 2: Killer Features (Product Teardown)</h2>
+<h3>1. Feature Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Langbase Memory</th>
+<th>Contexter</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Serverless / hosted</td>
+<td>Yes — fully managed</td>
+<td>Self-hosted (Hetzner, €4.72/mo)</td>
+<td>Different trade-off: managed vs. control</td>
+</tr>
+<tr>
+<td>File formats supported</td>
+<td>.txt, .pdf, .md, .csv, &quot;major plain coding files&quot; (5-6 types)</td>
+<td>15 formats incl. audio, video</td>
+<td>Contexter wins on format breadth</td>
+</tr>
+<tr>
+<td>Audio/video ingestion</td>
+<td>Not mentioned / not found</td>
+<td>Yes (audio/video listed)</td>
+<td>Contexter advantage</td>
+</tr>
+<tr>
+<td>Max file size</td>
+<td>10 MB per file</td>
+<td>Not publicly stated</td>
+<td>Langbase documented</td>
+</tr>
+<tr>
+<td>Chunk size control</td>
+<td>Yes — 1,024–30,000 chars, configurable overlap (min 256, default 2,048)</td>
+<td>Not publicly documented</td>
+<td>Langbase more transparent on chunking params</td>
+</tr>
+<tr>
+<td>Embedding model</td>
+<td>OpenAI <code>text-embedding-3-large</code>, 256 dimensions (default)</td>
+<td>Not publicly documented</td>
+<td>Langbase documented</td>
+</tr>
+<tr>
+<td>Vector search</td>
+<td>Hybrid similarity search</td>
+<td>Yes (RAG query)</td>
+<td>Parity claimed</td>
+</tr>
+<tr>
+<td>Reranking</td>
+<td>Yes — &quot;intelligent reranking&quot; (mechanism unspecified)</td>
+<td>Not mentioned</td>
+<td>Langbase stated advantage</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>Yes — <code>/v1/memory/retrieve</code>, <code>/v1/memory</code>, etc.</td>
+<td>Yes</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>MCP support</td>
+<td>Yes — Remote MCP Server + Docs MCP Server</td>
+<td>Yes — native MCP</td>
+<td>Parity; Langbase also exposes other workspace ops via MCP</td>
+</tr>
+<tr>
+<td>SDK</td>
+<td>TypeScript + Python (official)</td>
+<td>Not specified</td>
+<td>Langbase advantage if TS/Python stacks</td>
+</tr>
+<tr>
+<td>Agent integration</td>
+<td>Native (Pipes) — direct memory attachment</td>
+<td>External (REST + MCP)</td>
+<td>Langbase advantage for users already on Langbase</td>
+</tr>
+<tr>
+<td>Multi-memory per agent</td>
+<td>Yes — multiple Memory Sets per Pipe</td>
+<td>Not specified</td>
+<td>Langbase documented</td>
+</tr>
+<tr>
+<td>Per-user personalized RAG</td>
+<td>Yes — &quot;millions of personalized RAG knowledge bases&quot;</td>
+<td>Not specified</td>
+<td>Langbase stated advantage</td>
+</tr>
+<tr>
+<td>Web content ingestion</td>
+<td>Yes — &quot;augment with up-to-date web content&quot; / internet access</td>
+<td>Not mentioned</td>
+<td>Langbase advantage</td>
+</tr>
+<tr>
+<td>Answers with sources</td>
+<td>Implied (chunk retrieval returns similarity scores)</td>
+<td>Yes — explicitly stated</td>
+<td>Contexter explicitly states source attribution</td>
+</tr>
+<tr>
+<td>Storage limit</td>
+<td>5 MB free / 50 MB at $250/mo</td>
+<td>Infrastructure-bound (no hard cap at €4.72/mo)</td>
+<td>Contexter advantage for storage-heavy use cases</td>
+</tr>
+<tr>
+<td>Pricing transparency</td>
+<td>Full public pricing</td>
+<td>Public (€4.72/mo)</td>
+<td>Both transparent</td>
+</tr>
+<tr>
+<td>Open source</td>
+<td>Not open source (examples repo is OSS)</td>
+<td>Not specified in this analysis</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Self-hosted option</td>
+<td>No</td>
+<td>Yes</td>
+<td>Contexter advantage for data-sensitive use cases</td>
+</tr>
+<tr>
+<td>Analytics/observability</td>
+<td>Yes — Langbase Studio with analytics, version control, evals</td>
+<td>Not mentioned</td>
+<td>Langbase advantage</td>
+</tr>
+<tr>
+<td>Collaboration features</td>
+<td>Yes — org seats, version control, collaborative studio</td>
+<td>Not mentioned</td>
+<td>Langbase advantage</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>2. Unique Capabilities</h3>
+<p><strong>A. Integrated platform (Pipes + Threads + Memory)</strong></p>
+<p>Langbase&#39;s most structurally unique advantage is that Memory is one primitive within a full AI agent platform. A developer can create a Memory Set, attach it to a Pipe (an AI agent), and deploy that agent — all within one platform, using one SDK, one API key. There is no &quot;glue layer&quot; to maintain between the vector store and the LLM agent. This is architecturally different from Contexter (which is a standalone context storage layer that any system can call).</p>
+<p>Source: <a href="https://langbase.com/docs/memory/quickstart">https://langbase.com/docs/memory/quickstart</a> — the 8-step quickstart builds both the memory AND the agent in the same workflow.</p>
+<p><strong>B. &quot;30-50x cheaper&quot; claim — evidence assessment</strong></p>
+<p>The claim: &quot;30-50x less expensive than the competition, with industry-leading accuracy in advanced agentic routing and intelligent reranking.&quot; (Source: <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a>)</p>
+<p>Evidence quality: UNVERIFIED. No methodology published. No named competitors in the comparison. No independent benchmark found. The claim may refer to the cost of using managed Memory vs. self-hosting a full vector database stack (Pinecone Enterprise, Weaviate Cloud, etc.) — which is a plausible framing but not the same as comparing to all RAG competitors. The &quot;bestaitools.com&quot; amplification of &quot;50-100x&quot; appears to restate Langbase&#39;s own marketing. No third-party validation found as of 2026-03-27.</p>
+<p><strong>Contexter angle:</strong> If Contexter operates at €4.72/mo self-hosted with no per-query charges, the actual per-query cost comparison to Langbase&#39;s credit-based pricing at $100/mo for 20K credits likely favors Contexter heavily at scale — inverting Langbase&#39;s claim for users with volume.</p>
+<p><strong>C. Personalized RAG at scale</strong></p>
+<p>Langbase claims architecture supporting &quot;millions of personalized RAG knowledge bases&quot; per organization. This is architecturally meaningful: a consumer app could give each user their own Memory Set without provisioning separate infrastructure. This is a genuine differentiator vs. systems requiring a separate vector index per tenant.</p>
+<p>Source: <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a></p>
+<hr>
+<h3>3. MCP Support</h3>
+<p><strong>Source:</strong> <a href="https://langbase.com/docs/mcp-servers">https://langbase.com/docs/mcp-servers</a> (fetched 2026-03-27)</p>
+<p><strong>MCP Server 1 — Remote MCP Server (workspace operations)</strong></p>
+<ul>
+<li>Enables direct interaction with Langbase workspace from IDEs (Cursor, Windsurf)</li>
+<li>Exposed operations: create Pipe agents, upload documents to Memory, run existing Pipes, manage workspace</li>
+<li>Auth: Langbase API key</li>
+<li>Integration pattern: <code>mcp_servers</code> parameter in agent config with <code>type: &#39;url&#39;</code></li>
+</ul>
+<p><strong>MCP Server 2 — Docs MCP Server</strong></p>
+<ul>
+<li>Purpose: gives IDEs/LLMs access to Langbase documentation for accurate API answers</li>
+<li>Setup: <code>npx @langbase/cli@latest docs-mcp-server</code></li>
+<li>Not related to Memory operations directly; for developer tooling</li>
+</ul>
+<p><strong>Third-party MCP servers supported via Langbase agents:</strong></p>
+<ul>
+<li>Slack, Cloudflare Browser Rendering, Intercom, Deepwiki, community servers</li>
+<li>Connection format: <code>{ type: &#39;url&#39;, name: &#39;deepwiki&#39;, url: &#39;https://mcp.deepwiki.com/sse&#39; }</code></li>
+</ul>
+<p><strong>Docs URL:</strong> <a href="https://langbase.com/docs/mcp-servers">https://langbase.com/docs/mcp-servers</a></p>
+<p><strong>Assessment vs. Contexter:</strong> Both support MCP. Langbase&#39;s Remote MCP Server is broader — it covers agent management, not just memory retrieval. Contexter&#39;s MCP is purpose-built for context querying. Langbase&#39;s approach is a superset but requires using the full Langbase platform.</p>
+<hr>
+<h3>4. Format Support</h3>
+<p><strong>Source:</strong> <a href="https://langbase.com/docs/memory/faqs">https://langbase.com/docs/memory/faqs</a> (fetched 2026-03-27)</p>
+<p><strong>Verbatim from FAQ:</strong> &quot;Currently, we support <code>.txt</code>, <code>.pdf</code>, <code>.md</code>, <code>.csv</code>, and all the major plain coding files.&quot;</p>
+<p><strong>Full documented list:</strong> <code>.txt</code>, <code>.pdf</code>, <code>.md</code>, <code>.csv</code>, + coding file extensions (unspecified but likely: <code>.js</code>, <code>.ts</code>, <code>.py</code>, <code>.json</code>, <code>.yaml</code>, <code>.html</code>, etc.)</p>
+<p><strong>Notably absent from Langbase&#39;s stated formats:</strong></p>
+<ul>
+<li>Audio files (MP3, WAV, M4A)</li>
+<li>Video files (MP4, MOV)</li>
+<li>Word documents (.docx)</li>
+<li>PowerPoint (.pptx)</li>
+<li>Excel (.xlsx)</li>
+<li>Images with OCR</li>
+<li>Web URLs / crawling (mentioned in docs as a feature but not as a &quot;file format&quot;)</li>
+</ul>
+<p><strong>Contexter&#39;s stated 15 formats include audio and video</strong> — a meaningful gap. Langbase&#39;s file size limit is 10 MB per file. For unsupported formats, Langbase advises: &quot;convert documents to compatible formats using online conversion tools before importing.&quot;</p>
+<hr>
+<h3>5. API Design</h3>
+<p><strong>Source:</strong> <a href="https://langbase.com/docs/api-reference/memory">https://langbase.com/docs/api-reference/memory</a> (fetched 2026-03-27)</p>
+<p><strong>Endpoints:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/v1/memory</code></td>
+<td>GET</td>
+<td>List all memories</td>
+</tr>
+<tr>
+<td><code>/v1/memory</code></td>
+<td>POST</td>
+<td>Create new memory</td>
+</tr>
+<tr>
+<td><code>/v1/memory/{memoryName}</code></td>
+<td>DELETE</td>
+<td>Delete memory</td>
+</tr>
+<tr>
+<td><code>/v1/memory/retrieve</code></td>
+<td>POST</td>
+<td>Similarity search (core query endpoint)</td>
+</tr>
+<tr>
+<td><code>/v1/memory/{memoryName}/documents</code></td>
+<td>GET</td>
+<td>List documents in memory</td>
+</tr>
+<tr>
+<td><code>/v1/memory/{memoryName}/documents/{documentName}</code></td>
+<td>DELETE</td>
+<td>Remove document</td>
+</tr>
+<tr>
+<td><code>/v1/memory/documents</code></td>
+<td>POST</td>
+<td>Get signed URL for upload</td>
+</tr>
+<tr>
+<td><code>{SignedUrl}</code></td>
+<td>PUT</td>
+<td>Upload document via signed URL</td>
+</tr>
+<tr>
+<td><code>/v1/memory/{memoryName}/documents/{documentName}/embeddings/retry</code></td>
+<td>GET</td>
+<td>Regenerate embeddings</td>
+</tr>
+</tbody></table>
+<p><strong>Authentication:</strong> User API key or Organization API key via HTTP header.</p>
+<p><strong>SDKs:</strong> TypeScript (primary), Python (secondary). Both shown in quickstart. Setup: <code>npm install langbase</code> / <code>pip install langbase</code>.</p>
+<p><strong>Upload pattern:</strong> Two-step — get a signed URL via POST, then PUT the file to that URL. Not a single-call upload.</p>
+<p><strong>Rate limits:</strong> Documented at <code>/api-reference/limits/rate-limits</code> but specific numbers not publicly surfaced in fetched content.</p>
+<p><strong>Usage limits response headers:</strong> <code>lb-usagelimit-limit</code>, <code>lb-usagelimit-remaining</code>, <code>lb-usagelimit-used</code>.</p>
+<p><strong>Free tier enforcement:</strong> HTTP 403 + <code>USAGE_EXCEEDED</code> error on limit breach.</p>
+<hr>
+<h3>6. Integrations</h3>
+<p><strong>Native within Langbase ecosystem:</strong></p>
+<ul>
+<li>Pipes (LLM agent primitive) — direct memory attachment via <code>memory</code> array param</li>
+<li>Threads (conversation history) — separate but related primitive</li>
+<li>Langbase Studio (no-code UI for all operations)</li>
+</ul>
+<p><strong>LLM providers (via Pipes, not Memory directly):</strong></p>
+<ul>
+<li>OpenAI, Anthropic, Google, Mistral, Meta (Llama), Cohere — 250-600 LLMs via unified API</li>
+</ul>
+<p><strong>MCP integrations:</strong> Slack, Cloudflare Browser Rendering, Intercom, Deepwiki</p>
+<p><strong>External framework compatibility:</strong> Can be called from any system via REST API; examples shown in TypeScript and Python. No official LangChain/LlamaIndex integration documented (they are effectively competitors).</p>
+<hr>
+<h3>7. Architecture Signals</h3>
+<p><strong>Source:</strong> <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a>, <a href="https://langbase.com/docs/memory/concepts">https://langbase.com/docs/memory/concepts</a> (fetched 2026-03-27)</p>
+<ul>
+<li><strong>Fully serverless:</strong> No servers to provision. Multi-tenant cloud architecture.</li>
+<li><strong>Embedding model:</strong> OpenAI <code>text-embedding-3-large</code> at 256 dimensions (default, not configurable per available docs).</li>
+<li><strong>Chunking:</strong> Separator-first (<code>\n\n</code>, <code>\n</code>) then character limit. Default chunk max: 10,000 chars. Default overlap: 2,048 chars. Range: 1,024–30,000 chars max.</li>
+<li><strong>Document processing states:</strong> Queued → Processing → Ready (or Failed).</li>
+<li><strong>Hybrid similarity search:</strong> Stated but mechanism unspecified.</li>
+<li><strong>Reranking:</strong> Stated, mechanism unspecified. &quot;Intelligent reranking&quot; is marketing language without a named algorithm (e.g., cross-encoder, Cohere Rerank).</li>
+<li><strong>Agentic routing:</strong> Claimed as a differentiator in &quot;30-50x cheaper&quot; statement. Details not in public docs.</li>
+<li><strong>Retrieval chunk count:</strong> 3–20 chunks returned per query (configurable).</li>
+<li><strong>Infrastructure provider:</strong> Not disclosed. Fully managed cloud.</li>
+<li><strong>Limitation noted in docs:</strong> &quot;Documents with only selectable text are supported. The document processing may fail otherwise. Small and simple documents are recommended for better results.&quot; — this is a scanned PDF / image-based PDF limitation.</li>
+</ul>
+<hr>
+<h3>8. Source URLs — Document 2</h3>
+<ul>
+<li><a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a></li>
+<li><a href="https://langbase.com/docs/memory/faqs">https://langbase.com/docs/memory/faqs</a></li>
+<li><a href="https://langbase.com/docs/memory/quickstart">https://langbase.com/docs/memory/quickstart</a></li>
+<li><a href="https://langbase.com/docs/memory/concepts">https://langbase.com/docs/memory/concepts</a></li>
+<li><a href="https://langbase.com/docs/mcp-servers">https://langbase.com/docs/mcp-servers</a></li>
+<li><a href="https://langbase.com/docs/api-reference/memory">https://langbase.com/docs/api-reference/memory</a></li>
+<li><a href="https://langbase.com/docs/api-reference/limits/usage-limits">https://langbase.com/docs/api-reference/limits/usage-limits</a></li>
+<li><a href="https://github.com/LangbaseInc/langbase-examples">https://github.com/LangbaseInc/langbase-examples</a></li>
+<li><a href="https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/">https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/</a></li>
+</ul>
+<hr>
+<h2>Document 3: Audience Voice (&quot;Love / Hate / Want&quot;)</h2>
+<h3>Data Collection Methodology</h3>
+<p>Sources searched: G2, Product Hunt, Reddit, Hacker News, Slashdot, SourceForge, AIAgentsDirectory, BestAITools, AIChief, TheresAnAIForThat, Twitter/X, GitHub Issues, FreeCodeCamp, Techjockey. Date of research: 2026-03-27.</p>
+<p><strong>Critical disclosure:</strong> Langbase does not have a substantial independent review corpus as of this date. G2 shows no Langbase reviews. Slashdot shows &quot;No User Reviews. Be the first.&quot; SourceForge shows no reviews. Reddit: no threads found. GitHub issues: minimal (2 issues in examples repo). Product Hunt: listing found but reviews page returned 404. The platform appears to be pre-review-corpus stage — either too new, too niche, or review channels have not been cultivated.</p>
+<p>All &quot;user quotes&quot; below are sourced from developer blog posts, directory descriptions, and the Langbase homepage testimonials. They are attributed and dated where possible.</p>
+<hr>
+<h3>1. Love — Exact Quotes</h3>
+<p><strong>Quote 1</strong> (developer review, source unspecified by aggregator — attributed in search result summary):
+&quot;The real breakthrough is how easily you can test RAG via Langbase memory agents — actually seeing which chunks get retrieved for specific queries. That kind of visibility just isn&#39;t available with other providers.&quot;
+Source aggregated from: <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a> (developer testimonial language in docs)</p>
+<p><strong>Quote 2</strong> (Logan Kilpatrick, Google/OpenAI/Harvard — homepage testimonial):
+Direct quote text not captured in full from homepage fetch; listed as trust signal with name and affiliation.
+Source: <a href="https://langbase.com">https://langbase.com</a></p>
+<p><strong>Quote 3</strong> (Zeno Rocha, Founder of Resend — homepage testimonial):
+Direct quote text not captured; listed as trust signal.
+Source: <a href="https://langbase.com">https://langbase.com</a></p>
+<p><strong>Quote 4</strong> (review summary from search aggregation):
+&quot;Langbase lets me manage all my LLM-related infrastructure in one place with quick-iteration, actionable analytics, version controlled prompts, and rapid testing of different LLM models.&quot;
+Source: search result summary from <a href="https://slashdot.org/software/p/Langbase/">https://slashdot.org/software/p/Langbase/</a> (no primary attribution)</p>
+<p><strong>Quote 5</strong> (review summary from search aggregation):
+&quot;One of the most &#39;need to have&#39; tools in the past decade... a serverless composable infrastructure to mix/match/test/deploy new models is the fastest way for an organization to stay on the bleeding edge without vendor lock-in.&quot;
+Source: search result summary (no primary attribution URL)</p>
+<p><strong>Quote 6</strong> (freecodecamp.org tutorial author — Maham Codes):
+The tutorial presents Langbase memory agents as enabling LLMs to &quot;dynamically attach private data to any LLM, enabling context-aware responses in real time.&quot; Setup via a few CLI commands is praised implicitly through tutorial structure.
+Source: <a href="https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/">https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/</a></p>
+<hr>
+<h3>2. Hate / Friction — Exact Quotes</h3>
+<p>No verified primary negative reviews found on any platform as of 2026-03-27. The following friction signals are inferred from product structure and available secondary sources.</p>
+<p><strong>Friction signal 1 — JS-focused SDK:</strong>
+Review directory (bestaitools.com) lists &quot;JS focused SDK&quot; as a weakness.
+Source: <a href="https://www.bestaitools.com/tool/langbase/">https://www.bestaitools.com/tool/langbase/</a>
+Implication: Python developers may feel second-class (Python SDK exists but TS is primary per 82.4% TypeScript in examples repo).</p>
+<p><strong>Friction signal 2 — Free tier limits:</strong>
+Review directory (bestaitools.com) lists &quot;Free tier limits&quot; as a weakness.
+Source: <a href="https://www.bestaitools.com/tool/langbase/">https://www.bestaitools.com/tool/langbase/</a>
+Implication: 5 MB / 2 files free is insufficient for meaningful experimentation on real-world knowledge bases.</p>
+<p><strong>Friction signal 3 — Storage limits at scale:</strong>
+At $250/mo Growth plan, 50 MB storage and 50 files cap is a hard architectural constraint. No intermediate tier exists before Custom/Enterprise (sales required). This pricing cliff is a friction point for teams growing past the Growth tier.
+Source: <a href="https://langbase.com/pricing">https://langbase.com/pricing</a></p>
+<p><strong>Friction signal 4 — Document processing limitation (from official docs):</strong>
+&quot;Documents with only selectable text are supported. The document processing may fail otherwise.&quot; Scanned PDFs and image-based PDFs will fail. This is stated in official documentation as a known limitation.
+Source: <a href="https://langbase.com/docs/memory/concepts">https://langbase.com/docs/memory/concepts</a> (verbatim from docs)</p>
+<p><strong>Friction signal 5 — Unverified performance claims:</strong>
+The &quot;30-50x cheaper&quot; and &quot;near zero hallucinations&quot; claims lack public methodology. Developers with a skeptical/engineering mindset (Langbase&#39;s own ICP) may be deterred by uncited superlatives.
+Source: <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a></p>
+<hr>
+<h3>3. Want — Feature Requests</h3>
+<p>No primary feature request data found (GitHub issues sparse, no public roadmap or community forum scraped). Inferred &quot;want&quot; signals from structural gaps:</p>
+<ul>
+<li><strong>Larger storage tiers without sales contact.</strong> The $250 → Enterprise cliff with no self-serve path for 100-500 MB use cases is a structural gap.</li>
+<li><strong>More file format support.</strong> FAQ advises converting unsupported formats manually — suggests demand for DOCX, XLSX, MP3/video support.</li>
+<li><strong>Scanned PDF / OCR support.</strong> Docs explicitly state failure on image-based PDFs; this is a frequent real-world use case.</li>
+<li><strong>Embedding model choice.</strong> Only OpenAI <code>text-embedding-3-large</code> is documented as default; no model selection option documented. Teams using Cohere, Voyage, or open-source embeddings have no path.</li>
+<li><strong>Hybrid search transparency.</strong> &quot;Hybrid similarity search&quot; is claimed but undocumented. Developers want to know what BM25 vs. vector weighting is used.</li>
+<li><strong>Reranking model choice.</strong> &quot;Intelligent reranking&quot; without specifying cross-encoder vs. learned sparse — limits teams who want to tune retrieval precision.</li>
+</ul>
+<hr>
+<h3>4. Switching Triggers</h3>
+<p>Based on product structure and competitive landscape analysis:</p>
+<p><strong>Triggers TO switch to Langbase Memory:</strong></p>
+<ul>
+<li>Team is already using Langbase Pipes (agent integration is native, zero glue code)</li>
+<li>Need managed RAG with no DevOps overhead</li>
+<li>Building per-user personalized RAG at scale (claimed architectural advantage)</li>
+<li>TS/Node.js stack (SDK is TS-first)</li>
+</ul>
+<p><strong>Triggers TO switch AWAY from Langbase Memory (to Contexter or alternatives):</strong></p>
+<ul>
+<li>Knowledge base exceeds 50 MB (hits Growth tier ceiling, requires sales)</li>
+<li>Need audio/video ingestion (not supported)</li>
+<li>Need scanned PDF / OCR (documented failure mode)</li>
+<li>Data sovereignty / GDPR / on-prem requirement (Langbase is fully managed cloud, no self-hosted option)</li>
+<li>Cost sensitivity at scale: credit-based pricing ($100/mo minimum for production) vs. €4.72/mo infrastructure cost</li>
+<li>Python-first teams (TS SDK is primary)</li>
+<li>Need embedding model choice (locked to OpenAI embeddings)</li>
+</ul>
+<hr>
+<h3>5. Traction Signals</h3>
+<p><strong>Self-reported (from Langbase&#39;s own research report — source: <a href="https://langbase.com/state-of-ai-agents">https://langbase.com/state-of-ai-agents</a>):</strong></p>
+<ul>
+<li>36,000 developers on platform</li>
+<li>184 billion tokens processed</li>
+<li>786 million API requests</li>
+<li>3,400+ respondents in State of AI Agents survey</li>
+</ul>
+<p><strong>Third-party signals:</strong></p>
+<ul>
+<li>Named customer logos: FirstQuadrant AI, Ignition, Liquid Web (3 logos — limited for a $250/mo+ platform)</li>
+<li>GitHub examples repo: 21 PRs, 2 issues — low for a platform claiming 36K developers</li>
+<li>AI directory engagement: 4,724 views, 30 upvotes, 75% popularity score (aiagentsdirectory.com)</li>
+<li>Product Hunt launch page returned 404 — no verifiable PH launch traction found</li>
+<li>No G2 reviews, no Capterra reviews, no independent review corpus on major platforms</li>
+</ul>
+<p><strong>Assessment:</strong> The gap between self-reported scale (36K developers, 184B tokens) and the near-zero independent review corpus is notable. Possible explanations: platform is B2B-API (low motivation for user reviews), relatively young (company positioned as a 2024-2025 startup), or review cultivation has not been a priority.</p>
+<hr>
+<h3>6. Sentiment Assessment</h3>
+<p><strong>Overall sentiment:</strong> Positive but thin. Available reviews and quotes are predominantly promotional in nature (homepage testimonials, tutorial articles). No sustained negative discourse found on any platform. The absence of negative reviews is not equivalent to positive satisfaction — it may reflect low review corpus rather than high NPS.</p>
+<p><strong>Developer community signal:</strong> The FreeCodeCamp tutorial and the Langbase &quot;State of AI Agents&quot; research report suggest some developer mindshare in the AI agent space. The trust signal roster (Snyk, Vercel, Resend founders) points to credibility in the developer tools community.</p>
+<p><strong>Red flag:</strong> 5/5 from &quot;4,675 reviews&quot; cited in multiple aggregator directories cannot be traced to a primary review platform. This number should be treated as unverified until a primary source is identified.</p>
+<hr>
+<h3>7. No Data Protocol</h3>
+<p>The following data was sought but not found as of 2026-03-27:</p>
+<table>
+<thead>
+<tr>
+<th>Data Point</th>
+<th>Status</th>
+<th>Where Searched</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G2 reviews for Langbase</td>
+<td>NOT FOUND</td>
+<td>G2.com (search redirected to LangChain)</td>
+</tr>
+<tr>
+<td>Product Hunt launch reviews</td>
+<td>NOT FOUND</td>
+<td>producthunt.com/products/langbase (404)</td>
+</tr>
+<tr>
+<td>Reddit threads about Langbase Memory</td>
+<td>NOT FOUND</td>
+<td>site:reddit.com search returned no results</td>
+</tr>
+<tr>
+<td>Hacker News threads about Langbase</td>
+<td>NOT FOUND</td>
+<td>site:news.ycombinator.com search returned no results</td>
+</tr>
+<tr>
+<td>Twitter/X user reviews</td>
+<td>NOT FOUND</td>
+<td>x.com/LangbaseInc returned 402 (auth required)</td>
+</tr>
+<tr>
+<td>GitHub issues with user feedback</td>
+<td>NOT FOUND</td>
+<td>Repo has 2 issues, neither about memory UX</td>
+</tr>
+<tr>
+<td>Benchmark data for &quot;30-50x cheaper&quot;</td>
+<td>NOT FOUND</td>
+<td>No methodology page, no external validation</td>
+</tr>
+<tr>
+<td>Benchmark data for &quot;97% hallucination reduction&quot;</td>
+<td>NOT FOUND</td>
+<td>Referenced in aggregator, no primary source</td>
+</tr>
+<tr>
+<td>Pricing for &gt;50 MB storage without Enterprise</td>
+<td>NOT FOUND</td>
+<td>Pricing page shows no intermediate tier</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>8. Source URLs — Document 3</h3>
+<ul>
+<li><a href="https://langbase.com">https://langbase.com</a> (testimonials section)</li>
+<li><a href="https://langbase.com/state-of-ai-agents">https://langbase.com/state-of-ai-agents</a></li>
+<li><a href="https://langbase.com/docs/memory/concepts">https://langbase.com/docs/memory/concepts</a> (documented limitations)</li>
+<li><a href="https://langbase.com/pricing">https://langbase.com/pricing</a></li>
+<li><a href="https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/">https://www.freecodecamp.org/news/how-to-use-langbase-memory-agents/</a></li>
+<li><a href="https://www.bestaitools.com/tool/langbase/">https://www.bestaitools.com/tool/langbase/</a></li>
+<li><a href="https://slashdot.org/software/p/Langbase/">https://slashdot.org/software/p/Langbase/</a></li>
+<li><a href="https://sourceforge.net/software/product/Langbase/">https://sourceforge.net/software/product/Langbase/</a></li>
+<li><a href="https://aiagentsdirectory.com/agent/langbase">https://aiagentsdirectory.com/agent/langbase</a></li>
+<li><a href="https://aiagentslist.com/agents/langbase">https://aiagentslist.com/agents/langbase</a></li>
+<li><a href="https://github.com/LangbaseInc/langbase-examples">https://github.com/LangbaseInc/langbase-examples</a></li>
+</ul>
+<hr>
+<h2>Summary: Contexter Positioning Insights</h2>
+<p>Three structural implications for Contexter from this analysis:</p>
+<p><strong>1. Storage limits are Langbase&#39;s Achilles heel.</strong>
+50 MB at $250/mo is not a knowledge base — it&#39;s a demo. Contexter&#39;s infrastructure-bound model (Hetzner, €4.72/mo) scales storage cost linearly with actual use, not with a tier cliff. This is a genuine differentiation to communicate: &quot;No arbitrary storage caps.&quot;</p>
+<p><strong>2. Format support is a clear win.</strong>
+Langbase supports ~6 formats (txt, pdf, md, csv, coding files) and explicitly fails on scanned PDFs and image-based documents. Contexter&#39;s 15 formats including audio and video is a meaningful capability advantage. Lead with this in any head-to-head comparison.</p>
+<p><strong>3. Self-hosted = data sovereignty.</strong>
+Langbase is fully managed cloud with no self-hosted option. For any customer with GDPR, HIPAA, or data residency requirements, Contexter&#39;s self-hosted model is a structural win. Langbase&#39;s Custom plan mentions security features but not self-hosting. This segment is unaddressed by Langbase.</p>
+<p><strong>4. The &quot;30-50x cheaper&quot; claim is unverified and inversible.</strong>
+At scale (millions of queries), Langbase&#39;s credit-based pricing ($100/mo for 20K credits) vs. Contexter&#39;s flat infrastructure cost likely favors Contexter. The claim is a marketing assertion, not a verified benchmark. Contexter can and should publish a transparent cost comparison when it has the data.</p>
+<p><strong>5. Contexter is a pure play; Langbase is a platform.</strong>
+Developers who want only context storage — not an agent platform — will find Langbase over-engineered for their use case. Contexter&#39;s focused positioning (&quot;Context Storage for AI&quot;) is actually a strength against a platform player: less to learn, less lock-in, single-purpose reliability.</p>
+
+</body>
+</html>

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-copy-audit — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter — Copy Audit</h1>
+<p><strong>Дата:</strong> 2026-03-24
+<strong>Аудитор:</strong> Lead/Copywriting
+<strong>Аудитория:</strong> русскоязычные пользователи нейросетей, нетехнический профиль
+<strong>Принцип:</strong> без жаргона, короткие фразы, каждый CTA объясняет что произойдёт</p>
+<hr>
+<h2>Критические находки по файлам</h2>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Строка</th>
+<th>Текущий текст</th>
+<th>Проблема</th>
+<th>Предлагаемая замена</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hero.tsx</td>
+<td>382</td>
+<td><code>единое хранилище знаний</code></td>
+<td>Корпоративный штамп. Не объясняет продукт.</td>
+<td><code>ваши файлы — в любой нейросети</code></td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>426</td>
+<td><code>результат: база знаний с семантическим поиском</code></td>
+<td>&quot;Семантический поиск&quot; — технический жаргон для массовой аудитории</td>
+<td><code>результат: нейросеть отвечает по вашим файлам</code></td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>512</td>
+<td><code>загрузка ({files().length})</code></td>
+<td>Раздел называется &quot;загрузка&quot; когда файлы уже загружены — вводит в заблуждение</td>
+<td><code>файлы ({files().length})</code></td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>574</td>
+<td><code>чанки</code> (stat card label)</td>
+<td>Технический термин, пользователь не знает что это</td>
+<td><code>фрагменты</code> или убрать карточку совсем</td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>574</td>
+<td><code>векторы</code> (stat card label)</td>
+<td>Технический термин, не имеет смысла для пользователя</td>
+<td>убрать — дублирует &quot;фрагменты&quot;, не несёт ценности</td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>605</td>
+<td><code>чанки</code> (колонка таблицы)</td>
+<td>Технический термин</td>
+<td><code>фрагменты</code></td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>667</td>
+<td><code>подключите contexter как mcp-сервер к claude, chatgpt, cursor или любому совместимому клиенту</code></td>
+<td>&quot;mcp-сервер&quot;, &quot;совместимый клиент&quot; — полный жаргон</td>
+<td><code>откройте ChatGPT, Claude или Cursor — и спросите по вашим файлам</code></td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>674</td>
+<td><code>скопируйте mcp url</code> (шаг 1)</td>
+<td>&quot;mcp url&quot; — непонятно что это и зачем</td>
+<td><code>скопируйте ссылку подключения</code></td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>675</td>
+<td><code>добавьте json конфигурацию</code> (шаг 2)</td>
+<td>&quot;json конфигурация&quot; — технический жаргон</td>
+<td><code>вставьте настройки в нейросеть</code></td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>698</td>
+<td><code>mcp url</code> (label поля)</td>
+<td>Технический термин</td>
+<td><code>ссылка подключения</code></td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>292</td>
+<td><code>youtube url добавлен</code> (toast)</td>
+<td>English-mixed, нейтральный — не вызывает доверия</td>
+<td><code>youtube-видео добавлено, обрабатываем...</code></td>
+</tr>
+<tr>
+<td>Hero.tsx</td>
+<td>291</td>
+<td><code>url добавлен</code> (toast)</td>
+<td>English-mixed, нет ощущения прогресса</td>
+<td><code>ссылка добавлена, обрабатываем...</code></td>
+</tr>
+<tr>
+<td>Dashboard.tsx</td>
+<td>291–293</td>
+<td><code>чанки</code> / <code>векторы</code> (stat cards)</td>
+<td>Технический жаргон</td>
+<td><code>чанки → фрагменты</code>, <code>векторы → убрать</code></td>
+</tr>
+<tr>
+<td>Dashboard.tsx</td>
+<td>309</td>
+<td><code>чанки</code> (колонка таблицы)</td>
+<td>Технический термин</td>
+<td><code>фрагменты</code></td>
+</tr>
+<tr>
+<td>Dashboard.tsx</td>
+<td>419</td>
+<td><code>ЗАПРОС</code> (section label)</td>
+<td>Техническое слово, не говорит что делать</td>
+<td><code>ВОПРОС</code></td>
+</tr>
+<tr>
+<td>Dashboard.tsx</td>
+<td>424</td>
+<td><code>задайте вопрос по документам...</code></td>
+<td>Хорошо — оставить</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Dashboard.tsx</td>
+<td>433</td>
+<td><code>спросить</code> (кнопка)</td>
+<td>Хорошо — оставить</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Dashboard.tsx</td>
+<td>521</td>
+<td><code>API</code> (section label)</td>
+<td>Жаргон, виден пользователю на странице</td>
+<td>убрать секцию с дашборда или скрыть в &quot;для разработчиков&quot;</td>
+</tr>
+<tr>
+<td>Dashboard.tsx</td>
+<td>536</td>
+<td><code>POST /api/query</code></td>
+<td>Технический эндпоинт на странице обычного пользователя</td>
+<td>убрать из интерфейса пользователя</td>
+</tr>
+<tr>
+<td>Dashboard.tsx</td>
+<td>546</td>
+<td><code>token: ctx_...</code></td>
+<td>Технический токен прямо на дашборде</td>
+<td>убрать из основного дашборда</td>
+</tr>
+<tr>
+<td>Dashboard.tsx</td>
+<td>562–564</td>
+<td><code>mcp подключен</code></td>
+<td>&quot;mcp&quot; — жаргон</td>
+<td><code>нейросеть подключена</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>245</td>
+<td><code>api &amp; подключение</code> (заголовок страницы)</td>
+<td>&quot;api&quot; — жаргон для технарей, но страница смешана: часть для пользователей (подключение), часть для разработчиков (curl)</td>
+<td>Разделить страницы: &quot;подключение&quot; (для пользователей) и &quot;api&quot; (для разработчиков). Пока: <code>подключение</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>248</td>
+<td><code>эндпоинты, примеры и настройка mcp-клиентов</code> (subtitle)</td>
+<td>&quot;Эндпоинты&quot;, &quot;mcp-клиентов&quot; — жаргон</td>
+<td><code>как подключить contexter к нейросети</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>256</td>
+<td><code>api эндпоинты</code> (раздел)</td>
+<td>Жаргон</td>
+<td><code>для разработчиков</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>21</td>
+<td><code>семантический запрос</code> (curl label)</td>
+<td>&quot;Семантический&quot; — жаргон</td>
+<td><code>поиск по документам</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>282</td>
+<td><code>mcp подключение</code> (раздел)</td>
+<td>Жаргон</td>
+<td><code>как подключить нейросеть</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>285</td>
+<td><code>подключите contexter как mcp-сервер к claude desktop или другому совместимому клиенту</code></td>
+<td>&quot;mcp-сервер&quot;, &quot;совместимый клиент&quot; — жаргон</td>
+<td><code>добавьте contexter в Claude Desktop — и он начнёт отвечать по вашим файлам</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>291</td>
+<td><code>скопируйте mcp url</code></td>
+<td>Жаргон</td>
+<td><code>скопируйте ссылку подключения</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>293</td>
+<td><code>mcp url с токеном</code> (label)</td>
+<td>Жаргон</td>
+<td><code>ваша ссылка</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>299</td>
+<td><code>откройте настройки claude desktop</code></td>
+<td>Хорошо — конкретно</td>
+<td>—</td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>301</td>
+<td><code>settings → developer → mcp servers → add</code></td>
+<td>Инструкция на английском внутри русского текста, &quot;mcp servers&quot; — жаргон</td>
+<td><code>настройки → разработчик → mcp-серверы → добавить</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>306</td>
+<td><code>добавьте сервер</code></td>
+<td>&quot;Сервер&quot; — технический термин в user-facing context</td>
+<td><code>добавьте подключение</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>308</td>
+<td><code>добавьте следующий json в конфигурацию mcp-серверов:</code></td>
+<td>Технический жаргон</td>
+<td><code>вставьте этот код в файл настроек:</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>317</td>
+<td><code>перезапустите claude desktop</code></td>
+<td>Хорошо — конкретно</td>
+<td>—</td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>319</td>
+<td><code>закройте и откройте claude desktop чтобы применить изменения</code></td>
+<td>Хорошо — конкретно</td>
+<td>—</td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>325</td>
+<td><code>в claude спросите: &quot;какие документы загружены?&quot; — должен вернуться список через mcp</code></td>
+<td>&quot;через mcp&quot; — жаргон</td>
+<td><code>в Claude спросите: «какие документы загружены?» — должен появиться список</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>336</td>
+<td><code>альтернатива: streamable http</code></td>
+<td>&quot;Streamable HTTP&quot; — технический жаргон, запрещён</td>
+<td><code>другой способ подключения</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>339</td>
+<td><code>для claude.ai projects и других клиентов с поддержкой streamable http — используйте url напрямую:</code></td>
+<td>&quot;streamable http&quot; — жаргон</td>
+<td><code>для Claude.ai и других нейросетей — вставьте ссылку напрямую:</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>343</td>
+<td><code>streamable http url</code> (label)</td>
+<td>Жаргон</td>
+<td><code>ссылка подключения</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>356</td>
+<td><code>токены и шеринг</code> (заголовок)</td>
+<td>&quot;Шеринг&quot; — транслитерированный английский жаргон</td>
+<td><code>доступ и ссылки</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>360</td>
+<td><code>управление api-токенами и ссылками для совместного доступа</code></td>
+<td>&quot;api-токенами&quot; — жаргон</td>
+<td><code>управление доступом к вашей базе знаний</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>365</td>
+<td><code>ваш api токен</code> (label)</td>
+<td>&quot;api токен&quot; — жаргон</td>
+<td><code>ваш ключ доступа</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>373</td>
+<td><code>создать токен</code> (заголовок и кнопка)</td>
+<td>&quot;Токен&quot; — жаргон</td>
+<td><code>создать новый ключ доступа</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>185</td>
+<td><code>токен создан</code> (toast)</td>
+<td>&quot;Токен&quot; — жаргон</td>
+<td><code>новый ключ создан</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>168</td>
+<td><code>ошибка создания ссылки</code> (error toast)</td>
+<td>Сообщает что пошло не так, не говорит что делать</td>
+<td><code>не удалось создать ссылку — попробуйте ещё раз</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>202</td>
+<td><code>ошибка отзыва</code> (error toast)</td>
+<td>Сообщает что пошло не так, не говорит что делать</td>
+<td><code>не удалось отозвать доступ — попробуйте ещё раз</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>185</td>
+<td><code>ошибка создания токена</code> (error toast)</td>
+<td>Сообщает что пошло не так, не говорит что делать</td>
+<td><code>не удалось создать ключ — попробуйте ещё раз</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>394</td>
+<td><code>создать ссылку для шеринга</code> (заголовок)</td>
+<td>&quot;Шеринга&quot; — транслитерация</td>
+<td><code>поделиться базой знаний</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>421</td>
+<td><code>read-only</code> (badge)</td>
+<td>Английский термин</td>
+<td><code>только чтение</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>476</td>
+<td><code>активные ссылки</code></td>
+<td>Хорошо — оставить</td>
+<td>—</td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>227</td>
+<td><code>войдите чтобы получить доступ к api</code></td>
+<td>&quot;к api&quot; — жаргон</td>
+<td><code>войдите, чтобы подключить нейросеть</code></td>
+</tr>
+<tr>
+<td>ApiPage.tsx</td>
+<td>229</td>
+<td><code>начать</code> (кнопка)</td>
+<td>Неясно что произойдёт при нажатии</td>
+<td><code>войти</code></td>
+</tr>
+<tr>
+<td>Settings.tsx</td>
+<td>122</td>
+<td><code>войдите чтобы получить доступ к api</code></td>
+<td>&quot;к api&quot; — жаргон</td>
+<td><code>войдите, чтобы управлять настройками</code></td>
+</tr>
+<tr>
+<td>Settings.tsx</td>
+<td>194</td>
+<td><code>чанки</code> (usage card)</td>
+<td>Жаргон</td>
+<td><code>фрагменты</code></td>
+</tr>
+<tr>
+<td>Settings.tsx</td>
+<td>224</td>
+<td><code>удалит все документы, чанки и векторы. необратимо.</code></td>
+<td>&quot;чанки&quot;, &quot;векторы&quot; — жаргон</td>
+<td><code>удалит все файлы и базу знаний. это нельзя отменить.</code></td>
+</tr>
+<tr>
+<td>Settings.tsx</td>
+<td>239</td>
+<td><code>удалить ВСЕ документы, чанки и векторы? это необратимо.</code></td>
+<td>&quot;чанки&quot;, &quot;векторы&quot; — жаргон, капслок создаёт стресс</td>
+<td><code>удалить все файлы и базу знаний? это нельзя отменить.</code></td>
+</tr>
+<tr>
+<td>Settings.tsx</td>
+<td>269</td>
+<td><code>токен останется в хранилище до ручной очистки</code></td>
+<td>Пользователь не знает что делать с этой информацией — бесполезный текст под кнопкой выхода</td>
+<td><code>сессия завершится на этом устройстве</code></td>
+</tr>
+<tr>
+<td>Settings.tsx</td>
+<td>85</td>
+<td><code>ошибка удаления</code> (error toast)</td>
+<td>Сообщает что пошло не так, не говорит что делать</td>
+<td><code>не удалось удалить — попробуйте ещё раз</code></td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>30</td>
+<td><code>Settings → Connectors → Advanced</code></td>
+<td>Навигация на английском, неконсистентно с русскоязычным интерфейсом</td>
+<td>оставить английские названия меню ChatGPT (они так и называются в интерфейсе) — но добавить пояснение на русском</td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>35</td>
+<td><code>Только Plus / Pro / Team / Enterprise планы</code> (gotcha)</td>
+<td>Хорошо — конкретная информация</td>
+<td>—</td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>52</td>
+<td><code>mcp-remote bridge</code> (transport label)</td>
+<td>Технический жаргон в UI</td>
+<td>убрать — пользователю не нужно это знать</td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>66</td>
+<td><code>Требуется Node.js для npx. Установите с nodejs.org</code></td>
+<td>Пользователь может не знать что такое Node.js</td>
+<td><code>нужен Node.js. скачайте на nodejs.org</code> (оставить — это реальное требование)</td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>73</td>
+<td><code>Settings → MCP Servers</code></td>
+<td>&quot;MCP Servers&quot; — жаргон в навигации Perplexity</td>
+<td>оставить — это реальное название пункта меню в Perplexity</td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>79</td>
+<td><code>Remote MCP доступен на Pro плане. На бесплатном — только локальные серверы (Mac)</code></td>
+<td>&quot;Remote MCP&quot;, &quot;локальные серверы&quot; — жаргон</td>
+<td><code>работает на платном плане Perplexity. бесплатный план — только для Mac</code></td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>86</td>
+<td><code>Тип: Streamable HTTP</code></td>
+<td>&quot;Streamable HTTP&quot; — запрещённый технический жаргон</td>
+<td><code>тип подключения: через ссылку</code></td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>94</td>
+<td><code>Cursor определяет HTTP транспорт автоматически по полю url</code></td>
+<td>Технический жаргон</td>
+<td><code>Cursor подключится автоматически</code></td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>295</td>
+<td><code>copied</code> (кнопка после копирования)</td>
+<td>Английское слово в русскоязычном интерфейсе</td>
+<td><code>скопировано</code></td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>296</td>
+<td><code>copy</code> (кнопка)</td>
+<td>Английское слово</td>
+<td><code>скопировать</code></td>
+</tr>
+<tr>
+<td>ConnectionModal.tsx</td>
+<td>305</td>
+<td><code>MCP Server URL</code> (label)</td>
+<td>Технический жаргон</td>
+<td><code>ссылка для подключения</code></td>
+</tr>
+<tr>
+<td>AuthModal.tsx</td>
+<td>63</td>
+<td><code>создайте аккаунт</code></td>
+<td>Хорошо</td>
+<td>—</td>
+</tr>
+<tr>
+<td>AuthModal.tsx</td>
+<td>66</td>
+<td><code>чтобы сохранить загруженные файлы и дать доступ, создайте аккаунт</code></td>
+<td>Неясно &quot;дать доступ&quot; кому. Второстепенная польза поставлена перед основной.</td>
+<td><code>ваши файлы сохранятся, и нейросеть сможет их читать</code></td>
+</tr>
+<tr>
+<td>AuthModal.tsx</td>
+<td>38</td>
+<td><code>ошибка регистрации</code> (error)</td>
+<td>Не объясняет что делать</td>
+<td><code>не удалось создать аккаунт — проверьте email и попробуйте снова</code></td>
+</tr>
+<tr>
+<td>Nav.tsx</td>
+<td>50</td>
+<td><code>отправить</code> (nav link)</td>
+<td>Неясно что &quot;отправить&quot; — документы, сообщение?</td>
+<td><code>загрузить</code></td>
+</tr>
+<tr>
+<td>Nav.tsx</td>
+<td>56</td>
+<td><code>api</code> (nav link)</td>
+<td>Жаргон для нетехнических пользователей</td>
+<td><code>подключение</code></td>
+</tr>
+<tr>
+<td>Nav.tsx</td>
+<td>58–59</td>
+<td><code>api</code> + <code>подключение</code> — два пункта меню ведут на один путь <code>/api</code></td>
+<td>Дублирование, путаница</td>
+<td>убрать один из пунктов — оставить <code>подключение</code></td>
+</tr>
+<tr>
+<td>Nav.tsx</td>
+<td>64</td>
+<td><code>начать</code> (кнопка для незалогиненных)</td>
+<td>Неясно что произойдёт</td>
+<td><code>войти</code> или <code>попробовать</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Сводка по категориям проблем</h2>
+<h3>1. Технический жаргон (запрещён для массовой аудитории)</h3>
+<p>Слова к полной замене по всему продукту:</p>
+<table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Замена</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>чанки</code></td>
+<td><code>фрагменты</code></td>
+</tr>
+<tr>
+<td><code>векторы</code></td>
+<td>убрать (не показывать пользователю)</td>
+</tr>
+<tr>
+<td><code>mcp</code>, <code>mcp-сервер</code>, <code>mcp url</code></td>
+<td><code>подключение</code>, <code>ссылка подключения</code></td>
+</tr>
+<tr>
+<td><code>api токен</code>, <code>токен</code></td>
+<td><code>ключ доступа</code></td>
+</tr>
+<tr>
+<td><code>семантический поиск</code> / <code>семантический запрос</code></td>
+<td><code>поиск по документам</code></td>
+</tr>
+<tr>
+<td><code>streamable http</code></td>
+<td><code>подключение через ссылку</code></td>
+</tr>
+<tr>
+<td><code>эндпоинты</code></td>
+<td><code>для разработчиков</code></td>
+</tr>
+<tr>
+<td><code>шеринг</code></td>
+<td><code>поделиться</code> / <code>совместный доступ</code></td>
+</tr>
+<tr>
+<td><code>read-only</code></td>
+<td><code>только чтение</code></td>
+</tr>
+</tbody></table>
+<h3>2. CTA без ясного действия</h3>
+<table>
+<thead>
+<tr>
+<th>Кнопка</th>
+<th>Проблема</th>
+<th>Исправление</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>начать</code> (nav + ApiPage + Settings)</td>
+<td>Непонятно что произойдёт</td>
+<td><code>войти</code></td>
+</tr>
+<tr>
+<td><code>отправить</code> (nav)</td>
+<td>Что отправить?</td>
+<td><code>загрузить</code></td>
+</tr>
+<tr>
+<td><code>создать токен</code></td>
+<td>&quot;токен&quot; — жаргон</td>
+<td><code>создать ключ доступа</code></td>
+</tr>
+</tbody></table>
+<h3>3. Сообщения об ошибках — говорить что делать, не что пошло не так</h3>
+<table>
+<thead>
+<tr>
+<th>Текущий текст</th>
+<th>Исправление</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ошибка регистрации</code></td>
+<td><code>не удалось создать аккаунт — проверьте email и попробуйте снова</code></td>
+</tr>
+<tr>
+<td><code>ошибка создания ссылки</code></td>
+<td><code>не удалось создать ссылку — попробуйте ещё раз</code></td>
+</tr>
+<tr>
+<td><code>ошибка создания токена</code></td>
+<td><code>не удалось создать ключ — попробуйте ещё раз</code></td>
+</tr>
+<tr>
+<td><code>ошибка отзыва</code></td>
+<td><code>не удалось отозвать доступ — попробуйте ещё раз</code></td>
+</tr>
+<tr>
+<td><code>ошибка удаления</code></td>
+<td><code>не удалось удалить — попробуйте ещё раз</code></td>
+</tr>
+</tbody></table>
+<h3>4. Дублирующие элементы</h3>
+<ul>
+<li>Nav.tsx: два пункта меню <code>api</code> и <code>подключение</code> ведут на один и тот же путь <code>/api</code> — убрать <code>api</code>, оставить <code>подключение</code></li>
+<li>Dashboard.tsx: карточки <code>чанки</code> и <code>векторы</code> показывают одно и то же число — убрать <code>векторы</code></li>
+</ul>
+<h3>5. Технические элементы на пользовательских страницах</h3>
+<ul>
+<li>Dashboard.tsx: секция <code>API</code> с <code>POST /api/query</code> и <code>token: ctx_...</code> видна на дашборде обычного пользователя — скрыть или вынести в отдельную страницу для разработчиков</li>
+<li>Dashboard.tsx: статус <code>mcp подключен</code> → <code>нейросеть подключена</code></li>
+</ul>
+<hr>
+<h2>Хорошие места — не трогать</h2>
+<p>Эти тексты уже работают правильно:</p>
+<ul>
+<li>Hero.tsx L388: <code>получите доступ к файлам из любой нейросети</code> — сильный заголовок, точный</li>
+<li>Hero.tsx L486: <code>перетащите файлы или вставьте текст</code> — понятный drop zone</li>
+<li>Hero.tsx L489: <code>pdf · docx · xlsx · аудио · youtube · изображения · или просто текст</code> — исчерпывающий, читаемый</li>
+<li>Hero.tsx L499: <code>скопировали текст? просто вставьте — мы всё сделаем</code> — разговорный, тёплый тон</li>
+<li>Dashboard.tsx L424: <code>задайте вопрос по документам...</code> — placeholder понятен</li>
+<li>Dashboard.tsx L433: <code>спросить</code> — лаконичная кнопка</li>
+<li>ApiPage.tsx L317–320: шаги &quot;перезапустите claude desktop&quot; — конкретные, actionable</li>
+<li>AuthModal.tsx L63: <code>создайте аккаунт</code> — понятный заголовок</li>
+<li>ConnectionModal.tsx L35: <code>Только Plus / Pro / Team / Enterprise планы</code> — честный gotcha</li>
+</ul>
+
+</body>
+</html>

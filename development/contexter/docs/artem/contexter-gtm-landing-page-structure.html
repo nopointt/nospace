@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-landing-page-structure — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter Landing Page Structure Research</h1>
+<blockquote>
+<p>Lead/MarketAnalysis | Date: 2026-03-27
+Topic: Optimal landing page structure for non-technical AI SaaS (analysts, PMs, marketers, founders)
+Product: Contexter — &quot;One memory. Every AI.&quot;
+Status: COMPLETE</p>
+</blockquote>
+<hr>
+<h2>1. SaaS Landing Page Structure Best Practices (2025–2026)</h2>
+<h3>Sources</h3>
+<ul>
+<li><a href="https://unbounce.com/conversion-rate-optimization/the-state-of-saas-landing-pages/">26 SaaS landing pages: examples, trends and best practices — Unbounce</a></li>
+<li><a href="https://genesysgrowth.com/blog/designing-b2b-saas-landing-pages">Best Practices for Designing B2B SaaS Landing Pages 2026 — Genesys Growth</a></li>
+<li><a href="https://genesysgrowth.com/blog/landing-page-conversion-stats-for-marketing-leaders">Landing Page Conversion Stats 2026 — Genesys Growth</a></li>
+<li><a href="https://fibr.ai/landing-page/saas-landing-pages">20 Best SaaS Landing Pages + 2026 Best Practices — Fibr.ai</a></li>
+<li><a href="https://userpilot.com/blog/saas-landing-page-best-practices/">15 SaaS Landing Page Best Practices — Userpilot</a></li>
+<li><a href="https://arclen.io/blog/saas-cro-playbook-2026">CRO for SaaS: The Complete 2026 Playbook — Arclen</a></li>
+<li><a href="https://www.flow-agency.com/blog/b2b-saas-landing-page-best-practices/">High-Performing B2B SaaS Landing Page — Flow Agency</a></li>
+<li><a href="https://www.alfdesigngroup.com/post/saas-hero-section-best-practices">SaaS Hero Section Design Best Practices — ALF Design Group</a></li>
+<li><a href="https://www.zoho.com/landingpage/landing-page-checklist.html">Landing Page Checklist 2025 — Zoho LandingPage</a></li>
+<li><a href="https://www.grafit.agency/blog/saas-landing-page-best-practices">SaaS Landing Page Best Practices 2025 — Grafit Agency</a></li>
+<li><a href="https://magicui.design/blog/saas-landing-page-best-practices">7 SaaS Landing Page Best Practices 2025 — Magic UI</a></li>
+</ul>
+<h3>Core Section Order (proven high-converting structure)</h3>
+<p>Based on synthesis of 2025–2026 sources. Data-driven ordering:</p>
+<pre><code>1. Navigation (minimal, sticky, persistent CTA)
+2. Hero (headline + subheadline + CTA + visual proof)
+3. Trust bar (integration logos OR customer logos — see notes)
+4. Pain framing (&quot;Do you recognize this?&quot;)
+5. Solution reveal / How it works (3-step flow)
+6. Feature highlights (3–4 key capabilities)
+7. Demo / Product proof (show the thing working)
+8. Social proof / Testimonials (role-specific)
+9. Use case segmentation (by persona/role)
+10. Integration ecosystem (full logo grid)
+11. Pricing (if self-serve and simple)
+12. Final CTA (repeat primary offer)
+13. Footer
+</code></pre>
+<h3>Key 2025–2026 Data Points</h3>
+<p><strong>Reading level drives conversion more than polish</strong>
+Arclen 2026 Playbook: pages written at 5th–7th grade reading level convert at 12.9% — 6x higher than professional-level copy at 2.1%. For non-technical audiences: plain language is not &quot;dumbing down,&quot; it is the highest-converting approach.</p>
+<p><strong>Outcome-first messaging is now table stakes</strong>
+2024–2025 shift: pages leading with transformation outperform feature-list pages. Non-technical users need to see &quot;what changes for me&quot; before &quot;how does this work.&quot;</p>
+<p><strong>One CTA rule</strong>
+Single primary CTA = highest conversion. Every additional competing CTA reduces overall conversion. Exception: hero can have &quot;primary CTA&quot; + &quot;secondary/lower-commitment CTA&quot; (e.g., &quot;Watch demo&quot; as secondary).</p>
+<p><strong>Social proof must be distributed, not clustered</strong>
+Arclen: layering proof near every CTA outperforms having one testimonials section. 92% of consumers hesitate to buy with no reviews present.</p>
+<p><strong>Video testimonials lift 80% over text-only</strong>
+Arclen 2026 Playbook. For AI products: a 30-second screen-recording testimonial outperforms even the best-written quote.</p>
+<p><strong>Form friction: 3–5 fields max</strong>
+HubSpot: 11 fields → 4 fields = +120% conversions. Optimal: 3–5 fields. 67.8% abandonment at 7+ fields.</p>
+<p><strong>Free trial model nuance for non-tech</strong>
+Arclen: credit card required trials convert at 48.8% vs 18.2% no-card — but only when product delivers clear value in the first session. For non-tech users with longer activation curves: no-card free tier + rapid onboarding is preferred. AI-driven onboarding cuts time-to-productivity by 40%.</p>
+<p><strong>Mobile-first is table stakes</strong>
+60–82.9% of landing page traffic is mobile. Non-tech audiences especially skew mobile. Section order must work as vertical scroll on 390px width.</p>
+<p><strong>Benchmark metrics (2025–2026)</strong></p>
+<ul>
+<li>SaaS median conversion rate: 3.8% (Unbounce)</li>
+<li>Top performers: 8–12%</li>
+<li>Personalized CTAs: 202% better than generic (Genesys Growth)</li>
+<li>AI personalization conversion lift: +36–40%</li>
+<li>Page speed: 1s load = 3x higher conversion vs 5s; each extra second = -4.42% conversion</li>
+</ul>
+<hr>
+<h2>2. Reference Landing Page Teardowns</h2>
+<h3>2.1 Otter.ai — AI meeting memory for non-tech</h3>
+<p><strong>Source:</strong> Direct structural fetch, 2026-03-27 | URL: <a href="https://otter.ai">https://otter.ai</a></p>
+<p><strong>Above the fold (actual):</strong></p>
+<ul>
+<li>Nav: logo + use case dropdown + resources dropdown + 3 CTAs (Schedule demo, Log in, Start for free)</li>
+<li>Headline: outcome-first (&quot;Turn meetings into transcripts&quot;)</li>
+<li>Subheadline: positions as &quot;AI Notetaker&quot; + capability list</li>
+<li>3 CTAs: &quot;Start for free&quot;, &quot;Download for Mac&quot;, &quot;Schedule demo&quot;</li>
+<li>Background video (silent autoplay) + testimonial carousel visible immediately</li>
+</ul>
+<p><strong>What is this? (first 5 seconds):</strong>
+Headline + subheadline answer directly. Video shows product in action. No ambiguity about use case or audience.</p>
+<p><strong>Section order (complete, verified):</strong></p>
+<ol>
+<li>Nav/Header</li>
+<li>Hero (video bg + inline testimonials)</li>
+<li>Customer testimonial carousel (3 quotes)</li>
+<li>Customer logo bar: Salesforce, Harvard, NBC Universal, Amazon, IBM, Workday, Walgreens, Mastercard</li>
+<li>Value framing: &quot;Like having your own executive assistant&quot;</li>
+<li>Feature cards x6: AI Chat, voice activation, transcription, summaries, action items, CRM sync</li>
+<li>Mid-page CTA (&quot;Start for free&quot;)</li>
+<li>Use case carousel: Sales, Education, Media, SDR Agent, Recruiting Agent</li>
+<li>Capture modality section (&quot;Choose how you capture meetings&quot;)</li>
+<li>Enterprise features section</li>
+<li>AI chat integration section</li>
+<li>Expanded testimonials (with company backgrounds)</li>
+<li>WSJ recognition badge</li>
+<li>More testimonials + company logos</li>
+<li>Statistics: &quot;4+ hours saved per week&quot;</li>
+<li>Integration showcase: 12 partner logos with descriptions</li>
+<li>Pricing table (3 tiers)</li>
+<li>Final CTA</li>
+<li>Footer</li>
+</ol>
+<p><strong>CTA placement pattern (verified):</strong></p>
+<ul>
+<li>Header: 3 CTAs (Schedule demo / Log in / Start for free)</li>
+<li>Hero: 3 CTAs (Start for free / Download Mac / Schedule demo)</li>
+<li>Post-feature-cards: single CTA</li>
+<li>Pricing: per-tier CTA</li>
+<li>Footer: repeat</li>
+</ul>
+<p><strong>Social proof placement (verified):</strong></p>
+<ul>
+<li>Hero: testimonial carousel (visible above fold)</li>
+<li>Section 4: customer logo bar (immediately after hero)</li>
+<li>Section 12: expanded testimonials</li>
+<li>Section 13: WSJ badge</li>
+<li>Section 15: statistics</li>
+</ul>
+<p><strong>Key structural insights:</strong></p>
+<ul>
+<li>Social proof appears at sections 2, 3, AND 4 — before any features explanation</li>
+<li>Logo bar is direct peer trust: &quot;companies you know use this&quot;</li>
+<li>Statistics section (&quot;4+ hours saved&quot;) converts mid-funnel skeptics via ROI framing</li>
+<li>Use case carousel segments audience without requiring separate pages</li>
+</ul>
+<hr>
+<h3>2.2 Grammarly — AI writing for non-tech</h3>
+<p><strong>Source:</strong> Direct structural fetch, 2026-03-27 | URL: <a href="https://grammarly.com">https://grammarly.com</a></p>
+<p><strong>Above the fold (actual):</strong></p>
+<ul>
+<li>Nav: Product / Work / Education / Pricing / Resources + sticky &quot;Get Grammarly - it&#39;s free&quot;</li>
+<li>Headline: aspirational framing (&quot;You think big. We&#39;ll take care of the details&quot;)</li>
+<li>Animated video demo (3 use cases: Slack, proposals, manager feedback — no click required)</li>
+<li>2 CTAs: &quot;Sign up - It&#39;s free&quot; + &quot;Download desktop app&quot;</li>
+<li>Social proof anchor: &quot;Trusted by 50,000 organizations and 40 million people&quot;</li>
+<li>Rotating company logos carousel (visible in hero)</li>
+</ul>
+<p><strong>What is this? (first 5 seconds):</strong>
+Headline sets user aspiration. Animated demo shows product working across 3 contexts. Social proof numbers anchor scale immediately. Full product purpose clear before any scrolling.</p>
+<p><strong>Section order (complete, verified):</strong></p>
+<ol>
+<li>Nav (sticky, persistent CTA)</li>
+<li>Hero (animated video + dual CTA + social proof number + logo carousel)</li>
+<li>Product demonstrations x4 (alternating 2-col: text + video animation)<ul>
+<li>&quot;Better writing, better results&quot;</li>
+<li>&quot;Expert advice at your fingertips&quot;</li>
+<li>&quot;Keep your voice, make it clear&quot;</li>
+<li>&quot;Get a read on your writing&quot;</li>
+</ul>
+</li>
+<li>Trust/security section: &quot;This is responsible AI&quot;</li>
+<li>Pricing comparison table (Free, Pro, Enterprise)</li>
+<li>ROI testimonials carousel (case studies with metrics)</li>
+<li>Product expansion announcement</li>
+<li>Footer</li>
+</ol>
+<p><strong>CTA placement pattern (verified):</strong></p>
+<ul>
+<li>Sticky header: persistent &quot;Get Grammarly - it&#39;s free&quot;</li>
+<li>Hero: 2 CTAs (Sign up / Download)</li>
+<li>Each feature demo section: embedded CTA</li>
+<li>Pricing: per-tier CTA</li>
+</ul>
+<p><strong>Social proof placement (verified):</strong></p>
+<ul>
+<li>Hero: &quot;50,000 organizations + 40 million people&quot; + rotating logos (ABOVE FOLD)</li>
+<li>Section 6: ROI testimonials with metrics</li>
+</ul>
+<p><strong>Key structural insights:</strong></p>
+<ul>
+<li>Grammarly puts THE BIGGEST social proof number IN THE HERO — before scrolling begins</li>
+<li>Animated demo shows 3 different use cases in hero without click = covers multiple user types simultaneously</li>
+<li>&quot;This is responsible AI&quot; section directly before pricing = last trust barrier before conversion</li>
+<li>Alternating text/video demo format is the most common 2025 pattern for AI products</li>
+<li>Product expansion section (&quot;Superhuman integration&quot;) signals momentum — important for late-funnel hesitation</li>
+</ul>
+<hr>
+<h3>2.3 Loom — Video for non-tech teams</h3>
+<p><strong>Source:</strong> Direct structural fetch, 2026-03-27 | URL: <a href="https://loom.com">https://loom.com</a></p>
+<p><strong>Above the fold (actual):</strong></p>
+<ul>
+<li>Nav: logo + menu toggle</li>
+<li>Headline: outcome-first (&quot;One video is worth a thousand words&quot;)</li>
+<li>Subheadline: describes core value of recording and sharing video messages</li>
+<li>Primary CTA: &quot;Get Loom for free&quot;</li>
+<li>Social proof: grid of 24+ company logos (HubSpot, Atlassian, Tesla) — visible above fold</li>
+</ul>
+<p><strong>What is this? (first 5 seconds):</strong>
+Headline is self-explanatory for video audience. Logo grid signals enterprise adoption. CTA is free tier — no commitment friction.</p>
+<p><strong>Section order (complete, verified):</strong></p>
+<ol>
+<li>Nav</li>
+<li>Hero (headline + CTA + 24-logo grid)</li>
+<li>&quot;How It Works&quot; section</li>
+<li>Screen recording feature block (with download CTA)</li>
+<li>Video player/demo (interactive in-page)</li>
+<li>&quot;So Much More&quot; — 3 feature modules (Edit / Share+embed / Engage)</li>
+<li>Security/Privacy section</li>
+<li>Use cases grid x4: Sales, Engineering, Support, Design</li>
+<li>Features list (bullet-point capabilities)</li>
+<li>Blog/Resources section</li>
+<li>Enterprise section (screenshot + CTA)</li>
+<li>Testimonials carousel (customer quotes + avatars + logos)</li>
+<li>End CTA module</li>
+<li>Footer</li>
+</ol>
+<p><strong>CTA placement pattern (verified):</strong></p>
+<ul>
+<li>Hero: &quot;Get Loom for free&quot;</li>
+<li>Feature blocks: embedded CTAs</li>
+<li>Screen recording section: download CTA</li>
+<li>Enterprise section: separate CTA</li>
+<li>End module: repeat primary CTA</li>
+</ul>
+<p><strong>Social proof placement (verified):</strong></p>
+<ul>
+<li>Hero: 24+ company logos (ABOVE FOLD)</li>
+<li>Section 12: testimonials carousel with avatars</li>
+</ul>
+<p><strong>Key structural insights:</strong></p>
+<ul>
+<li>Logo grid IN THE HERO (not below) — 24 logos signals massive adoption immediately</li>
+<li>Security/Privacy section BEFORE use cases — addresses compliance concern for enterprise</li>
+<li>Use case grid (Sales / Engineering / Support / Design) segments audience with a single scannable section</li>
+<li>Blog/Resources section mid-page is unusual — signals content-led growth strategy</li>
+</ul>
+<hr>
+<h3>2.4 Gamma.app — AI presentations for non-tech</h3>
+<p><strong>Source:</strong> Direct fetch returned 403. Structural analysis from published teardowns and search research.</p>
+<p><strong>Known above the fold:</strong></p>
+<ul>
+<li>User count trust anchor: &quot;10M+ users&quot; displayed prominently (before scrolling)</li>
+<li>Output-first hero: shows finished AI-generated presentation — the product IS the demo</li>
+<li>Single primary CTA: low-friction free tier</li>
+</ul>
+<p><strong>Known section order:</strong></p>
+<ol>
+<li>Nav</li>
+<li>Hero (product output as visual + user count + CTA)</li>
+<li>Inline interactive demo (&quot;try it here&quot; embedded in page — type a prompt, see output)</li>
+<li>Feature trifecta (3-column benefit cards)</li>
+<li>Template gallery (visual grid of output variety)</li>
+<li>Testimonials (role-specific: PM, designer, consultant)</li>
+<li>Pricing (3-tier, simple)</li>
+<li>Footer</li>
+</ol>
+<p><strong>Key structural insights:</strong></p>
+<ul>
+<li>Gamma leads with OUTPUT, not feature description. &quot;Here&#39;s what you get&quot; before &quot;here&#39;s how it works.&quot;</li>
+<li>Interactive demo embedded in page = highest-engagement element for AI products</li>
+<li>For Contexter equivalent: showing &quot;AI responds with YOUR context&quot; is the Gamma moment</li>
+<li>Role-specific testimonials are critical for non-tech audiences — &quot;a PM like me uses this&quot;</li>
+</ul>
+<hr>
+<h3>2.5 NotebookLM (Google) — AI for non-tech</h3>
+<p><strong>Source:</strong> Auth-redirected (requires Google login). Analysis from published teardowns and research.</p>
+<p><strong>Known structure:</strong></p>
+<ul>
+<li>Google brand = implicit trust anchor (no logos needed)</li>
+<li>Hero positions around &quot;AI notebook that works with your sources&quot;</li>
+<li>Demo: podcast generation from documents — novel/visceral output shown</li>
+<li>Feature flow: upload → AI understands → generate → query</li>
+<li>Academic and professional use case testimonials</li>
+</ul>
+<p><strong>Key structural insights:</strong></p>
+<ul>
+<li>The &quot;Audio Overview&quot; feature (documents → AI podcast) is the visceral demo that drives viral sharing and conversions — it shows something impossible without AI</li>
+<li>For Contexter: &quot;AI responds using YOUR context, citing the exact source&quot; is the equivalent visceral moment</li>
+<li>This must be in the hero or immediately below — not buried in a features section</li>
+</ul>
+<hr>
+<h3>2.6 Supermemory.ai — AI memory (direct competitor)</h3>
+<p><strong>Source:</strong> Direct structural fetch, 2026-03-27 | URL: <a href="https://supermemory.ai">https://supermemory.ai</a></p>
+<p><strong>Above the fold (actual):</strong></p>
+<ul>
+<li>Headline: &quot;Your AI is only as good as what it remembers&quot;</li>
+<li>Subheadline: &quot;Context infrastructure for your AI agents&quot; — DEVELOPER framing</li>
+<li>2 CTAs: &quot;Start Building&quot; (developer console) + &quot;Talk to Founder&quot;</li>
+<li>Secondary option: &quot;Get a personal supermemory&quot; (consumer app)</li>
+</ul>
+<p><strong>What is this? (first 5 seconds):</strong>
+Clear for developers. Confusing for non-tech users — &quot;context infrastructure&quot; and &quot;AI agents&quot; is developer vocabulary.</p>
+<p><strong>Section order (complete, verified):</strong>
+Numbered 8-section structure:</p>
+<ol>
+<li>[1/8] What We Do (developer API vs consumer app contrast)</li>
+<li>[2/8] Context Stack (5-layer technical visualization)</li>
+<li>[3/8] Under the Hood (vector graph engine, user understanding model)</li>
+<li>[4/8] Benchmarks (#1 claims, comparison vs Mem0, Zep)</li>
+<li>[5/8] Developer Experience (SDK in 3 languages)</li>
+<li>[6/8] Enterprise (self-hosting, SOC 2, HIPAA, GDPR)</li>
+<li>[7/8] Testimonials (developer tweets, Cloudflare VP)</li>
+<li>[8/8] Pricing (4-tier: Free, Pro, Scale, Enterprise)</li>
+</ol>
+<p><strong>CTA strategy:</strong>
+Developer console / Personal app / Docs / Founder call / Startup program — FIVE competing CTAs</p>
+<p><strong>Social proof:</strong>
+Developer tweets and executive quotes. Customer logos: Adapta, Nissan, OpenNote, Composio.</p>
+<p><strong>Critical competitive analysis for Contexter:</strong>
+Supermemory is optimizing for developers and enterprises. Non-technical users (PMs, analysts, marketers, founders) are an afterthought. &quot;Context infrastructure&quot;, &quot;vector graph engine&quot;, &quot;SDK implementations&quot; — this vocabulary drives non-tech users away.</p>
+<p>Contexter&#39;s structural advantage: build for the opposite audience from the ground up. Non-tech framing from the first word.</p>
+<hr>
+<h2>3. Hero Section Patterns</h2>
+<h3>Sources</h3>
+<ul>
+<li><a href="https://www.alfdesigngroup.com/post/saas-hero-section-best-practices">SaaS Hero Section Design Best Practices — ALF Design Group</a> — direct fetch</li>
+<li><a href="https://arclen.io/blog/saas-cro-playbook-2026">CRO Playbook 2026 — Arclen</a> — direct fetch</li>
+<li><a href="https://thrivethemes.com/hero-section-examples/">I&#39;ve Studied 50+ Hero Section Examples — ThriveThemes</a></li>
+<li><a href="https://www.grafit.agency/blog/saas-landing-page-best-practices">SaaS Landing Page Best Practices 2025 — Grafit Agency</a></li>
+<li><a href="https://landingi.com/conversion-optimization/hero-shot/">Hero Shot for Landing Pages — Landingi</a></li>
+<li><a href="https://www.b2w.tv/blog/video-landing-page-examples">15 High-Converting Video Landing Page Examples 2025 — B2W.tv</a></li>
+</ul>
+<h3>Video hero vs static hero: synthesis</h3>
+<p><strong>There is no universal winner. Context determines best choice.</strong></p>
+<p>Evidence summary:</p>
+<ul>
+<li>88% of B2B buyers watched product videos in past 3 months (B2W.tv 2025)</li>
+<li>Wyzowl 2025: 84% say a brand&#39;s video has convinced them to buy</li>
+<li>Unbounce (35,000 landing pages): video impact varies significantly by industry and implementation</li>
+<li>Studio1 Design: video backgrounds can hurt performance — page speed is a conversion variable</li>
+<li>ALF Design Group: looping demo video or GIF animation works well when kept lightweight</li>
+</ul>
+<p><strong>For non-technical AI SaaS (Contexter&#39;s segment):</strong></p>
+<p>The winning pattern in 2025–2026 for this specific category is NOT a full-screen video background. It is one of:</p>
+<p><strong>Option A: Product UI screenshot with subtle animation</strong></p>
+<ul>
+<li>Static screenshot of the actual product interface</li>
+<li>One or two animated elements (typing indicator appearing, response generating)</li>
+<li>Load time: fast (image-based)</li>
+<li>Conversion signal: &quot;this is what you&#39;ll actually see&quot;</li>
+<li>Best for: audiences who need to visualize the product before committing</li>
+</ul>
+<p><strong>Option B: Short looping demo GIF (10–15s)</strong></p>
+<ul>
+<li>Shows the core action: user asks question → AI responds with context-sourced answer</li>
+<li>No click required</li>
+<li>Lightweight (optimized GIF or video/webm &lt; 2MB)</li>
+<li>Best for: when the &quot;magic moment&quot; can be shown in under 15 seconds</li>
+<li>Reference: Otter.ai (video background), Grammarly (animated demo showing 3 use cases)</li>
+</ul>
+<p><strong>Option C: Output-first static (Gamma model)</strong></p>
+<ul>
+<li>Show the final result/output rather than the process</li>
+<li>For Contexter: show an AI chat where the response includes &quot;from your Notion doc, from yesterday&#39;s Slack&quot;</li>
+<li>No animation needed — the content of the output is the demo</li>
+<li>Best for: when output is visually distinctive and self-explanatory</li>
+</ul>
+<p><strong>Recommendation for Contexter:</strong> Option C or B. Show the AI response that includes context citations. The &quot;sourced from your [tool]&quot; attribution is Contexter&#39;s visceral moment — equivalent to Gamma&#39;s finished slide deck.</p>
+<h3>Auto-play silent loop vs click-to-play</h3>
+<p><strong>Auto-play silent loop wins for above-fold hero. Click-to-play wins for mid-page deep demo.</strong></p>
+<p>Rationale:</p>
+<ul>
+<li>Auto-play removes decision friction (&quot;should I engage with this?&quot;)</li>
+<li>Silent loop communicates product capability with zero user effort</li>
+<li>ALF Design Group: &quot;looped animations or autoplay previews&quot; recommended, keep lightweight</li>
+<li>Click-to-play with sound: reserve for mid-page demo section where high-intent visitors self-select</li>
+<li>Best practice: include subtle visual affordance that content is playing (fade-in, progress indicator)</li>
+</ul>
+<p>Pattern from analyzed pages:</p>
+<ul>
+<li>Otter.ai: silent autoplay video background (hero)</li>
+<li>Grammarly: animated inline demo (no click, no sound)</li>
+<li>Loom: product demo visible in hero without click</li>
+<li>Gamma: static product output (no animation needed)</li>
+</ul>
+<h3>Above the Fold Checklist (mandatory elements)</h3>
+<p>Based on synthesis of 2025–2026 best practices + direct analysis of Otter, Grammarly, Loom:</p>
+<pre><code>MANDATORY (must be visible without scrolling):
+[ ] 1. Headline — 5–10 words, outcome-first, 5th-grade reading level
+[ ] 2. Subheadline — expands headline, max 20 words, mentions mechanism
+[ ] 3. Primary CTA — single button, action verb, low friction (&quot;Try free&quot;, &quot;Start free&quot;)
+[ ] 4. CTA subtext — removes friction (&quot;Free plan · No credit card · Takes 2 min&quot;)
+[ ] 5. Visual proof — product UI, demo video/GIF, or output example
+[ ] 6. Trust micro-signal — 1–2 elements: user count, rating, &quot;works with X&quot;
+
+STRONG RECOMMENDATION (include if space allows):
+[ ] 7. Secondary CTA — lower commitment (&quot;Watch demo&quot; / &quot;See how it works&quot;)
+[ ] 8. Nav CTA — sticky &quot;Try free&quot; or &quot;Log in&quot; in header
+[ ] 9. Logo bar or integration logos — visible without scrolling OR immediately below hero
+
+MUST NOT BE ABOVE FOLD:
+[ ] Feature list (below-fold only)
+[ ] Long explanation paragraphs (3+ sentences)
+[ ] Multiple competing primary CTAs
+[ ] Abstract taglines without benefit (&quot;The future of AI memory&quot; = fails)
+[ ] Technical jargon (&quot;MCP protocol&quot;, &quot;vector embeddings&quot;, &quot;context infrastructure&quot;)
+</code></pre>
+<p><strong>Hero headline principles (ALF Design Group + Arclen 2026):</strong></p>
+<ul>
+<li>Must answer in 3 seconds: what is this + why does it matter</li>
+<li>Structure: &quot;[outcome] for [audience]&quot; OR &quot;[problem solved]&quot; OR &quot;[transformation]&quot;</li>
+<li>Reading level: 5th–7th grade. Jargon = 2.1% conversion. Plain language = 12.9% conversion</li>
+<li>Max 8 words is guideline — clarity beats brevity</li>
+<li>Avoid: &quot;platform&quot;, &quot;solution&quot;, &quot;next-generation&quot;, &quot;powerful&quot;, &quot;seamless&quot;</li>
+</ul>
+<hr>
+<h2>4. Recommended Structure for Contexter</h2>
+<h3>Context</h3>
+<ul>
+<li>Product: Contexter — &quot;One memory. Every AI.&quot;</li>
+<li>Audience: non-technical (analysts, PMs, marketers, founders)</li>
+<li>Core value: connect all your tools → AI remembers your context → every AI gets smarter</li>
+<li>Primary pain: context fragmentation across ChatGPT, Claude, Notion, Slack, email — re-entering context manually every time</li>
+<li>Distribution: MCP-first, self-serve, free tier entry</li>
+<li>Stage: pre-PMF, building audience</li>
+<li>Competitive gap: Supermemory targets developers. Contexter owns the non-tech angle.</li>
+</ul>
+<h3>Section-by-Section Structure</h3>
+<hr>
+<h4>Section 0: Navigation (sticky)</h4>
+<p><strong>Purpose:</strong> Persistent orientation and re-entry point for returning visitors</p>
+<p><strong>Content:</strong></p>
+<ul>
+<li>Logo (left)</li>
+<li>3 nav links max: &quot;How it works&quot; / &quot;Integrations&quot; / &quot;Pricing&quot;</li>
+<li>Right side: &quot;Log in&quot; (text link) + &quot;Try free&quot; (button, accent color)</li>
+</ul>
+<p><strong>Design principles:</strong></p>
+<ul>
+<li>Sticky on scroll: yes — keeps CTA perpetually accessible</li>
+<li>Minimal — non-tech users are not looking for extensive nav</li>
+<li>CTA button uses brand accent, high contrast</li>
+</ul>
+<p><strong>Reference:</strong> Otter.ai (minimal nav + 2-level CTA), Grammarly (sticky &quot;Get Grammarly - it&#39;s free&quot;)</p>
+<hr>
+<h4>Section 1: Hero</h4>
+<p><strong>Purpose:</strong> Answer &quot;what is this and why should I care?&quot; in under 3 seconds (ALF Design Group)</p>
+<p><strong>Content structure:</strong></p>
+<ul>
+<li>Headline (5–8 words, outcome-first, 5th–7th grade level)<ul>
+<li>Example frame: &quot;Your AI finally knows your work&quot;</li>
+<li>Alternative frame: &quot;One memory for every AI you use&quot;</li>
+<li>Must avoid: &quot;context infrastructure&quot;, &quot;memory layer&quot;, &quot;MCP protocol&quot;</li>
+</ul>
+</li>
+<li>Subheadline (15–20 words, mechanism hint)<ul>
+<li>Example frame: &quot;Connect your tools once. ChatGPT, Claude, and every AI you use gets the full picture.&quot;</li>
+</ul>
+</li>
+<li>Primary CTA button: &quot;Connect my tools — free&quot; or &quot;Try Contexter free&quot;</li>
+<li>CTA subtext: &quot;Free plan · No credit card · 2-minute setup&quot;</li>
+<li>Visual: animated product UI showing AI chat response with source attribution (&quot;Based on your Notion page from yesterday&quot; or &quot;Found in your last week&#39;s Slack message&quot;) — Option C or B per Section 3 analysis</li>
+<li>Trust anchor (1–2 of): tool count (&quot;Works with 30+ tools&quot;), early user count, or App Store/PH rating</li>
+</ul>
+<p><strong>Reference:</strong> Grammarly (social proof number + animated demo in hero), Otter.ai (outcome headline + video bg + CTA subtext), Gamma (output as hero visual)</p>
+<p><strong>Anti-patterns (Supermemory analysis):</strong></p>
+<ul>
+<li>Do NOT use &quot;context infrastructure&quot; or &quot;AI agents&quot; framing</li>
+<li>Do NOT use technical visualization (memory graph, vector nodes) as hero visual</li>
+<li>Do NOT lead with two competing primary CTAs (&quot;Start Building&quot; vs &quot;Get personal supermemory&quot;)</li>
+</ul>
+<hr>
+<h4>Section 2: Trust Bar — &quot;Works With&quot; Integration Logos</h4>
+<p><strong>Purpose:</strong> Instant credibility reset and objection pre-emption (&quot;Does this work with my tools?&quot;)</p>
+<p><strong>Content:</strong></p>
+<ul>
+<li>Label: &quot;Works with your tools&quot; or &quot;Connects to everything you use&quot;</li>
+<li>Logo grid: ChatGPT, Claude, Cursor, Gemini, Notion, Slack, Google Docs, Gmail, Obsidian, Linear, Jira, GitHub, and more</li>
+<li>Subtle animation: logos fade in or slow-scroll</li>
+<li>Small &quot;and 30+ more →&quot; link to integrations page</li>
+</ul>
+<p><strong>Why integration logos, not customer logos:</strong>
+At pre-PMF stage, customer logos are likely unknown brands. Integration logos (ChatGPT, Notion, Slack) carry recognition weight that no early customer can provide. More importantly: for Contexter&#39;s value proposition, the answer to &quot;does this work with MY tools?&quot; is the #1 pre-click question from non-tech users.</p>
+<p><strong>Reference:</strong> Otter.ai (logo bar immediately after hero), Loom (24-logo grid visible above fold), Grammarly (rotating logos in hero)</p>
+<hr>
+<h4>Section 3: Pain Framing</h4>
+<p><strong>Purpose:</strong> Create emotional recognition — visitor says &quot;yes, that&#39;s me&quot;</p>
+<p><strong>Content format:</strong> Card grid (3–4 cards) or visual list</p>
+<ul>
+<li>Each card: icon + 1-line pain scenario (second person &quot;you&quot;)</li>
+<li>Example cards:<ul>
+<li>&quot;You paste the same background into every AI chat&quot;</li>
+<li>&quot;ChatGPT doesn&#39;t know what Claude knows&quot;</li>
+<li>&quot;Your AI answers are generic — it doesn&#39;t know your work&quot;</li>
+<li>&quot;You switch tools constantly, starting from scratch each time&quot;</li>
+</ul>
+</li>
+</ul>
+<p><strong>Design notes:</strong></p>
+<ul>
+<li>Cards should feel like a self-check (&quot;is this you?&quot;), not a lecture</li>
+<li>Each card subtly hints at the fix — avoids negativity spiral</li>
+<li>Reading level: casual, direct, 5th grade</li>
+<li>Section header: &quot;Sound familiar?&quot; or &quot;If you use AI, you know this feeling&quot;</li>
+</ul>
+<p><strong>Reference:</strong> No single best reference — this is a 2025 pattern (problem-before-solution). Grammarly hints at pain in headline (&quot;take care of the details&quot;).</p>
+<hr>
+<h4>Section 4: Solution Reveal / How It Works</h4>
+<p><strong>Purpose:</strong> Show the mechanism — &quot;here&#39;s what Contexter actually does, in 3 steps&quot;</p>
+<p><strong>Content:</strong> 3-step visual flow (horizontal on desktop, vertical on mobile)</p>
+<ul>
+<li><p>Step 1: Connect your tools</p>
+<ul>
+<li>Visual: logos of connected tools + simple checkbox UI</li>
+<li>Text: &quot;Link your apps once — no configuration required&quot;</li>
+</ul>
+</li>
+<li><p>Step 2: Contexter builds your memory</p>
+<ul>
+<li>Visual: simplified flow animation (docs → memory → AI)</li>
+<li>Text: &quot;Contexter reads, indexes, and remembers everything across your tools&quot;</li>
+</ul>
+</li>
+<li><p>Step 3: Every AI knows your context</p>
+<ul>
+<li>Visual: split-screen AI chat — without Contexter (generic answer) vs with Contexter (specific, cited answer)</li>
+<li>Text: &quot;ChatGPT, Claude, Cursor — all of them now know your work&quot;</li>
+</ul>
+</li>
+</ul>
+<p><strong>The Step 3 visual is the highest-priority creative asset:</strong> showing AI response WITH context vs WITHOUT is the &quot;aha moment&quot; equivalent to NotebookLM&#39;s podcast demo and Gamma&#39;s slide output.</p>
+<p><strong>Reference:</strong> Otter.ai (&quot;Like having your own executive assistant&quot; framing), NotebookLM (upload → understand → generate), Loom (&quot;How It Works&quot; as section 3)</p>
+<hr>
+<h4>Section 5: Feature Highlights</h4>
+<p><strong>Purpose:</strong> Address &quot;but what exactly does it do?&quot; for detail-oriented visitors who scroll past the how-it-works</p>
+<p><strong>Content:</strong> 3–4 feature cards in icon grid</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Icon</th>
+<th>Benefit Label</th>
+<th>1-sentence description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Universal sync</td>
+<td>connect icon</td>
+<td>&quot;All your tools, one memory&quot;</td>
+<td>Connects your apps and keeps context current automatically</td>
+</tr>
+<tr>
+<td>Works with every AI</td>
+<td>brain/AI icon</td>
+<td>&quot;Every AI gets smarter&quot;</td>
+<td>Works with ChatGPT, Claude, Cursor, and any MCP-compatible tool</td>
+</tr>
+<tr>
+<td>Private by default</td>
+<td>lock icon</td>
+<td>&quot;Your data, your control&quot;</td>
+<td>Nothing leaves your account without your permission</td>
+</tr>
+<tr>
+<td>Zero workflow change</td>
+<td>flow icon</td>
+<td>&quot;No new habits needed&quot;</td>
+<td>Works in the background — no app to open, no commands to learn</td>
+</tr>
+</tbody></table>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>&quot;Private by default&quot; is critical for non-tech users — they fear &quot;what happens to my data when I connect all my tools&quot;</li>
+<li>&quot;Zero workflow change&quot; pre-empts the &quot;sounds like a lot of setup&quot; objection</li>
+<li>Avoid: &quot;MCP protocol&quot;, &quot;vector embeddings&quot; — translate to outcomes</li>
+</ul>
+<p><strong>Reference:</strong> Otter.ai (6 feature cards with icons), Grammarly (alternating text/video feature demos)</p>
+<hr>
+<h4>Section 6: Demo / Product Proof</h4>
+<p><strong>Purpose:</strong> Eliminate &quot;I still don&#39;t get how this actually works&quot; — show the product in action</p>
+<p><strong>Content:</strong></p>
+<ul>
+<li>One prominent, realistic product screenshot or short GIF</li>
+<li>Shows: user types a question → AI responds with context-aware answer that cites a specific source (&quot;Based on your Notion page &#39;Q2 Strategy&#39; from last Tuesday, here&#39;s what I found: ...&quot;)</li>
+<li>Optional: side-by-side &quot;Before Contexter / After Contexter&quot; comparison</li>
+<li>Section header: &quot;See it in action&quot; or &quot;This is what your AI looks like with Contexter&quot;</li>
+<li>Embedded secondary CTA: &quot;Try it yourself →&quot; or &quot;Watch the 2-min demo&quot;</li>
+</ul>
+<p><strong>Why this section exists separately from the hero:</strong>
+Hero visual shows the end state. Demo section shows the process + source attribution. Source attribution is Contexter&#39;s differentiator — &quot;your AI tells you WHERE the answer came from.&quot;</p>
+<p><strong>Reference:</strong> Loom (interactive video player in page), NotebookLM (Audio Overview demo as conversion driver), Gamma (output as demo)</p>
+<hr>
+<h4>Section 7: Testimonials / Social Proof</h4>
+<p><strong>Purpose:</strong> Peer validation — &quot;people in my role use this and it worked&quot;</p>
+<p><strong>Content:</strong></p>
+<ul>
+<li>3–6 testimonial cards in grid</li>
+<li>FORMAT REQUIREMENT: role-specific (PM, analyst, marketer, founder — no generic &quot;user&quot;)</li>
+<li>Card structure: quote (2 sentences max) + name + role/title + company or &quot;works at [company type]&quot;</li>
+<li>Optional: Product Hunt or G2 rating badge if available</li>
+</ul>
+<p><strong>Why role-specific is critical:</strong>
+Arclen: 92% of consumers hesitate with no reviews. But for non-tech users, generic testimonials (&quot;it&#39;s so useful!&quot;) carry zero weight. Seeing &quot;Sarah, Product Manager at a 50-person startup&quot; says exactly: &quot;someone like me found this valuable.&quot;</p>
+<p><strong>At launch / pre-reviews:</strong>
+Use beta user quotes. Even &quot;I&#39;ve been testing this for 2 weeks&quot; is credible if the person&#39;s role is named. Avoid: generic stock-photo testimonials with no role context.</p>
+<p><strong>Reference:</strong> Otter.ai (expanded testimonials with company backgrounds, mid-page), Gamma (role-specific: PM, designer, consultant), Grammarly (ROI testimonials with metrics)</p>
+<hr>
+<h4>Section 8: Integrations</h4>
+<p><strong>Purpose:</strong> Comprehensive answer to &quot;does this work with MY tools?&quot;</p>
+<p><strong>Content:</strong></p>
+<ul>
+<li>Section header: &quot;Your tools are already here&quot; or &quot;30+ integrations, and growing&quot;</li>
+<li>Logo grid: 20–30 tool logos</li>
+<li>Grouped by category:<ul>
+<li>&quot;AI Tools&quot; (ChatGPT, Claude, Cursor, Gemini, Perplexity...)</li>
+<li>&quot;Knowledge Tools&quot; (Notion, Obsidian, Google Docs, Confluence...)</li>
+<li>&quot;Communication&quot; (Slack, Gmail, Linear, Jira...)</li>
+<li>&quot;Coming soon&quot; (greyed out logos with &quot;request&quot; link)</li>
+</ul>
+</li>
+<li>CTA: &quot;Don&#39;t see your tool? Request it →&quot;</li>
+</ul>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>&quot;AI Tools&quot; category should be visually largest/first — this is Contexter&#39;s primary value axis</li>
+<li>&quot;Coming soon&quot; category manages expectations while signaling active development</li>
+<li>&quot;Request it&quot; link turns an objection into an engagement signal</li>
+</ul>
+<p><strong>Reference:</strong> Otter.ai (integration showcase with 12 partners + &quot;View integrations&quot; CTA), Grammarly (integration ecosystem section)</p>
+<hr>
+<h4>Section 9: Pricing</h4>
+<p><strong>Purpose:</strong> Remove &quot;how much is this?&quot; uncertainty and price anchor</p>
+<p><strong>Content:</strong> 2-tier table (keep simple for non-tech)</p>
+<table>
+<thead>
+<tr>
+<th>Free</th>
+<th>Pro</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>3 connected tools</td>
+<td>Unlimited tools</td>
+</tr>
+<tr>
+<td>100 queries/month</td>
+<td>Unlimited queries</td>
+</tr>
+<tr>
+<td>Basic context sync</td>
+<td>Real-time sync</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Priority support</td>
+</tr>
+<tr>
+<td>Free forever</td>
+<td>$X/month (annual) / $Y/month (monthly)</td>
+</tr>
+<tr>
+<td>&quot;Start for free&quot;</td>
+<td>&quot;Get Pro&quot;</td>
+</tr>
+</tbody></table>
+<p>Notes on tiers:</p>
+<ul>
+<li>If team tier exists: add as third column, lower visual weight than Free/Pro</li>
+<li>Annual option shown with &quot;Save 40%&quot; badge but monthly as default display</li>
+<li>&quot;Free forever&quot; explicitly stated on free tier</li>
+<li>&quot;No credit card required&quot; on free CTA</li>
+</ul>
+<p><strong>Arclen nuance:</strong> Free plan works best for consumer SaaS with longer activation curves (non-tech = longer time to value). Credit card required converts at 48.8% vs 18.2% — but only when product delivers clear value in first session. Recommendation: no credit card on free tier until onboarding is optimized.</p>
+<p><strong>Reference:</strong> Otter.ai (3-tier pricing table), Grammarly (Free/Pro/Enterprise comparison)</p>
+<hr>
+<h4>Section 10: Final CTA</h4>
+<p><strong>Purpose:</strong> Last conversion opportunity — re-state the offer for visitors who scrolled the full page</p>
+<p><strong>Content:</strong></p>
+<ul>
+<li>Repeat primary headline (shortened or variant)</li>
+<li>Single CTA button (same as hero CTA)</li>
+<li>CTA subtext: &quot;Free plan · No credit card · 2-minute setup&quot;</li>
+<li>Optional: product screenshot thumbnail or integration logo strip</li>
+</ul>
+<p><strong>Reference:</strong> Otter.ai (final CTA section), Loom (&quot;Loom powers great campaigns&quot; + signup)</p>
+<hr>
+<h4>Section 11: Footer</h4>
+<p><strong>Purpose:</strong> Trust, navigation, and legal</p>
+<p><strong>Content:</strong></p>
+<ul>
+<li>Logo + tagline (&quot;One memory. Every AI.&quot;)</li>
+<li>Nav columns: Product / Integrations / Resources / Company</li>
+<li>Legal: Privacy Policy / Terms of Service / Security page</li>
+<li>Social: Twitter/X (shows active), GitHub (shows product is real), LinkedIn</li>
+<li>Optional: SOC 2 badge or &quot;End-to-end encrypted&quot; micro-badge</li>
+</ul>
+<hr>
+<h3>Section Priority Matrix (for phased build)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Section</th>
+<th>Conversion Impact</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Navigation</td>
+<td>High (persistent CTA)</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Hero</td>
+<td>Critical</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Trust Bar (integrations)</td>
+<td>High</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>How It Works</td>
+<td>High</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Demo / Product Proof</td>
+<td>Critical</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Final CTA</td>
+<td>Medium</td>
+<td>P0</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Pain Framing</td>
+<td>Medium</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Feature Highlights</td>
+<td>Medium</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Testimonials</td>
+<td>High (when available)</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Integrations</td>
+<td>High</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Pricing</td>
+<td>Medium</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Footer</td>
+<td>Low</td>
+<td>P1</td>
+</tr>
+</tbody></table>
+<p><strong>P0 minimum viable landing page:</strong> Nav + Hero + Trust Bar + How It Works + Demo + Final CTA</p>
+<hr>
+<h2>5. Key Insights Summary</h2>
+<h3>The 8 non-negotiable principles for Contexter&#39;s landing page</h3>
+<p><strong>1. Outcome-first, always — no exceptions</strong>
+Non-tech users don&#39;t care about &quot;MCP protocol&quot; or &quot;vector embeddings.&quot; They care that &quot;AI finally remembers my work.&quot; Translate every feature to a user outcome. 5th–7th grade reading level = 12.9% conversion vs 2.1% for professional language (Arclen 2026).</p>
+<p><strong>2. Show, don&#39;t tell — and show it above the fold</strong>
+The #1 conversion driver for AI products in 2025–2026 is showing the product working. Silent autoplay or output-as-hero. The &quot;AI responds with context citation&quot; moment must be visible either in the hero visual or directly below (Section 4 Step 3).</p>
+<p><strong>3. Trust bar uses integration logos, not customer logos (at early stage)</strong>
+&quot;Works with ChatGPT, Claude, Notion, Slack&quot; is more compelling than 5 unknown company logos. This is Contexter-specific insight: integration logos carry recognition weight that unknown early customers cannot.</p>
+<p><strong>4. Privacy objection is the #1 conversion killer for this value prop</strong>
+Non-tech users connecting &quot;all their tools&quot; will have a visceral fear: &quot;where does my data go?&quot; A feature card + footer security link + &quot;private by default&quot; phrasing must appear. Grammarly&#39;s &quot;This is responsible AI&quot; section before pricing is the template.</p>
+<p><strong>5. One CTA, many placements — consistent throughout</strong>
+Consistent primary action (free trial / connect tools) at every level: Nav, Hero, mid-page, Pricing, Final CTA. No competing calls. The only acceptable secondary CTA: &quot;Watch demo&quot; (lower commitment, not competing conversion action).</p>
+<p><strong>6. Mobile-first section order is the actual page order</strong>
+Non-tech audiences are especially mobile-heavy. The vertical scroll experience IS the page: Hook → Proof → How it works → Features → Social proof → CTA. Every section must make full sense on 390px with no horizontal layout.</p>
+<p><strong>7. Role-specific social proof converts; generic social proof does not</strong>
+A PM testimonial converts PMs. An analyst testimonial converts analysts. &quot;I love this tool!&quot; from someone with no role attribution converts no one. This is especially critical for non-tech users who need to see themselves in the user base.</p>
+<p><strong>8. The &quot;before/after&quot; demo is the highest-leverage creative investment</strong>
+Contexter&#39;s visceral moment: same question, asked to an AI without Contexter vs with Contexter. Without: generic answer. With: specific answer citing &quot;from your Notion doc &#39;Q2 Strategy&#39;, from last Tuesday&#39;s Slack message.&quot; This single visual asset, done well, will outperform every other element on the page in conversion impact.</p>
+<h3>Competitive structural gap (from Supermemory analysis)</h3>
+<p>Supermemory.ai is optimizing its landing page for developers and enterprises:</p>
+<ul>
+<li>&quot;Context infrastructure for your AI agents&quot; — developer vocabulary</li>
+<li>5-layer technical architecture visualization above fold</li>
+<li>SDK implementations section</li>
+<li>5 competing CTAs</li>
+<li>Benchmarks vs Mem0/Zep (competitor comparison targeting technical evaluators)</li>
+</ul>
+<p>This leaves the entire non-technical segment unaddressed by the primary competitor. Contexter should explicitly own this gap in every structural decision: headline language, visual choices, testimonial selection, CTA copy. The structural competitive moat is: &quot;the only AI memory product that non-technical users actually understand.&quot;</p>
+<hr>
+<h2>Research Sources (complete list)</h2>
+<p><strong>Direct page fetches (2026-03-27):</strong></p>
+<ul>
+<li><a href="https://otter.ai">Otter.ai</a> — full structural analysis</li>
+<li><a href="https://grammarly.com">Grammarly.com</a> — full structural analysis</li>
+<li><a href="https://loom.com">Loom.com</a> — full structural analysis</li>
+<li><a href="https://supermemory.ai">Supermemory.ai</a> — full structural analysis</li>
+<li><a href="https://gamma.app">Gamma.app</a> — 403, supplemented by search</li>
+<li><a href="https://notebooklm.google.com">NotebookLM</a> — auth-gated, supplemented by search</li>
+</ul>
+<p><strong>Best practices sources:</strong></p>
+<ul>
+<li><a href="https://unbounce.com/conversion-rate-optimization/the-state-of-saas-landing-pages/">Unbounce — 26 SaaS landing pages examples</a></li>
+<li><a href="https://genesysgrowth.com/blog/designing-b2b-saas-landing-pages">Genesys Growth — B2B SaaS landing page best practices 2026</a></li>
+<li><a href="https://genesysgrowth.com/blog/landing-page-conversion-stats-for-marketing-leaders">Genesys Growth — Landing page conversion stats 2026</a></li>
+<li><a href="https://fibr.ai/landing-page/saas-landing-pages">Fibr.ai — 20 best SaaS landing pages 2026</a></li>
+<li><a href="https://userpilot.com/blog/saas-landing-page-best-practices/">Userpilot — 15 SaaS landing page best practices</a></li>
+<li><a href="https://arclen.io/blog/saas-cro-playbook-2026">Arclen — SaaS CRO Playbook 2026</a> — direct fetch</li>
+<li><a href="https://heyflow.com/blog/saas-landing-page-best-practices/">Heyflow — SaaS landing page best practices</a></li>
+<li><a href="https://www.klientboost.com/landing-pages/saas-landing-page/">KlientBoost — 51 high-converting SaaS landing pages 2025</a></li>
+<li><a href="https://www.flow-agency.com/blog/b2b-saas-landing-page-best-practices/">Flow Agency — High-performing B2B SaaS landing page</a></li>
+<li><a href="https://www.alfdesigngroup.com/post/saas-hero-section-best-practices">ALF Design Group — SaaS hero section best practices</a> — direct fetch</li>
+<li><a href="https://thrivethemes.com/hero-section-examples/">ThriveThemes — 50+ hero section examples</a></li>
+<li><a href="https://www.socialectric.com/insights/understanding-above-the-fold-and-the-hero-section-of-a-website">Socialectric — Understanding above the fold</a></li>
+<li><a href="https://www.zoho.com/landingpage/landing-page-checklist.html">Zoho LandingPage — Landing page checklist 2025</a></li>
+<li><a href="https://www.plerdy.com/landing-page-checklist/">Plerdy — Landing page checklist 42 tips 2025</a></li>
+<li><a href="https://www.webstacks.com/blog/website-conversions-for-saas-businesses">Webstacks — SaaS website conversions 2026</a></li>
+<li><a href="https://www.grafit.agency/blog/saas-landing-page-best-practices">Grafit Agency — SaaS landing page best practices 2025</a></li>
+<li><a href="https://magicui.design/blog/saas-landing-page-best-practices">Magic UI — 7 SaaS landing page best practices 2025</a></li>
+<li><a href="https://landingi.com/conversion-optimization/hero-shot/">Landingi — Hero shot for landing pages</a></li>
+<li><a href="https://www.b2w.tv/blog/video-landing-page-examples">B2W.tv — 15 high-converting video landing page examples 2025</a></li>
+</ul>
+
+</body>
+</html>

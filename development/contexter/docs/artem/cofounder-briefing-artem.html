@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cofounder-briefing-artem — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter — Co-Founder Briefing</h1>
+<blockquote>
+<p>Для: Артём (GTM &amp; Marketing)
+Дата: 2026-04-05
+Автор: nopoint (founder, product &amp; engineering)
+Статус продукта: <strong>Production-ready, 0 маркетинга</strong></p>
+</blockquote>
+<h2>Как пользоваться этим пакетом</h2>
+<p>Этот briefing — часть пакета из 28 файлов. Полный индекс: <a href="https://cdn.contexter.cc/public/artem/INDEX.md">INDEX.md</a></p>
+<p>Все файлы доступны по прямым ссылкам:</p>
+<pre><code>https://cdn.contexter.cc/public/artem/{filename}.md
+</code></pre>
+<p>Например:</p>
+<ul>
+<li><a href="https://cdn.contexter.cc/public/artem/contexter-financial-model.md">https://cdn.contexter.cc/public/artem/contexter-financial-model.md</a></li>
+<li><a href="https://cdn.contexter.cc/public/artem/contexter-gtm-market-landscape.md">https://cdn.contexter.cc/public/artem/contexter-gtm-market-landscape.md</a></li>
+<li><a href="https://cdn.contexter.cc/public/artem/contexter-gtm-v2-nontechnical-pain.md">https://cdn.contexter.cc/public/artem/contexter-gtm-v2-nontechnical-pain.md</a></li>
+</ul>
+<p>Можно скормить любой файл в ChatGPT/Claude по ссылке для глубокого анализа.</p>
+<hr>
+<h2>1. Что такое Contexter</h2>
+<p><strong>Contexter = постоянная память для всех твоих AI.</strong></p>
+<p>Загрузи любой файл (PDF, DOCX, аудио, видео — 23 формата) → Contexter разбирает, индексирует, хранит → все твои AI (ChatGPT, Claude, Cursor, Perplexity и др.) получают доступ к этим знаниям через единое подключение.</p>
+<p><strong>Проблема, которую решаем:</strong> Сегодня каждый AI-чат начинается с нуля. Люди вручную копируют контекст из чата в чат, теряют месяцы накопленных знаний при сбоях, не могут использовать одну базу знаний в разных AI-инструментах.</p>
+<p><strong>Как работает:</strong></p>
+<pre><code>Файл → загрузка → парсинг → индексация → API/MCP endpoint
+                                              ↓
+                              ChatGPT / Claude / Cursor / любой AI
+</code></pre>
+<p><strong>Демо-видео:</strong> <a href="https://cdn.contexter.cc/public/contexter-screencast.mp4">https://cdn.contexter.cc/public/contexter-screencast.mp4</a></p>
+<hr>
+<h2>2. Рыночная возможность</h2>
+<h3>Размер рынка</h3>
+<table>
+<thead>
+<tr>
+<th>Метрика</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TAM (RAG market 2026)</td>
+<td>$2.76–3.33B</td>
+</tr>
+<tr>
+<td>SAM (managed RAG APIs)</td>
+<td>$400–800M</td>
+</tr>
+<tr>
+<td>SOM (реалистичный)</td>
+<td>$20–50M</td>
+</tr>
+<tr>
+<td>CAGR</td>
+<td>38–49% до 2030</td>
+</tr>
+</tbody></table>
+<h3>Почему сейчас</h3>
+<ul>
+<li><strong>MCP стал стандартом.</strong> 17K+ серверов, 97M+ загрузок SDK/мес (март 2026). Рост 80x за 5 месяцев.</li>
+<li><strong>Категория активируется.</strong> Anthropic и Google одновременно выпустили инструменты импорта памяти (март 2026). Mem0 поднял $24M (ноябрь 2025).</li>
+<li><strong>Консолидация началась.</strong> Carbon AI закрывается, Trieve куплен Mintlify, Nuclia куплена Progress Software за $50M. Окно для новых игроков сужается — <strong>12–18 месяцев</strong> максимум.</li>
+</ul>
+<h3>Сигналы спроса</h3>
+<ul>
+<li>ChatGPT memory wipe (февраль 2025) — 300+ тредов жалоб, grief language</li>
+<li>Пользователи описывают потерю контекста как <strong>потерю близкого человека</strong>: <em>&quot;It feels like losing a beloved relative&quot;</em>, <em>&quot;Two years worth of memories gone&quot;</em></li>
+<li>Cursor/Claude пользователи тратят <strong>15–30 минут в день</strong> на повторное объяснение контекста AI</li>
+</ul>
+<hr>
+<h2>3. Конкурентный ландшафт</h2>
+<h3>Прямые конкуренты (RAG-as-a-Service)</h3>
+<table>
+<thead>
+<tr>
+<th>Продукт</th>
+<th>Funding</th>
+<th>Цена</th>
+<th>Слабость vs Contexter</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Ragie</strong></td>
+<td>$5.5M seed</td>
+<td>$100–500/мес</td>
+<td>Cloud-only, $250/коннектор, 20x дороже</td>
+</tr>
+<tr>
+<td><strong>Supermemory</strong></td>
+<td>$3M seed</td>
+<td>$0–399/мес</td>
+<td>Silent retrieval failures, fake open-source (MIT но self-host = enterprise agreement)</td>
+</tr>
+<tr>
+<td><strong>Graphlit</strong></td>
+<td>$3.56M</td>
+<td>$49–999/мес</td>
+<td>0 независимых отзывов, opaque pricing</td>
+</tr>
+<tr>
+<td><strong>Morphik</strong> (YC X25)</td>
+<td>~$500K</td>
+<td>$59–799/мес</td>
+<td>Нужен GPU для self-host, команда 2 человека</td>
+</tr>
+<tr>
+<td><strong>Vectorize</strong></td>
+<td>$3.6M</td>
+<td>$99–399/мес</td>
+<td>Нет аудио/видео, &quot;barebone UI&quot; (G2)</td>
+</tr>
+<tr>
+<td><strong>Langbase</strong></td>
+<td>неизв.</td>
+<td>$100–250/мес</td>
+<td>50 MB cap на $250/мес (!), ~6 форматов, нет аудио/видео</td>
+</tr>
+<tr>
+<td><strong>Vectara</strong></td>
+<td>$73.5M</td>
+<td>Enterprise</td>
+<td>Только enterprise, без developer tier</td>
+</tr>
+</tbody></table>
+<h3>Косвенные конкуренты</h3>
+<ul>
+<li><strong>AI-чаты</strong> (ChatGPT, Claude, Gemini) — walled garden, нет API, нет persistence</li>
+<li><strong>Workspace AI</strong> (Notion AI, Obsidian) — locked в свою экосистему</li>
+<li><strong>Enterprise Search</strong> (Glean — $7.2B valuation) — $10–30/user/мес, enterprise sales cycle</li>
+<li><strong>DIY RAG</strong> (LangChain + Pinecone + ...) — 7 компонентов собирать самому</li>
+</ul>
+<h3>Главный конкурент — <strong>copy-paste</strong></h3>
+<p>~95% людей, использующих AI сегодня, вручную копируют контекст. Это привычка, которую мы заменяем.</p>
+<hr>
+<h2>4. White Space — почему Contexter выигрывает</h2>
+<p><strong>Структурный белый квадрант: &quot;работает со всеми AI + понятен не-разработчикам&quot; = пусто.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Преимущество</th>
+<th>Детали</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Self-hosted</strong></td>
+<td>Единственный продукт, где self-hosting = основной режим. Все конкуренты — cloud-only.</td>
+</tr>
+<tr>
+<td><strong>Фиксированная цена</strong></td>
+<td>€7.72/мес за сервер. Конкуренты: токены × страницы × коннекторы = непредсказуемые счета.</td>
+</tr>
+<tr>
+<td><strong>23 формата</strong></td>
+<td>Включая аудио и видео. Langbase: ~6 форматов. Vectorize: нет аудио/видео.</td>
+</tr>
+<tr>
+<td><strong>MCP-native</strong></td>
+<td>Одно подключение = все AI-клиенты видят твои документы.</td>
+</tr>
+<tr>
+<td><strong>Data sovereignty</strong></td>
+<td>Данные на твоём сервере. GDPR, healthcare, air-gapped — автоматически.</td>
+</tr>
+<tr>
+<td><strong>20x дешевле Ragie</strong></td>
+<td>Функционально идентичный продукт, $5/мес vs $100/мес.</td>
+</tr>
+</tbody></table>
+<p><strong>Позиционирование:</strong> <em>&quot;One memory. Every AI.&quot;</em> — контекст-хранилище, которое ты контролируешь.</p>
+<hr>
+<h2>5. Боли пользователей (реальные цитаты)</h2>
+<h3>Категория A: Потеря памяти AI (самая эмоциональная)</h3>
+<blockquote>
+<p><em>&quot;Two years worth of memories gone. Only an empty memories box.&quot;</em> — OpenAI Forum, Plus subscriber</p>
+</blockquote>
+<blockquote>
+<p><em>&quot;It feels like losing a beloved relative, as they were a part of the customs through my saved memories.&quot;</em> — OpenAI Forum</p>
+</blockquote>
+<blockquote>
+<p><em>&quot;I&#39;ve lost a year and a half of memories... feels more like Memento.&quot;</em> — OpenAI Forum</p>
+</blockquote>
+<h3>Категория B: Фрагментация между инструментами</h3>
+<blockquote>
+<p><em>&quot;I explain my architecture to Cursor in the morning and in the afternoon, I have to explain it all again.&quot;</em> — Cursor Forum</p>
+</blockquote>
+<blockquote>
+<p><em>&quot;We plan out a whole feature, then I come back a week later and have no record of what we decided.&quot;</em> — Cursor Forum</p>
+</blockquote>
+<h3>Категория C: Безмолвная потеря данных</h3>
+<blockquote>
+<p><em>&quot;After a few weeks of adding information to ChatGPT memory, it just cleared on its own.&quot;</em> — OpenAI Forum</p>
+</blockquote>
+<p><strong>Вывод:</strong> Боль категории A (потеря накопленного контекста) вызывает grief language и готовность платить. Это наш главный messaging hook.</p>
+<hr>
+<h2>6. Финансовая модель</h2>
+<h3>Unit Economics</h3>
+<table>
+<thead>
+<tr>
+<th>Метрика</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Инфраструктура</td>
+<td>€7.72/мес (Hetzner CAX21)</td>
+</tr>
+<tr>
+<td>Break-even (месячный)</td>
+<td>Месяц 3</td>
+</tr>
+<tr>
+<td>Cash positive (накопительно)</td>
+<td>Месяц 4 ($858)</td>
+</tr>
+<tr>
+<td>Max cash deficit</td>
+<td>~$971 (месяц 2)</td>
+</tr>
+<tr>
+<td>Gross margin</td>
+<td>68.5%</td>
+</tr>
+<tr>
+<td>ARPU (платящий)</td>
+<td>$22.54</td>
+</tr>
+<tr>
+<td>LTV (12 мес)</td>
+<td>$270.48</td>
+</tr>
+<tr>
+<td>CAC</td>
+<td>$0 (organic)</td>
+</tr>
+</tbody></table>
+<h3>Рост (10K пользователей, 40% conversion)</h3>
+<table>
+<thead>
+<tr>
+<th>Метрика</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MRR</td>
+<td>$90,168</td>
+</tr>
+<tr>
+<td>ARR</td>
+<td>$1,082,021</td>
+</tr>
+<tr>
+<td>EBITDA margin</td>
+<td>67.7%</td>
+</tr>
+<tr>
+<td>Годовой cash</td>
+<td>$212,715</td>
+</tr>
+</tbody></table>
+<h3>Сценарии</h3>
+<table>
+<thead>
+<tr>
+<th>Сценарий</th>
+<th>Conversion</th>
+<th>MRR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base (10K users, 40%)</td>
+<td>4,000 платящих</td>
+<td>$90K</td>
+</tr>
+<tr>
+<td>Conservative (20%)</td>
+<td>2,000 платящих</td>
+<td>$45K — всё ещё profitable</td>
+</tr>
+<tr>
+<td>Ambitious (50K users)</td>
+<td>20,000 платящих</td>
+<td>$450K</td>
+</tr>
+</tbody></table>
+<p><strong>Ключевое:</strong> Капитально-эффективный бизнес. Максимальные инвестиции до прибыльности — менее $1,000. Внешнее финансирование не требуется.</p>
+<hr>
+<h2>7. Pricing</h2>
+<table>
+<thead>
+<tr>
+<th>План</th>
+<th>Цена</th>
+<th>Что входит</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Free</strong></td>
+<td>$0</td>
+<td>Ограниченные загрузки и запросы</td>
+</tr>
+<tr>
+<td><strong>Starter</strong></td>
+<td>$9/мес</td>
+<td>Расширенные лимиты</td>
+</tr>
+<tr>
+<td><strong>Pro</strong></td>
+<td>$29/мес</td>
+<td>Полный доступ</td>
+</tr>
+</tbody></table>
+<p><strong>Первая цель: 100 Founding Supporters × $10</strong> = $1,000. Framing: &quot;Founding Supporter&quot; (не donation), счётчик &quot;X/100 spots&quot;.</p>
+<hr>
+<h2>8. Текущее состояние продукта</h2>
+<h3>Что готово</h3>
+<ul>
+<li>API: production, Hetzner Helsinki, все системы healthy</li>
+<li>Frontend: <a href="https://contexter.cc">https://contexter.cc</a> (SolidJS SPA, CF Pages)</li>
+<li>Auth: email + password + Google OAuth</li>
+<li>Pipeline: 23 формата, парсинг, индексация, поиск</li>
+<li>MCP: 12 tools, Streamable HTTP, работает в Claude, ChatGPT, Cursor, Perplexity</li>
+<li>Security: rate limiting, content filter, circuit breakers, CORS, HTTPS</li>
+<li>Legal: Privacy Policy + Terms of Service (English, GDPR)</li>
+<li>Monitoring: Netdata + health checks + Telegram alerts</li>
+<li>Backups: daily PG dump → R2, WAL archiving (5 min RPO)</li>
+</ul>
+<h3>Метрики</h3>
+<table>
+<thead>
+<tr>
+<th>Метрика</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Реальных юзеров</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Документов</td>
+<td>26</td>
+</tr>
+<tr>
+<td>MCP search p50</td>
+<td>110ms</td>
+</tr>
+<tr>
+<td>GitHub</td>
+<td>github.com/nopointt/contexter</td>
+</tr>
+</tbody></table>
+<h3>Что НЕ готово (блокеры GTM)</h3>
+<ul>
+<li><strong>Copy audit:</strong> 50+ случаев технического жаргона на лендинге (убивает конверсию non-tech)</li>
+<li><strong>LemonSqueezy:</strong> одобрение pending (без этого — только крипта, -93% конверсии)</li>
+<li><strong>Social accounts:</strong> 0 аккаунтов, 0 присутствие</li>
+<li><strong>Reddit:</strong> u/Cute_Baseball2875, karma=1, нужен warmup</li>
+<li><strong>Analytics:</strong> не установлена (Plausible/Umami)</li>
+<li><strong>OG теги:</strong> нет social preview</li>
+</ul>
+<hr>
+<h2>9. GTM Plan — что нужно сделать</h2>
+<h3>Каналы (приоритет)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Канал</th>
+<th>Потенциал</th>
+<th>Почему</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Hacker News</strong> (Show HN)</td>
+<td>10–30K визитов, 3–5x конверсия</td>
+<td>Dev tools → HN аудитория = наша ЦА</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Reddit</strong> (r/ChatGPT, r/ClaudeAI)</td>
+<td>Прямая ЦА</td>
+<td>&quot;I built X&quot; формат, нужен karma warmup</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Product Hunt</strong></td>
+<td>800–1K визитов</td>
+<td>Только ~10% featured, но бренд-value</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>MCP Directories</strong> (7+)</td>
+<td>SEO + discovery</td>
+<td>Glama, Smithery, PulseMCP, mcp.so — submit forms</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>GitHub Awesome lists</strong></td>
+<td>Long-tail</td>
+<td>awesome-mcp, awesome-rag PRs</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>IndieHackers</strong></td>
+<td>Средний</td>
+<td>Build in public narrative</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Dev.to / Hashnode</strong></td>
+<td>SEO</td>
+<td>&quot;I built an AI memory that works with every LLM&quot;</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>X/Twitter</strong></td>
+<td>Slow burn</td>
+<td>Build in public, milestone posts</td>
+</tr>
+</tbody></table>
+<h3>Оптимальная последовательность</h3>
+<table>
+<thead>
+<tr>
+<th>День</th>
+<th>Действие</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>D-14</td>
+<td>PR в Official MCP Registry</td>
+</tr>
+<tr>
+<td>D-7</td>
+<td>PH Teaser page, submit MCP directories</td>
+</tr>
+<tr>
+<td>D-3</td>
+<td>BetaList, TAAFT, SaaSHub, создать X account</td>
+</tr>
+<tr>
+<td><strong>Day 0 (Вт)</strong></td>
+<td><strong>Product Hunt launch</strong> — весь день на комментарии</td>
+</tr>
+<tr>
+<td><strong>Day 1 (Ср)</strong></td>
+<td><strong>Show HN</strong> — 8–9 AM PT</td>
+</tr>
+<tr>
+<td><strong>Day 2 (Чт)</strong></td>
+<td>Reddit + IndieHackers, cross-post результаты</td>
+</tr>
+</tbody></table>
+<h3>Messaging</h3>
+<p><strong>Запрещённые слова</strong> (non-tech аудитория): RAG, embeddings, vector, MCP, API, tokens, chunks</p>
+<p><strong>Разрешённые замены:</strong> remembers, knows, memory, your stuff, all your AIs, uploads, connect</p>
+<p><strong>Hero:</strong> <em>&quot;One memory. Every AI.&quot;</em></p>
+<p><strong>Pain hook:</strong> <em>&quot;Your AI doesn&#39;t know your stuff. You paste context manually into every chat. That&#39;s broken. Contexter fixes it.&quot;</em></p>
+<p><strong>Founding Supporter framing:</strong> <em>&quot;Your $10 covers 3 days of server costs&quot;</em> — конкретика &gt; абстракция.</p>
+<h3>Viral паттерн</h3>
+<p><strong>Единственный must-have asset:</strong> 30–60 сек screencast: &quot;Загружаю 200-страничный PDF → спрашиваю ChatGPT → он знает ответ&quot;. Это единственный ролик, который нужно шарить everywhere.</p>
+<hr>
+<h2>10. Design Identity</h2>
+<ul>
+<li>Стиль: Bauhaus + Swiss typography</li>
+<li>Лого: <code>con[text]er</code> — &quot;text&quot; выделен синим (#1E3EA0)</li>
+<li>Шрифт: JetBrains Mono (единственный, везде)</li>
+<li>Цвета: чёрный #0A0A0A, белый #FAFAFA, accent #1E3EA0</li>
+<li>Принцип: <em>&quot;A well-typeset technical document that happens to be interactive&quot;</em></li>
+</ul>
+<hr>
+<h2>11. Что нужно от co-founder (Marketing/GTM)</h2>
+<ol>
+<li><strong>Стратегия каналов</strong> — выбрать 3 приоритетных, расписать execution plan</li>
+<li><strong>Copy</strong> — переписать лендинг без жаргона (copy audit готов, 50+ замен)</li>
+<li><strong>Social presence</strong> — создать и прогреть аккаунты (X, Reddit, IndieHackers)</li>
+<li><strong>Launch coordination</strong> — день запуска = все каналы одновременно</li>
+<li><strong>Content</strong> — статьи, threads, &quot;I built X&quot; посты</li>
+<li><strong>Founding Supporters</strong> — стратегия привлечения первых 100 × $10</li>
+<li><strong>Metrics</strong> — настроить аналитику, отслеживать конверсию</li>
+</ol>
+<h3>Revenue share модель</h3>
+<p>По договорённости — % от LTV привлечённых пользователей.</p>
+<hr>
+<h2>Ссылки</h2>
+<table>
+<thead>
+<tr>
+<th>Ресурс</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Продукт</td>
+<td><a href="https://contexter.cc">https://contexter.cc</a></td>
+</tr>
+<tr>
+<td>API</td>
+<td><a href="https://api.contexter.cc">https://api.contexter.cc</a></td>
+</tr>
+<tr>
+<td>GitHub</td>
+<td><a href="https://github.com/nopointt/contexter">https://github.com/nopointt/contexter</a></td>
+</tr>
+<tr>
+<td>Демо-видео</td>
+<td><a href="https://cdn.contexter.cc/public/contexter-screencast.mp4">https://cdn.contexter.cc/public/contexter-screencast.mp4</a></td>
+</tr>
+<tr>
+<td>Health check</td>
+<td><a href="https://api.contexter.cc/health">https://api.contexter.cc/health</a></td>
+</tr>
+</tbody></table>
+<hr>
+<p><em>Документ подготовлен на основе 25+ research файлов (рынок, конкуренты, боли, позиционирование, финмодель, launch mechanics). Полная база: <code>nospace/docs/research/contexter-*</code></em></p>
+
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-indirect-competitors — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter GTM: Indirect Competitors Analysis</h1>
+<blockquote>
+<p>Research date: 2026-03-27
+Analyst: Lead/MarketAnalysis
+Status: COMPLETE (15 indirect competitors, all 7 categories covered)</p>
+</blockquote>
+<hr>
+<h2>What Contexter Does (reference)</h2>
+<p>Upload any document (15 formats) -&gt; automatic parse/chunk/embed/index pipeline -&gt; query via REST API or MCP protocol -&gt; AI answers with sources. Target: developers and AI-native users who want to give AI context from their documents. Deployed at api.contexter.cc, costs EUR 4.72/mo to run.</p>
+<h2>Definition of Indirect Competitor</h2>
+<p>Same pain: &quot;I want AI to answer questions based on my documents.&quot;
+Different method: not &quot;upload docs -&gt; get API&quot;, but solves the same user need through a different approach.</p>
+<hr>
+<h2>Category 1: AI Chat with File Upload</h2>
+<h3>1. ChatGPT (OpenAI)</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://chat.openai.com">https://chat.openai.com</a></li>
+<li><strong>Category:</strong> AI chat with file upload</li>
+<li><strong>One-line:</strong> Upload files directly to ChatGPT conversations, ask questions, get answers grounded in uploaded content.</li>
+<li><strong>How it solves the same pain differently:</strong> User uploads files into a chat session (up to 80 files per 3 hours, 512 MB each, 2M tokens per file). No API, no pipeline -- just drag-drop into chat and ask questions. The AI reads the file in-context and responds.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Zero setup. Everyone already has a ChatGPT account. No API integration needed. Works for ad-hoc document Q&amp;A immediately. Supports code interpreter for data analysis on top of Q&amp;A.</li>
+<li><strong>Key weakness vs Contexter:</strong> Ephemeral -- files live in a chat session, not in a persistent indexed knowledge base. No API endpoint for programmatic access. No MCP. Can&#39;t build a product on top of it. Context window limits mean large document collections degrade quality. No hybrid search (vector + full-text). Expensive at scale ($20-200/mo per user vs Contexter&#39;s EUR 4.72/mo infrastructure).</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://help.openai.com/en/articles/8555545-file-uploads-faq">https://help.openai.com/en/articles/8555545-file-uploads-faq</a></li>
+<li><a href="https://fast.io/resources/chatgpt-file-upload-limit/">https://fast.io/resources/chatgpt-file-upload-limit/</a></li>
+</ul>
+<hr>
+<h3>2. Claude Projects (Anthropic)</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://claude.ai">https://claude.ai</a> (Projects feature)</li>
+<li><strong>Category:</strong> AI chat with file upload</li>
+<li><strong>One-line:</strong> Create persistent project workspaces with uploaded knowledge bases; Claude answers grounded in project files using enhanced RAG.</li>
+<li><strong>How it solves the same pain differently:</strong> Users create a &quot;Project&quot; with a knowledge base (upload PDFs, DOCX, code, etc., up to 30 MB each). Claude uses RAG with a &quot;Contextual Retriever&quot; to search the knowledge base and generate answers. Persistent across conversations within the project.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Persistent knowledge base (unlike one-off ChatGPT uploads). Best-in-class reasoning quality (Claude). Team sharing on Team/Enterprise plans. No infrastructure to manage. Already included in Pro/Max subscription.</li>
+<li><strong>Key weakness vs Contexter:</strong> No API endpoint to query the project knowledge base programmatically. No MCP server. Can&#39;t embed into your own product. RAG is a black box -- no control over chunking strategy, embedding model, or search parameters. Limited to Claude&#39;s ecosystem. No audio/video format support. Pricing at $20-100/mo per seat doesn&#39;t scale for applications.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://support.claude.com/en/articles/9517075-what-are-projects">https://support.claude.com/en/articles/9517075-what-are-projects</a></li>
+<li><a href="https://support.claude.com/en/articles/8241126-uploading-files-to-claude">https://support.claude.com/en/articles/8241126-uploading-files-to-claude</a></li>
+</ul>
+<hr>
+<h3>3. Google Gemini</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://gemini.google.com">https://gemini.google.com</a></li>
+<li><strong>Category:</strong> AI chat with file upload</li>
+<li><strong>One-line:</strong> Upload documents, images, and videos to Gemini for analysis, summaries, and Q&amp;A powered by Gemini 3 models.</li>
+<li><strong>How it solves the same pain differently:</strong> Upload up to 10 files per prompt (100 MB each, 2 GB for video). Gemini processes with native multimodal understanding -- PDFs are parsed with native text extraction, images are analyzed visually, videos up to 1 hour (paid plans). Deep Google Workspace integration.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Best multimodal support (video analysis up to 1 hour). Free tier available. Deep integration with Google Docs, Sheets, Slides. Native PDF understanding with adjustable resolution. Massive context window (Gemini 3).</li>
+<li><strong>Key weakness vs Contexter:</strong> No persistent knowledge base across sessions. No API for document Q&amp;A (Gemini API exists but without persistent RAG). No custom chunking or embedding control. Per-session file limits (10 files). Can&#39;t build a product on top of it. No MCP protocol. No hybrid search.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://support.google.com/gemini/answer/14903178">https://support.google.com/gemini/answer/14903178</a></li>
+<li><a href="https://ai.google.dev/gemini-api/docs/document-processing">https://ai.google.dev/gemini-api/docs/document-processing</a></li>
+</ul>
+<hr>
+<h2>Category 2: Note-taking / Workspace AI</h2>
+<h3>4. Notion AI (Q&amp;A)</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://www.notion.com/product/ai">https://www.notion.com/product/ai</a></li>
+<li><strong>Category:</strong> Note-taking / workspace AI</li>
+<li><strong>One-line:</strong> AI assistant built into Notion that answers questions by searching across your entire workspace&#39;s pages and databases.</li>
+<li><strong>How it solves the same pain differently:</strong> Instead of uploading documents to a separate service, your knowledge already lives in Notion. Notion AI Q&amp;A searches across all pages, databases, and connected apps (via AI connectors) you have permission to access. Answers include source citations pointing back to specific Notion pages.</li>
+<li><strong>Why a prospect might choose this instead:</strong> If your knowledge is already in Notion, zero migration needed. Team collaboration is native. Q&amp;A respects existing permissions. Connected apps extend reach beyond Notion content. Familiar UI for non-technical users.</li>
+<li><strong>Key weakness vs Contexter:</strong> Only works with content inside Notion (or connected via limited AI connectors). Can&#39;t process raw files like PDFs, audio, or video. No API endpoint for external applications. No MCP. Vendor lock-in to Notion ecosystem. Add-on pricing ($10/member/month on top of Notion subscription). No developer-facing RAG pipeline.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://www.notion.com/help/guides/get-answers-about-content-faster-with-q-and-a">https://www.notion.com/help/guides/get-answers-about-content-faster-with-q-and-a</a></li>
+<li><a href="https://www.notion.com/help/guides/ultimate-guide-to-ai-powered-knowledge-hubs-in-notion">https://www.notion.com/help/guides/ultimate-guide-to-ai-powered-knowledge-hubs-in-notion</a></li>
+</ul>
+<hr>
+<h3>5. Coda AI</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://coda.io/product/ai">https://coda.io/product/ai</a></li>
+<li><strong>Category:</strong> Note-taking / workspace AI</li>
+<li><strong>One-line:</strong> AI assistant inside Coda workspace that answers questions about your docs, summarizes content, and works with structured data tables.</li>
+<li><strong>How it solves the same pain differently:</strong> Like Notion AI but with stronger structured data capabilities. Users ask natural language questions about their Coda docs and get answers. Coda AI excels at working with tables and structured data -- it can query, filter, and analyze tabular information alongside free-form text.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Strong at structured data Q&amp;A (tables, databases). Built-in automation (Coda packs) for workflows. Good for teams that need both document Q&amp;A and operational automation in one tool.</li>
+<li><strong>Key weakness vs Contexter:</strong> Locked to Coda ecosystem. No external file processing. No API for programmatic Q&amp;A. No MCP. Weaker at pure document Q&amp;A compared to dedicated solutions. No audio/video/image processing. Smaller ecosystem than Notion.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://coda.io/product/ai">https://coda.io/product/ai</a></li>
+<li><a href="https://www.fahimai.com/how-to-use-coda">https://www.fahimai.com/how-to-use-coda</a></li>
+</ul>
+<hr>
+<h3>6. Obsidian + AI Plugins (Smart Connections / Neural Composer)</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://obsidian.md">https://obsidian.md</a> + community plugins</li>
+<li><strong>Category:</strong> Note-taking / workspace AI</li>
+<li><strong>One-line:</strong> Local-first knowledge management with community AI plugins that add RAG-powered Q&amp;A over your vault using local or cloud LLMs.</li>
+<li><strong>How it solves the same pain differently:</strong> Your documents are local Markdown files. Plugins like Smart Connections, Vault AI Chat, and Neural Composer (LightRAG/Graph RAG) embed your vault and let you chat with your notes. Everything runs locally -- no data leaves your machine if using Ollama or similar local LLMs.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Complete data privacy (local-first, no cloud). Free and open source. Full control over embedding model, LLM, and RAG pipeline. Graph RAG (Neural Composer) leverages note relationships. 1.5M+ users. Active plugin ecosystem.</li>
+<li><strong>Key weakness vs Contexter:</strong> Requires manual setup (Python backends, ChromaDB, Ollama). No API endpoint for external access. Only works with Obsidian vault content (Markdown). No audio/video/image pipeline. Not a service -- can&#39;t share access or build products on top. Technical barrier is high. No MCP server (though Claude Code MCP integration exists for note editing, not RAG Q&amp;A).</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://www.nxcode.io/resources/news/obsidian-ai-second-brain-complete-guide-2026">https://www.nxcode.io/resources/news/obsidian-ai-second-brain-complete-guide-2026</a></li>
+<li><a href="https://forum.obsidian.md/t/neural-composer-local-graph-rag-made-easy-lightrag-integration/109891">https://forum.obsidian.md/t/neural-composer-local-graph-rag-made-easy-lightrag-integration/109891</a></li>
+</ul>
+<hr>
+<h2>Category 3: Enterprise Search / Knowledge Management</h2>
+<h3>7. Glean</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://www.glean.com">https://www.glean.com</a></li>
+<li><strong>Category:</strong> Enterprise search / knowledge management</li>
+<li><strong>One-line:</strong> AI-powered enterprise search platform that connects to 100+ workplace apps and provides permission-aware answers grounded in company knowledge.</li>
+<li><strong>How it solves the same pain differently:</strong> Instead of uploading documents to a service, Glean connects to where documents already live (Google Workspace, Slack, Jira, Confluence, GitHub, Notion, etc.) via connectors. It indexes everything with permission-awareness and provides a unified AI search and chat interface. Answers preferred 1.9x over ChatGPT and 1.6x over Claude on enterprise queries (blind evaluation, 280 queries).</li>
+<li><strong>Why a prospect might choose this instead:</strong> No document migration needed -- connects to existing tools. Permission-aware (respects who can see what). Enterprise-grade security. Proven at scale (valued at $7.2B as of 2025). Reduces internal support requests by 20%.</li>
+<li><strong>Key weakness vs Contexter:</strong> Enterprise pricing (custom, reportedly $10-30+ per user/month). Overkill for individuals or small teams. No developer API for building products on top. No MCP. Requires enterprise IT setup. Not for external/customer-facing use cases. No processing of raw uploaded files (only indexed from connected apps).</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://www.glean.com/blog/enterprise-search-evaluation-2026">https://www.glean.com/blog/enterprise-search-evaluation-2026</a></li>
+<li><a href="https://techcrunch.com/2026/02/15/the-enterprise-ai-land-grab-is-on-glean-is-building-the-layer-beneath-the-interface/">https://techcrunch.com/2026/02/15/the-enterprise-ai-land-grab-is-on-glean-is-building-the-layer-beneath-the-interface/</a></li>
+</ul>
+<hr>
+<h3>8. Guru</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://www.getguru.com">https://www.getguru.com</a></li>
+<li><strong>Category:</strong> Enterprise search / knowledge management</li>
+<li><strong>One-line:</strong> AI knowledge platform that bundles enterprise search, company wiki, and intranet with verified answers from company documentation.</li>
+<li><strong>How it solves the same pain differently:</strong> Guru combines three functions: AI enterprise search across connected apps (Slack, Salesforce, Google Workspace, Jira, Confluence), a company wiki for verified documentation, and an intranet hub. AI answers use reasoning to match intent even when terminology doesn&#39;t match exactly. Verification workflows ensure answers stay accurate.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Built-in knowledge verification (experts mark content as verified/stale). Embeds in Slack, Teams, and browser. Reduces repeat Slack queries by 20% in first 60 days. Good for internal support and onboarding. SOC 2 Type 2 compliance.</li>
+<li><strong>Key weakness vs Contexter:</strong> Starts at $25/user/month (10-seat minimum = $250/mo minimum). Enterprise-only positioning. No developer API for custom RAG applications. No MCP. Can&#39;t process raw documents (PDFs, audio, video). No external/customer-facing use case. Heavy setup and admin overhead.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://www.getguru.com">https://www.getguru.com</a></li>
+<li><a href="https://www.eesel.ai/blog/guru-ai">https://www.eesel.ai/blog/guru-ai</a></li>
+</ul>
+<hr>
+<h2>Category 4: Custom GPTs / AI Agents</h2>
+<h3>9. OpenAI Custom GPTs</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://chat.openai.com/gpts">https://chat.openai.com/gpts</a></li>
+<li><strong>Category:</strong> Custom GPTs / AI agents</li>
+<li><strong>One-line:</strong> Build custom ChatGPT personas with uploaded knowledge files (up to 20 files, 512 MB each) that anyone can use.</li>
+<li><strong>How it solves the same pain differently:</strong> Create a custom GPT with specific instructions and uploaded knowledge files. Share it via link. Users interact through ChatGPT&#39;s interface. OpenAI handles the RAG internally -- you just upload files and write instructions. No code required.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Fastest path from &quot;I have documents&quot; to &quot;anyone can ask questions about them.&quot; Built on GPT-4/5 models. Shareable via link. Zero infrastructure. Custom instructions shape behavior. GPT Store for distribution.</li>
+<li><strong>Key weakness vs Contexter:</strong> No programmatic API access to query the GPT&#39;s knowledge. Locked to ChatGPT interface. Limited to 20 knowledge files. RAG quality is unreliable (community reports frequent failures with knowledge file retrieval). No control over chunking, embedding, or search. No MCP. No audio/video processing in knowledge base. Can&#39;t build a product on top -- it IS the product.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://help.openai.com/en/articles/8843948-knowledge-in-gpts">https://help.openai.com/en/articles/8843948-knowledge-in-gpts</a></li>
+<li><a href="https://community.openai.com/t/uploaded-files-work-knowledge-files-dont/607194">https://community.openai.com/t/uploaded-files-work-knowledge-files-dont/607194</a></li>
+</ul>
+<hr>
+<h3>10. Coze</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://www.coze.com">https://www.coze.com</a></li>
+<li><strong>Category:</strong> Custom GPTs / AI agents</li>
+<li><strong>One-line:</strong> AI agent development platform (by ByteDance) with built-in knowledge base RAG, plugins, workflows, and multi-platform deployment.</li>
+<li><strong>How it solves the same pain differently:</strong> Build AI agents (bots) with knowledge bases: upload documents, Coze handles vectorization and semantic retrieval. Add plugins (50+ built-in), workflows, and custom prompts. Deploy to Telegram, Discord, Slack, web, and other platforms. Open-source edition (Coze Studio) available for self-hosting.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Multi-platform deployment (Telegram, Discord, etc.) out of the box. Visual workflow builder for complex agent logic. Plugin ecosystem. Open-source option (Coze Studio). Free tier available. Knowledge base is persistent and managed.</li>
+<li><strong>Key weakness vs Contexter:</strong> No standard API for raw RAG queries (agents are the interface). Less control over RAG pipeline internals. ByteDance ownership raises data sovereignty concerns for some users. Knowledge base has size/count restrictions. No MCP protocol. No audio/video processing in knowledge base. Agent-first, not API-first.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://www.coze.com/open/docs/guides/knowledge_overview">https://www.coze.com/open/docs/guides/knowledge_overview</a></li>
+<li><a href="https://docs.coze.com/guides/use_knowledge">https://docs.coze.com/guides/use_knowledge</a></li>
+</ul>
+<hr>
+<h3>11. Dify</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://dify.ai">https://dify.ai</a></li>
+<li><strong>Category:</strong> Custom GPTs / AI agents</li>
+<li><strong>One-line:</strong> Open-source LLMOps platform with visual workflow builder, built-in RAG engine, and agent framework for building AI applications.</li>
+<li><strong>How it solves the same pain differently:</strong> Dify provides a complete platform: upload documents (PDF, TXT, HTML, Markdown), configure chunking strategies, and Dify handles embedding and retrieval with pgvector. Build agents with 50+ tools, create visual workflows, and deploy as web apps or APIs. 60K+ GitHub stars. Self-hostable or cloud.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Open source (self-hostable). Visual workflow builder is powerful. Built-in RAG + agent + workflow in one platform. Agentic RAG (retrieval inside reasoning loop). Large community (60K+ stars). API access for deployment. Supports multiple LLM providers.</li>
+<li><strong>Key weakness vs Contexter:</strong> Heavier to self-host (requires more infrastructure than Contexter&#39;s single Docker compose). Platform, not a service -- you build apps on Dify, not call a simple API. No MCP protocol. No native audio/video processing. Document format support limited to text-based formats (no PPTX, XLSX, ODS, images). More complex than &quot;upload file, get API endpoint.&quot;</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://dify.ai">https://dify.ai</a></li>
+<li><a href="https://github.com/langgenius/dify">https://github.com/langgenius/dify</a></li>
+</ul>
+<hr>
+<h2>Category 5: Research Tools</h2>
+<h3>12. Google NotebookLM</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://notebooklm.google.com">https://notebooklm.google.com</a></li>
+<li><strong>Category:</strong> Research tools</li>
+<li><strong>One-line:</strong> Google&#39;s AI research tool that analyzes uploaded sources (PDFs, Docs, websites, YouTube) and generates summaries, Q&amp;A, audio overviews, and even cinematic videos.</li>
+<li><strong>How it solves the same pain differently:</strong> Upload sources to a &quot;notebook.&quot; NotebookLM (powered by Gemini 3) generates study guides, summaries, FAQs, and answers grounded exclusively in your uploaded sources. Unique features: Audio Overview (AI podcast from your docs), Cinematic Video Overviews (documentary-style video from docs), Deep Research (multi-step analysis generating cited reports), and built-in slide editing.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Free to use. Best-in-class source grounding (answers only from your uploaded docs, no hallucination from training data). Audio Overview is unique and viral. Deep Research generates comprehensive reports automatically. Supports YouTube videos as sources. Google ecosystem integration.</li>
+<li><strong>Key weakness vs Contexter:</strong> No API. No MCP. No programmatic access whatsoever -- purely a consumer research tool. Limited source count per notebook. No way to build products on top. No audio/video file upload (only YouTube URLs). No chunking/embedding control. Google can discontinue it (Labs product).</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://notebooklm.google.com">https://notebooklm.google.com</a></li>
+<li><a href="https://medium.com/@jimmisound/the-cognitive-engine-a-comprehensive-analysis-of-notebooklms-evolution-2023-2026-90b7a7c2df36">https://medium.com/@jimmisound/the-cognitive-engine-a-comprehensive-analysis-of-notebooklms-evolution-2023-2026-90b7a7c2df36</a></li>
+</ul>
+<hr>
+<h3>13. Perplexity AI</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://www.perplexity.ai">https://www.perplexity.ai</a></li>
+<li><strong>Category:</strong> Research tools</li>
+<li><strong>One-line:</strong> AI search engine with file upload (up to 50 MB/file for Pro) that combines web search with document analysis for research and Q&amp;A.</li>
+<li><strong>How it solves the same pain differently:</strong> Upload documents, then ask questions that Perplexity answers by combining your uploaded files with its web search results. Deep Research mode performs multi-step research with autonomous reasoning. Pro users get up to 10 files per prompt, 90-day retention. Enterprise gets 1 GB/file and 1-year retention.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Combines document Q&amp;A with live web search (unique hybrid). Deep Research is powerful for comprehensive analysis. Document auditing feature cross-references claims against public sources. Free tier available. Mobile apps. Clean, fast UX.</li>
+<li><strong>Key weakness vs Contexter:</strong> No persistent knowledge base (files retained 30-90 days, then deleted). No API for document Q&amp;A (Perplexity API is for web search only). No MCP. Limited to 10 files per prompt. No audio/video processing. Can&#39;t build products on top. Primary value is web search, not document RAG.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://www.perplexity.ai/help-center/en/articles/10354807-file-uploads">https://www.perplexity.ai/help-center/en/articles/10354807-file-uploads</a></li>
+<li><a href="https://www.datastudios.org/post/perplexity-ai-file-uploading-size-limits-supported-formats-plan-differences-and-workflow-strateg">https://www.datastudios.org/post/perplexity-ai-file-uploading-size-limits-supported-formats-plan-differences-and-workflow-strateg</a></li>
+</ul>
+<hr>
+<h3>14. Elicit</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://elicit.com">https://elicit.com</a></li>
+<li><strong>Category:</strong> Research tools</li>
+<li><strong>One-line:</strong> AI research assistant for academic papers -- searches 138M+ papers, extracts data into tables, and generates literature review reports with 94-99% accuracy.</li>
+<li><strong>How it solves the same pain differently:</strong> Instead of uploading your own documents, Elicit gives you access to 138M+ academic papers. Upload PDFs for data extraction into structured tables. Systematic review workflows. Every extracted data point shows the supporting quote from the original paper. New Elicit API (March 2026) for programmatic access.</li>
+<li><strong>Why a prospect might choose this instead:</strong> If the documents are academic papers, Elicit is purpose-built. 138M paper database eliminates the need to upload. 94-99% extraction accuracy. Structured data extraction (not just Q&amp;A). Systematic review workflow. New API for programmatic access.</li>
+<li><strong>Key weakness vs Contexter:</strong> Academic papers only -- doesn&#39;t work for general documents, internal docs, audio, video, or proprietary content. Narrow domain. No MCP. Extraction-focused, not conversational Q&amp;A. Pricing: $12-49/mo for individual plans. Can&#39;t use with your own private documents at scale.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://elicit.com">https://elicit.com</a></li>
+<li><a href="https://www.fahimai.com/how-to-use-elicit">https://www.fahimai.com/how-to-use-elicit</a></li>
+</ul>
+<hr>
+<h2>Category 6: Vector DB with RAG Templates</h2>
+<h3>15. Weaviate Verba</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://github.com/weaviate/Verba">https://github.com/weaviate/Verba</a></li>
+<li><strong>Category:</strong> Vector DB with RAG templates</li>
+<li><strong>One-line:</strong> Open-source RAG chatbot application by Weaviate that provides end-to-end document ingestion, embedding, and conversational search with a web UI.</li>
+<li><strong>How it solves the same pain differently:</strong> Verba is a complete RAG application (not just a database). Upload documents through a web UI, Verba chunks, embeds, and stores them in Weaviate. Chat interface for Q&amp;A with source citations. Supports local LLMs (Ollama) or cloud providers (OpenAI, Anthropic, Cohere). Modular and customizable architecture.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Open source and free. Self-hostable with full control. Supports local LLMs for complete data privacy. Backed by Weaviate (well-funded vector DB company). Web UI included. Modular -- swap embedding models, LLMs, chunking strategies. Good for privacy-sensitive use cases.</li>
+<li><strong>Key weakness vs Contexter:</strong> Requires self-hosting and setup (Docker, Weaviate cluster). No hosted service. No MCP protocol. Limited format support (primarily text-based documents). No audio/video processing. No production API out of the box (it&#39;s a demo app, not a service). No hybrid search (vector + full-text RRF). Community project, not a product -- less polished, fewer features.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://github.com/weaviate/Verba">https://github.com/weaviate/Verba</a></li>
+<li><a href="https://weaviate.io/blog/verba-open-source-rag-app">https://weaviate.io/blog/verba-open-source-rag-app</a></li>
+</ul>
+<hr>
+<h2>Category 7: No-code AI App Builders</h2>
+<p>(NOTE: Dify (#11) also belongs here but was placed in Category 4 due to its stronger agent-building identity. Stack AI and Flowise below are pure no-code builders.)</p>
+<h3>(Bonus: covered by #11 Dify above)</h3>
+<h3>Stack AI (no-code RAG pipeline builder)</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://www.stackai.com">https://www.stackai.com</a></li>
+<li><strong>Category:</strong> No-code AI app builders</li>
+<li><strong>One-line:</strong> Enterprise no-code platform for building RAG chatbots and AI agents with visual drag-and-drop builder, templates, and API publishing.</li>
+<li><strong>How it solves the same pain differently:</strong> Visual builder with templates for common use cases (support, sales ops, policy Q&amp;A). Upload documents, configure RAG pipeline visually, deploy as internal app or expose as API. Built-in environments, roles, audit history, and guardrails. Bridges prototyping and production.</li>
+<li><strong>Why a prospect might choose this instead:</strong> No-code visual builder is faster for non-developers. Enterprise features (roles, audit, environments). Templates for common patterns. Can publish as API. Good bridge from prototype to production.</li>
+<li><strong>Key weakness vs Contexter:</strong> Enterprise pricing (not disclosed, reportedly $500+/mo). No MCP. Less control than code-first approach. Vendor lock-in. Limited format support compared to Contexter&#39;s 15 formats. No audio/video pipeline. Abstraction layer adds latency and cost.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://www.stackai.com">https://www.stackai.com</a></li>
+<li><a href="https://www.stackai.com/blog/how-to-build-rag-chatbot">https://www.stackai.com/blog/how-to-build-rag-chatbot</a></li>
+</ul>
+<h3>Flowise (open-source no-code RAG builder)</h3>
+<ul>
+<li><strong>URL:</strong> <a href="https://flowiseai.com">https://flowiseai.com</a> / <a href="https://github.com/FlowiseAI/Flowise">https://github.com/FlowiseAI/Flowise</a></li>
+<li><strong>Category:</strong> No-code AI app builders</li>
+<li><strong>One-line:</strong> Open-source drag-and-drop platform for building RAG chatbots and AI agents with support for multiple vector DBs and LLM providers.</li>
+<li><strong>How it solves the same pain differently:</strong> Drag-and-drop interface to connect AI components: document loaders, text splitters, embedding models, vector stores (Pinecone, Chroma, Weaviate), and LLMs. Build RAG pipelines visually, deploy as chatbots or API endpoints. Open source, self-hostable. Multi-agent orchestration with human-in-the-loop.</li>
+<li><strong>Why a prospect might choose this instead:</strong> Open source and free (self-hosted). Visual builder requires no coding. Supports any combination of vector DB + LLM + embedding model. Human-in-the-loop workflows. Active community. Can expose as API endpoint.</li>
+<li><strong>Key weakness vs Contexter:</strong> Requires assembly -- you build the pipeline from blocks, Contexter gives you a working pipeline. No hosted service (free tier has 2 flows, 100 predictions/mo). No MCP. No native multi-format document processing (need to add loaders manually). No audio/video pipeline. Configuration complexity increases with sophistication. Less opinionated = more decisions to make.</li>
+</ul>
+<p>Sources:</p>
+<ul>
+<li><a href="https://flowiseai.com">https://flowiseai.com</a></li>
+<li><a href="https://github.com/FlowiseAI/Flowise">https://github.com/FlowiseAI/Flowise</a></li>
+</ul>
+<hr>
+<h2>Summary Matrix</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Competitor</th>
+<th>Category</th>
+<th>API Access</th>
+<th>MCP</th>
+<th>Persistent KB</th>
+<th>Audio/Video</th>
+<th>Self-host</th>
+<th>Free Tier</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>ChatGPT</td>
+<td>AI Chat</td>
+<td>No</td>
+<td>No</td>
+<td>No (session)</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (limited)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Claude Projects</td>
+<td>AI Chat</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (project)</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Google Gemini</td>
+<td>AI Chat</td>
+<td>Partial</td>
+<td>No</td>
+<td>No</td>
+<td>Video only</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Notion AI</td>
+<td>Workspace AI</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (workspace)</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Coda AI</td>
+<td>Workspace AI</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (workspace)</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (limited)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Obsidian+AI</td>
+<td>Workspace AI</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (vault)</td>
+<td>No</td>
+<td>Yes (local)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Glean</td>
+<td>Enterprise</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (index)</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Guru</td>
+<td>Enterprise</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (wiki)</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Custom GPTs</td>
+<td>AI Agents</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (20 files)</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Coze</td>
+<td>AI Agents</td>
+<td>Partial</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes (Studio)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Dify</td>
+<td>AI Agents</td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>12</td>
+<td>NotebookLM</td>
+<td>Research</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (notebook)</td>
+<td>YouTube only</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Perplexity</td>
+<td>Research</td>
+<td>No (search only)</td>
+<td>No</td>
+<td>Temp (30-90d)</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (limited)</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Elicit</td>
+<td>Research</td>
+<td>Yes (new)</td>
+<td>No</td>
+<td>Academic DB</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (limited)</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Verba/Weaviate</td>
+<td>Vector DB+RAG</td>
+<td>Self-build</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Contexter</strong> for reference: <strong>Yes</strong> API | <strong>Yes</strong> MCP | <strong>Yes</strong> persistent | <strong>Yes</strong> audio+video | <strong>Yes</strong> self-host | Pending (GTM) |</p>
+<hr>
+<h2>Key Insight: Contexter&#39;s Unique Position</h2>
+<p>None of the 15 indirect competitors offer ALL of:</p>
+<ol>
+<li><strong>API-first</strong> (REST endpoint for programmatic RAG queries)</li>
+<li><strong>MCP-native</strong> (12-tool MCP server for AI agent integration)</li>
+<li><strong>15-format pipeline</strong> (including audio, video, images, office formats)</li>
+<li><strong>Self-hostable</strong> with a single docker compose</li>
+<li><strong>Ultra-low infrastructure cost</strong> (EUR 4.72/mo for production)</li>
+</ol>
+<p>The closest competitors in feature overlap are:</p>
+<ul>
+<li><strong>Dify</strong> (#11) -- has API + self-hosting + RAG, but is a platform (not a service), lacks audio/video, no MCP</li>
+<li><strong>Verba/Weaviate</strong> (#15) -- open source + self-host + RAG, but is a demo app, no MCP, no multi-format pipeline</li>
+<li><strong>Flowise</strong> -- open source + visual builder + API, but requires assembly, no MCP, no native multi-format</li>
+</ul>
+<p><strong>Contexter&#39;s primary differentiation:</strong> It is the simplest path from &quot;I have files&quot; to &quot;I have an API endpoint (and MCP server) that answers questions about them.&quot; No platform to learn, no pipeline to assemble, no vendor lock-in. Upload -&gt; query. Developer-first, AI-native.</p>
+<hr>
+<h2>Competitive Positioning Recommendations</h2>
+<ol>
+<li><strong>Against AI chats (ChatGPT/Claude/Gemini):</strong> Position as &quot;persistent, programmable, embeddable&quot; -- the step after you outgrow dragging files into chat windows.</li>
+<li><strong>Against workspace AI (Notion/Coda/Obsidian):</strong> Position as &quot;format-agnostic, API-accessible&quot; -- for when your knowledge lives outside a single workspace tool.</li>
+<li><strong>Against enterprise search (Glean/Guru):</strong> Position as &quot;lightweight, developer-first, affordable&quot; -- 100x cheaper, no enterprise sales cycle, API in 5 minutes.</li>
+<li><strong>Against custom GPTs/agents (GPTs/Coze/Dify):</strong> Position as &quot;infrastructure, not application&quot; -- Contexter is the knowledge layer YOUR agents query via MCP or API.</li>
+<li><strong>Against research tools (NotebookLM/Perplexity/Elicit):</strong> Position as &quot;your own research tool&quot; -- programmable, private, persistent, with any document type.</li>
+<li><strong>Against vector DB templates (Verba/Pinecone):</strong> Position as &quot;batteries-included&quot; -- no assembly required, production-ready pipeline with one upload.</li>
+<li><strong>Against no-code builders (Stack AI/Flowise):</strong> Position as &quot;simpler than no-code&quot; -- no drag-and-drop needed, just upload and query.</li>
+</ol>
+
+</body>
+</html>

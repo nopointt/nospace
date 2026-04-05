@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-synthesis-positioning — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter GTM Synthesis — Positioning &amp; Hero Copy</h1>
+<blockquote>
+<p>Author: Lead/Copywriting
+Date: 2026-03-27
+Operator: Eidolon (nopoint)
+Sources: contexter-gtm-v2-nontechnical-pain.md, contexter-gtm-v2-direct-competitors.md,
+         contexter-gtm-v2-indirect-competitors.md, contexter-gtm-competitor-supermemory.md
+Scope: Non-technical user positioning — analysts, researchers, PMs, marketers, founders, consultants</p>
+</blockquote>
+<hr>
+<h2>Copywriting Brief — Summary Before Writing</h2>
+<p><strong>The product:</strong> Contexter = one place to store everything you know. Every AI you use reads from it.
+Upload once. ChatGPT knows it. Claude knows it. Gemini knows it. Switch models freely.</p>
+<p><strong>The emotional truth (from user research):</strong>
+People grieve lost AI context. They say &quot;it forgot me,&quot; &quot;two years gone,&quot; &quot;like losing a loved one.&quot;
+They&#39;ve built something real — accumulated understanding, trained preferences, shared history — and
+it disappears without warning. The pain is personal, not technical.</p>
+<p><strong>The competitive gap:</strong>
+Every competitor is either:</p>
+<ul>
+<li>Locked to one AI (Claude Projects, Custom GPTs, NotebookLM) — your knowledge dies if you switch</li>
+<li>Developer-first (Ragie, Graphlit, Supermemory, Morphik) — requires a coder to set up and use</li>
+<li>Format-limited (Langbase, copy-paste) — won&#39;t accept your PDFs, meetings, voice notes</li>
+</ul>
+<p>Contexter is the only product that is simultaneously: works with all AI, accepts all formats, and
+requires zero technical knowledge to use.</p>
+<p><strong>The user&#39;s vocabulary (verbatim, from research):</strong></p>
+<ul>
+<li>&quot;memory&quot; / &quot;remembers&quot; / &quot;forgot everything&quot;</li>
+<li>&quot;start from scratch&quot; / &quot;start all over again&quot;</li>
+<li>&quot;knows me&quot; / &quot;knows my work&quot;</li>
+<li>&quot;picks up where we left off&quot;</li>
+<li>&quot;I don&#39;t have to explain myself&quot;</li>
+<li>&quot;my stuff&quot; / &quot;my information&quot;</li>
+</ul>
+<p><strong>Copy rules derived from research:</strong></p>
+<ul>
+<li>NEVER use: RAG, embeddings, vector, MCP, API, chunks, pipeline, context window, tokens</li>
+<li>ALWAYS use: remembers, knows, forgets, memory, your stuff, all your AIs</li>
+<li>Lead with the emotional relief, follow with the functional clarity</li>
+<li>H1 under 8 words (confirmed best practice from NotebookLM, Otter.ai, Gamma hero patterns)</li>
+<li>Frame the product as a trusted assistant, not infrastructure</li>
+</ul>
+<hr>
+<h2>Section 1 — Positioning Statements (3 Variants)</h2>
+<p>Format: &quot;For [audience], Contexter is [category] that [benefit], unlike [alternatives] which [limitation].&quot;</p>
+<hr>
+<h3>Variant A — Emphasizing Cross-Model Memory</h3>
+<p><strong>For knowledge workers who use multiple AI tools, Contexter is the one memory that works across
+every AI you use, unlike ChatGPT memory, Claude Projects, or Gemini — which each lock your
+knowledge inside their own walls.</strong></p>
+<p><strong>Rationale:</strong>
+The research shows the dominant pain is having to &quot;start over&quot; when switching tools or starting
+a new chat. The user has accumulated real value — months or years of context — and it disappears
+every time they cross a platform boundary. This variant names the villains explicitly (ChatGPT,
+Claude, Gemini), which is bold but accurate: those products silo your memory by design. The
+&quot;walled garden&quot; trend identified in competitive research confirms this framing is fair and timely.
+The phrase &quot;every AI you use&quot; echoes the tagline and the user&#39;s own language (&quot;every AI&quot;).</p>
+<hr>
+<h3>Variant B — Emphasizing Format Freedom</h3>
+<p><strong>For professionals who live in documents, meetings, and research, Contexter is the only AI memory
+that accepts everything — PDF, DOCX, audio, video, images — no matter the size, unlike tools that
+only work with certain files or make you retype your material.</strong></p>
+<p><strong>Rationale:</strong>
+This variant targets users with diverse, messy knowledge libraries: analysts with hundreds of PDFs,
+consultants with recorded client calls, researchers with mixed-format archives. The direct competitor
+research shows most tools have narrow format support (Langbase: PDF/TXT only, 10MB limit; Custom GPTs:
+20 files max). The phrase &quot;no matter the size&quot; addresses an unspoken anxiety — &quot;is my 200-page report
+too big?&quot; — by pre-emptively eliminating it. &quot;No retype&quot; references the copy-paste manual workaround,
+the most common incumbent behavior identified in the research.</p>
+<hr>
+<h3>Variant C — Emphasizing Simplicity for Non-Tech</h3>
+<p><strong>For non-technical professionals who use AI every day but aren&#39;t developers, Contexter is the first
+AI memory you can actually set up yourself — upload your files, connect your AI tool, done — unlike
+Ragie, Supermemory, and similar products built for engineers who write code for a living.</strong></p>
+<p><strong>Rationale:</strong>
+This variant is the most direct differentiation play in the market. The competitive analysis confirms
+that every direct competitor (Ragie, Graphlit, Morphik, Supermemory, Langbase) is developer-first:
+their landing pages lead with code examples, SDKs, and API documentation. Contexter&#39;s target user
+doesn&#39;t know what an SDK is. The phrasing &quot;write code for a living&quot; is slightly aggressive but
+accurately describes the competitor ICP — and creates a clear in-group/out-group distinction for
+the non-technical user. &quot;Upload your files, connect your AI tool, done&quot; is a three-step journey
+that any person can visualize.</p>
+<hr>
+<h2>Section 2 — Hero Copy (5 EN + 5 RU)</h2>
+<hr>
+<h3>English Variants</h3>
+<hr>
+<p><strong>EN Variant 1 — &quot;The Investment&quot; (grief-resonant, emotionally led)</strong></p>
+<p><strong>H1:</strong> Your AI finally remembers everything.</p>
+<p><strong>Subheadline:</strong>
+Upload your documents, notes, and recordings once. ChatGPT, Claude, Gemini — they all know your
+work. No more starting over.</p>
+<p><strong>CTA:</strong> Try Contexter Free</p>
+<p><strong>Rationale:</strong>
+&quot;Finally&quot; carries the weight of accumulated frustration — this is the word users reach for after
+months of re-explaining themselves. &quot;Remembers everything&quot; uses the exact vocabulary from the
+research (&quot;it doesn&#39;t remember me,&quot; &quot;ChatGPT forgot everything&quot;). The subheadline names all three
+major AI tools, which immediately answers the unstated question: &quot;does it work with my AI?&quot; The
+CTA &quot;Try Contexter Free&quot; removes friction for someone who has been burned by tool lock-in before.
+The 5-second test passes: any knowledge worker understands this on first read.</p>
+<hr>
+<p><strong>EN Variant 2 — &quot;The Relief&quot; (cognitive offload, Mem.ai &quot;forget it&quot; pattern)</strong></p>
+<p><strong>H1:</strong> Stop re-explaining yourself to every AI.</p>
+<p><strong>Subheadline:</strong>
+Contexter gives every AI you use one shared memory — your documents, your notes, your way of
+working. Upload once, and you&#39;re done.</p>
+<p><strong>CTA:</strong> Get Started — It Takes 2 Minutes</p>
+<p><strong>Rationale:</strong>
+&quot;Stop re-explaining yourself&quot; captures the most repeated behavioral pain: the exhausting ritual
+of starting a new chat and rebuilding context from scratch. The second person imperative (&quot;stop&quot;)
+creates urgency without pressure. &quot;One shared memory&quot; is the product&#39;s entire value in three words.
+The CTA specifies &quot;2 minutes&quot; — this handles the non-technical user&#39;s implicit fear: &quot;setup will
+take forever.&quot; Research from Supermemory&#39;s testimonials shows that &quot;integration achievable in 120
+seconds&quot; was one of the most praised elements. Borrowed directly.</p>
+<hr>
+<p><strong>EN Variant 3 — &quot;The Ownership&quot; (investment framing, grief-to-pride)</strong></p>
+<p><strong>H1:</strong> Your knowledge. Every AI. One place.</p>
+<p><strong>Subheadline:</strong>
+You&#39;ve spent months teaching your AI about your work. That knowledge belongs to you — not to
+ChatGPT, not to Claude. Contexter keeps it yours, forever.</p>
+<p><strong>CTA:</strong> Keep My AI Memory</p>
+<p><strong>Rationale:</strong>
+This variant leans hardest into the grief research. Users say &quot;two years gone,&quot; &quot;I spent a year
+building these memories.&quot; They frame accumulated context as built capital — something they own.
+&quot;That knowledge belongs to you&quot; is a direct response to the implicit betrayal they feel when a
+platform erases their history. The CTA &quot;Keep My AI Memory&quot; is unusual (most CTAs are action-first,
+not retention-first) but matches the emotional register of someone afraid of losing something again.
+Worth A/B testing against more standard CTAs.</p>
+<hr>
+<p><strong>EN Variant 4 — &quot;The Practicality&quot; (outcome-led, Otter.ai pattern)</strong></p>
+<p><strong>H1:</strong> One upload. ChatGPT knows it. Claude knows it.</p>
+<p><strong>Subheadline:</strong>
+Drop in any file — PDF, recording, document, image. All your AI tools instantly know the
+content. Switch between tools without losing a thing.</p>
+<p><strong>CTA:</strong> Upload Your First File</p>
+<p><strong>Rationale:</strong>
+Inspired by Otter.ai&#39;s &quot;Turn meetings into transcripts&quot; pattern — pure concrete transformation,
+no emotional scaffolding. The H1 is a micro-narrative: upload → both major AIs know it. The
+reader watches the value being delivered in the headline itself. &quot;Drop in any file&quot; addresses
+format anxiety. &quot;Switch between tools without losing a thing&quot; is the cross-model memory promise
+stated plainly. CTA &quot;Upload Your First File&quot; is the smallest possible commitment — not &quot;sign up,&quot;
+not &quot;start a trial,&quot; just do the one thing. Reduces decision friction to near zero.</p>
+<hr>
+<p><strong>EN Variant 5 — &quot;The Status&quot; (executive assistant frame, Otter.ai pattern)</strong></p>
+<p><strong>H1:</strong> The memory your AI should have had all along.</p>
+<p><strong>Subheadline:</strong>
+Connect Contexter to any AI tool and it instantly knows your documents, your history, your
+projects. Like giving every AI a perfect briefing before every conversation.</p>
+<p><strong>CTA:</strong> Connect Your AI Tools</p>
+<p><strong>Rationale:</strong>
+&quot;Should have had all along&quot; carries a quiet indignation — this is something users feel cheated
+out of. &quot;Perfect briefing&quot; uses a professional metaphor (executive briefing) that resonates with
+PMs, consultants, and analysts — people who prepare briefing documents as part of their daily
+work. The phrase &quot;before every conversation&quot; is specific and visualizable. This variant skews
+slightly more sophisticated and will perform better with the consultant/founder segment than with
+researchers or marketers.</p>
+<hr>
+<h3>Russian Variants</h3>
+<p>Note on approach: These are NOT translations of the English variants. They are written natively
+in Russian, using the emotional register and vocabulary that Russian-speaking knowledge workers
+actually use when talking about AI tools.</p>
+<hr>
+<p><strong>RU Вариант 1 — &quot;Наконец-то помнит&quot; (эмоциональный, для тех кто устал объяснять)</strong></p>
+<p><strong>H1:</strong> Все нейросети знают твою работу.</p>
+<p><strong>Подзаголовок:</strong>
+Загрузи документы один раз — и ChatGPT, Claude, Gemini автоматически знают весь контекст.
+Больше не нужно объяснять с нуля.</p>
+<p><strong>CTA:</strong> Попробовать бесплатно</p>
+<p><strong>Обоснование:</strong>
+&quot;Все нейросети&quot; — именно так говорят пользователи в русскоязычном сообществе AI. Не &quot;все LLM&quot;,
+не &quot;все модели&quot; — &quot;все нейросети&quot;. Это живой разговорный язык 2026 года. H1 сформулирован как
+результат, а не процесс. &quot;Знают твою работу&quot; — это формулировка, которую хочет услышать аналитик,
+консультант или PM: не &quot;хранят данные&quot;, а именно &quot;знают&quot;. Подзаголовок сразу называет три главных
+инструмента — снимает вопрос &quot;а мой инструмент поддерживается?&quot;. &quot;С нуля&quot; — прямое попадание в
+боль из исследования.</p>
+<hr>
+<p><strong>RU Вариант 2 — &quot;Больше не начинай сначала&quot; (рельеф от боли)</strong></p>
+<p><strong>H1:</strong> Хватит объяснять одно и то же каждой нейросети.</p>
+<p><strong>Подзаголовок:</strong>
+Contexter — одна память для всех твоих AI. Загрузи документы, подключи нужный инструмент —
+и он уже всё знает о твоей работе.</p>
+<p><strong>CTA:</strong> Начать — займёт 2 минуты</p>
+<p><strong>Обоснование:</strong>
+Прямая формулировка самой распространённой жалобы из исследования: &quot;начинать всё сначала в
+каждом новом чате&quot;. &quot;Одна память&quot; — буквальный перевод ключевого обещания продукта, и он звучит
+естественно по-русски. &quot;Уже всё знает&quot; — это целевое состояние, которое пользователь хочет
+достичь. CTA &quot;займёт 2 минуты&quot; снимает барьер &quot;настройка = что-то сложное&quot; — критично для
+нетехнической аудитории.</p>
+<hr>
+<p><strong>RU Вариант 3 — &quot;Твои знания — не их собственность&quot; (владение, эмоциональный)</strong></p>
+<p><strong>H1:</strong> Твои знания не должны исчезать вместе с чатом.</p>
+<p><strong>Подзаголовок:</strong>
+Ты месяцами объяснял нейросети свою работу. Contexter сохраняет всё это — и делает доступным
+для любого AI, который ты используешь.</p>
+<p><strong>CTA:</strong> Сохранить мою память</p>
+<p><strong>Обоснование:</strong>
+Этот вариант написан для пользователей, которые пережили потерю контекста — &quot;два года воспоминаний
+исчезли&quot;, &quot;это было невероятно важно&quot;. По-русски это звучит как личная обида: &quot;не должны исчезать&quot;
+— это не техническое описание, это моральное утверждение. &quot;Месяцами объяснял&quot; — отсылка к
+реальному пользовательскому поведению, которое исследование называет &quot;построением воспоминаний&quot;.
+CTA &quot;Сохранить мою память&quot; нестандартный, но эмоционально точный.</p>
+<hr>
+<p><strong>RU Вариант 4 — &quot;Практичный&quot; (конкретный, для занятых людей)</strong></p>
+<p><strong>H1:</strong> Один файл — и все нейросети в курсе.</p>
+<p><strong>Подзаголовок:</strong>
+Загружай PDF, записи встреч, презентации — в любом формате, любого размера. ChatGPT и Claude
+сразу получают доступ к нужному контексту.</p>
+<p><strong>CTA:</strong> Загрузить первый файл</p>
+<p><strong>Обоснование:</strong>
+Для занятого аналитика или консультанта важна скорость понимания. H1 — это мини-история: загрузил →
+все AI знают. Никакой метафоры, никакой эмоции — чистый результат. &quot;Записи встреч, презентации&quot; —
+конкретные форматы из жизни целевой аудитории. Важно назвать аудио (записи встреч) — это снимает
+вопрос &quot;а вдруг это только текстовые документы?&quot;. CTA &quot;Загрузить первый файл&quot; — минимально
+возможный барьер входа.</p>
+<hr>
+<p><strong>RU Вариант 5 — &quot;Статусный&quot; (для founders/консультантов)</strong></p>
+<p><strong>H1:</strong> Твой AI наконец-то помнит всё.</p>
+<p><strong>Подзаголовок:</strong>
+Подключи Contexter к ChatGPT, Claude или Gemini — и они автоматически знают твои документы,
+историю проектов, твой стиль работы. Как личный ассистент, который всегда в контексте.</p>
+<p><strong>CTA:</strong> Подключить мои инструменты</p>
+<p><strong>Обоснование:</strong>
+&quot;Наконец-то&quot; — одно из самых эмоционально заряженных слов в русском языке для накопленного
+раздражения. &quot;Помнит всё&quot; — полная противоположность главной жалобы (&quot;забыл всё&quot;). &quot;Личный
+ассистент, который всегда в контексте&quot; — статусный образ для founder или консультанта, который
+мечтает о человеке, которого не нужно вводить в курс дела каждый раз. CTA &quot;Подключить мои
+инструменты&quot; ориентирован на действие и подчёркивает, что продукт работает с существующим
+инструментарием, а не требует смены привычек.</p>
+<hr>
+<h2>Section 3 — Three Value Props (EN + RU)</h2>
+<hr>
+<h3>VP1 — Works with All Your AIs</h3>
+<p><strong>Icon:</strong> Grid of 4 AI logos (ChatGPT / Claude / Gemini / Perplexity)</p>
+<p><strong>EN Headline:</strong> One memory. Every AI reads it.</p>
+<p><strong>EN Body:</strong>
+ChatGPT, Claude, Gemini, Perplexity — Contexter connects to all of them. Upload your knowledge
+once and every AI you open already knows the context. No more choosing between tools. No more
+starting over.</p>
+<hr>
+<p><strong>RU Заголовок:</strong> Одна память — для всех нейросетей.</p>
+<p><strong>RU Текст:</strong>
+ChatGPT, Claude, Gemini, Perplexity — Contexter работает со всеми. Загрузи материалы один раз,
+и каждый AI, который ты откроешь, уже знает контекст. Больше не нужно выбирать между инструментами
+или объяснять одно и то же по кругу.</p>
+<p><strong>Rationale:</strong>
+The biggest competitive moat Contexter has is cross-model access. Every platform competitor
+(Claude Projects, Custom GPTs, NotebookLM) is walled to one model. This VP leads with the
+most differentiating fact. Naming the four major AI tools acts as social proof — &quot;yes, the one
+you use is on the list.&quot; The phrase &quot;no more starting over&quot; mirrors verbatim user language from
+research.</p>
+<hr>
+<h3>VP2 — Any Format, Any Size</h3>
+<p><strong>Icon:</strong> File icons — PDF / microphone / video camera / image / document</p>
+<p><strong>EN Headline:</strong> PDFs. Recordings. Videos. Images. All of it.</p>
+<p><strong>EN Body:</strong>
+Drop in a contract, a meeting recording, a research paper, or a photo of your whiteboard.
+Contexter reads them all — no manual typing, no size limits, no &quot;file type not supported&quot; error.
+Your knowledge, whatever form it takes.</p>
+<hr>
+<p><strong>RU Заголовок:</strong> PDF, запись разговора, видео, фото — принимаем всё.</p>
+<p><strong>RU Текст:</strong>
+Договор, запись встречи, исследование, фотография доски — Contexter читает любой формат.
+Никакого ручного ввода, никаких ограничений по размеру, никакого &quot;формат не поддерживается&quot;.
+Твои знания — в любом виде.</p>
+<p><strong>Rationale:</strong>
+Format anxiety is real and underdiscussed. Non-technical users have been burned by &quot;file type
+not supported&quot; errors on other tools. The copy lists specific, concrete file types (contract,
+meeting recording, research paper, whiteboard photo) — each one is a real object from the target
+user&#39;s daily life, not an abstract category. The three-negative-resolved structure (&quot;no manual
+typing, no size limits, no error&quot;) directly neutralizes three specific objections before they
+form. In Russian, &quot;читает любой формат&quot; uses the metaphor of reading — the AI &quot;reads&quot; the file,
+not &quot;processes&quot; it — which is warmer and more human.</p>
+<hr>
+<h3>VP3 — Just Works, No Setup</h3>
+<p><strong>Icon:</strong> A single checkmark or lightning bolt</p>
+<p><strong>EN Headline:</strong> No technical knowledge required. Seriously.</p>
+<p><strong>EN Body:</strong>
+You don&#39;t need to be a developer. You don&#39;t need to set up anything. Upload a file, paste a
+link, connect your AI tool — and it works. If you can use email, you can use Contexter.</p>
+<hr>
+<p><strong>RU Заголовок:</strong> Не нужно быть программистом. Совсем.</p>
+<p><strong>RU Текст:</strong>
+Никакой настройки, никаких API-ключей, никакого кода. Загрузил файл, подключил нейросеть —
+всё работает. Если ты умеешь пользоваться почтой, ты умеешь пользоваться Contexter.</p>
+<p><strong>Rationale:</strong>
+This is the single most important VP for non-technical users. The competitive landscape is
+drowning in developer tools — Ragie&#39;s landing page leads with a code block, Supermemory&#39;s CTA
+says &quot;Start Building.&quot; Every competitor signals &quot;this is for engineers.&quot; Contexter&#39;s differentiator
+is that it&#39;s for everyone. &quot;Seriously&quot; (and &quot;Совсем&quot; in Russian) is a conversational intensifier
+that acknowledges the user&#39;s skepticism — they&#39;ve heard &quot;easy to use&quot; before. The &quot;if you can
+use email&quot; comparison is a classic technique (Otter.ai uses &quot;like your own executive assistant&quot;
+for the same reason): anchor to something the user already does confidently.</p>
+<p>The Russian version explicitly names &quot;API-ключей&quot; — because this is the specific word that
+non-technical users hear from developer tools and that immediately signals &quot;not for me.&quot;
+Naming it and then dismissing it is a powerful reassurance move.</p>
+<hr>
+<h2>Section 4 — Before / After (EN + RU)</h2>
+<h3>English Version</h3>
+<table>
+<thead>
+<tr>
+<th>Before Contexter</th>
+<th>After Contexter</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Every new chat starts from zero. You type the same background again.</td>
+<td>Every chat already knows your work. You just ask.</td>
+</tr>
+<tr>
+<td>You trained ChatGPT on your preferences for a year — then it forgot everything.</td>
+<td>Your knowledge lives in Contexter. It can&#39;t disappear.</td>
+</tr>
+<tr>
+<td>You found the perfect AI tool, but all your context is stuck in a different one.</td>
+<td>Switch between ChatGPT, Claude, and Gemini freely. Your memory comes with you.</td>
+</tr>
+<tr>
+<td>You uploaded a PDF to ChatGPT last week. Now you&#39;re in Claude. Start over.</td>
+<td>Upload once. Every AI you use can read it.</td>
+</tr>
+<tr>
+<td>Your meeting recordings, PDFs, and notes live in different places — no AI can see all of them.</td>
+<td>One place for everything. Every AI reads from it.</td>
+</tr>
+<tr>
+<td>You feel like you&#39;re teaching the same student every single morning.</td>
+<td>Your AI already knows the lesson. Pick up where you left off.</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Russian Version</h3>
+<table>
+<thead>
+<tr>
+<th>До Contexter</th>
+<th>После Contexter</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Каждый новый чат — с нуля. Снова объясняешь, кто ты и что делаешь.</td>
+<td>Каждый чат уже знает твою работу. Просто задаёшь вопрос.</td>
+</tr>
+<tr>
+<td>Год учил нейросеть своим предпочтениям — она всё забыла в одно утро.</td>
+<td>Твои знания хранятся в Contexter. Они никуда не исчезнут.</td>
+</tr>
+<tr>
+<td>Нашёл идеальную нейросеть, но весь контекст застрял в другой.</td>
+<td>Переключайся между ChatGPT, Claude и Gemini свободно. Память идёт с тобой.</td>
+</tr>
+<tr>
+<td>Загрузил PDF в ChatGPT на прошлой неделе. Сейчас открыл Claude — начинай заново.</td>
+<td>Загрузил один раз. Все нейросети получают доступ.</td>
+</tr>
+<tr>
+<td>Записи встреч, документы, заметки в разных местах — ни одна нейросеть не видит картину целиком.</td>
+<td>Одно место для всего. Все нейросети читают отсюда.</td>
+</tr>
+<tr>
+<td>Каждый день объясняешь одно и то же, будто AI видит тебя впервые.</td>
+<td>Твой AI помнит всё с прошлого раза. Продолжаешь с того места, где остановился.</td>
+</tr>
+</tbody></table>
+<p><strong>Rationale:</strong>
+The Before/After format is the most efficient conversion tool for non-technical users because it
+requires zero abstraction. The user reads the &quot;Before&quot; column and either nods (it&#39;s their life)
+or doesn&#39;t (it&#39;s not for them). The selection is automatic.</p>
+<p>The Before column uses the exact words from the research: &quot;from scratch,&quot; &quot;it forgot everything,&quot;
+&quot;stuck in a different one.&quot; Each row maps to a specific pain identified in the research data.</p>
+<p>Row 1 = daily ritual pain (Quote 13 from the research — re-explaining architecture)
+Row 2 = grief/investment loss (Quotes 8-12 — months and years of context destroyed)
+Row 3 = cross-tool fragmentation (Quotes from Substack + DEV.to research)
+Row 4 = re-upload friction (Section 2.5 of the pain research)
+Row 5 = format fragmentation (Section 2.5 — files in multiple tools)
+Row 6 = the teaching metaphor that several users used organically</p>
+<p>The Russian &quot;После&quot; column uses &quot;идёт с тобой&quot; (goes with you) for the memory portability
+promise — this is more vivid than &quot;accessible&quot; and matches the movement vocabulary that Russian
+speakers find natural.</p>
+<hr>
+<h2>Section 5 — Product Video Decision + Script</h2>
+<h3>Decision: YES — Include a product video on the hero section.</h3>
+<p><strong>Rationale:</strong>
+Non-technical users make decisions based on social proof and demonstrated simplicity. A product
+video serves as the single most efficient objection-clearing mechanism for this audience, because:</p>
+<ol>
+<li><p>The product&#39;s value is best demonstrated, not described. &quot;Upload a PDF, connect ChatGPT, it
+knows your document&quot; is a 30-second demo that would take three paragraphs to explain in text.</p>
+</li>
+<li><p>The non-technical user&#39;s primary fear is: &quot;I&#39;ll try this and it&#39;ll be too complicated.&quot; A video
+showing a real person — not a developer — successfully setting this up in under 60 seconds
+neutralizes that fear immediately.</p>
+</li>
+<li><p>Competitive context: Supermemory&#39;s landing page leads with a code block (TypeScript). NotebookLM
+has a product video. Otter.ai has a product video. For the non-technical segment, the video
+signals &quot;this is for people like you.&quot;</p>
+</li>
+<li><p>Research shows that the moment users believe in is the cross-tool moment — &quot;I asked Claude about
+a document I uploaded to ChatGPT and it knew the answer.&quot; That moment needs to be shown.</p>
+</li>
+</ol>
+<p><strong>Recommended format:</strong> Auto-playing silent loop in hero section (20-30 seconds) + a &quot;Watch how it
+works&quot; link to the full 60-second version.</p>
+<hr>
+<h3>60-Second Product Video Script</h3>
+<p><strong>Title:</strong> &quot;One Memory. Every AI.&quot; — Contexter Product Demo</p>
+<p><strong>Tone:</strong> Calm, human, slightly delighted. No voiceover that sounds like a commercial. Should feel
+like watching a colleague show you something useful.</p>
+<p><strong>Visual style:</strong> Screen recording with occasional hand-over-screen moments. Real files, not dummy
+data. Real AI interfaces, not mockups.</p>
+<hr>
+<p><strong>[0:00–0:08] — Opening: The Pain (silent, text on screen)</strong></p>
+<p>Screen: A chat window (ChatGPT) with a long message. The user is typing context:
+&quot;I&#39;m a marketing consultant. My client is in the B2B SaaS space. We&#39;ve been working on a
+repositioning strategy for the past three months. Here&#39;s the background:...&quot;</p>
+<p>Text overlay: &quot;You&#39;ve done this before.&quot;
+Fade text: &quot;You&#39;ll do it again. Tomorrow. In every new chat.&quot;</p>
+<hr>
+<p><strong>[0:08–0:20] — Upload: The One Action</strong></p>
+<p>Screen: Contexter dashboard. Clean, simple.
+Voiceover (natural, not performed): &quot;This is Contexter. Everything your AI needs to know goes here.&quot;</p>
+<p>User drags and drops a folder: three files.
+— &quot;Q4 Strategy Deck.pdf&quot;
+— &quot;Client Call Recording.mp3&quot;
+— &quot;Market Research Notes.docx&quot;</p>
+<p>Progress bar. A few seconds. Done.
+Text overlay: &quot;Uploaded. Indexed. Ready.&quot;</p>
+<hr>
+<p><strong>[0:20–0:35] — ChatGPT Connection</strong></p>
+<p>Screen: Contexter settings panel. &quot;Connected AI Tools&quot; section.
+User clicks &quot;Connect ChatGPT.&quot; A toggle turns green. Done in two clicks.</p>
+<p>Cut to: ChatGPT interface (fresh chat, completely empty).
+User types: &quot;What&#39;s the main risk in our current repositioning strategy?&quot;</p>
+<p>ChatGPT responds with a specific, accurate answer that references the deck that was just uploaded.
+Text overlay: &quot;ChatGPT just read your strategy deck.&quot;</p>
+<hr>
+<p><strong>[0:35–0:50] — Switch to Claude: The Magic Moment</strong></p>
+<p>Screen: User opens a new tab. Claude.ai. Fresh interface.
+Voiceover: &quot;Now let&#39;s try Claude.&quot;</p>
+<p>User types: &quot;Summarize the client&#39;s main concern from our last call.&quot;</p>
+<p>Claude responds with a summary that clearly references the meeting recording that was uploaded.
+Text overlay: &quot;Same memory. Different AI.&quot;</p>
+<p>Small visual: side-by-side of ChatGPT window and Claude window, both showing accurate, context-aware
+answers. Both responding to different questions about the same uploaded material.</p>
+<hr>
+<p><strong>[0:50–1:00] — Tagline + CTA</strong></p>
+<p>Screen fades to clean background.
+Text, centered, slow fade in:</p>
+<p>&quot;One memory.&quot;
+&quot;Every AI.&quot;</p>
+<p>&quot;Contexter — try it free at contexter.cc&quot;</p>
+<hr>
+<p><strong>Production Notes:</strong></p>
+<ul>
+<li>The real files (PDF, MP3, DOCX) should be recognizable business documents, not developer content</li>
+<li>The AI responses should be clearly accurate and cite the source material — this is the key trust signal</li>
+<li>The person&#39;s face never appears — this is not a talking-head testimonial, it&#39;s a pure product demo</li>
+<li>Total runtime: under 60 seconds hard cap. Attention spans in the hero section are 15-45 seconds.</li>
+<li>Russian version: same video, Russian subtitles. No re-shoot needed.</li>
+</ul>
+<hr>
+<h2>Section 6 — Objection Busters</h2>
+<p>For use in FAQ section or landing page trust section.</p>
+<hr>
+<p><strong>Objection 1: &quot;Is my data safe?&quot;</strong></p>
+<p>Your files are stored securely and are only accessible to you. Contexter does not use your documents
+to train AI models, share them with other users, or sell your data. What you upload stays private —
+only you and the AI tools you explicitly connect can access it.</p>
+<p><em>RU версия:</em>
+Ваши файлы хранятся в защищённом виде и доступны только вам. Contexter не использует ваши документы
+для обучения нейросетей, не передаёт их другим пользователям и не продаёт ваши данные. То, что
+вы загружаете, остаётся приватным.</p>
+<p><strong>Copywriting note:</strong>
+The research shows users feel ownership over their AI memories — &quot;my crucial data,&quot; &quot;two years of
+memories.&quot; The answer must match that emotional register: &quot;yours&quot; and &quot;stays private&quot; are the
+operative words. Do NOT lead with technical security terms (encryption, TLS, SOC 2) — these are
+meaningless to non-technical users. Lead with what they actually worry about: who can see my files.</p>
+<hr>
+<p><strong>Objection 2: &quot;Do I need to be technical?&quot;</strong></p>
+<p>No. If you can attach a file to an email, you can use Contexter. There is nothing to install, no
+code to write, and no settings to configure. Upload your files, connect your AI tool of choice,
+and you&#39;re done. Most users are up and running in under two minutes.</p>
+<p><em>RU версия:</em>
+Нет. Если вы умеете прикреплять файл к письму, вы справитесь с Contexter. Ничего устанавливать не
+нужно, код писать не нужно, никаких сложных настроек. Загрузил файлы, подключил нейросеть — всё.
+Большинство пользователей начинают работать за две минуты.</p>
+<p><strong>Copywriting note:</strong>
+&quot;If you can attach a file to an email&quot; is a reference point that literally every knowledge worker
+has — it&#39;s not condescending, it&#39;s reassuring. The &quot;two minutes&quot; claim is borrowed from Supermemory&#39;s
+testimonials (&quot;integration achievable in 120 seconds&quot;) and should be verified against actual onboarding
+time before publishing.</p>
+<hr>
+<p><strong>Objection 3: &quot;How is this different from just uploading to ChatGPT?&quot;</strong></p>
+<p>When you upload a file to ChatGPT, it exists for that one conversation only. Close the chat and
+it&#39;s gone. With Contexter, you upload once and every AI you use — ChatGPT, Claude, Gemini,
+Perplexity — can access the same information anytime. Your documents don&#39;t disappear. They don&#39;t
+need to be re-uploaded. They just work.</p>
+<p><em>RU версия:</em>
+Когда вы загружаете файл в ChatGPT, он существует только в этом одном чате. Закрыли — пропал.
+С Contexter вы загружаете один раз, и каждая нейросеть — ChatGPT, Claude, Gemini, Perplexity —
+получает доступ к той же информации в любой момент. Ваши документы не исчезают. Их не нужно
+загружать заново. Они просто работают.</p>
+<p><strong>Copywriting note:</strong>
+This objection comes from users who have discovered ChatGPT&#39;s file upload feature and feel it
+partially solves the problem. The answer must acknowledge that partial solution and then clearly
+articulate the gap: persistence and cross-model access. The phrase &quot;just work&quot; echoes Apple&#39;s
+brand language but is used here because it&#39;s the genuine emotional target — the user wants
+something that works without thinking about it.</p>
+<hr>
+<p><strong>Objection 4: &quot;What formats work?&quot;</strong></p>
+<p>Contexter accepts PDF, Word documents (DOCX), PowerPoint, Excel, plain text, Markdown, audio
+files (MP3, WAV), video files (MP4), images (JPG, PNG), and more. If you have a document in an
+unusual format, contact us — we&#39;re expanding support constantly. No file size limits that would
+affect normal business documents.</p>
+<p><em>RU версия:</em>
+Contexter принимает PDF, документы Word (DOCX), PowerPoint, Excel, обычный текст, аудиофайлы
+(MP3, WAV), видео (MP4), изображения (JPG, PNG) и другие форматы. Если у вас документ в
+нестандартном формате — напишите нам, мы постоянно расширяем поддержку. Ограничений по размеру
+для обычных рабочих документов нет.</p>
+<p><strong>Copywriting note:</strong>
+Format anxiety is real. Users have been burned by &quot;file type not supported&quot; on other tools. The
+answer lists formats in a plain, scannable way — this is the one place where a list is the right
+format. &quot;Normal business documents&quot; is a soft qualifier that sets honest expectations without
+creating a hard size limit that could become a trust issue. Note: the actual list of 15 formats
+claimed for Contexter should be verified with the product team and the copy updated accordingly
+before going live.</p>
+<hr>
+<p><strong>Objection 5: &quot;Is it free?&quot;</strong></p>
+<p>Contexter has a free plan that lets you get started without a credit card. It includes [X uploads,
+Y queries per month — to be filled in with actual pricing]. Paid plans start at [price] and unlock
+higher limits and additional features. Full pricing details are on our pricing page.</p>
+<p><em>RU версия:</em>
+У Contexter есть бесплатный тариф — можно начать без банковской карты. Он включает [X загрузок,
+Y запросов в месяц]. Платные тарифы начинаются от [цена] и снимают ограничения. Полные условия —
+на странице с ценами.</p>
+<p><strong>Copywriting note:</strong>
+Pricing copy is left with placeholders deliberately. The copywriter&#39;s job is to write the frame —
+the actual numbers must come from the product/business team. The critical elements preserved:
+(1) &quot;without a credit card&quot; — removes friction for non-technical users who are wary of surprise
+charges; (2) &quot;get started&quot; rather than &quot;sign up&quot; — action language not commitment language;
+(3) reference to a pricing page rather than trying to embed complex tier logic in an FAQ answer.</p>
+<hr>
+<h2>Appendix: Copy-Strategy Decisions Log</h2>
+<p>This section records the reasoning behind top-level strategic choices so future copywriters or
+A/B test designers can understand the intent.</p>
+<hr>
+<p><strong>Decision 1: Why &quot;remembers&quot; and &quot;knows&quot; instead of &quot;stores&quot; and &quot;retrieves&quot;</strong></p>
+<p>The research found that non-technical users never say &quot;stores.&quot; They say &quot;remembers&quot; and &quot;knows.&quot;
+Technically, Contexter &quot;stores&quot; data and &quot;retrieves&quot; it — but these words trigger the wrong mental
+model. &quot;Stores&quot; implies a passive archive (filing cabinet). &quot;Retrieves&quot; implies mechanical process
+(library catalog). &quot;Remembers&quot; implies a trusted colleague. &quot;Knows&quot; implies expertise.
+The goal is to position Contexter as an intelligent assistant, not a database.</p>
+<hr>
+<p><strong>Decision 2: Why not lead with &quot;self-hosted&quot; in non-technical copy</strong></p>
+<p>The direct competitor analysis confirms self-hosted is a real differentiator — Contexter is the
+only product offering true self-hosting without an enterprise agreement. However, this feature
+is ONLY relevant to developers and technical operators. Non-technical knowledge workers do not
+know what &quot;self-hosted&quot; means, do not care, and may interpret it as meaning &quot;you have to install
+something,&quot; which creates friction rather than reducing it.</p>
+<p>Self-hosting belongs in developer-facing copy, not in the non-technical landing page.</p>
+<hr>
+<p><strong>Decision 3: Why name competitors explicitly (ChatGPT, Claude, Gemini)</strong></p>
+<p>The research shows users are locked to specific platforms by habit and investment. The question
+&quot;does it work with my AI?&quot; is the first question in every non-technical user&#39;s mind. The answer
+must come before they have to ask it. Naming the three major tools (ChatGPT, Claude, Gemini)
+in H1 or the first subheadline is the fastest way to answer this implicit question. It also
+serves as social proof by association — &quot;if it works with ChatGPT, it&#39;s real.&quot;</p>
+<hr>
+<p><strong>Decision 4: Why &quot;every AI&quot; rather than &quot;all AI models&quot; or &quot;any LLM&quot;</strong></p>
+<p>&quot;Every AI&quot; is the phrase non-technical users actually use. The research documents that users say
+&quot;all my AIs,&quot; &quot;every AI I use,&quot; not &quot;all language models&quot; or &quot;any LLM.&quot; &quot;Model&quot; is a technical
+term. &quot;LLM&quot; is a technical term. &quot;AI&quot; is mainstream vocabulary. &quot;Every AI&quot; also mirrors Contexter&#39;s
+own tagline (&quot;One memory. Every AI.&quot;), creating internal consistency across the landing page.</p>
+<hr>
+<p><strong>Decision 5: Why the Before/After section is critical for non-technical users</strong></p>
+<p>Non-technical users do not respond to feature lists. They respond to recognition. When a user reads
+&quot;every new chat starts from zero. You type the same background again.&quot; and thinks &quot;that&#39;s exactly me,&quot;
+the sale is already three-quarters done. The Before/After format is borrowed from the strongest
+non-technical SaaS landing pages (Otter.ai, Calendly, Loom) because it does the work of positioning
+through identification, not explanation.</p>
+<hr>
+<p><strong>Decision 6: Why the CTA &quot;Upload Your First File&quot; outperforms &quot;Get Started&quot; for non-technical users</strong></p>
+<p>&quot;Get Started&quot; is generic and implies a journey. &quot;Upload Your First File&quot; is a specific, visualizable
+action — the user can literally imagine themselves doing it before clicking. For non-technical users
+who are not sure if the product is for them, a specific action CTA reduces the commitment feeling.
+&quot;Try Contexter Free&quot; is acceptable for sections where the user already understands the product.
+&quot;Upload Your First File&quot; is better for the hero where they are still deciding.</p>
+<hr>
+<p><em>End of document</em>
+<em>Lead/Copywriting — 2026-03-27</em>
+<em>All copy is production-ready for A/B testing. Placeholders marked in [brackets] require product data.</em></p>
+
+</body>
+</html>

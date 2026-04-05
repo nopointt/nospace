@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-competitor-sentiment-analysis — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter Competitor Sentiment Analysis</h1>
+<blockquote>
+<p>What users LOVE, HATE, and what triggers them to SWITCH
+Date: 2026-03-28
+Sources: Existing competitor research files + fresh web research (Reddit, ProductHunt, HN, forums, review sites)</p>
+</blockquote>
+<hr>
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#1-direct-competitors">Direct Competitors (RAG/Context Infrastructure)</a><ul>
+<li>Supermemory</li>
+<li>Ragie</li>
+<li>Morphik</li>
+<li>Vectorize</li>
+<li>Graphlit</li>
+<li>Langbase Memory</li>
+</ul>
+</li>
+<li><a href="#2-indirect-competitors">Indirect Competitors (Consumer AI Tools)</a><ul>
+<li>ChatGPT (Memory + File Upload)</li>
+<li>Claude Projects</li>
+<li>NotebookLM</li>
+</ul>
+</li>
+<li><a href="#3-indirect-competitors-developer-memory">Indirect Competitors (Developer Memory)</a><ul>
+<li>Mem0</li>
+</ul>
+</li>
+<li><a href="#4-universal-rag-user-pain-points">Universal RAG User Pain Points</a></li>
+<li><a href="#5-sources">Sources</a></li>
+</ol>
+<hr>
+<h2>1. Direct Competitors</h2>
+<h3>Supermemory</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Speed — sub-300ms retrieval resonates (&quot;lightning speed &amp; consistency&quot;)</td>
+<td>&quot;Polished repackaging of known ideas rather than a breakthrough&quot; (HN user gabrycina)</td>
+<td>Cost cliff: Free 10K queries -&gt; $399/mo Scale tier is a steep jump</td>
+</tr>
+<tr>
+<td>Memory graph connecting context across projects</td>
+<td>Silent retrieval failures — writes succeed but recall returns empty (GitHub #792)</td>
+<td>Closed self-host: enterprise agreement required for self-hosting despite MIT repo</td>
+</tr>
+<tr>
+<td>Integration simplicity — &quot;achievable in 120 seconds&quot;</td>
+<td>Cannot edit memories — must create new ones instead of editing existing</td>
+<td>Vendor lock-in: proprietary <code>sm_</code> API keys, no data portability</td>
+</tr>
+<tr>
+<td>&quot;The only thing that works reliably&quot; (CEO testimonial)</td>
+<td>Platform instability — login failures, SSL errors on org invites, JSON parse errors</td>
+<td>Benchmark skepticism: independent tests show 70% vs. self-claimed #1 (dev.to 2026)</td>
+</tr>
+<tr>
+<td>Token efficiency — &quot;40-50% fewer tokens&quot; reported</td>
+<td>Dual product confusion (API vs consumer app) on landing page</td>
+<td>March 2026 outage: first major downtime, elevated latency for hours</td>
+</tr>
+<tr>
+<td>Strong ecosystem: Claude Code, Cursor, OpenCode plugins</td>
+<td>Learning curve for non-technical users</td>
+<td></td>
+</tr>
+<tr>
+<td>19.8K GitHub stars — strong organic discovery</td>
+<td>Occasionally sluggish interface with heavy use</td>
+<td></td>
+</tr>
+<tr>
+<td>Formatting issues when importing bullet-pointed lists</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Verbatim praise:</strong></p>
+<blockquote>
+<p>&quot;A thousand times better than the competition.&quot; — Zaid Mukaddam, Scira.ai
+&quot;60% recall accuracy improvement&quot; — Scira.ai</p>
+</blockquote>
+<p><strong>Verbatim criticism:</strong></p>
+<blockquote>
+<p>&quot;It&#39;s essentially a memory layer on top of an LLM... a polished repackaging of known ideas rather than a breakthrough.&quot; — gabrycina, HN
+&quot;Can&#39;t edit memories — I would prefer to go back and edit existing memories rather than creating separate ones.&quot; — Olivia, Product Hunt (4.0/5)</p>
+</blockquote>
+<hr>
+<h3>Ragie</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A+ developer experience — &quot;Ragie is unbelievable!&quot; (McKay Wrigley)</td>
+<td>No self-hosted option — cloud only</td>
+<td>Connector pricing: $250/connector/month after first free one</td>
+</tr>
+<tr>
+<td>Speed to production — &quot;3 weeks instead of 3 months&quot; (Glue)</td>
+<td>Potential for vendor lock-in (skywork.ai comparison)</td>
+<td>Cost at scale: $100-$500/mo + page overages vs self-hosted alternatives</td>
+</tr>
+<tr>
+<td>Legal drafting &quot;5-10x faster&quot; (Ellis)</td>
+<td>Feature limitations tied to Ragie&#39;s roadmap, not user customization</td>
+<td>No control over embedding models — blocks domain-specific tuning</td>
+</tr>
+<tr>
+<td>All advanced features (reranking, hybrid search) available on free tier</td>
+<td>Subscription costs vs free open-source alternatives</td>
+<td>Cloud-only = hard blocker for on-prem regulated environments</td>
+</tr>
+<tr>
+<td>Context-aware MCP server (dynamic tool descriptions)</td>
+<td>Learning curve for new users</td>
+<td>Rate limits exist but thresholds not publicly documented</td>
+</tr>
+<tr>
+<td>Enterprise-ready: SOC2, HIPAA, GDPR from day one</td>
+<td>No published rate limit documentation</td>
+<td>Proprietary chunking/indexing — migrating means re-indexing everything</td>
+</tr>
+<tr>
+<td>40+ file formats including 11 video formats</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Verbatim praise:</strong></p>
+<blockquote>
+<p>&quot;I LOVE ragie!&quot; — Luke Thomas, Zapier
+&quot;Ragie is doing for RAG infrastructure what AWS did for the cloud&quot; — Craft Ventures framing</p>
+</blockquote>
+<p><strong>Inferred friction:</strong>
+No independent negative reviews found on any public platform (G2: 0, Slashdot: 0, Reddit: 0). Product is 18 months old and pre-review-corpus stage.</p>
+<hr>
+<h3>Morphik</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ColPali visual search — &quot;game changer for legal, aerospace, health tech&quot; (PH)</td>
+<td>&quot;Never hallucinate&quot; headline challenged: &quot;How can it never hallucinate when retrieval accuracy is at 95%?&quot; (vikyw89, GitHub)</td>
+<td>GPU requirement for ColPali makes self-hosting operationally heavy</td>
+</tr>
+<tr>
+<td>93%+ accuracy on arXiv QA benchmarks</td>
+<td>Documentation quality lags behind product velocity</td>
+<td>Steep pricing cliff: Free (200 pages) -&gt; Pro ($59/mo, 2,000 pages)</td>
+</tr>
+<tr>
+<td>Search across diagrams and videos — &quot;a big win&quot; (HN user)</td>
+<td>MCP update &quot;isn&#39;t as interesting honestly&quot; (bosky101, HN)</td>
+<td>BSL license — some enterprises require Apache/MIT</td>
+</tr>
+<tr>
+<td>Knowledge graphs in a single line of code</td>
+<td>Self-hosting has &quot;limited support&quot; (official docs)</td>
+<td>Self-hosted is first-class in messaging but second-class in support</td>
+</tr>
+<tr>
+<td>Open source (BSL 1.1, 3,500 GitHub stars)</td>
+<td>GPU Docker flash_attn crash (Issue #258 — resolved)</td>
+<td>2-person team raises scalability questions for enterprise commitments</td>
+</tr>
+<tr>
+<td>Research Agent for multi-hop retrieval</td>
+<td>Cloud vs self-hosted feature gaps</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Verbatim praise:</strong></p>
+<blockquote>
+<p>&quot;This is seriously impressive, visual-based search for technical and research-heavy documents feels like a game changer.&quot; — PH user
+&quot;The accuracy on the arXiv QA benchmark is really impressive.&quot; — PH user</p>
+</blockquote>
+<p><strong>Verbatim criticism:</strong></p>
+<blockquote>
+<p>&quot;More extensive documentation and use cases and a &#39;Deploy your first app&#39; section would be helpful.&quot; — lehen04, HN
+&quot;How can it never hallucinate when retrieval accuracy is at 95% instead of 100%?&quot; — vikyw89, GitHub</p>
+</blockquote>
+<hr>
+<h3>Vectorize</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>No-code pipeline builder — &quot;smooth as silk&quot; (G2)</td>
+<td>&quot;Poor UI... lacks polish and functionality&quot; (G2)</td>
+<td>Pipeline count limits: only 3 on Pro ($399/mo) — forces Enterprise</td>
+</tr>
+<tr>
+<td>&quot;Very intuitive no-code system for testing and setting up various embeddings APIs&quot; (G2)</td>
+<td>&quot;Barebones&quot; UI (G2, multiple reviewers)</td>
+<td>No audio/video support — blocker for media-rich use cases</td>
+</tr>
+<tr>
+<td>Automatic weekly pipeline sync</td>
+<td>Initial learning curve for advanced features</td>
+<td>No self-hosting — fully managed cloud only</td>
+</tr>
+<tr>
+<td>Responsive team (&quot;Chris and the team are very responsive&quot;) (G2)</td>
+<td>Variable pricing affecting budgeting</td>
+<td>Pricing unpredictability on overages</td>
+</tr>
+<tr>
+<td>RAG evaluation engine — unique differentiator</td>
+<td>Complex setup (PH aggregate)</td>
+<td>Price: $99/mo Starter is 21x more expensive than Contexter for equivalent</td>
+</tr>
+<tr>
+<td>Hindsight agent memory: 91.4% on LongMemEval</td>
+<td>Pipeline limits disproportionately restrictive</td>
+<td></td>
+</tr>
+<tr>
+<td>30+ document formats, Iris extraction</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Verbatim praise:</strong></p>
+<blockquote>
+<p>&quot;Building RAG pipelines has become smooth as silk.&quot; — G2 reviewer
+&quot;Makes it easy to connect RAG sources for places where non-technical users want to store them.&quot; — G2 reviewer</p>
+</blockquote>
+<p><strong>Verbatim criticism:</strong></p>
+<blockquote>
+<p>&quot;Poor UI with Vectorize.io, feeling it lacks polish and functionality despite some improvements.&quot; — G2 reviewer
+&quot;Some users had difficulties with the UI and felt it was barebones.&quot; — G2</p>
+</blockquote>
+<hr>
+<h3>Graphlit</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>36+ live data connectors — broadest in category</td>
+<td>Vendor lock-in: &quot;Data stored with third party&quot; (TrustGraph comparison)</td>
+<td>Cloud-only = disqualified for EU data residency, GDPR-strict, government, healthcare</td>
+</tr>
+<tr>
+<td>Multimodal pipeline (audio, video, images)</td>
+<td>&quot;API-only access to your data&quot; — no direct database queries</td>
+<td>Usage-based credits = &quot;variable monthly bills&quot;</td>
+</tr>
+<tr>
+<td>Knowledge graph with 19 entity types (Schema.org)</td>
+<td>&quot;Limited control over data location&quot;</td>
+<td>No SOC2 certification found publicly</td>
+</tr>
+<tr>
+<td>Framework-agnostic — &quot;switch agent frameworks without rebuilding memory layer&quot;</td>
+<td>GraphQL API = steeper learning curve than REST</td>
+<td>Opaque credit system — no published per-operation pricing</td>
+</tr>
+<tr>
+<td>MCP server has 373 GitHub stars (primary discovery)</td>
+<td>Zero independent reviews on any platform</td>
+<td></td>
+</tr>
+<tr>
+<td>Kirk Marple&#39;s credibility (ex-Microsoft, prior exit)</td>
+<td>Second PH launch got only 3 upvotes (vs 105 first)</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Inferred friction:</strong>
+Zero independent user reviews found on G2, Slashdot, Capterra, or PH (1 review total, likely affiliated). Product is in pre-social-proof stage with only one named production customer (Zine).</p>
+<hr>
+<h3>Langbase Memory</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Zero-infra RAG — &quot;test RAG via Langbase memory agents, seeing which chunks get retrieved&quot;</td>
+<td>Storage limits are tiny: 5 MB free / 50 MB at $250/mo</td>
+<td>Knowledge base &gt; 50 MB hits Growth ceiling, requires sales call</td>
+</tr>
+<tr>
+<td>&quot;One of the most &#39;need to have&#39; tools in the past decade&quot; (review aggregation)</td>
+<td>JS-focused SDK — Python developers feel second-class</td>
+<td>Audio/video not supported</td>
+</tr>
+<tr>
+<td>Native integration with Pipes (agent platform) — zero glue code</td>
+<td>&quot;Documents with only selectable text are supported&quot; — scanned PDFs fail</td>
+<td>Scanned PDF / OCR = documented failure mode</td>
+</tr>
+<tr>
+<td>Quickstart in 8 steps</td>
+<td>&quot;30-50x cheaper&quot; claim is unverified — no methodology</td>
+<td>Data sovereignty / GDPR: fully managed cloud, no self-hosted</td>
+</tr>
+<tr>
+<td>&quot;Millions of personalized RAG knowledge bases&quot; at scale</td>
+<td>Free tier (5MB, 2 files) insufficient for real experimentation</td>
+<td>Locked to OpenAI embeddings — no model choice</td>
+</tr>
+<tr>
+<td>Composability within Langbase platform</td>
+<td>No intermediate tier between $250/mo and Enterprise</td>
+<td>Cost at scale: $100/mo minimum for production</td>
+</tr>
+</tbody></table>
+<p><strong>Inferred friction:</strong>
+No verified independent negative reviews found on any platform. Gap between self-reported scale (36K developers, 184B tokens) and near-zero independent review corpus is notable.</p>
+<hr>
+<h2>2. Indirect Competitors (Consumer AI Tools)</h2>
+<h3>ChatGPT (Memory + File Upload)</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Memory feature — &quot;The fact that it knows me and understands my needs is the most valuable feature&quot;</td>
+<td>February 2025 memory wipe destroyed years of accumulated data</td>
+<td>Involuntary memory loss drives subscription cancellation intent</td>
+</tr>
+<tr>
+<td>Accumulated personalized context over months/years</td>
+<td>&quot;Each new chat resets completely, like it has no memory of me at all&quot;</td>
+<td>Memory cap: ~1,500-1,750 words — then silent degradation</td>
+</tr>
+<tr>
+<td>Custom Instructions as persistent context</td>
+<td>&quot;Two years worth of memories gone (Plus subscriber)&quot;</td>
+<td>No warning when memory is full — &quot;silence&quot;</td>
+</tr>
+<tr>
+<td>File upload for in-conversation analysis</td>
+<td>File upload limits: 3 files/day free, 80 per 3hr Plus</td>
+<td>&quot;Using 2024&#39;s AI on 1990s memory policy&quot; (Medium user)</td>
+</tr>
+<tr>
+<td>GPTs for specialized workflows</td>
+<td>Files above 50MB frequently cause timeout/processing errors</td>
+<td>300+ active complaint threads in r/ChatGPTPro since July 2025</td>
+</tr>
+<tr>
+<td></td>
+<td>&quot;I&#39;ve lost a year and a half of memories, and this thing was extraordinarily important&quot;</td>
+<td>Context fragmentation: no cross-conversation continuity</td>
+</tr>
+<tr>
+<td></td>
+<td>November 2025 memory incident (acknowledged by OpenAI)</td>
+<td>No export of memories or cross-tool portability</td>
+</tr>
+<tr>
+<td></td>
+<td>&quot;It feels like losing a beloved relative&quot; — grief language for AI memory loss</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Verbatim pain quotes:</strong></p>
+<blockquote>
+<p>&quot;I spent a year building these memories with the AI, and now all my crucial data is lost.&quot; — tugsatbaris, OpenAI Forum
+&quot;few more than 8 months of chats, gone down the drain in one morning, and it&#39;s devastating&quot; — benjamingalindo, OpenAI Forum
+&quot;for a paid product, this limit feels primitive. We&#39;re using 2024&#39;s AI on 1990s memory policy.&quot; — Medium user
+&quot;OpenAI doesn&#39;t notify you when your memory is full. There&#39;s no warning, no banner, no popup — just silence.&quot;</p>
+</blockquote>
+<hr>
+<h3>Claude Projects</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Knowledge base per project — &quot;turn Claude into your brain&#39;s co-worker&quot;</td>
+<td>200K token context window cap (500K Enterprise)</td>
+<td>Unpredictable usage limits — &quot;you don&#39;t know when you&#39;ll hit limits&quot;</td>
+</tr>
+<tr>
+<td>Multiple file formats: PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB</td>
+<td>Files are read-only — cannot edit, update, rename, or delete in place</td>
+<td>Free users cannot create projects at all</td>
+</tr>
+<tr>
+<td>Project instructions persist across conversations</td>
+<td>Flat file structure — no folders</td>
+<td>Rate limit complaints: &quot;sessions meant to last hours burn out in minutes&quot;</td>
+</tr>
+<tr>
+<td>RAG selectively pulls relevant sections</td>
+<td>&quot;Claude only pulls relevant sections&quot; — can&#39;t read entire KB at once</td>
+<td>August 2025 weekly caps triggered &quot;Claude Is Dead&quot; threads</td>
+</tr>
+<tr>
+<td>Team sharing on paid plans</td>
+<td>No audio/video file support</td>
+<td>March 2026: Max subscribers report 5-hour windows depleting in 1-2 hours</td>
+</tr>
+<tr>
+<td></td>
+<td>Each Project is siloed — no cross-project context</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>30MB per individual file</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Verbatim pain quotes:</strong></p>
+<blockquote>
+<p>&quot;Your usage depends on Anthropic&#39;s load, and they don&#39;t tell you when you&#39;re going to hit limits.&quot;
+&quot;Sessions meant to last hours are literally burning out in minutes.&quot; — Claude Code users, March 2026</p>
+</blockquote>
+<hr>
+<h3>NotebookLM</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Grounded in user&#39;s sources — &quot;AI tools don&#39;t need to make things up to be useful&quot;</td>
+<td>50 source cap per notebook — researchers with 100+ papers hit ceiling immediately</td>
+<td>No API access — cannot programmatically upload, query, or extract</td>
+</tr>
+<tr>
+<td>Audio Overviews — podcast-style content generation</td>
+<td>Isolated notebooks — psychology notebook can&#39;t reference neuroscience notebook</td>
+<td>Export is &quot;surprisingly difficult&quot; — no structured export of notebooks</td>
+</tr>
+<tr>
+<td>&quot;Thinking partner&quot; positioning resonates with non-technical users</td>
+<td>No export to PDF, Word, or Excel — only Google Sheets/Docs</td>
+<td>100+ documents causes slowdowns, crashes, or confusing answers</td>
+</tr>
+<tr>
+<td>Source-grounded responses reduce hallucination</td>
+<td>Cannot see charts, diagrams, or schematics in PDFs — ignores visual content</td>
+<td>Source updates not recognized — AI references outdated copy</td>
+</tr>
+<tr>
+<td>Free tier generous enough for experimentation</td>
+<td>Audio context truncates long documents, leading to &quot;hallucinated summaries&quot;</td>
+<td>No task management layer — can&#39;t flag for follow-up</td>
+</tr>
+<tr>
+<td></td>
+<td>Mobile app doesn&#39;t sync saved Studio output</td>
+<td>Daily caps on Audio Overviews</td>
+</tr>
+<tr>
+<td></td>
+<td>No bulk import of YouTube videos — one at a time only</td>
+<td>No cross-notebook intelligence</td>
+</tr>
+<tr>
+<td></td>
+<td>No real-time source sync — edits to Google Docs not reflected</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Inferred pain from review articles:</strong></p>
+<blockquote>
+<p>&quot;NotebookLM feels powerful until you try to do these 5 basic things.&quot; — XDA Developers
+&quot;Once you try to add more than a hundred documents, they slow down, crash, or give you confusing answers.&quot; — Elephas.app</p>
+</blockquote>
+<hr>
+<h2>3. Indirect Competitors (Developer Memory)</h2>
+<h3>Mem0</h3>
+<table>
+<thead>
+<tr>
+<th>What users love</th>
+<th>What users hate</th>
+<th>Switching triggers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Single line of code integration</td>
+<td>Limited review data — near-zero independent reviews on any platform</td>
+<td>No substantial complaint corpus found</td>
+</tr>
+<tr>
+<td>41,000+ GitHub stars</td>
+<td>(Insufficient data to populate)</td>
+<td>(Insufficient data)</td>
+</tr>
+<tr>
+<td>Beat OpenAI by 26% accuracy with 91% faster performance (benchmark)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>13 million Python package downloads</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Open source with strong community</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>$24M funding validates category</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>Note:</strong> Mem0 is primarily a developer memory framework, not a consumer product. Review corpus on public platforms (G2, Slashdot, SourceForge) shows zero user reviews as of March 2026.</p>
+<hr>
+<h2>4. Universal RAG User Pain Points</h2>
+<p>These pain points appear consistently across ALL products and ALL user segments:</p>
+<h3>Pain 1: Context Loss / Memory Wipe (HIGHEST SEVERITY)</h3>
+<p>Users invest weeks, months, or years building context — then lose it involuntarily.</p>
+<ul>
+<li>ChatGPT: February 2025 mass memory wipe, November 2025 incident</li>
+<li>Supermemory: Silent retrieval failures (write succeeds, read empty)</li>
+<li>All AI tools: New conversation = blank slate</li>
+<li>Emotional impact escalates to grief language after 6+ months of accumulated context</li>
+</ul>
+<blockquote>
+<p>&quot;I spent a year building these memories with the AI, and now all my crucial data is lost.&quot;</p>
+</blockquote>
+<h3>Pain 2: Context Fragmentation Across Tools</h3>
+<p>No AI tool shares context with any other. Users must re-explain everything when switching tools.</p>
+<ul>
+<li>&quot;Using multiple AI tools feels like having a team of brilliant coworkers, who just refuse to talk to each other.&quot;</li>
+<li>Both Anthropic and Google shipped memory transfer tools in March 2026 — direct market validation</li>
+<li>Cursor Forum: &quot;I explain my architecture in the morning and in the afternoon I have to explain it all again&quot;</li>
+</ul>
+<h3>Pain 3: Opaque / Unpredictable Pricing at Scale</h3>
+<p>Every managed RAG service creates cost anxiety:</p>
+<ul>
+<li>Ragie: $250/connector/month after first</li>
+<li>Vectorize: Pipeline limits force Enterprise at $399/mo for only 3 pipelines</li>
+<li>Langbase: 50 MB at $250/mo — not a knowledge base, it&#39;s a demo</li>
+<li>Supermemory: Free -&gt; $399 cliff</li>
+<li>Graphlit: Opaque credit system, no published per-operation cost</li>
+<li>Claude/ChatGPT: Rate limits depend on server load, unpredictable</li>
+</ul>
+<h3>Pain 4: Vendor Lock-in / No Data Portability</h3>
+<p>Every cloud-only product creates lock-in:</p>
+<ul>
+<li>Ragie: Proprietary chunking, no export, re-index everything to leave</li>
+<li>Supermemory: <code>sm_</code> API keys, proprietary memory graph format</li>
+<li>Graphlit: &quot;API-only access to your data&quot; — no direct DB access</li>
+<li>Langbase: Locked to OpenAI embeddings, no model choice</li>
+<li>Vectorize: Fully managed, no self-hosting</li>
+<li>ChatGPT/Claude: Memory is platform-specific, siloed</li>
+</ul>
+<h3>Pain 5: Chunking / Retrieval Quality</h3>
+<p>80% of RAG failures trace back to ingestion and chunking, not the LLM:</p>
+<ul>
+<li>&quot;One bad chunk split ruins relevance&quot;</li>
+<li>Fixed-size chunking: 47-51% faithfulness vs 79-82% for semantic chunking</li>
+<li>&quot;I asked for the Q3 policy update, it gave me the Q1 draft&quot;</li>
+<li>Vector-only search has &quot;mathematically provable limitations&quot;</li>
+<li>Single-pass RAG is dead — multi-step retrieval needed but few products offer it</li>
+</ul>
+<h3>Pain 6: Format Limitations</h3>
+<p>Users have content in formats their tools cannot process:</p>
+<ul>
+<li>Vectorize: No audio/video support</li>
+<li>Langbase: Only .txt, .pdf, .md, .csv + coding files — no DOCX, no OCR, no audio</li>
+<li>NotebookLM: Cannot see charts, diagrams, or schematics in PDFs</li>
+<li>Claude Projects: No audio/video files</li>
+<li>ChatGPT: File upload limits and timeouts on large files</li>
+</ul>
+<h3>Pain 7: No Self-Hosting / Data Sovereignty</h3>
+<p>Cloud-only products are automatically disqualified for:</p>
+<ul>
+<li>EU data residency (GDPR-strict)</li>
+<li>Healthcare (HIPAA without third-party audit)</li>
+<li>Government / defense (air-gapped networks)</li>
+<li>Enterprise legal review (data stored with third party = compliance complexity)</li>
+<li>Affected: Ragie, Vectorize, Graphlit, Langbase, Supermemory (enterprise agreement for self-host)</li>
+</ul>
+<h3>Pain 8: UI / UX Polish Gap</h3>
+<p>Developer tools consistently under-invest in interface quality:</p>
+<ul>
+<li>Vectorize: &quot;Poor UI... lacks polish&quot; (G2, multiple reviewers)</li>
+<li>Morphik: Documentation quality lags product velocity</li>
+<li>MCP ecosystem: &quot;95% of MCP servers are utter garbage&quot; (Reddit)</li>
+<li>NotebookLM: No structured export, no folders, no task management</li>
+</ul>
+<h3>Pain 9: &quot;Is This Really Novel?&quot; Technical Skepticism</h3>
+<p>Experienced developers question whether managed RAG adds value over DIY:</p>
+<ul>
+<li>&quot;We&#39;ve had embeddings + vector search + profile stores for years&quot; — HN on Supermemory</li>
+<li>&quot;Subscription costs versus free open-source license&quot; — on Ragie</li>
+<li>&quot;Build it yourself&quot; sentiment strongest among senior engineers and infrastructure teams</li>
+<li>Unverified performance claims (Langbase &quot;30-50x cheaper&quot;, Morphik &quot;never hallucinate&quot;) erode trust</li>
+</ul>
+<h3>Pain 10: MCP Ecosystem Immaturity</h3>
+<p>MCP is promising but painful in production:</p>
+<ul>
+<li>Token bloat: 50 tools = 100K+ tokens burned before conversation starts</li>
+<li>Security vulnerabilities: prompt injection, sandbox escapes in early implementations</li>
+<li>Enterprise gaps: no multi-tenancy, no admin controls, no context-aware discovery</li>
+<li>Server quality: barrier to publish is low, barrier to publish well is high</li>
+</ul>
+<hr>
+<h2>Summary Matrix: Contexter Positioning Opportunities</h2>
+<table>
+<thead>
+<tr>
+<th>Universal Pain</th>
+<th>Contexter&#39;s Answer</th>
+<th>Strength</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Context loss / memory wipe</td>
+<td>User-owned storage, user-controlled backups</td>
+<td>Strong</td>
+</tr>
+<tr>
+<td>Context fragmentation across tools</td>
+<td>MCP-native = any AI tool reads your context</td>
+<td>Strong</td>
+</tr>
+<tr>
+<td>Opaque / unpredictable pricing</td>
+<td>Flat EUR 4.72/mo self-hosted, no usage ceiling</td>
+<td>Very strong</td>
+</tr>
+<tr>
+<td>Vendor lock-in</td>
+<td>Self-hosted on your server, open infrastructure</td>
+<td>Very strong</td>
+</tr>
+<tr>
+<td>Chunking / retrieval quality</td>
+<td>(Must demonstrate comparable quality)</td>
+<td>Needs proof</td>
+</tr>
+<tr>
+<td>Format limitations</td>
+<td>15 formats incl. audio/video</td>
+<td>Strong vs Langbase, Vectorize; parity with others</td>
+</tr>
+<tr>
+<td>No self-hosting</td>
+<td>Primary deployment mode</td>
+<td>Very strong</td>
+</tr>
+<tr>
+<td>UI/UX gap</td>
+<td>(API-first, no UI currently)</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>Technical skepticism</td>
+<td>Transparent, simple, self-hostable</td>
+<td>Moderate — simplicity counters skepticism</td>
+</tr>
+<tr>
+<td>MCP ecosystem issues</td>
+<td>Purpose-built MCP, minimal tool surface</td>
+<td>Moderate</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. Sources</h2>
+<h3>Existing Research Files (read in full)</h3>
+<ul>
+<li><code>contexter-gtm-competitor-supermemory.md</code> (2026-03-27)</li>
+<li><code>contexter-gtm-competitor-ragie.md</code> (2026-03-27)</li>
+<li><code>contexter-gtm-competitor-morphik.md</code> (2026-03-27)</li>
+<li><code>contexter-gtm-competitor-vectorize.md</code> (2026-03-27)</li>
+<li><code>contexter-gtm-competitor-graphlit.md</code> (2026-03-27)</li>
+<li><code>contexter-gtm-competitor-langbase.md</code> (2026-03-27)</li>
+<li><code>contexter-gtm-v2-nontechnical-pain.md</code> (2026-03-27)</li>
+</ul>
+<h3>Fresh Web Research (2026-03-28)</h3>
+<ul>
+<li><a href="https://blog.supermemory.ai/incident-report-march-2026/">Supermemory Incident Report March 2026</a></li>
+<li><a href="https://comparateur-ia.com/en/ai-tools/supermemory-ai">Supermemory Review — Comparateur-IA</a></li>
+<li><a href="https://adventuresinclaude.ai/posts/2026-02-17-supermemory-evaluation/">Supermemory Evaluation for Claude Code</a></li>
+<li><a href="https://skywork.ai/skypage/en/RAGFlow-vs.-Ragie-Which-RAG-Platform-is-Right-for-You-in-2025/1976482607423090688">RAGFlow vs Ragie comparison</a></li>
+<li><a href="https://declom.com/ragie">Ragie Review — DeClom</a></li>
+<li><a href="https://aichief.com/ai-development-tools/ragie/">Ragie Review — AIChief</a></li>
+<li><a href="https://www.stackone.com/blog/mcp-where-its-been-where-its-going/">MCP: What&#39;s Working, What&#39;s Broken — StackOne</a></li>
+<li><a href="https://thenewstack.io/how-to-reduce-mcp-token-bloat/">MCP Token Bloat — The New Stack</a></li>
+<li><a href="https://thenewstack.io/model-context-protocol-roadmap-2026/">MCP Roadmap 2026 — The New Stack</a></li>
+<li><a href="https://news.ycombinator.com/item?id=46552254">MCP is a fad — HN discussion</a></li>
+<li><a href="https://www.stackai.com/blog/rag-limitations">RAG Limitations: 7 Critical Challenges 2026</a></li>
+<li><a href="https://discuss.huggingface.co/t/why-does-rag-still-feel-clunky-in-2025/164650">Why RAG Still Feels Clunky in 2025 — HuggingFace Forums</a></li>
+<li><a href="https://dev.to/theprodsde/why-most-rag-systems-fail-in-production-and-how-to-design-one-that-actually-works-j55">Why Most RAG Systems Fail in Production — DEV.to</a></li>
+<li><a href="https://medium.com/@gokulpalanisamy/fixing-rag-in-2026-why-your-enterprise-search-underperforms-and-what-actually-works-93480190fdd0">Fixing RAG in 2026 — Medium</a></li>
+<li><a href="https://www.atlasworkspace.ai/blog/notebooklm-limitations">NotebookLM Limitations 2026 — Atlas Blog</a></li>
+<li><a href="https://www.xda-developers.com/notebooklm-limitations/">NotebookLM feels powerful until... — XDA Developers</a></li>
+<li><a href="https://www.androidpolice.com/notebooklm-powerful-but-these-features-would-make-it-unstoppable/">NotebookLM 5 features for 2026 — Android Police</a></li>
+<li><a href="https://getaitoolhub.com/articles/notebooklm-review-2026-still-worth-using">NotebookLM Review 2026 — The Collective</a></li>
+<li><a href="https://community.openai.com/t/critical-chatgpt-data-loss-engineering-fix-urgently-needed/1360675">ChatGPT Data Loss — OpenAI Community</a></li>
+<li><a href="https://community.openai.com/t/bug-gpt-4o-memory-regression-context-loss-across-chats-and-inside-threads/1310926">ChatGPT Memory Regression Bug — OpenAI Community</a></li>
+<li><a href="https://www.allaboutai.com/ai-news/why-openai-wont-talk-about-chatgpt-silent-memory-crisis/">ChatGPT Silent Memory Crisis — AllAboutAI</a></li>
+<li><a href="https://www.webpronews.com/chatgpts-fading-recall-inside-the-2025-memory-wipe-crisis/">ChatGPT Memory Wipe Crisis — WebProNews</a></li>
+<li><a href="https://aicognitivezone.com/chatgpt-file-upload-limits/">ChatGPT File Upload Limits 2026</a></li>
+<li><a href="https://www.theregister.com/2026/01/05/claude_devs_usage_limits/">Claude Devs Usage Limits — The Register</a></li>
+<li><a href="https://www.macrumors.com/2026/03/26/claude-code-users-rapid-rate-limit-drain-bug/">Claude Code Rate Limit Drain — MacRumors</a></li>
+<li><a href="https://medium.com/all-about-claude/claude-weekly-limits-are-still-broken-but-the-2x-usage-offer-shows-anthropic-gets-it-e0c35e51bb70">Claude Weekly Limits Broken — Medium</a></li>
+<li><a href="https://support.claude.com/en/articles/9517075-what-are-projects">Claude Projects — Help Center</a></li>
+<li><a href="https://fast.io/resources/claude-file-upload-limit/">Claude File Upload Limits — Fast.io</a></li>
+<li><a href="https://techcrunch.com/2025/10/28/mem0-raises-24m-from-yc-peak-xv-and-basis-set-to-build-the-memory-layer-for-ai-apps/">Mem0 raises $24M — TechCrunch</a></li>
+<li><a href="https://guptadeepak.com/the-ai-memory-wars-why-one-system-crushed-the-competition-and-its-not-openai/">AI Memory Benchmark: Mem0 vs OpenAI vs LangMem</a></li>
+<li><a href="https://aichief.com/ai-development-tools/langbase/">Langbase Review — AIChief</a></li>
+<li><a href="https://aiagentslist.com/agents/langbase">Langbase Review — AI Agents List</a></li>
+<li><a href="https://blog.premai.io/building-production-rag-architecture-chunking-evaluation-monitoring-2026-guide/">RAG Production Guide 2026 — PremAI</a></li>
+<li><a href="https://redis.io/blog/rag-at-scale/">RAG at Scale 2026 — Redis</a></li>
+<li><a href="https://weaviate.io/blog/chunking-strategies-for-rag">Chunking Strategies for RAG — Weaviate</a></li>
+</ul>
+<hr>
+<p><em>Report generated: 2026-03-28 | Analyst: Orchestrator (Axis)</em></p>
+
+</body>
+</html>

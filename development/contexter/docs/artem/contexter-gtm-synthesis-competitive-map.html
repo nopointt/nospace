@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-synthesis-competitive-map — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter — Competitive Map: Non-Technical User Lens</h1>
+<blockquote>
+<p>Analyst: Lead/MarketAnalysis
+Date: 2026-03-27
+Purpose: Positioning synthesis for non-technical ICP (analysts, researchers, PMs, marketers, founders, consultants)
+Source research: 7 deep-dive files (direct competitors, indirect, PKM, non-tech pain, Ragie, Supermemory, Langbase)</p>
+</blockquote>
+<hr>
+<h2>Section 1 — Non-Technical User Journey Map</h2>
+<h3>The Current Reality: How a Non-Tech Person Tries to Make AI Know Their Documents</h3>
+<p>This is the actual lived experience of an analyst, PM, researcher, or consultant in 2026, reconstructed from real user quotes collected across OpenAI Community Forum, Reddit, Cursor Forum, and developer blogs.</p>
+<hr>
+<h4>Step 1: Discovery (first encounter with the problem)</h4>
+<p>The user starts a new ChatGPT chat. They paste a PDF they&#39;ve uploaded before, or re-explain a project that the AI &quot;should already know.&quot; The moment of recognition: &quot;Wait, I did this last week. Why doesn&#39;t it remember?&quot;</p>
+<p>They search &quot;how to make ChatGPT remember my documents.&quot; They find Custom Instructions. They spend 20 minutes writing a 1,500-character summary of their work context. They feel clever.</p>
+<p><strong>Emotional state:</strong> Mild frustration, but optimistic. &quot;I found a workaround.&quot;</p>
+<hr>
+<h4>Step 2: The Upload-Every-Time Ritual</h4>
+<p>For documents specifically, the user develops a ritual:</p>
+<ol>
+<li>Open ChatGPT (or Claude, or Gemini)</li>
+<li>Re-upload the PDF / paste the text</li>
+<li>Start the conversation over from scratch</li>
+<li>Get a useful answer</li>
+<li>Close the tab</li>
+</ol>
+<p>The next day: repeat from Step 1.</p>
+<p>For users with multiple AI tools, the ritual multiplies. The same research report gets uploaded to ChatGPT for one task, then to Claude for another. The same contract PDF goes into both.</p>
+<p><strong>Emotional state:</strong> Resignation. &quot;That&#39;s just how it works.&quot;</p>
+<p><strong>Key friction moments:</strong></p>
+<ul>
+<li>File limits: ChatGPT Plus allows ~80 uploads per 3-hour window; free users get 3/day</li>
+<li>Format failures: some PDFs don&#39;t parse correctly, audio files aren&#39;t accepted everywhere</li>
+<li>Context loss: long documents get truncated when they exceed context windows</li>
+</ul>
+<hr>
+<h4>Step 3: The Context Document Workaround</h4>
+<p>Power users eventually build a &quot;context document&quot; — a Google Doc, Notion page, or text file containing everything the AI needs to know. Before each important AI session, they copy-paste the relevant section.</p>
+<p>User quote (from Reddit r/ChatGPT, paraphrased from community research):</p>
+<blockquote>
+<p>&quot;The cruel irony is that the obvious solution — start a new chat — immediately destroys everything you built up, including all that onboarding, all those corrections, and all that shared context, leaving you back at square one.&quot;</p>
+</blockquote>
+<p>Some users maintain multiple context documents — one per project, per client, per domain. They become context librarians for their own AI assistant.</p>
+<p><strong>Emotional state:</strong> High cognitive load. &quot;This takes effort I shouldn&#39;t have to spend.&quot;</p>
+<hr>
+<h4>Step 4: The Walled Garden Discovery</h4>
+<p>The user discovers Claude Projects, or Custom GPTs, or NotebookLM. They&#39;re excited. They upload their documents once and they persist! The AI actually knows their stuff.</p>
+<p>Then the reality sets in:</p>
+<ul>
+<li>Claude Projects only works in Claude. Switch to ChatGPT for a different task: start over.</li>
+<li>Custom GPTs have a 20-file hard cap. The research library doesn&#39;t fit.</li>
+<li>NotebookLM doesn&#39;t connect to anything else — it&#39;s a reading room, not a memory layer.</li>
+</ul>
+<p>User quote (from Substack, March 2026, verbatim from research):</p>
+<blockquote>
+<p>&quot;I want to try Claude, but I&#39;ve been using ChatGPT for years. I have memories saved, projects set up, custom GPTs running. The idea of starting over feels exhausting.&quot;</p>
+</blockquote>
+<p>User quote (from DEV.to, verbatim from research):</p>
+<blockquote>
+<p>&quot;Using multiple AI tools feels like having a team of brilliant coworkers, who just refuse to talk to each other.&quot;</p>
+</blockquote>
+<p><strong>Emotional state:</strong> Trapped. Investment in one platform feels wasted the moment you try another.</p>
+<hr>
+<h4>Step 5: Accumulated Loss</h4>
+<p>For users who have been at this for 6-18 months, the emotional stakes become surprisingly high. They&#39;ve built up months of context: preferences, project history, document libraries, style guidelines.</p>
+<p>Then something breaks. ChatGPT&#39;s memory resets unexpectedly. A project&#39;s files disappear. A browser tab closes. Context is gone.</p>
+<p>Real user quotes (verbatim, from OpenAI Community Forum, dates verified):</p>
+<blockquote>
+<p>&quot;Two years worth of memories gone (Plus subscriber). Only an empty memories box.&quot; — nodehappy, Mar 2025</p>
+</blockquote>
+<blockquote>
+<p>&quot;I spent a year building these memories with the AI, and now all my crucial data is lost.&quot; — tugsatbaris, Mar 2025</p>
+</blockquote>
+<blockquote>
+<p>&quot;It feels like losing a beloved relative.&quot; — tugsatbaris, Mar 2025</p>
+</blockquote>
+<blockquote>
+<p>&quot;8 months of chats, gone down the drain in one morning, and it&#39;s devastating&quot; — benjamingalindo, Jul 2025</p>
+</blockquote>
+<p><strong>Emotional state:</strong> Grief. The language users reach for is not &quot;technical failure&quot; — it&#39;s loss of something personal.</p>
+<hr>
+<h4>Step 6: The Fragmentation Tax (daily, ongoing)</h4>
+<p>Even without catastrophic loss, the daily friction compounds. Every tool switch requires a context tax:</p>
+<ul>
+<li>Switching from ChatGPT to Claude: re-upload documents, re-explain project</li>
+<li>Starting a new chat in the same tool: re-introduce context if the conversation got too long</li>
+<li>Using Perplexity for research: cannot access personal documents at all</li>
+<li>Using Cursor for code: no knowledge of the business requirements explained in Claude</li>
+</ul>
+<p>The fragmentation tax is invisible to any single AI provider, but visible to the user who lives across multiple tools.</p>
+<p><strong>Emotional state:</strong> Chronic, low-level exhaustion. &quot;I&#39;m the memory for all my AI tools.&quot;</p>
+<hr>
+<h3>Where the Journey Breaks: Failure Points Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Failure Mode</th>
+<th>Emotional Impact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Session ends</td>
+<td>All uploaded files vanish</td>
+<td>Annoyance → resignation</td>
+</tr>
+<tr>
+<td>New conversation</td>
+<td>Full context must be re-introduced</td>
+<td>Time waste</td>
+</tr>
+<tr>
+<td>Switch to different AI</td>
+<td>Everything starts from zero</td>
+<td>Frustration → avoidance</td>
+</tr>
+<tr>
+<td>Context document workaround</td>
+<td>Manual maintenance burden, easy to forget</td>
+<td>Cognitive overload</td>
+</tr>
+<tr>
+<td>Walled garden (Claude Projects, Custom GPT)</td>
+<td>Only works in one tool</td>
+<td>Trapped</td>
+</tr>
+<tr>
+<td>Memory reset (OpenAI, Claude)</td>
+<td>Months of accumulated context destroyed</td>
+<td>Grief</td>
+</tr>
+<tr>
+<td>Long documents</td>
+<td>Truncated, partial results, silent failures</td>
+<td>Loss of trust in AI</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>What Non-Technical Users Actually Want (Their Own Words)</h3>
+<p>From research (verbatim vocabulary analysis, Section 3 of non-tech pain research):</p>
+<ul>
+<li>&quot;I wish AI just knew me already&quot;</li>
+<li>&quot;picks up where we left off&quot;</li>
+<li>&quot;doesn&#39;t need me to repeat myself&quot;</li>
+<li>&quot;one place to put everything so all my AIs can use it&quot;</li>
+<li>&quot;my AI assistant that knows everything about my work&quot;</li>
+</ul>
+<p>They do NOT say: &quot;RAG,&quot; &quot;embeddings,&quot; &quot;context window,&quot; &quot;vector store,&quot; &quot;chunks.&quot; They say: &quot;remember,&quot; &quot;knows me,&quot; &quot;start from scratch,&quot; &quot;my stuff.&quot;</p>
+<hr>
+<h2>Section 2 — Competitive Comparison Matrix (Non-Tech Lens)</h2>
+<p>Data sources: direct competitor research (2026-03-27), indirect competitor research (2026-03-27), PKM research (2026-03-27). All data verified at time of collection; market data has ~6-month shelf life.</p>
+<p>Legend:</p>
+<ul>
+<li>YES = fully supported</li>
+<li>NO = not available</li>
+<li>PARTIAL = works but with significant limitations</li>
+<li>N/A = not applicable</li>
+</ul>
+<hr>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>Persistent?</th>
+<th>All LLMs?</th>
+<th>Non-tech friendly?</th>
+<th>Any format?</th>
+<th>Any size?</th>
+<th>Free tier?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ChatGPT file upload</strong></td>
+<td>NO — files vanish after session</td>
+<td>NO — ChatGPT only</td>
+<td>YES — zero setup, drag and drop</td>
+<td>PARTIAL — PDF, images, DOCX; no audio/video on free</td>
+<td>PARTIAL — 512MB/file, 2M tokens/file; ~80 files/3hr window on Plus</td>
+<td>YES — 3 uploads/day on free</td>
+</tr>
+<tr>
+<td><strong>Claude Projects</strong></td>
+<td>YES — persists across conversations</td>
+<td>NO — Claude only; Anthropic crackdown Jan 2026 blocked external OAuth</td>
+<td>YES — no setup, upload in UI</td>
+<td>PARTIAL — PDF, DOCX, images; no audio/video processing</td>
+<td>PARTIAL — context window limits apply; large knowledge bases trigger RAG mode</td>
+<td>YES — Pro $20/mo required for full Projects</td>
+</tr>
+<tr>
+<td><strong>NotebookLM</strong></td>
+<td>YES — sources persist in notebooks</td>
+<td>NO — Gemini models only; no external API</td>
+<td>YES — best non-tech UX in class; source citation built in</td>
+<td>PARTIAL — PDF, DOCX, URLs, YouTube; no general audio/video beyond YouTube</td>
+<td>PARTIAL — 50 sources/notebook; each source has size limits</td>
+<td>YES — free tier available; Plus via Google Workspace $14/user/mo</td>
+</tr>
+<tr>
+<td><strong>Custom GPTs</strong></td>
+<td>YES — knowledge base persists</td>
+<td>NO — ChatGPT only</td>
+<td>YES — no-code setup; shareable</td>
+<td>PARTIAL — major document formats; no audio/video transcription</td>
+<td>NO — hard cap of 20 files, 512MB each</td>
+<td>YES — ChatGPT Plus required ($20/mo)</td>
+</tr>
+<tr>
+<td><strong>Supermemory</strong></td>
+<td>YES — persistent cross-session</td>
+<td>YES — works with Claude, ChatGPT, Gemini, Cursor via MCP</td>
+<td>NO — developer-first; requires API key setup; no UX for non-tech</td>
+<td>YES — PDFs, web pages, images (OCR), audio, video, connectors</td>
+<td>YES — unlimited storage all tiers</td>
+<td>YES — free: 1M tokens, 10K queries/mo</td>
+</tr>
+<tr>
+<td><strong>Mem.ai</strong></td>
+<td>YES — notes persist</td>
+<td>NO — chat is within Mem&#39;s own AI; API exists but not for end-user LLM routing</td>
+<td>YES — note-taking UX; easy capture</td>
+<td>PARTIAL — voice memos transcribed; no PDF/video confirmed</td>
+<td>PARTIAL — storage limits by plan</td>
+<td>YES — free: 25 notes, 25 chat/mo; Pro $12/mo</td>
+</tr>
+<tr>
+<td><strong>Notion AI</strong></td>
+<td>YES — workspace persists</td>
+<td>NO — Notion AI uses GPT-5/Claude/Gemini but only within Notion</td>
+<td>YES — for teams already in Notion; familiar UI</td>
+<td>PARTIAL — text, images, file attachments; no audio/video processing</td>
+<td>PARTIAL — Notion file size limits apply</td>
+<td>YES — free tier exists; AI on Business $15/user/mo</td>
+</tr>
+<tr>
+<td><strong>Copy-paste (manual)</strong></td>
+<td>NO — must repeat every session</td>
+<td>YES — works with every AI tool</td>
+<td>YES — zero setup; everyone knows how</td>
+<td>PARTIAL — only what you can fit in a text paste</td>
+<td>NO — context window limits; large docs must be summarized first</td>
+<td>YES — completely free</td>
+</tr>
+<tr>
+<td><strong>Contexter</strong></td>
+<td>YES — persistent across all sessions and tools</td>
+<td>YES — any LLM via REST API or MCP (ChatGPT, Claude, Gemini, Perplexity, Cursor)</td>
+<td>PARTIAL — currently developer-oriented setup; non-tech UX is the product opportunity</td>
+<td>YES — 15 formats including PDF, DOCX, audio, video, images</td>
+<td>YES — no arbitrary file count caps; infrastructure-bound</td>
+<td>YES — self-hosted at €4.72/mo; no per-upload or per-query limits</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Notes on Key Rows</h3>
+<p><strong>ChatGPT file upload:</strong> The most-used &quot;solution&quot; by default. OpenAI redesigned paste behavior in early 2026 (auto-converting pastes &gt;5,000 chars to attachments) specifically because this workflow is so dominant it was degrading UX. Its fundamental problem — no persistence — is architectural.</p>
+<p><strong>Claude Projects:</strong> Anthropic made a deliberate walled-garden move in January 2026, blocking OAuth tokens from working outside Claude Code CLI. The direction is toward lock-in, not portability. Best-in-class for Claude-only workflows.</p>
+<p><strong>NotebookLM:</strong> The closest thing to non-tech-friendly persistent context that exists today. Source grounding (every answer cites exactly where it came from) is genuinely excellent UX. Critical limitation: Gemini-only, no API, not programmable.</p>
+<p><strong>Custom GPTs:</strong> 20-file hard cap is a policy decision, not a technical constraint. OpenAI&#39;s business incentive is to keep users in ChatGPT.</p>
+<p><strong>Supermemory:</strong> Closest functional competitor to Contexter. Developer-first. Non-technical users have no path to use it without engineering help. $3M funded, 19.8K GitHub stars.</p>
+<p><strong>Mem.ai:</strong> Solves a different problem — note capture and personal knowledge organization, not document context for AI tools. Confused with Contexter in some comparison queries but architecturally distinct.</p>
+<p><strong>Notion AI:</strong> For teams living in Notion, this is the path of least resistance. Official MCP server exists. Critical gap: only knows Notion pages, not arbitrary documents you upload.</p>
+<p><strong>Copy-paste:</strong> The real incumbent. Dominant behavior for ~95% of knowledge workers using AI today. Contexter&#39;s primary conversion story is from this behavior, not from displacing another SaaS product.</p>
+<hr>
+<h2>Section 3 — Positioning Maps (2x2)</h2>
+<h3>Matrix A: AI Portability vs. User Accessibility</h3>
+<p><strong>X-axis:</strong> Locked to one AI (left) ↔ Works with all AI (right)
+<strong>Y-axis:</strong> Requires technical setup (bottom) ↔ Non-tech friendly (top)</p>
+<pre><code>NON-TECH FRIENDLY
+        |
+NotebookLM          Contexter (target position)
+Mem.ai              [no one occupies this yet]
+        |
+Claude      Copy-
+Projects    paste
+Custom GPTs  ....
+        |
+ChatGPT     Supermemory
+file upload  Langbase
+             Ragie
+        |
+REQUIRES TECH SETUP
+        |
+LOCKED TO ONE AI ----+---- WORKS WITH ALL AI
+</code></pre>
+<p><strong>Plotted positions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>X position</th>
+<th>Y position</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ChatGPT file upload</td>
+<td>Far left (ChatGPT only)</td>
+<td>Upper-middle (easy to use)</td>
+</tr>
+<tr>
+<td>Claude Projects</td>
+<td>Left (Claude only)</td>
+<td>Upper-middle (easy for Claude users)</td>
+</tr>
+<tr>
+<td>NotebookLM</td>
+<td>Left (Gemini only)</td>
+<td>Upper (best non-tech UX)</td>
+</tr>
+<tr>
+<td>Custom GPTs</td>
+<td>Left (ChatGPT only)</td>
+<td>Upper-middle</td>
+</tr>
+<tr>
+<td>Mem.ai</td>
+<td>Left-center (Mem&#39;s own AI)</td>
+<td>Upper (note-taking UX)</td>
+</tr>
+<tr>
+<td>Notion AI</td>
+<td>Left-center (Notion ecosystem)</td>
+<td>Upper (familiar workspace)</td>
+</tr>
+<tr>
+<td>Copy-paste</td>
+<td>Right (all tools manually)</td>
+<td>Upper (everyone can do it)</td>
+</tr>
+<tr>
+<td>Supermemory</td>
+<td>Right (all LLMs via API/MCP)</td>
+<td>Lower (developer-only setup)</td>
+</tr>
+<tr>
+<td>Ragie</td>
+<td>Right (model-agnostic API)</td>
+<td>Lower (developer-only)</td>
+</tr>
+<tr>
+<td>Langbase</td>
+<td>Right (100+ LLMs via API)</td>
+<td>Lower (developer-only)</td>
+</tr>
+<tr>
+<td><strong>Contexter</strong></td>
+<td><strong>Far right (all LLMs)</strong></td>
+<td><strong>Upper-right (target: non-tech)</strong></td>
+</tr>
+</tbody></table>
+<p><strong>WHITE SPACE Contexter Occupies:</strong>
+The upper-right quadrant — works with all AI AND accessible to non-technical users — is empty. Every current solution forces a choice: either easy (but locked to one AI) or universal (but technical). Contexter is the only product positioned, or attempting to position, in this white space.</p>
+<p>This is not an accident of market structure. The walled-garden players (OpenAI, Anthropic, Google) have business incentive to stay in the upper-left. The developer infrastructure players (Supermemory, Ragie, Langbase) serve developers first and have no stated roadmap for non-tech UX. The white space is structurally available.</p>
+<hr>
+<h3>Matrix B: Format Breadth vs. Memory Persistence</h3>
+<p><strong>X-axis:</strong> Text only (left) ↔ Any format — audio, video, images (right)
+<strong>Y-axis:</strong> Per-session only (bottom) ↔ Persistent across sessions and tools (top)</p>
+<pre><code>PERSISTENT ACROSS SESSIONS &amp; TOOLS
+        |
+        |   Claude Projects     Supermemory
+        |   Custom GPTs         Ragie
+        |   NotebookLM          Contexter
+        |   Notion AI
+        |
+        |
+        |   ChatGPT file upload (audio limited)
+        |   Mem.ai (text/voice only)
+        |
+PER SESSION ONLY
+        |
+TEXT ONLY ----+---- ANY FORMAT (audio, video, images)
+</code></pre>
+<p><strong>Plotted positions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>X position</th>
+<th>Y position</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ChatGPT file upload</td>
+<td>Center (PDF/doc but limited audio)</td>
+<td>Bottom (per-session)</td>
+</tr>
+<tr>
+<td>Claude Projects</td>
+<td>Left-center (text/PDF/image)</td>
+<td>Upper (persistent)</td>
+</tr>
+<tr>
+<td>Custom GPTs</td>
+<td>Center (major formats)</td>
+<td>Upper (persistent)</td>
+</tr>
+<tr>
+<td>NotebookLM</td>
+<td>Center-left (text/PDF/YouTube)</td>
+<td>Upper (persistent)</td>
+</tr>
+<tr>
+<td>Mem.ai</td>
+<td>Left (text/voice)</td>
+<td>Upper (persistent)</td>
+</tr>
+<tr>
+<td>Notion AI</td>
+<td>Center-left (text/files)</td>
+<td>Upper (persistent)</td>
+</tr>
+<tr>
+<td>Supermemory</td>
+<td>Right (PDF/audio/video/web/connectors)</td>
+<td>Upper (persistent)</td>
+</tr>
+<tr>
+<td>Ragie</td>
+<td>Right (17 audio/video formats + docs)</td>
+<td>Upper (persistent)</td>
+</tr>
+<tr>
+<td><strong>Contexter</strong></td>
+<td><strong>Right (15 formats: PDF/audio/video/images)</strong></td>
+<td><strong>Upper (persistent)</strong></td>
+</tr>
+<tr>
+<td>Copy-paste</td>
+<td>Far left (text only)</td>
+<td>Bottom (manual each time)</td>
+</tr>
+</tbody></table>
+<p><strong>WHITE SPACE Contexter Occupies:</strong>
+In Matrix B, Contexter clusters with Supermemory and Ragie in the upper-right. The differentiation here is not about white space but about the non-tech access layer (see Matrix A). The upper-right quadrant has technical players but no consumer-accessible product. Contexter&#39;s opportunity is to occupy &quot;any format + persistent + non-tech&quot; — a position no one holds.</p>
+<p><strong>Key insight from both matrices combined:</strong>
+When you overlay the two matrices, Contexter&#39;s unique position becomes the intersection of:</p>
+<ul>
+<li>Works with all AI (Matrix A, right side)</li>
+<li>Non-tech friendly (Matrix A, top)</li>
+<li>Any format (Matrix B, right)</li>
+<li>Persistent (Matrix B, top)</li>
+</ul>
+<p>No other product is in all four quadrants simultaneously. This is the structural white space.</p>
+<hr>
+<h2>Section 4 — &quot;Why Not Just...&quot; Objection Handling</h2>
+<p>These are the real objections a non-technical PM, analyst, or consultant will raise. Each counter is grounded in research, not marketing.</p>
+<hr>
+<h3>&quot;Why not just upload files to ChatGPT?&quot;</h3>
+<p><strong>The objection:</strong> It&#39;s already in my workflow. Free. Zero setup. Just drag and drop.</p>
+<p><strong>The reality:</strong>
+Every file you upload disappears when the conversation ends. The next day you start from zero — same document, same re-upload, same re-introduction. If you use multiple AI tools (ChatGPT for one task, Claude for another), you upload the same file to both. Separately. Every time.</p>
+<p>For occasional use (one document, one question, done), ChatGPT upload is fine. But if you work with the same materials over time, or across multiple AI tools, the upload ritual becomes a tax on every work session.</p>
+<p>The moment you want to ask Claude about a document you already gave ChatGPT, you are paying the tax twice.</p>
+<p><strong>One-sentence counter:</strong> ChatGPT file upload is perfect for one question about one document — but your knowledge doesn&#39;t live there between conversations, and it certainly doesn&#39;t travel to Claude or Perplexity.</p>
+<hr>
+<h3>&quot;Why not use Claude Projects?&quot;</h3>
+<p><strong>The objection:</strong> I use Claude a lot. Projects let me upload documents once and they persist. That&#39;s exactly what I need.</p>
+<p><strong>The reality:</strong>
+Claude Projects work perfectly — inside Claude. The moment you open ChatGPT, Perplexity, Gemini, or any other tool, your Projects context is gone. You&#39;ve built a personal knowledge base that one company controls.</p>
+<p>In January 2026, Anthropic explicitly tightened their walled garden (blocked OAuth access from outside Claude Code CLI). The direction of travel is toward more lock-in, not less. Your accumulated context — documents, conversation history, project knowledge — belongs to Anthropic&#39;s ecosystem.</p>
+<p>If Claude disappears, changes pricing, or you want to try a better model for a specific task, you rebuild from scratch.</p>
+<p><strong>One-sentence counter:</strong> Claude Projects solve the memory problem perfectly — until you need to use any other AI tool, at which point you&#39;re starting over.</p>
+<hr>
+<h3>&quot;Why not use NotebookLM?&quot;</h3>
+<p><strong>The objection:</strong> NotebookLM is made for exactly this — upload sources, ask questions, get cited answers. It&#39;s free and works well.</p>
+<p><strong>The reality:</strong>
+NotebookLM is genuinely excellent at what it does: reading research, grounding answers in sources, creating Audio Overviews. For a self-contained research project with a defined document set, it&#39;s one of the best tools available.</p>
+<p>Three hard limits:</p>
+<ol>
+<li>Gemini-only. Every answer comes from Google&#39;s model. You cannot take your NotebookLM knowledge base and ask Claude or ChatGPT about it.</li>
+<li>No API. If you want another application to access your notebook&#39;s content, it cannot. NotebookLM is a reading room, not a library with a checkout system.</li>
+<li>50 sources per notebook cap. A substantial document collection won&#39;t fit.</li>
+</ol>
+<p>NotebookLM is the best non-technical solution for reading and analyzing a fixed set of documents within a single Google experience. It is not a universal memory layer.</p>
+<p><strong>One-sentence counter:</strong> NotebookLM is a brilliant reading tool — but your sources stay inside Google&#39;s walls and can&#39;t be accessed by ChatGPT, Claude, or Perplexity.</p>
+<hr>
+<h3>&quot;Why not just copy-paste?&quot;</h3>
+<p><strong>The objection:</strong> I know exactly what context is relevant. I paste it into the prompt. It&#39;s simple and it works.</p>
+<p><strong>The reality:</strong>
+Copy-paste works. It has zero setup, zero cost, works with every AI tool, and gives you complete control over what the AI sees. For occasional, simple use, it is genuinely the right choice.</p>
+<p>It breaks at scale and over time:</p>
+<ul>
+<li>You are the retrieval layer. You manually decide what&#39;s relevant and hunt for it.</li>
+<li>Large documents cannot fit. A 200-page report must be summarized before pasting, losing information in the process.</li>
+<li>Every conversation starts from zero — there is no accumulation of context.</li>
+<li>If you work with AI daily across multiple projects, you spend a significant portion of your time feeding context rather than receiving answers.</li>
+</ul>
+<p>The user who does five AI sessions per week, each requiring 10 minutes of context-gathering, is spending ~3.5 hours per week on context logistics. That is a productivity tax that compounds.</p>
+<p><strong>One-sentence counter:</strong> Copy-paste is perfect for occasional use — but if you work with AI every day, you&#39;re spending hours each week re-teaching AI tools what they should already know.</p>
+<hr>
+<h3>&quot;Why not use Notion AI?&quot;</h3>
+<p><strong>The objection:</strong> My team lives in Notion. Notion AI knows all our pages and databases. We already have everything in one place.</p>
+<p><strong>The reality:</strong>
+For teams fully committed to Notion, this is the strongest objection — and it is partially valid. Notion AI has genuinely gotten good. Notion 3.0 (September 2025) added autonomous AI Agents. There&#39;s an official MCP server that lets Claude Code and Cursor access your Notion workspace.</p>
+<p>Three limits that matter:</p>
+<ol>
+<li>Notion AI only knows what&#39;s in Notion. The PDF a client sent by email, the audio recording from last week&#39;s meeting, the competitor&#39;s annual report — if it&#39;s not a Notion page, Notion AI doesn&#39;t know it.</li>
+<li>Notion AI is inaccessible outside Notion. There is no endpoint that returns &quot;answer from your Notion workspace&quot; to an external application. You cannot ask Perplexity to use your Notion knowledge.</li>
+<li>Complex document formats are limited. Notion handles text-based pages well. It is not a deep processor of PDFs, audio files, or large video transcripts.</li>
+</ol>
+<p><strong>One-sentence counter:</strong> Notion AI is excellent for your Notion workspace — but the moment your knowledge lives anywhere else (email attachments, PDFs, audio recordings), Notion AI can&#39;t see it.</p>
+<hr>
+<h2>Section 5 — One-Sentence Competitive Positioning</h2>
+<p>Three formulations targeting different conversation contexts:</p>
+<hr>
+<p><strong>Formulation 1 — Against the walled garden (ChatGPT Projects, Claude Projects, NotebookLM):</strong></p>
+<p>&quot;Unlike Claude Projects or NotebookLM, Contexter stores your knowledge in a neutral layer accessible to every AI tool — ChatGPT, Claude, Gemini, Perplexity — so your documents follow you wherever you work, not where one company decides you should stay.&quot;</p>
+<hr>
+<p><strong>Formulation 2 — Against the copy-paste ritual:</strong></p>
+<p>&quot;Unlike manually re-uploading your documents to every AI chat, Contexter remembers everything once — any format, any size — so every AI you use already knows your work the moment you open a new conversation.&quot;</p>
+<hr>
+<p><strong>Formulation 3 — Against developer-only solutions (Supermemory, Ragie):</strong></p>
+<p>&quot;Unlike Supermemory or Ragie, which require API keys and developer setup, Contexter gives non-technical professionals — analysts, researchers, PMs, consultants — a single memory layer their AI tools can actually use without involving an engineer.&quot;</p>
+<hr>
+<h2>Synthesis: The Structural White Space</h2>
+<p>Every research finding across all seven source files points to the same conclusion.</p>
+<p>The market in 2026 has:</p>
+<ul>
+<li>Easy solutions that lock you to one AI (Claude Projects, Custom GPTs, NotebookLM)</li>
+<li>Universal solutions that require technical setup (Supermemory, Ragie, Langbase)</li>
+<li>No solution that is both universal AND accessible to non-technical users</li>
+</ul>
+<p>The non-technical user&#39;s pain is documented, real, and emotionally charged. Users describe memory loss in grief language. They describe re-uploading as exhausting. They describe tool-switching as isolation between AI tools that &quot;refuse to talk to each other.&quot;</p>
+<p>Both Anthropic (Claude memory import, March 2026) and Google (Gemini import tool, March 26, 2026) independently shipped memory transfer tools in the same two-week window — direct market validation that this pain is activating into purchasing behavior now.</p>
+<p>The positioning &quot;One memory. Every AI.&quot; maps to the vocabulary users actually use (&quot;memory,&quot; &quot;every AI&quot;) and names the exact problem (singular vs. fragmented). No current product owns this position with non-technical users.</p>
+<p>Contexter&#39;s strategic path: occupy the upper-right of Matrix A (universal + non-tech accessible) before any well-funded player decides to move there. The walled-garden players (OpenAI, Anthropic, Google) have structural incentives preventing them from moving right on the X-axis. The developer infrastructure players (Supermemory, Ragie, Langbase) are oriented toward developers and have no non-tech roadmap visible. The window is open.</p>
+<hr>
+<h2>Appendix: Sources and Research Basis</h2>
+<p>This document synthesizes findings from seven research files:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>contexter-gtm-v2-direct-competitors.md</code></td>
+<td>Top 5 direct competitors (Ragie, Graphlit, Morphik, Vectorize, Langbase Memory), competitive matrix, DIY RAG as non-product competitor</td>
+</tr>
+<tr>
+<td><code>contexter-gtm-v2-indirect-competitors.md</code></td>
+<td>15 indirect competitors across 9 categories (per-session, walled garden, PKM, enterprise knowledge, AI memory, MCP servers, vector DB, no-code RAG, manual)</td>
+</tr>
+<tr>
+<td><code>contexter-gtm-v2-second-brain.md</code></td>
+<td>10 PKM products + Supermemory bonus finding; API/MCP status; convergence assessment</td>
+</tr>
+<tr>
+<td><code>contexter-gtm-v2-nontechnical-pain.md</code></td>
+<td>17 verbatim user quotes; 6 workaround patterns; vocabulary analysis; 5 landing page teardowns for non-tech language patterns</td>
+</tr>
+<tr>
+<td><code>contexter-gtm-competitor-ragie.md</code></td>
+<td>Deep dive: Ragie positioning, pricing ($100-$500/mo), ICP, feature matrix, user sentiment</td>
+</tr>
+<tr>
+<td><code>contexter-gtm-competitor-supermemory.md</code></td>
+<td>Deep dive: Supermemory positioning, $3M funding, feature matrix, love/hate/want analysis, switching triggers</td>
+</tr>
+<tr>
+<td><code>contexter-gtm-competitor-langbase.md</code></td>
+<td>Deep dive: Langbase Memory positioning, storage-based pricing ($100-$250/mo + 5-50 MB caps), format limitations, audience voice</td>
+</tr>
+</tbody></table>
+<p>All pricing data as of 2026-03-27. Competitive intelligence has a shelf-life of approximately 6 months.</p>
+<hr>
+<p><em>Research by Lead/MarketAnalysis | Operator: chief-research (Eidolon) | 2026-03-27</em></p>
+
+</body>
+</html>

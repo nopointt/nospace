@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-market-landscape — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter GTM: Market Landscape Research</h1>
+<blockquote>
+<p>Research date: 2026-03-27
+Analyst: Lead/MarketAnalysis
+Status: COMPLETE
+Product: Contexter -- RAG-as-a-service (document upload, parse, chunk, embed, query via API/MCP)</p>
+</blockquote>
+<hr>
+<h2>1. Market Category Definition</h2>
+<h3>1.1 Analyst Taxonomy</h3>
+<p>The product sits at the intersection of several analyst-defined categories. No single Gartner/Forrester category captures &quot;RAG-as-a-service&quot; precisely -- it spans multiple adjacent markets:</p>
+<table>
+<thead>
+<tr>
+<th>Analyst Category</th>
+<th>Who Tracks It</th>
+<th>Fit for Contexter</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Knowledge Management Software</td>
+<td>Gartner Peer Insights, Forrester Wave (Q4 2024)</td>
+<td>Partial -- Contexter is API-first, not full KM suite</td>
+</tr>
+<tr>
+<td>Intelligent Document Processing (IDP)</td>
+<td>Gartner MQ, Everest Group PEAK</td>
+<td>Partial -- Contexter parses docs but focus is retrieval, not extraction</td>
+</tr>
+<tr>
+<td>Enterprise Search</td>
+<td>Gartner MQ (Insight Engines)</td>
+<td>Partial -- retrieval layer overlaps, but Contexter is generative</td>
+</tr>
+<tr>
+<td>Retrieval-Augmented Generation (RAG)</td>
+<td>Emerging category -- tracked by MarketsandMarkets, Grand View Research, Precedence Research, Mordor Intelligence</td>
+<td><strong>Primary fit</strong></td>
+</tr>
+<tr>
+<td>API Management</td>
+<td>Gartner MQ</td>
+<td>No -- Contexter is an API product, not API management</td>
+</tr>
+<tr>
+<td>Customer Service KM Systems</td>
+<td>Gartner Market Guide (2025)</td>
+<td>No -- too narrow</td>
+</tr>
+</tbody></table>
+<p><strong>Key insight:</strong> &quot;RAG&quot; is now a standalone market category recognized by multiple research firms (Grand View Research, Precedence Research, Mordor Intelligence, MarketsandMarkets, Next Move Strategy Consulting). However, <strong>Gartner and Forrester have not yet published a dedicated Magic Quadrant or Wave for RAG</strong> as of March 2026. They subsume RAG within broader categories like &quot;AI-augmented development,&quot; &quot;knowledge management,&quot; and &quot;enterprise search.&quot;</p>
+<p>Sources:</p>
+<ul>
+<li>Gartner Market Guide for Customer Service KM Systems: <a href="https://www.gartner.com/en/documents/5491795">https://www.gartner.com/en/documents/5491795</a></li>
+<li>Gartner Peer Insights -- Knowledge Management Software: <a href="https://www.gartner.com/reviews/market/knowledge-management-software">https://www.gartner.com/reviews/market/knowledge-management-software</a></li>
+<li>Forrester Wave -- Knowledge Management Solutions, Q4 2024: <a href="https://www.forrester.com/blogs/the-forrester-wave-knowledge-management-solutions-q4-2024-insights/">https://www.forrester.com/blogs/the-forrester-wave-knowledge-management-solutions-q4-2024-insights/</a></li>
+</ul>
+<h3>1.2 Emerging Category Labels</h3>
+<p>Based on market positioning of competitors, several category labels are in active use:</p>
+<ul>
+<li><strong>&quot;RAG-as-a-Service&quot;</strong> -- used by Vectara, Ragie, and smaller startups</li>
+<li><strong>&quot;Knowledge Base API&quot;</strong> -- used by developer-focused products</li>
+<li><strong>&quot;AI Document Processing API&quot;</strong> -- used by products emphasizing parsing/extraction</li>
+<li><strong>&quot;Conversational Knowledge Platform&quot;</strong> -- used by enterprise-oriented products</li>
+<li><strong>&quot;AI Search API&quot;</strong> -- used by search-first products (Algolia AI, etc.)</li>
+</ul>
+<p>The term &quot;RAG-as-a-Service&quot; is gaining traction but is not yet standardized by major analysts.</p>
+<h3>1.3 Contexter&#39;s Category Position</h3>
+<p>Contexter best fits: <strong>RAG-as-a-Service / Knowledge Base API</strong> -- developer-facing, API-first, with MCP-native differentiation. It is NOT an enterprise KM suite, NOT a document extraction tool, NOT a general search engine. It is a <strong>retrieval + generation API for AI-native workflows</strong>.</p>
+<hr>
+<h2>2. Market Size (TAM/SAM/SOM)</h2>
+<h3>2.1 RAG Market (Primary Category)</h3>
+<p>Multiple research firms now size the RAG market independently. Estimates vary significantly:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>2025 Value</th>
+<th>2026 Value</th>
+<th>2030 Projection</th>
+<th>CAGR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Precedence Research</td>
+<td>$1.85B</td>
+<td>$2.76B</td>
+<td>--</td>
+<td>49.12% (to 2034)</td>
+</tr>
+<tr>
+<td>Roots Analysis</td>
+<td>$1.96B</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Mordor Intelligence</td>
+<td>$1.92B</td>
+<td>--</td>
+<td>$10.20B</td>
+<td>39.66%</td>
+</tr>
+<tr>
+<td>Next Move Strategy Consulting</td>
+<td>$2.33B</td>
+<td>$3.33B</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>MarketsandMarkets</td>
+<td>$1.94B</td>
+<td>--</td>
+<td>$9.86B</td>
+<td>38.4%</td>
+</tr>
+<tr>
+<td>Grand View Research</td>
+<td>--</td>
+<td>--</td>
+<td>reported but gated</td>
+<td>--</td>
+</tr>
+</tbody></table>
+<p><strong>Consensus range for 2025:</strong> $1.85B -- $2.33B
+<strong>Consensus range for 2026:</strong> $2.76B -- $3.33B
+<strong>Consensus CAGR:</strong> 38-49% through 2030-2034</p>
+<p>Sources:</p>
+<ul>
+<li>Precedence Research: <a href="https://www.precedenceresearch.com/retrieval-augmented-generation-market">https://www.precedenceresearch.com/retrieval-augmented-generation-market</a></li>
+<li>Mordor Intelligence: <a href="https://www.mordorintelligence.com/industry-reports/retrieval-augmented-generation-market">https://www.mordorintelligence.com/industry-reports/retrieval-augmented-generation-market</a></li>
+<li>Grand View Research: <a href="https://www.grandviewresearch.com/industry-analysis/retrieval-augmented-generation-rag-market-report">https://www.grandviewresearch.com/industry-analysis/retrieval-augmented-generation-rag-market-report</a></li>
+<li>Next Move Strategy Consulting: <a href="https://www.nextmsc.com/report/retrieval-augmented-generation-rag-market-ic3918">https://www.nextmsc.com/report/retrieval-augmented-generation-rag-market-ic3918</a></li>
+<li>MarketsandMarkets / ResearchandMarkets: <a href="https://www.researchandmarkets.com/reports/6182071/retrieval-augmented-generation-rag-market">https://www.researchandmarkets.com/reports/6182071/retrieval-augmented-generation-rag-market</a></li>
+<li>Roots Analysis: <a href="https://www.rootsanalysis.com/retrieval-augmented-generation-rag-market">https://www.rootsanalysis.com/retrieval-augmented-generation-rag-market</a></li>
+</ul>
+<h3>2.2 Adjacent Markets</h3>
+<h4>Intelligent Document Processing (IDP)</h4>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>2025 Value</th>
+<th>2026 Value</th>
+<th>2030+ Projection</th>
+<th>CAGR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Precedence Research</td>
+<td>$3.22B</td>
+<td>$4.31B</td>
+<td>$43.92B (2034)</td>
+<td>33.68%</td>
+</tr>
+<tr>
+<td>Fortune Business Insights</td>
+<td>$10.57B</td>
+<td>$14.16B</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Research Nester</td>
+<td>$3.0B</td>
+<td>$4.1B</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Polaris Market Research</td>
+<td>$3.09B</td>
+<td>--</td>
+<td>--</td>
+<td>--</td>
+</tr>
+<tr>
+<td>Coherent Market Insights</td>
+<td>$1.38B</td>
+<td>--</td>
+<td>--</td>
+<td>10.8%</td>
+</tr>
+</tbody></table>
+<p><strong>Note:</strong> Extreme variance ($1.38B to $10.57B for same year) reflects different scope definitions. Fortune BI likely includes broader document management; Coherent MI uses a narrow IDP definition.</p>
+<p>Sources:</p>
+<ul>
+<li>Precedence Research: <a href="https://www.precedenceresearch.com/intelligent-document-processing-market">https://www.precedenceresearch.com/intelligent-document-processing-market</a></li>
+<li>Fortune Business Insights: <a href="https://www.fortunebusinessinsights.com/intelligent-document-processing-market-108590">https://www.fortunebusinessinsights.com/intelligent-document-processing-market-108590</a></li>
+<li>Grand View Research: <a href="https://www.grandviewresearch.com/industry-analysis/intelligent-document-processing-market-report">https://www.grandviewresearch.com/industry-analysis/intelligent-document-processing-market-report</a></li>
+<li>Docsumo market summary: <a href="https://www.docsumo.com/blogs/intelligent-document-processing/intelligent-document-processing-market-report-2025">https://www.docsumo.com/blogs/intelligent-document-processing/intelligent-document-processing-market-report-2025</a></li>
+</ul>
+<h4>Enterprise Search</h4>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>2025 Value</th>
+<th>2030+ Projection</th>
+<th>CAGR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Coherent Market Insights</td>
+<td>$6.7B</td>
+<td>--</td>
+<td>8.77%</td>
+</tr>
+<tr>
+<td>Precedence Research</td>
+<td>$5.34B</td>
+<td>$12.71B (2035)</td>
+<td>9.05%</td>
+</tr>
+<tr>
+<td>IMARC Group</td>
+<td>--</td>
+<td>--</td>
+<td>reported but gated</td>
+</tr>
+</tbody></table>
+<p>Sources:</p>
+<ul>
+<li>Precedence Research: <a href="https://www.precedenceresearch.com/enterprise-search-market">https://www.precedenceresearch.com/enterprise-search-market</a></li>
+<li>Coherent Market Insights: <a href="https://www.coherentmarketinsights.com/market-insight/enterprise-search-market-4756">https://www.coherentmarketinsights.com/market-insight/enterprise-search-market-4756</a></li>
+</ul>
+<h4>AI Search Engine Market</h4>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>2025 Value</th>
+<th>2026 Value</th>
+<th>2035 Projection</th>
+<th>CAGR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SNS Insider / Future Market Insights</td>
+<td>$18.5B</td>
+<td>$21.0B</td>
+<td>$87.63B</td>
+<td>~13.6%</td>
+</tr>
+</tbody></table>
+<p>Source: <a href="https://www.globenewswire.com/news-release/2026/03/25/3261932/0/en/AI-Search-Engine-Market-Size-to-Reach-USD-87-63-Billion-by-2035">https://www.globenewswire.com/news-release/2026/03/25/3261932/0/en/AI-Search-Engine-Market-Size-to-Reach-USD-87-63-Billion-by-2035</a></p>
+<h4>AI API Market (Broadest)</h4>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>2025 Value</th>
+<th>2030 Projection</th>
+<th>CAGR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MarketsandMarkets</td>
+<td>$44.41B</td>
+<td>$179.14B</td>
+<td>32.2%</td>
+</tr>
+</tbody></table>
+<p>Source: <a href="https://www.marketsandmarkets.com/Market-Reports/ai-api-market-54185287.html">https://www.marketsandmarkets.com/Market-Reports/ai-api-market-54185287.html</a></p>
+<h3>2.3 TAM/SAM/SOM Framework for Contexter</h3>
+<p><strong>TAM (Total Addressable Market):</strong> RAG market + developer-facing share of Enterprise Search + AI API document processing segment</p>
+<ul>
+<li>Estimate: ~$3B-5B in 2026 (RAG $2.76-3.33B + overlap from adjacent categories)</li>
+</ul>
+<p><strong>SAM (Serviceable Addressable Market):</strong> RAG-as-a-Service specifically (managed RAG APIs, not self-built enterprise RAG)</p>
+<ul>
+<li>The &quot;as-a-Service&quot; segment is a fraction of total RAG market. Most RAG spend is on in-house builds using frameworks (LangChain, LlamaIndex) + vector DBs.</li>
+<li>Estimate: 15-25% of total RAG market = $400M-$800M in 2026</li>
+<li>This is the segment served by Vectara, Ragie, Cohere, and similar API products</li>
+</ul>
+<p><strong>SOM (Serviceable Obtainable Market):</strong> Developer/prosumer segment using MCP-native RAG APIs, self-hosted or small-cloud</p>
+<ul>
+<li>Target: individual developers, AI-native startups, small teams needing document Q&amp;A without building RAG pipelines</li>
+<li>Estimate: $20M-$50M in 2026 (early market, high fragmentation)</li>
+<li>Rationale: SOM for a pre-seed product in a fast-growing but fragmented market</li>
+</ul>
+<p><strong>Note:</strong> These SAM/SOM estimates are derived, not sourced from analyst reports. No analyst has segmented RAG by delivery model (self-built vs. managed API) at this granularity.</p>
+<hr>
+<h2>3. Market Trends 2025-2026</h2>
+<h3>3.1 MCP Protocol Adoption</h3>
+<p>The Model Context Protocol (MCP) by Anthropic has become the <strong>de facto standard</strong> for connecting AI systems to external data sources. Key milestones:</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Milestone</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Nov 2024</td>
+<td>MCP launched by Anthropic as open protocol</td>
+</tr>
+<tr>
+<td>Mar 2025</td>
+<td>OpenAI adopts MCP across Agents SDK, Responses API, ChatGPT desktop</td>
+</tr>
+<tr>
+<td>Mar 2025</td>
+<td>Google DeepMind confirms MCP support for Gemini</td>
+</tr>
+<tr>
+<td>Nov 2025</td>
+<td>First MCP anniversary -- spec v2025-11-25 released</td>
+</tr>
+<tr>
+<td>Dec 2025</td>
+<td>Anthropic donates MCP to Agentic AI Foundation (AAIF) under Linux Foundation. Co-founded by Anthropic, Block, OpenAI</td>
+</tr>
+<tr>
+<td>Jan 2026</td>
+<td>17,000+ MCP servers available. &quot;Knowledge &amp; Memory&quot; = largest category (283 servers)</td>
+</tr>
+<tr>
+<td>Feb 2026</td>
+<td>Official MCP registry: 6,400+ registered servers</td>
+</tr>
+<tr>
+<td>Mar 2026</td>
+<td>97M+ monthly SDK downloads (Python + TypeScript)</td>
+</tr>
+</tbody></table>
+<p><strong>Ecosystem scale:</strong></p>
+<ul>
+<li>Server downloads grew from ~100K (Nov 2024) to 8M+ (Apr 2025) -- 80x growth in 5 months</li>
+<li>10,000+ active public MCP servers</li>
+<li>Adopted by: ChatGPT, Cursor, Gemini, Microsoft Copilot, VS Code, Replit, Sourcegraph</li>
+</ul>
+<p><strong>Implication for Contexter:</strong> MCP-native is a genuine differentiator TODAY but will become table stakes within 12-18 months. The window for &quot;first-mover in MCP-native RAG&quot; is closing fast. By mid-2027, every RAG platform will offer MCP.</p>
+<p>Sources:</p>
+<ul>
+<li>Pento -- A Year of MCP: <a href="https://www.pento.ai/blog/a-year-of-mcp-2025-review">https://www.pento.ai/blog/a-year-of-mcp-2025-review</a></li>
+<li>Wikipedia -- MCP: <a href="https://en.wikipedia.org/wiki/Model_Context_Protocol">https://en.wikipedia.org/wiki/Model_Context_Protocol</a></li>
+<li>MCP Enterprise Adoption Guide: <a href="https://guptadeepak.com/the-complete-guide-to-model-context-protocol-mcp-enterprise-adoption-market-trends-and-implementation-strategies/">https://guptadeepak.com/the-complete-guide-to-model-context-protocol-mcp-enterprise-adoption-market-trends-and-implementation-strategies/</a></li>
+<li>Anthropic -- Donating MCP to AAIF: <a href="https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation">https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation</a></li>
+<li>MCP Blog -- First Anniversary: <a href="https://blog.modelcontextprotocol.io/posts/2025-11-25-first-mcp-anniversary/">https://blog.modelcontextprotocol.io/posts/2025-11-25-first-mcp-anniversary/</a></li>
+<li>The New Stack -- Why MCP Won: <a href="https://thenewstack.io/why-the-model-context-protocol-won/">https://thenewstack.io/why-the-model-context-protocol-won/</a></li>
+<li>PulseMCP Server Directory: <a href="https://www.pulsemcp.com/servers?q=rag">https://www.pulsemcp.com/servers?q=rag</a></li>
+</ul>
+<h3>3.2 RAG Commoditization vs. Differentiation</h3>
+<p><strong>The &quot;RAG is Dead&quot; debate:</strong>
+VentureBeat&#39;s 2026 predictions headline &quot;RAG is dead&quot; -- but the reality is nuanced. RAG as a basic pattern (embed-retrieve-generate) is commoditized. What is NOT commoditized:</p>
+<ol>
+<li><strong>Governance &amp; compliance</strong> -- regulated industries need audit trails, access control, citation provenance. Adds 20-30% to infrastructure costs but is non-negotiable. Open-source frameworks lack compliance modules.</li>
+<li><strong>Hybrid retrieval</strong> -- combining semantic + keyword + graph retrieval outperforms vector-only in legal, financial, regulatory domains.</li>
+<li><strong>Contextual/agentic memory</strong> -- static RAG is giving way to long-context memory that persists across sessions.</li>
+<li><strong>Data quality &amp; parsing</strong> -- &quot;garbage in, garbage out&quot; -- the parsing/chunking pipeline is where quality is won or lost. 15+ format support is a real differentiator.</li>
+<li><strong>Multi-modal RAG</strong> -- charts, images, tables, audio transcription. Morphik claims 95% accuracy on chart queries vs 60-70% for text-only.</li>
+</ol>
+<p><strong>Key quote:</strong> &quot;The winners won&#39;t be those with access to the best models -- those will be commoditized. The winners will be organizations that have systematically captured institutional knowledge, made it accessible through sophisticated retrieval architectures.&quot; (NStarX)</p>
+<p><strong>Key trend:</strong> RAG is evolving from a &quot;pattern&quot; into a &quot;knowledge runtime&quot; -- an orchestration layer managing retrieval, verification, reasoning, access control, and audit trails as integrated operations.</p>
+<p>Sources:</p>
+<ul>
+<li>VentureBeat -- 6 Data Predictions 2026: <a href="https://venturebeat.com/data/six-data-shifts-that-will-shape-enterprise-ai-in-2026">https://venturebeat.com/data/six-data-shifts-that-will-shape-enterprise-ai-in-2026</a></li>
+<li>NStarX -- Next Frontier of RAG: <a href="https://nstarxinc.com/blog/the-next-frontier-of-rag-how-enterprise-knowledge-systems-will-evolve-2026-2030/">https://nstarxinc.com/blog/the-next-frontier-of-rag-how-enterprise-knowledge-systems-will-evolve-2026-2030/</a></li>
+<li>Squirro -- RAG in 2026: <a href="https://squirro.com/squirro-blog/state-of-rag-genai">https://squirro.com/squirro-blog/state-of-rag-genai</a></li>
+<li>RAGFlow -- From RAG to Context (2025 review): <a href="https://ragflow.io/blog/rag-review-2025-from-rag-to-context">https://ragflow.io/blog/rag-review-2025-from-rag-to-context</a></li>
+<li>LangWatch -- Ultimate RAG Blueprint: <a href="https://langwatch.ai/blog/the-ultimate-rag-blueprint-everything-you-need-to-know-about-rag-in-2025-2026">https://langwatch.ai/blog/the-ultimate-rag-blueprint-everything-you-need-to-know-about-rag-in-2025-2026</a></li>
+</ul>
+<h3>3.3 Enterprise vs. Developer vs. Prosumer Segments</h3>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Characteristics</th>
+<th>Key Players</th>
+<th>Price Sensitivity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Enterprise</strong> (1000+ employees)</td>
+<td>Compliance-first, on-prem/VPC, SSO, audit logs, SLA 99.9%</td>
+<td>Glean ($7.2B), Cohere ($7B), Vectara</td>
+<td>Low -- pays $50K-$500K+/yr</td>
+</tr>
+<tr>
+<td><strong>Mid-market</strong> (50-500 employees)</td>
+<td>Team productivity, integrations (Notion, Slack, Drive), moderate customization</td>
+<td>Nuclia (acquired by Progress for $50M), Ragu AI</td>
+<td>Medium -- pays $5K-$50K/yr</td>
+</tr>
+<tr>
+<td><strong>Developer/startup</strong> (1-50 people)</td>
+<td>API-first, quick integration, pay-per-use, self-serve onboarding</td>
+<td>Ragie, Pinecone Assistant, LlamaCloud</td>
+<td>High -- pays $0-$5K/yr</td>
+</tr>
+<tr>
+<td><strong>Prosumer/individual</strong></td>
+<td>Personal knowledge, privacy-first, low cost</td>
+<td>Personal AI, local RAG tools, MCP servers</td>
+<td>Very high -- pays $0-$40/mo</td>
+</tr>
+</tbody></table>
+<p><strong>Contexter&#39;s segment:</strong> Developer/startup + prosumer. API-first, MCP-native, self-hosted option. Competes with Ragie on simplicity, with local MCP servers on privacy/control.</p>
+<h3>3.4 Self-Hosted vs. Cloud-Managed RAG</h3>
+<p>Two clear trends are pulling in opposite directions:</p>
+<p><strong>Toward cloud-managed:</strong></p>
+<ul>
+<li>Pinecone&#39;s &quot;Integrated Inference&quot; (late 2025) eliminates need for separate embedding pipelines</li>
+<li>Ragie&#39;s pitch: &quot;sign-up to live product in 2-3 weeks&quot;</li>
+<li>Complexity of maintaining RAG infra (embeddings, vector DB, chunking, reranking) pushes teams to managed solutions</li>
+</ul>
+<p><strong>Toward self-hosted:</strong></p>
+<ul>
+<li>Privacy regulations (GDPR, HIPAA, 152-FZ) drive enterprises to on-prem</li>
+<li>Open-source frameworks maturing: RAGFlow, Haystack, LLMWare enable private hosting</li>
+<li>Developer distrust of vendor lock-in</li>
+<li>Cost at scale: managed services charge per query/page; self-hosted has fixed infra cost</li>
+</ul>
+<p><strong>Hybrid is winning:</strong></p>
+<ul>
+<li>Nuclia offered cloud + on-prem + hybrid before acquisition</li>
+<li>Cohere&#39;s partnership with Dell for on-prem deployment</li>
+<li>LlamaCloud supports SaaS and VPC deployment</li>
+<li>Developer consensus: &quot;evaluate per use case&quot; rather than all-in on either model</li>
+</ul>
+<p><strong>Contexter&#39;s position:</strong> Self-hosted on Hetzner = cost advantage + data sovereignty. But limits scalability marketing vs. cloud-native competitors. Could offer both self-hosted and managed tiers.</p>
+<p>Sources:</p>
+<ul>
+<li>Meilisearch -- 10 Best RAG Tools: <a href="https://www.meilisearch.com/blog/rag-tools">https://www.meilisearch.com/blog/rag-tools</a></li>
+<li>Firecrawl -- Best Enterprise RAG Platforms: <a href="https://www.firecrawl.dev/blog/best-enterprise-rag-platforms-2025">https://www.firecrawl.dev/blog/best-enterprise-rag-platforms-2025</a></li>
+<li>Aimprosoft -- Best RAG-as-a-Service: <a href="https://www.aimprosoft.com/blog/best-rag-as-a-service-platforms/">https://www.aimprosoft.com/blog/best-rag-as-a-service-platforms/</a></li>
+<li>Firecrawl -- Open Source RAG Frameworks 2026: <a href="https://www.firecrawl.dev/blog/best-open-source-rag-frameworks">https://www.firecrawl.dev/blog/best-open-source-rag-frameworks</a></li>
+</ul>
+<h3>3.5 Long Context Windows vs. RAG</h3>
+<p>A critical emerging threat: LLM context windows are expanding rapidly.</p>
+<ul>
+<li>GPT-4 Turbo (2024): 128K tokens</li>
+<li>Gemini 1.5 Pro (2024): 1M tokens</li>
+<li>Claude 3.5 / Claude 4: 200K tokens</li>
+<li>Speculation for 2026-2027: 10M+ token windows becoming standard</li>
+</ul>
+<p><strong>Does long context kill RAG?</strong> No, but it reshapes it:</p>
+<ul>
+<li>For small document sets (&lt; 100 pages), stuffing context directly may outperform RAG</li>
+<li>For large knowledge bases (1000s of docs), RAG remains essential for cost/latency</li>
+<li>RAG adds citation/provenance that pure context stuffing lacks</li>
+<li>Enterprise compliance requires knowing WHICH document was used -- RAG provides this</li>
+</ul>
+<p><strong>Implication:</strong> RAG-as-a-Service must demonstrate value beyond &quot;fitting documents into context.&quot; Citation, provenance, access control, and multi-source orchestration become the value prop, not raw retrieval.</p>
+<p>Sources:</p>
+<ul>
+<li>MarkAICode -- RAG vs Long Context 2026: <a href="https://markaicode.com/vs/rag-vs-long-context/">https://markaicode.com/vs/rag-vs-long-context/</a></li>
+<li>Techment -- RAG in 2026: <a href="https://www.techment.com/blogs/rag-models-2026-enterprise-ai/">https://www.techment.com/blogs/rag-models-2026-enterprise-ai/</a></li>
+</ul>
+<hr>
+<h2>4. Key Players Overview</h2>
+<h3>4.1 Competitive Landscape Map</h3>
+<p>Players are organized by layer in the RAG value chain:</p>
+<pre><code>LAYER 1: Full-Stack Enterprise AI (RAG built-in)
+  Glean, Cohere, Hebbia
+
+LAYER 2: RAG-as-a-Service (managed RAG API)
+  Vectara, Ragie, Nuclia/Progress, Graphlit, Morphik, Personal AI, Ragu AI
+
+LAYER 3: RAG Frameworks + Cloud (build-your-own with managed infra)
+  LlamaIndex/LlamaCloud, LangChain/LangSmith
+
+LAYER 4: Vector Databases (infrastructure layer)
+  Pinecone, Weaviate, Qdrant, Milvus/Zilliz, Chroma
+
+LAYER 5: Document Parsing (ingestion layer)
+  Unstructured, Reducto, Firecrawl, Crawl4AI
+
+LAYER 6: Open-Source RAG Engines (self-hosted)
+  RAGFlow, Haystack, LLMWare
+
+LAYER 7: AI Search (adjacent)
+  Algolia, Perplexity (consumer), You.com
+</code></pre>
+<h3>4.2 Key Player Profiles</h3>
+<h4>Tier 1: Well-Funded Leaders ($100M+ raised)</h4>
+<table>
+<thead>
+<tr>
+<th>Company</th>
+<th>Category</th>
+<th>Total Funding</th>
+<th>Valuation</th>
+<th>ARR (latest)</th>
+<th>Key Metric</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Glean</strong></td>
+<td>Enterprise AI Search + RAG</td>
+<td>$920M+ (Seed thru Series F)</td>
+<td>$7.2B (Jun 2025)</td>
+<td>$200M (Dec 2025)</td>
+<td>Doubled ARR in 9 months. $1M+ contracts tripled. 50+ industries.</td>
+</tr>
+<tr>
+<td><strong>Cohere</strong></td>
+<td>Enterprise AI / RAG API</td>
+<td>$600M+</td>
+<td>$7.0B (Sep 2025)</td>
+<td>$240M (2025)</td>
+<td>287% YoY growth. 85% revenue from private deployments. SAP, Oracle, Dell partnerships.</td>
+</tr>
+<tr>
+<td><strong>Hebbia</strong></td>
+<td>AI Document Intelligence</td>
+<td>$160M+ (Seed thru Series B)</td>
+<td>$700-800M (Jul 2024)</td>
+<td>$13M (Jun 2024)</td>
+<td>15x growth in 18 months. Acquired FlashDocs (Jul 2025). Focus: legal, finance.</td>
+</tr>
+<tr>
+<td><strong>LangChain</strong></td>
+<td>RAG Framework + LangSmith</td>
+<td>$260M (Seed thru Series B)</td>
+<td>$1.25B (Oct 2025)</td>
+<td>~$16M (Oct 2025)</td>
+<td>Open-source framework turned enterprise platform. 1.1B valuation milestone.</td>
+</tr>
+<tr>
+<td><strong>Pinecone</strong></td>
+<td>Vector Database + Assistant</td>
+<td>$238M+ (thru Series C)</td>
+<td>$750M (Oct 2025)</td>
+<td>~$14M (Dec 2025)</td>
+<td>4K customers. Integrated Inference eliminates embedding pipeline.</td>
+</tr>
+<tr>
+<td><strong>Unstructured</strong></td>
+<td>Document Parsing/ETL</td>
+<td>$65M (thru Series B)</td>
+<td>Not disclosed</td>
+<td>Not disclosed</td>
+<td>82% of Fortune 1000. 60K+ orgs. 64+ file types.</td>
+</tr>
+<tr>
+<td><strong>Reducto</strong></td>
+<td>Document Parsing API</td>
+<td>$108M (thru Series B)</td>
+<td>Not disclosed</td>
+<td>Not disclosed</td>
+<td>$8.4M seed to $108M total in 12 months. a16z, Benchmark backed.</td>
+</tr>
+</tbody></table>
+<p>Sources:</p>
+<ul>
+<li>Glean ARR: <a href="https://www.glean.com/press/glean-surpasses-200m-in-arr-for-enterprise-ai-doubling-revenue-in-nine-months">https://www.glean.com/press/glean-surpasses-200m-in-arr-for-enterprise-ai-doubling-revenue-in-nine-months</a></li>
+<li>Glean funding: <a href="https://www.glean.com/blog/glean-series-f-announcement">https://www.glean.com/blog/glean-series-f-announcement</a></li>
+<li>Cohere funding: <a href="https://cohere.com/blog/august-2025-funding-round">https://cohere.com/blog/august-2025-funding-round</a></li>
+<li>Cohere $7B: <a href="https://betakit.com/coheres-valuation-hits-7-billion-usd-following-100-million-round-extension/">https://betakit.com/coheres-valuation-hits-7-billion-usd-following-100-million-round-extension/</a></li>
+<li>Hebbia funding: <a href="https://techcrunch.com/2024/07/09/ai-startup-hebbia-rased-130m-at-a-700m-valuation-on-13-million-of-profitable-revenue/">https://techcrunch.com/2024/07/09/ai-startup-hebbia-rased-130m-at-a-700m-valuation-on-13-million-of-profitable-revenue/</a></li>
+<li>LangChain Series B: <a href="https://blog.langchain.com/series-b/">https://blog.langchain.com/series-b/</a></li>
+<li>LangChain valuation: <a href="https://fortune.com/2025/10/20/exclusive-early-ai-darling-langchain-is-now-a-unicorn-with-a-fresh-125-million-in-funding/">https://fortune.com/2025/10/20/exclusive-early-ai-darling-langchain-is-now-a-unicorn-with-a-fresh-125-million-in-funding/</a></li>
+<li>LangChain revenue: <a href="https://getlatka.com/companies/langchain">https://getlatka.com/companies/langchain</a></li>
+<li>Pinecone Series C: <a href="https://salestools.io/en/report/pinecone-raises-100m-series-c">https://salestools.io/en/report/pinecone-raises-100m-series-c</a></li>
+<li>Unstructured Series B: <a href="https://www.businesswire.com/news/home/20240314620374/en/">https://www.businesswire.com/news/home/20240314620374/en/</a></li>
+<li>Reducto Series B: <a href="https://reducto.ai/blog/reducto-series-b-funding">https://reducto.ai/blog/reducto-series-b-funding</a></li>
+</ul>
+<h4>Tier 2: Funded RAG-as-a-Service ($5M-$100M raised)</h4>
+<table>
+<thead>
+<tr>
+<th>Company</th>
+<th>Total Funding</th>
+<th>Key Differentiator</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Vectara</strong></td>
+<td>$73.5M</td>
+<td>Hallucination detection, 100+ languages, SOC 2/HIPAA/GDPR. Enterprise focus. $25-50M revenue range.</td>
+</tr>
+<tr>
+<td><strong>Weaviate</strong></td>
+<td>$67.6M (thru Series C at $200M val)</td>
+<td>Open-source vector DB, $12.3M revenue (Oct 2024). 99 employees.</td>
+</tr>
+<tr>
+<td><strong>Qdrant</strong></td>
+<td>$87.8M (thru Series B)</td>
+<td>Open-source vector search engine, Berlin-based. 114 employees.</td>
+</tr>
+<tr>
+<td><strong>LlamaIndex</strong></td>
+<td>$27.5M (Series A)</td>
+<td>LlamaCloud GA -- managed RAG from ingestion to agent deployment. Databricks + KPMG strategic investors.</td>
+</tr>
+<tr>
+<td><strong>Firecrawl</strong></td>
+<td>$14.5M (Series A)</td>
+<td>Web data extraction for RAG. 350K+ developers. YC-backed. Shopify CEO invested.</td>
+</tr>
+</tbody></table>
+<p>Sources:</p>
+<ul>
+<li>Vectara: <a href="https://www.crunchbase.com/organization/vectara">https://www.crunchbase.com/organization/vectara</a></li>
+<li>Vectara $25M raise: <a href="https://venturebeat.com/ai/vectara-raises-25m-as-it-launches-mockingbird-llm-for-enterprise-rag-applications">https://venturebeat.com/ai/vectara-raises-25m-as-it-launches-mockingbird-llm-for-enterprise-rag-applications</a></li>
+<li>Weaviate: <a href="https://www.crunchbase.com/organization/weaviate">https://www.crunchbase.com/organization/weaviate</a></li>
+<li>Weaviate revenue: <a href="https://getlatka.com/companies/weaviate">https://getlatka.com/companies/weaviate</a></li>
+<li>Qdrant Series B: <a href="https://www.techtarget.com/searchdatamanagement/news/366640132/Qdrant-raises-50M-in-funding-to-fuel-vector-database-growth">https://www.techtarget.com/searchdatamanagement/news/366640132/Qdrant-raises-50M-in-funding-to-fuel-vector-database-growth</a></li>
+<li>LlamaIndex: <a href="https://www.prnewswire.com/news-releases/llamaindex-secures-19-million-series-a-to-power-enterprise-grade-knowledge-agents-302390936.html">https://www.prnewswire.com/news-releases/llamaindex-secures-19-million-series-a-to-power-enterprise-grade-knowledge-agents-302390936.html</a></li>
+<li>Firecrawl: <a href="https://techcrunch.com/2025/08/19/ai-crawler-firecrawl-raises-14-5m-is-still-looking-to-hire-agents-as-employees/">https://techcrunch.com/2025/08/19/ai-crawler-firecrawl-raises-14-5m-is-still-looking-to-hire-agents-as-employees/</a></li>
+</ul>
+<h4>Tier 3: Early-Stage / Niche ($0-$5M raised)</h4>
+<table>
+<thead>
+<tr>
+<th>Company</th>
+<th>Funding</th>
+<th>Key Differentiator</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Ragie</strong></td>
+<td>$5.5M (Seed, Aug 2024)</td>
+<td>Developer-first RAG-as-a-Service. &quot;Sign-up to live in 2-3 weeks.&quot; Craft Ventures backed.</td>
+</tr>
+<tr>
+<td><strong>Morphik</strong></td>
+<td>$500K (YC, Jun 2025)</td>
+<td>Open-source multimodal RAG. 95% accuracy on charts. BSL license.</td>
+</tr>
+<tr>
+<td><strong>Graphlit</strong></td>
+<td>Not disclosed (likely pre-seed/seed)</td>
+<td>GraphRAG-native. Knowledge graph + vector + object storage. Multi-modal.</td>
+</tr>
+<tr>
+<td><strong>Personal AI</strong></td>
+<td>Not disclosed</td>
+<td>Individual-focused RAG. Privacy-first, $15-40/mo.</td>
+</tr>
+</tbody></table>
+<p>Sources:</p>
+<ul>
+<li>Ragie: <a href="https://siliconangle.com/2024/08/12/ragie-launches-5-5m-funding-ease-rag-application-development/">https://siliconangle.com/2024/08/12/ragie-launches-5-5m-funding-ease-rag-application-development/</a></li>
+<li>Morphik: <a href="https://www.ycombinator.com/companies/morphik">https://www.ycombinator.com/companies/morphik</a></li>
+<li>Graphlit: <a href="https://www.graphlit.com/blog/graphlit-2024-year-in-review">https://www.graphlit.com/blog/graphlit-2024-year-in-review</a></li>
+</ul>
+<h4>Acquired / Consolidated</h4>
+<table>
+<thead>
+<tr>
+<th>Company</th>
+<th>Acquirer</th>
+<th>Price</th>
+<th>Date</th>
+<th>Significance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nuclia</strong></td>
+<td>Progress Software</td>
+<td>$50M</td>
+<td>Jun 2025</td>
+<td>Validates RAG-as-a-Service as acquisition target. Nuclia had raised only EUR5.4M seed. 9x+ return for investors.</td>
+</tr>
+</tbody></table>
+<p>Source: <a href="https://investors.progress.com/news-releases/news-release-details/progress-software-acquires-nuclia-innovator-agentic-rag-ai">https://investors.progress.com/news-releases/news-release-details/progress-software-acquires-nuclia-innovator-agentic-rag-ai</a></p>
+<h4>Open-Source Alternatives (free, self-hosted)</h4>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>GitHub Stars</th>
+<th>Key Feature</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>RAGFlow</strong> (InfiniFlow)</td>
+<td>8,500+</td>
+<td>Full RAG engine with agent capabilities. Multi-modal. Knowledge graph extraction.</td>
+</tr>
+<tr>
+<td><strong>Haystack</strong> (deepset)</td>
+<td>18,000+</td>
+<td>Production-ready RAG framework. Modular pipelines.</td>
+</tr>
+<tr>
+<td><strong>LLMWare</strong></td>
+<td>8,000+</td>
+<td>Privacy-focused. Local models. Enterprise compliance.</td>
+</tr>
+<tr>
+<td><strong>Crawl4AI</strong></td>
+<td>58,000+</td>
+<td>Web crawler for RAG. #1 GitHub trending (2024).</td>
+</tr>
+</tbody></table>
+<p>Sources:</p>
+<ul>
+<li>RAGFlow: <a href="https://github.com/infiniflow/ragflow">https://github.com/infiniflow/ragflow</a></li>
+<li>Firecrawl open-source blog: <a href="https://www.firecrawl.dev/blog/best-open-source-rag-frameworks">https://www.firecrawl.dev/blog/best-open-source-rag-frameworks</a></li>
+</ul>
+<h3>4.3 Pricing Benchmarks</h3>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Free Tier</th>
+<th>Entry Paid</th>
+<th>Mid Tier</th>
+<th>Enterprise</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ragie</td>
+<td>Yes (limited)</td>
+<td>$100/mo (10K pages)</td>
+<td>$500/mo (60K pages)</td>
+<td>Custom</td>
+</tr>
+<tr>
+<td>Vectara</td>
+<td>Yes (Standard)</td>
+<td>Pro (not public)</td>
+<td>--</td>
+<td>Custom</td>
+</tr>
+<tr>
+<td>Morphik</td>
+<td>Yes (200 pages)</td>
+<td>$59/mo (2K pages)</td>
+<td>$799/mo (10GB)</td>
+<td>Custom</td>
+</tr>
+<tr>
+<td>LlamaCloud</td>
+<td>Credits ($1/1000 credits)</td>
+<td>Usage-based</td>
+<td>--</td>
+<td>Custom</td>
+</tr>
+<tr>
+<td>Nuclia (pre-acquisition)</td>
+<td>--</td>
+<td>$600/mo</td>
+<td>$1,500-3,333/mo</td>
+<td>$12.5K+/yr</td>
+</tr>
+<tr>
+<td>Pinecone</td>
+<td>Free (limited)</td>
+<td>Usage-based</td>
+<td>--</td>
+<td>Custom</td>
+</tr>
+<tr>
+<td>Personal AI</td>
+<td>Yes</td>
+<td>$15/mo</td>
+<td>$40/mo</td>
+<td>Custom</td>
+</tr>
+<tr>
+<td>Algolia</td>
+<td>Free (limited)</td>
+<td>Usage-based (Grow Plus)</td>
+<td>--</td>
+<td>Custom</td>
+</tr>
+</tbody></table>
+<p><strong>Key pricing insight:</strong> Most RAG-as-a-Service products use page-based or credit-based pricing. The market has NOT converged on a standard pricing model. This creates opportunity for transparent, simple pricing as a differentiator.</p>
+<p>Sources:</p>
+<ul>
+<li>Aimprosoft comparison: <a href="https://www.aimprosoft.com/blog/best-rag-as-a-service-platforms/">https://www.aimprosoft.com/blog/best-rag-as-a-service-platforms/</a></li>
+<li>Graphlit comparison: <a href="https://www.graphlit.com/blog/feature-comparison-of-rag-as-a-service-providers">https://www.graphlit.com/blog/feature-comparison-of-rag-as-a-service-providers</a></li>
+<li>LlamaIndex pricing: <a href="https://www.zenml.io/blog/llamaindex-pricing">https://www.zenml.io/blog/llamaindex-pricing</a></li>
+</ul>
+<hr>
+<h2>5. Implications for Contexter</h2>
+<h3>5.1 Market Position Assessment</h3>
+<p><strong>Where Contexter sits:</strong> Layer 2 (RAG-as-a-Service) + Layer 6 (self-hosted) hybrid. Closest competitors: Ragie (developer simplicity), Morphik (open-source multimodal), Nuclia (was self-hosted + cloud before acquisition).</p>
+<p><strong>Differentiation vectors available:</strong></p>
+<ol>
+<li><strong>MCP-native</strong> -- genuine differentiator in 2026, but closing window. Only a handful of RAG services offer MCP out of the box.</li>
+<li><strong>Self-hosted on Hetzner</strong> -- appeals to privacy-conscious developers, EU data sovereignty. Unique positioning vs. US-cloud-only competitors.</li>
+<li><strong>15 file format support</strong> -- competitive with Unstructured (64+ types) and Nuclia, ahead of simpler tools.</li>
+<li><strong>Developer/prosumer segment</strong> -- underserved by enterprise-focused players. Ragie is closest competitor here.</li>
+</ol>
+<h3>5.2 Strategic Considerations</h3>
+<p><strong>Favorable dynamics:</strong></p>
+<ul>
+<li>RAG market growing 38-49% CAGR</li>
+<li>MCP ecosystem exploding (17K+ servers, Linux Foundation governance)</li>
+<li>Nuclia acquisition ($50M) validates the RAG-as-a-Service category for M&amp;A</li>
+<li>Enterprise players (Glean, Cohere) are moving upmarket, leaving developer segment underserved</li>
+<li>Open-source RAG is complex to self-host -- managed service adds value</li>
+</ul>
+<p><strong>Risks:</strong></p>
+<ul>
+<li>LLM context windows expanding may reduce RAG need for small use cases</li>
+<li>Pinecone Assistant abstracts away RAG complexity at the vector DB layer</li>
+<li>LangChain/LlamaIndex have massive developer mindshare and are adding managed services</li>
+<li>Commoditization pressure: basic &quot;embed-retrieve-generate&quot; is table stakes</li>
+<li>Capital asymmetry: Tier 1 players have 100-1000x more funding</li>
+</ul>
+<h3>5.3 Recommended Next Steps (for product team)</h3>
+<ol>
+<li><strong>Deep competitive analysis</strong> -- feature matrix comparison: Contexter vs. Ragie vs. Morphik vs. Graphlit vs. Pinecone Assistant</li>
+<li><strong>Pricing strategy</strong> -- benchmark against Ragie ($100-500/mo) and Morphik ($59-799/mo) for developer segment</li>
+<li><strong>MCP differentiation</strong> -- document and market the MCP-native advantage while window is open</li>
+<li><strong>Self-hosted positioning</strong> -- lean into data sovereignty, EU hosting, GDPR compliance as differentiator</li>
+<li><strong>User research</strong> -- JTBD interviews with developers currently building RAG pipelines: what pain points would make them pay for a managed service?</li>
+</ol>
+<hr>
+<h2>6. Data Quality Notes</h2>
+<ul>
+<li>All market size figures are from paid research reports (gated). Values extracted from press releases, summaries, and secondary sources. Variance across firms reflects different scope definitions.</li>
+<li>Revenue/ARR figures for private companies are from Getlatka, Sacra, press releases, and journalist reporting. May not be audited.</li>
+<li>Funding data is from Crunchbase, TechCrunch, PitchBook summaries, and company announcements. Generally reliable.</li>
+<li>This research was conducted on 2026-03-27. Market data changes rapidly in this space.</li>
+</ul>
+<hr>
+<blockquote>
+<p>Status: COMPLETE
+Last updated: 2026-03-27
+Word count: ~3,500 (excluding tables)
+Source count: 60+ unique URLs referenced</p>
+</blockquote>
+
+</body>
+</html>

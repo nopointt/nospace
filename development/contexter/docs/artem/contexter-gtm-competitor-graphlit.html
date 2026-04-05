@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-competitor-graphlit — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Graphlit — Competitive Intelligence Report</h1>
+<blockquote>
+<p>Analyst: Lead/MarketAnalysis | Date: 2026-03-27
+Context lens: Contexter = &quot;Context Storage for AI&quot; (self-hosted Hetzner, €4.72/mo, REST+MCP, 15 formats, developer-first)</p>
+</blockquote>
+<hr>
+<h2>Document 1: Positioning (Landing Page Teardown)</h2>
+<h3>1. Hero Verbatim</h3>
+<p><strong>H1:</strong> &quot;Graphlit – Context Layer for AI agents&quot;</p>
+<p><strong>Subheadline:</strong> &quot;Give your agents context that actually works. Real-time sync across Slack, GitHub, Jira, and more. One API, zero ops, semantic search built-in.&quot;</p>
+<p><strong>CTA button text:</strong> Not extractable via server-side render (Next.js SSR — page is JS-rendered). Meta description confirms subheadline verbatim.</p>
+<p>Source: <a href="https://www.graphlit.com">https://www.graphlit.com</a> (fetched 2026-03-27)</p>
+<hr>
+<h3>2. Five-Second Test</h3>
+<p><strong>Result: YES, but narrowly.</strong></p>
+<p>After 5 seconds a developer gets: &quot;connects data sources to AI agents via one API.&quot; The category (&quot;Context Layer&quot;) is non-standard and requires a second read. The sub-headline does the heavy lifting: &quot;Real-time sync across Slack, GitHub, Jira&quot; — that&#39;s the clarifying hook. Without it, &quot;Context Layer&quot; is abstract. A non-developer buyer would be lost immediately.</p>
+<p><strong>Implication for Contexter:</strong> Contexter&#39;s own framing (&quot;Context Storage for AI&quot;) is similarly abstract. Both products share the problem of a category that doesn&#39;t yet exist in buyers&#39; heads.</p>
+<hr>
+<h3>3. Category Claim</h3>
+<p>Graphlit explicitly claims the category <strong>&quot;Context Layer for AI agents.&quot;</strong></p>
+<p>Secondary framing used across vs-pages: &quot;semantic memory platform,&quot; &quot;semantic content infrastructure,&quot; &quot;operational context layer.&quot;</p>
+<p>They are attempting to own the category above individual RAG tools — positioning themselves as infrastructure, not a feature.</p>
+<p>Source: <a href="https://www.graphlit.com">https://www.graphlit.com</a>, <a href="https://www.graphlit.com/vs/langmem">https://www.graphlit.com/vs/langmem</a>, <a href="https://www.graphlit.com/blog/context-layer-ai-agents-need">https://www.graphlit.com/blog/context-layer-ai-agents-need</a></p>
+<hr>
+<h3>4. ICP (Ideal Customer Profile)</h3>
+<p><strong>Primary ICP: Application developers building AI-powered B2B SaaS products.</strong></p>
+<p>Evidence:</p>
+<ul>
+<li>Pricing starts at $49/mo (developer-accessible, not enterprise-gated)</li>
+<li>Free tier requires no credit card — frictionless dev signup</li>
+<li>SDKs in TypeScript, Python, .NET — developer-first stack signal</li>
+<li>Docs emphasize &quot;ingest a PDF, run semantic search, and build a RAG-powered chat interface&quot; — prototype-first narrative</li>
+<li>Named customer <strong>Zine</strong> is a production SaaS app (&quot;thousands of users, automatic sync across 20+ data sources, millions of documents&quot;)</li>
+<li>Guide topics: &quot;AI Coding Agent Setup,&quot; &quot;Building a Conversational Slack Bot&quot; — builders, not analysts</li>
+<li>Comparison pages target LangChain/LlamaIndex users — devs who have already tried to DIY</li>
+</ul>
+<p><strong>Secondary ICP: Enterprise AI teams</strong> (signals: Salesforce CRM connector, Intercom, Zendesk, Azure Blob, SharePoint, multi-tenant production guide, mention of SOC2 direction via Azure infrastructure)</p>
+<p><strong>Implication for Contexter:</strong> Both products target the same developer-first ICP. Contexter&#39;s €4.72/mo Hetzner self-hosted model targets a narrower ICP — developers with infra awareness and data sovereignty concerns. Graphlit targets the &quot;just make it work&quot; developer who wants zero ops.</p>
+<p>Sources: <a href="https://docs.graphlit.dev/getting-started/overview">https://docs.graphlit.dev/getting-started/overview</a>, <a href="https://www.graphlit.com/guides/getting-started">https://www.graphlit.com/guides/getting-started</a>, <a href="https://www.graphlit.com/guides/production-architecture">https://www.graphlit.com/guides/production-architecture</a></p>
+<hr>
+<h3>5. Value Prop Decomposition</h3>
+<h4>VP-1: Zero Operational Overhead</h4>
+<ul>
+<li><strong>Pain:</strong> Building RAG requires assembling vector databases, embeddings, cloud storage, ETL pipelines separately.</li>
+<li><strong>Result:</strong> &quot;Managed platform that handles the entire memory stack&quot; — no infrastructure to run.</li>
+<li><strong>Mechanism:</strong> Fully managed cloud SaaS — CosmosDB, vector store, Azure Functions abstracted entirely.</li>
+<li><strong>Proof:</strong> Zine case study: &quot;thousands of users, millions of documents&quot; on production Graphlit.</li>
+</ul>
+<h4>VP-2: Real-Time Data Sync (30+ Connectors)</h4>
+<ul>
+<li><strong>Pain:</strong> AI agents only know what&#39;s in the prompt — they go stale as Slack/GitHub/Jira updates.</li>
+<li><strong>Result:</strong> &quot;Real-time sync across Slack, GitHub, Jira, and more&quot; — agents answer from current data.</li>
+<li><strong>Mechanism:</strong> Pre-built OAuth connectors with configurable polling schedules; automated ETL.</li>
+<li><strong>Proof:</strong> 30+ named connectors listed in documentation (verified: <a href="https://www.graphlit.com/guides/data-connectors">https://www.graphlit.com/guides/data-connectors</a>).</li>
+</ul>
+<h4>VP-3: Multimodal Ingestion (Audio, Video, Images)</h4>
+<ul>
+<li><strong>Pain:</strong> Most RAG tools only handle text; audio/video content is abandoned.</li>
+<li><strong>Result:</strong> &quot;Audio transcription, video processing, image OCR, full multimodal pipeline.&quot;</li>
+<li><strong>Mechanism:</strong> Deepgram/AssemblyAI for transcription, vision OCR, speaker diarization.</li>
+<li><strong>Proof:</strong> Listed capabilities in docs: MP3/WAV/M4A transcription, MP4/MOV video, image OCR.</li>
+</ul>
+<h4>VP-4: Knowledge Graph + Entity-Aware Search</h4>
+<ul>
+<li><strong>Pain:</strong> &quot;RAG retrieves text chunks, not organizational understanding.&quot; (Kirk Marple verbatim, <a href="https://www.graphlit.com/blog/context-layer-ai-agents-need">https://www.graphlit.com/blog/context-layer-ai-agents-need</a>)</li>
+<li><strong>Result:</strong> Identity-resolved entities, relationship mapping, cross-document graph traversal.</li>
+<li><strong>Mechanism:</strong> 19 built-in entity types (Schema.org), two-tier Observable/Observation model, co-occurrence analysis.</li>
+<li><strong>Proof:</strong> Production guide documents entity deduplication with confidence scoring (0.0–1.0).</li>
+</ul>
+<h4>VP-5: Framework Agnosticism</h4>
+<ul>
+<li><strong>Pain:</strong> Rebuilding memory layer when switching LLM frameworks.</li>
+<li><strong>Result:</strong> &quot;Switch agent frameworks without rebuilding your memory layer.&quot;</li>
+<li><strong>Mechanism:</strong> Graphlit is API-only; no framework dependencies.</li>
+<li><strong>Proof:</strong> Stated in vs/langmem: &quot;framework-agnostic — whether you use LangChain, LlamaIndex, AutoGPT, or build custom agents.&quot;</li>
+</ul>
+<p>Source: <a href="https://www.graphlit.com/vs/langmem">https://www.graphlit.com/vs/langmem</a>, <a href="https://docs.graphlit.dev/getting-started/overview">https://docs.graphlit.dev/getting-started/overview</a></p>
+<hr>
+<h3>6. Pricing Teardown</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Price</th>
+<th>Storage</th>
+<th>Credits</th>
+<th>Key Limits</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free</td>
+<td>$0/mo</td>
+<td>1 GB</td>
+<td>100 credits/mo</td>
+<td>No credit card required</td>
+</tr>
+<tr>
+<td>Hobby</td>
+<td>$49/mo</td>
+<td>Not specified</td>
+<td>Included + usage</td>
+<td>No file size limits stated</td>
+</tr>
+<tr>
+<td>Starter</td>
+<td>$199/mo</td>
+<td>Not specified</td>
+<td>Included + usage</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Growth</td>
+<td>$999/mo</td>
+<td>&quot;No storage limitations&quot;</td>
+<td>Included + usage</td>
+<td>Production tier</td>
+</tr>
+</tbody></table>
+<p><strong>Unit economics signal:</strong></p>
+<ul>
+<li>Credit = opaque unit (not documented as tokens, pages, or API calls in public materials)</li>
+<li>&quot;Usage-based add-ons&quot; on all paid tiers — variable billing</li>
+<li>Google File Search comparison reveals indexing cost reference of $0.15/1M tokens (competitor), Graphlit does not publish per-token pricing publicly</li>
+</ul>
+<p><strong>Free tier strategy:</strong> 100 credits + 1 GB is generous for experimentation but opaque. No stated expiry on free tier. Low friction for developer acquisition.</p>
+<p><strong>Implication for Contexter:</strong> Graphlit&#39;s pricing is SaaS-opaque (credits + usage). Contexter&#39;s €4.72/mo Hetzner infra cost is transparent and deterministic — a genuine competitive differentiator for cost-conscious or high-volume developers. At Graphlit&#39;s $49/mo minimum, a solo developer pays 10x more than Contexter&#39;s infra cost for managed convenience.</p>
+<p>Sources: <a href="https://docs.graphlit.dev/getting-started/overview">https://docs.graphlit.dev/getting-started/overview</a>, <a href="https://www.graphlit.com/vs/google-file-search">https://www.graphlit.com/vs/google-file-search</a>, <a href="https://www.graphlit.com/vs/langmem">https://www.graphlit.com/vs/langmem</a></p>
+<hr>
+<h3>7. Brand Voice</h3>
+<p><strong>Technical level: 4/5.</strong> Content assumes familiarity with RAG, LLMs, vector databases, and agent frameworks. Guides are 10-25 minute reads with code examples in TypeScript/Python.</p>
+<p><strong>Tone:</strong> Confident, product-led, lightly evangelical. Manifesto-adjacent (&quot;Your agent deserves more than storage. It deserves a memory that understands.&quot; — verbatim from vs/supermemory page). Uses strategic framing without being breathless or hypey.</p>
+<p><strong>Comparison with Contexter:</strong> Both are developer-first in tone. Graphlit is more polished and category-ambitious — they are attempting to define a market, not just describe a tool. Contexter&#39;s current messaging (&quot;Context Storage for AI&quot;) is more literal and self-deprecating by comparison. Graphlit would say &quot;operational context layer&quot;; Contexter says &quot;storage.&quot; Storage implies passive; context layer implies active intelligence.</p>
+<hr>
+<h3>8. Trust Signals</h3>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Present</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SOC2</td>
+<td>Not found</td>
+<td>No public SOC2 mention; compliance &quot;depends on Graphlit&#39;s certifications&quot; per TrustGraph comparison</td>
+</tr>
+<tr>
+<td>Customer logos</td>
+<td>1 named</td>
+<td>Zine (production SaaS, &quot;thousands of users, millions of documents&quot;)</td>
+</tr>
+<tr>
+<td>Testimonials</td>
+<td>Not found</td>
+<td>No public testimonials on site or review platforms</td>
+</tr>
+<tr>
+<td>Founder credibility</td>
+<td>Yes</td>
+<td>Kirk Marple: ex-Microsoft, ex-General Motors, ex-STATS, ex-Kespry; prior exit (RadiantGrid, sold to ESPN/Fox/NBC/PBS)</td>
+</tr>
+<tr>
+<td>Funding</td>
+<td>Yes</td>
+<td>$3.56M raised; investors: Feld Ventures, 8VC, Bossa Invest, Vectura Ventures, MAVA Ventures (11 total investors)</td>
+</tr>
+<tr>
+<td>GitHub presence</td>
+<td>Low</td>
+<td>graphlit/graphlit — 31 stars; graphlit MCP server — 373 stars</td>
+</tr>
+<tr>
+<td>Microsoft Marketplace</td>
+<td>Yes</td>
+<td>Listed on Azure Marketplace (<a href="https://marketplace.microsoft.com">https://marketplace.microsoft.com</a>)</td>
+</tr>
+<tr>
+<td>Product Hunt</td>
+<td>Low</td>
+<td>105 upvotes on first launch (Feb 2024); 1 review (5.0/5)</td>
+</tr>
+</tbody></table>
+<p><strong>Implication for Contexter:</strong> Graphlit has weak social proof. No testimonials, minimal reviews, single customer case study. This is a trust vacuum Contexter can exploit by building even modest review presence first.</p>
+<p>Sources: <a href="https://www.producthunt.com/products/graphlit">https://www.producthunt.com/products/graphlit</a>, <a href="https://github.com/graphlit/graphlit">https://github.com/graphlit/graphlit</a>, <a href="https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/">https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/</a></p>
+<hr>
+<h3>9. Document 1 Sources</h3>
+<ul>
+<li><a href="https://www.graphlit.com">https://www.graphlit.com</a></li>
+<li><a href="https://www.graphlit.com/vs/langmem">https://www.graphlit.com/vs/langmem</a></li>
+<li><a href="https://www.graphlit.com/vs/supermemory">https://www.graphlit.com/vs/supermemory</a></li>
+<li><a href="https://www.graphlit.com/vs/google-file-search">https://www.graphlit.com/vs/google-file-search</a></li>
+<li><a href="https://www.graphlit.com/blog/context-layer-ai-agents-need">https://www.graphlit.com/blog/context-layer-ai-agents-need</a></li>
+<li><a href="https://docs.graphlit.dev/getting-started/overview">https://docs.graphlit.dev/getting-started/overview</a></li>
+<li><a href="https://www.graphlit.com/guides/getting-started">https://www.graphlit.com/guides/getting-started</a></li>
+<li><a href="https://www.graphlit.com/guides/data-connectors">https://www.graphlit.com/guides/data-connectors</a></li>
+<li><a href="https://www.producthunt.com/products/graphlit">https://www.producthunt.com/products/graphlit</a></li>
+<li><a href="https://github.com/graphlit/graphlit">https://github.com/graphlit/graphlit</a></li>
+<li><a href="https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/">https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/</a></li>
+</ul>
+<hr>
+<h2>Document 2: Killer Features (Product Teardown)</h2>
+<h3>1. Feature Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Graphlit</th>
+<th>Contexter</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Document ingestion (PDF, DOCX, etc.)</td>
+<td>Yes</td>
+<td>Yes (15 formats)</td>
+<td>Tie — both cover core docs</td>
+</tr>
+<tr>
+<td>Audio transcription (MP3, WAV, M4A)</td>
+<td>Yes — Deepgram/AssemblyAI</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+<tr>
+<td>Video ingestion (MP4, MOV)</td>
+<td>Yes — audio extraction + transcription</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+<tr>
+<td>Image OCR</td>
+<td>Yes — vision models, layout preservation</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+<tr>
+<td>Knowledge graph / entity extraction</td>
+<td>Yes — 19 entity types, Schema.org</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+<tr>
+<td>GraphRAG / graph traversal search</td>
+<td>Yes — hybrid vector+keyword+graph</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+<tr>
+<td>Hybrid search (vector + keyword)</td>
+<td>Yes</td>
+<td>REST API query (type not specified)</td>
+<td>Graphlit likely wins</td>
+</tr>
+<tr>
+<td>MCP server</td>
+<td>Yes — open-source, Claude Desktop/Cline/Cursor/Goose/Windsurf</td>
+<td>Yes</td>
+<td>Tie</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>Yes (GraphQL, not REST)</td>
+<td>Yes (REST)</td>
+<td>Contexter wins on simplicity</td>
+</tr>
+<tr>
+<td>Real-time data connectors</td>
+<td>Yes — 30+ live feeds</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+<tr>
+<td>Self-hosted deployment</td>
+<td>No — cloud SaaS only</td>
+<td>Yes — Hetzner, €4.72/mo</td>
+<td>Contexter wins</td>
+</tr>
+<tr>
+<td>Data sovereignty / on-premise</td>
+<td>No</td>
+<td>Yes</td>
+<td>Contexter wins</td>
+</tr>
+<tr>
+<td>Transparent pricing</td>
+<td>Partial (credits opaque)</td>
+<td>Yes (infra cost)</td>
+<td>Contexter wins</td>
+</tr>
+<tr>
+<td>Open source</td>
+<td>No (proprietary)</td>
+<td>Not stated</td>
+<td>Unclear</td>
+</tr>
+<tr>
+<td>Multi-tenant</td>
+<td>Yes (built-in)</td>
+<td>Not stated</td>
+<td>Graphlit likely wins</td>
+</tr>
+<tr>
+<td>Streaming responses</td>
+<td>Yes</td>
+<td>Not stated</td>
+<td>Graphlit likely</td>
+</tr>
+<tr>
+<td>SDKs</td>
+<td>TypeScript, Python, .NET</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+<tr>
+<td>Speaker diarization</td>
+<td>Yes</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+<tr>
+<td>Geo-spatial search</td>
+<td>Yes</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+<tr>
+<td>Confidence scoring on entities</td>
+<td>Yes (0.0–1.0)</td>
+<td>Not stated</td>
+<td>Graphlit wins</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>2. Unique Capabilities</h3>
+<h4>Knowledge Graph — Observable/Observation Model</h4>
+<p>Graphlit&#39;s foundational data model is two-tiered:</p>
+<ul>
+<li><strong>Observable:</strong> &quot;The entity itself (e.g., the person &#39;Geoffrey Hinton&#39;)&quot;</li>
+<li><strong>Observation:</strong> &quot;A specific mention of that entity in content&quot;</li>
+</ul>
+<p>This enables deduplication, provenance tracking, and cross-document relationship discovery. The system supports 19 built-in entity types:</p>
+<p><strong>General (7):</strong> Person, Organization, Place, Event, Product, CreativeWork, Other</p>
+<p><strong>Medical (12):</strong> Condition, Procedure, Test, Treatment, Anatomy, Device, Guideline, Study, Measurement, Code, Quality, Drug</p>
+<p>Medical entity types suggest a deliberate vertical targeting of healthcare AI applications.</p>
+<p>Source: <a href="https://www.graphlit.com/guides/building-knowledge-graphs">https://www.graphlit.com/guides/building-knowledge-graphs</a></p>
+<h4>GraphRAG</h4>
+<p>Hybrid retrieval combining:</p>
+<ol>
+<li>Vector similarity (semantic embeddings)</li>
+<li>Graph traversal (entity-relationship paths)</li>
+<li>Keyword matching (BM25-style)</li>
+</ol>
+<p>Plus advanced filters: geo-spatial, image similarity, entity-based, temporal, boolean logic.</p>
+<p>This goes substantially beyond standard RAG. Entity-filtered RAG (&quot;find all mentions of Acme Corp across Slack, email, meetings&quot;) is a qualitatively different product.</p>
+<p>Source: <a href="https://docs.graphlit.dev/getting-started/overview">https://docs.graphlit.dev/getting-started/overview</a></p>
+<h4>Agent Tools Library (Dec 2024)</h4>
+<p>&quot;Graphlit Unveils Agent Tools Library to Streamline Unstructured Data Ingestion and AI Agent Workflows&quot; — announced Dec 31, 2024.</p>
+<p>Source: <a href="https://chinookobserver.com/2024/12/31/graphlit-unveils-agent-tools-library-to-streamline-unstructured-data-ingestion-and-ai-agent-workflows/">https://chinookobserver.com/2024/12/31/graphlit-unveils-agent-tools-library-to-streamline-unstructured-data-ingestion-and-ai-agent-workflows/</a></p>
+<hr>
+<h3>3. MCP Support</h3>
+<p><strong>Status: YES — full, open-source MCP server</strong></p>
+<ul>
+<li>Repository: github.com/graphlit (MCP server: 373 stars — highest in their GitHub org)</li>
+<li>Compatible clients: Claude Desktop, Goose, Cline, Cursor, Windsurf</li>
+<li>Requires: free Graphlit account + project creation</li>
+</ul>
+<p><strong>MCP Tools exposed:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Retrieval</td>
+<td>Retrieve Sources, Visually Describe Images</td>
+</tr>
+<tr>
+<td>Ingestion</td>
+<td>Files, Web Pages, Text</td>
+</tr>
+<tr>
+<td>Data Connectors</td>
+<td>Microsoft (Outlook, Teams, SharePoint, OneDrive), Google (Mail, Drive), Notion, Slack, Discord, GitHub, Jira, Linear, Reddit, Dropbox, Box, Podcasts (RSS)</td>
+</tr>
+<tr>
+<td>Web</td>
+<td>Web Crawling, Web Search, Web Mapping, Screenshot Page</td>
+</tr>
+<tr>
+<td>Operations</td>
+<td>Collection management, feed deletion, content removal, completion polling</td>
+</tr>
+<tr>
+<td>Enumerations</td>
+<td>Channel/project listing for Slack, Teams, SharePoint</td>
+</tr>
+</tbody></table>
+<p><strong>MCP Resources:</strong></p>
+<ul>
+<li>Contents</li>
+<li>Feeds</li>
+<li>Collections</li>
+</ul>
+<p><strong>Implication for Contexter:</strong> Graphlit&#39;s MCP server is the highest-engagement artifact in their GitHub org (373 stars vs 31 for the main repo). MCP is the primary discovery channel. Contexter needs a comparable MCP surface to compete for the same developer attention.</p>
+<p>Source: <a href="https://www.graphlit.com/blog/graphlit-mcp-server">https://www.graphlit.com/blog/graphlit-mcp-server</a>, <a href="https://github.com/graphlit">https://github.com/graphlit</a></p>
+<hr>
+<h3>4. Format Support</h3>
+<p><strong>Graphlit confirmed formats (from documentation):</strong></p>
+<p>Documents: PDF, DOCX, PPTX (extracted to Markdown on ingestion)</p>
+<p>Audio: MP3, WAV, M4A — transcription with speaker diarization via Deepgram or AssemblyAI</p>
+<p>Video: MP4, MOV — audio extraction + transcription</p>
+<p>Images: OCR + entity extraction via vision models</p>
+<p>Web: HTML pages (extracted to Markdown), web crawl, screenshots</p>
+<p>Email: MIME with attachments</p>
+<p>Code: Repository contents (GitHub, GitLab)</p>
+<p>Structured: Calendar events (ICS), CRM records</p>
+<p>Note: A complete list of all supported MIME types/extensions is NOT publicly documented in a single location. The docs reference capabilities, not an exhaustive format registry.</p>
+<p><strong>Contexter stated formats: 15 (including audio/video)</strong></p>
+<p>Graphlit likely supports more format breadth but the comparison cannot be made precisely due to Graphlit&#39;s incomplete public documentation.</p>
+<p>Source: <a href="https://docs.graphlit.dev/getting-started/overview">https://docs.graphlit.dev/getting-started/overview</a>, <a href="https://www.graphlit.com/guides/document-processing">https://www.graphlit.com/guides/document-processing</a></p>
+<hr>
+<h3>5. API Design</h3>
+<p><strong>API type: GraphQL (not REST)</strong></p>
+<p>This is a significant architectural choice with direct competitive implications:</p>
+<ul>
+<li>All operations are GraphQL queries/mutations</li>
+<li>SDKs (TypeScript, Python, .NET) wrap the GraphQL layer — devs do NOT need to write raw GraphQL</li>
+<li>GraphQL enables precise field selection — agents only fetch what they need</li>
+<li>GraphQL schema gives self-documenting type system</li>
+</ul>
+<p><strong>Implication for Contexter:</strong> Contexter uses REST. REST is simpler, more familiar, lower barrier for most developers. GraphQL has a steeper learning curve but enables more powerful queries (especially for graph traversal). For simple ingestion+retrieval use cases, REST wins on developer experience. Contexter should position its REST API as &quot;simpler to get started&quot; vs Graphlit&#39;s GraphQL.</p>
+<p>Source: <a href="https://docs.graphlit.dev">https://docs.graphlit.dev</a></p>
+<hr>
+<h3>6. Integrations — Complete Connector List (30+)</h3>
+<p><strong>Messaging &amp; Collaboration (6):</strong>
+Slack (channels, threads, DMs), Microsoft Teams, Discord, Gmail, Outlook Email, Intercom</p>
+<p><strong>Cloud Storage (8):</strong>
+Google Drive, Microsoft OneDrive, SharePoint, Dropbox, Box, Amazon S3, Azure Blob Storage, FTP/SFTP</p>
+<p><strong>Source Control &amp; Development (5):</strong>
+GitHub Code (repository contents), GitHub Issues, GitHub Pull Requests, GitHub Commits, GitLab</p>
+<p><strong>Project Management (4):</strong>
+Jira, Linear, Trello, Asana</p>
+<p><strong>Knowledge Management (2):</strong>
+Notion, Confluence</p>
+<p><strong>Social Media &amp; Web (6):</strong>
+Reddit, Twitter/X, YouTube, RSS Feeds, Web Crawling, Web Search (Tavily, Exa, Perplexity)</p>
+<p><strong>Calendars &amp; Meetings (3):</strong>
+Google Calendar, Outlook Calendar, Zoom (meeting recordings, transcribed)</p>
+<p><strong>Customer &amp; Sales (2+):</strong>
+Zendesk, Salesforce CRM, Attio CRM, Intercom, Google Contacts, Microsoft Contacts</p>
+<p><strong>Meetings (specialized):</strong>
+Fireflies.ai, Fathom, Attio Meetings, Salesforce ECI</p>
+<p><strong>Total documented: 36+ connectors</strong></p>
+<p>Source: <a href="https://www.graphlit.com/guides/data-connectors">https://www.graphlit.com/guides/data-connectors</a>, <a href="https://docs.graphlit.dev/getting-started/overview">https://docs.graphlit.dev/getting-started/overview</a></p>
+<hr>
+<h3>7. Architecture Signals</h3>
+<p><strong>Deployment: Cloud-only SaaS. No self-hosted option.</strong></p>
+<p>Underlying infrastructure: Azure — CosmosDB (Gremlin/SQL for graph), Event Grid, Event Hub, Azure Functions, C#/.NET Core, Azure DevOps (revealed via Zine case study: &quot;built on Azure&quot;).</p>
+<p><strong>Model support (model-agnostic):</strong></p>
+<ul>
+<li>Chat/completion: OpenAI (GPT-4), Anthropic (Claude), Google (Gemini), Meta (Llama), Mistral</li>
+<li>Embeddings: Configurable (not exposed publicly)</li>
+<li>Transcription: Deepgram, AssemblyAI</li>
+<li>OCR/Vision: Vision models (specific providers not named)</li>
+</ul>
+<p><strong>Multi-tenancy:</strong> Built-in, per-user data isolation at platform level.</p>
+<p><strong>Webhooks:</strong> Yes — workflow actions trigger on content events.</p>
+<p><strong>Streaming:</strong> Yes — streaming responses documented for chat.</p>
+<p><strong>Critical limitation:</strong> Data stored exclusively on Graphlit&#39;s Azure infrastructure. No data sovereignty, no on-premise option, no direct database access. This is the core architectural differentiator vs Contexter.</p>
+<p>Source: <a href="https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/">https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/</a>, <a href="https://www.graphlit.com/guides/production-architecture">https://www.graphlit.com/guides/production-architecture</a></p>
+<hr>
+<h3>8. Document 2 Sources</h3>
+<ul>
+<li><a href="https://www.graphlit.com/blog/graphlit-mcp-server">https://www.graphlit.com/blog/graphlit-mcp-server</a></li>
+<li><a href="https://www.graphlit.com/guides/building-knowledge-graphs">https://www.graphlit.com/guides/building-knowledge-graphs</a></li>
+<li><a href="https://www.graphlit.com/guides/data-connectors">https://www.graphlit.com/guides/data-connectors</a></li>
+<li><a href="https://docs.graphlit.dev/getting-started/overview">https://docs.graphlit.dev/getting-started/overview</a></li>
+<li><a href="https://docs.graphlit.dev">https://docs.graphlit.dev</a></li>
+<li><a href="https://github.com/graphlit">https://github.com/graphlit</a></li>
+<li><a href="https://www.graphlit.com/vs/supermemory">https://www.graphlit.com/vs/supermemory</a></li>
+<li><a href="https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/">https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/</a></li>
+<li><a href="https://chinookobserver.com/2024/12/31/graphlit-unveils-agent-tools-library-to-streamline-unstructured-data-ingestion-and-ai-agent-workflows/">https://chinookobserver.com/2024/12/31/graphlit-unveils-agent-tools-library-to-streamline-unstructured-data-ingestion-and-ai-agent-workflows/</a></li>
+</ul>
+<hr>
+<h2>Document 3: Audience Voice (&quot;Love / Hate / Want&quot;)</h2>
+<h3>Traction Signals (baseline)</h3>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Value</th>
+<th>Source</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GitHub — main repo stars</td>
+<td>31</td>
+<td>github.com/graphlit/graphlit</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>GitHub — MCP server stars</td>
+<td>373</td>
+<td>github.com/graphlit</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>GitHub — samples stars</td>
+<td>76</td>
+<td>github.com/graphlit/graphlit-samples</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>Product Hunt — first launch upvotes</td>
+<td>105</td>
+<td>producthunt.com/products/graphlit</td>
+<td>Feb 2024</td>
+</tr>
+<tr>
+<td>Product Hunt — second launch upvotes</td>
+<td>3</td>
+<td>producthunt.com/products/graphlit</td>
+<td>Aug 2024</td>
+</tr>
+<tr>
+<td>Product Hunt — followers</td>
+<td>79</td>
+<td>producthunt.com/products/graphlit</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>Product Hunt — reviews</td>
+<td>1 (5.0/5)</td>
+<td>producthunt.com/products/graphlit</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>Slashdot reviews</td>
+<td>0 (&quot;No User Reviews&quot;)</td>
+<td>slashdot.org/software/p/Graphlit/</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>G2 reviews</td>
+<td>Not found</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Company size</td>
+<td>3 employees</td>
+<td>PitchBook / LinkedIn</td>
+<td>2025</td>
+</tr>
+<tr>
+<td>Funding raised</td>
+<td>$3.56M seed</td>
+<td>PitchBook</td>
+<td>2025</td>
+</tr>
+<tr>
+<td>Founded</td>
+<td>2021</td>
+<td>PitchBook</td>
+<td>—</td>
+</tr>
+<tr>
+<td>HQ</td>
+<td>Seattle, WA</td>
+<td>PitchBook</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p><strong>MCP server (373 stars) is the primary organic discovery vector</strong> — 12x more traction than the core product repo. This confirms MCP is the acquisition channel.</p>
+<hr>
+<h3>1. Love — Verbatim Positive Signals</h3>
+<p><strong>NOTE:</strong> No independent user reviews exist on G2, Slashdot, Capterra, or Product Hunt (1 review total, author likely affiliated). The following are the best available positive signals:</p>
+<p><strong>Product Hunt — only public review (5.0/5, reviewer identity not verified):</strong>
+No verbatim text available — rating metadata only. The review is listed but text was not rendered in the scraped Product Hunt response.</p>
+<p><strong>Kirk Marple (founder) on HN submission (Oct 25, 2023):</strong></p>
+<blockquote>
+<p>&quot;With the use of Graphlit and Azure AI, market intelligence from Reddit can be automated - accelerating the time to business insights.&quot;
+Source: <a href="https://news.ycombinator.com/item?id=38010361">https://news.ycombinator.com/item?id=38010361</a></p>
+</blockquote>
+<p><strong>Product Hunt launch description (Feb 2024, by submitter):</strong></p>
+<blockquote>
+<p>&quot;Graphlit simplifies the development of intelligent AI apps and services. Compared to LangChain or LlamaIndex, their managed platform lets developers focus on building apps rather than data and AI infrastructure.&quot;
+Source: <a href="https://www.producthunt.com/products/graphlit">https://www.producthunt.com/products/graphlit</a></p>
+</blockquote>
+<p><strong>Deepgram ecosystem listing (third-party, positive framing):</strong></p>
+<blockquote>
+<p>&quot;Graphlit: the API-first platform for AI applications&quot; — listed as recommended integration partner.
+Source: <a href="https://deepgram.com/ai-apps/graphlit">https://deepgram.com/ai-apps/graphlit</a></p>
+</blockquote>
+<p><strong>FlowHunt integration listing:</strong>
+Listed as a featured MCP integration, indicating ecosystem adoption signal.
+Source: <a href="https://www.flowhunt.io/integrations/graphlit/">https://www.flowhunt.io/integrations/graphlit/</a></p>
+<hr>
+<h3>2. Hate — Verbatim Negative Signals</h3>
+<p><strong>NOTE:</strong> No user-generated negative reviews found on any public review platform. The following are structural criticisms identified via competitor comparison pages and architectural analysis.</p>
+<p><strong>TrustGraph comparison — on vendor lock-in (verbatim from trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/):</strong></p>
+<blockquote>
+<p>&quot;Data stored with third party&quot; creates compliance complexity.
+&quot;Compliance depends on Graphlit&#39;s certifications&quot; rather than your own controls.
+&quot;Limited control over data location.&quot;
+&quot;API-only access to your data&quot; prevents direct database queries.
+&quot;Vendor lock-in risk&quot; due to proprietary format and limited export options.
+Usage-based costs that &quot;scale with usage&quot; and produce &quot;variable monthly bills.&quot;</p>
+</blockquote>
+<p><strong>Graphlit&#39;s own positioning reveals known objections they&#39;re pre-empting:</strong></p>
+<p>Their vs/langmem page explicitly defends against the framework lock-in objection: &quot;switch agent frameworks without rebuilding your memory layer&quot; — suggesting this is a real objection heard from prospects.</p>
+<p>The &quot;zero ops&quot; pitch pre-empts the &quot;no control&quot; concern: they lead with the benefit, not the tradeoff.</p>
+<p><strong>Architecture-implied friction points (not user-stated, but structural):</strong></p>
+<ul>
+<li>GraphQL API = steeper learning curve than REST for new developers</li>
+<li>Credit system = opaque cost at scale (no published per-operation pricing)</li>
+<li>Cloud-only = disqualified for EU data residency, GDPR-strict, government, healthcare (without separate enterprise agreement)</li>
+<li>No self-hosted = single point of failure dependency on Graphlit&#39;s uptime</li>
+</ul>
+<hr>
+<h3>3. Want — Feature Requests</h3>
+<p><strong>No direct user feature requests found on public platforms.</strong></p>
+<p><strong>Inferred from product roadmap signals:</strong></p>
+<p>From <a href="https://www.graphlit.com/blog/context-layer-ai-agents-need">https://www.graphlit.com/blog/context-layer-ai-agents-need</a> (Feb 2026):</p>
+<blockquote>
+<p>&quot;2026 roadmap positions Graphlit further into advancing the market, and includes building infrastructure to capture reasoning traces that agents produce as they execute workflows.&quot;</p>
+</blockquote>
+<p>Graphlit&#39;s own vs/supermemory comparison acknowledges missing features:</p>
+<ul>
+<li>&quot;Feedback/relevance scoring&quot; — listed as &quot;Coming soon&quot;</li>
+<li>&quot;Project/org APIs&quot; — listed as &quot;Coming soon&quot;</li>
+</ul>
+<p>These are implied feature requests from developers evaluating Graphlit against Supermemory.</p>
+<hr>
+<h3>4. Switching Triggers</h3>
+<p>Based on architectural analysis and competitive comparison content:</p>
+<p><strong>Triggers that would drive a developer TO Graphlit:</strong></p>
+<ul>
+<li>Currently DIY-assembling vector DB + parser + embedding pipeline and spending &gt;2 days on infra</li>
+<li>Needs audio/video ingestion and doesn&#39;t want to self-integrate Deepgram</li>
+<li>Working in an org where Slack/GitHub/Jira sync is the primary data problem</li>
+<li>Wants to avoid managing any databases</li>
+<li>Building a multi-tenant SaaS and wants tenant isolation handled by the platform</li>
+</ul>
+<p><strong>Triggers that would drive a developer AWAY from Graphlit (toward Contexter or alternatives):</strong></p>
+<ul>
+<li>EU data residency requirement (data must stay in specific jurisdiction)</li>
+<li>High volume at low cost — credit-based pricing becomes unpredictable at scale</li>
+<li>Need for direct database access or custom indexing logic</li>
+<li>On-premise/air-gapped deployment requirement (government, healthcare, defense)</li>
+<li>Preference for REST over GraphQL</li>
+<li>Open source requirement (Graphlit is proprietary)</li>
+<li>Developer wants to understand the internals / avoid black-box infrastructure</li>
+</ul>
+<hr>
+<h3>5. Sentiment Assessment</h3>
+<p><strong>Overall: INSUFFICIENT PUBLIC DATA for reliable sentiment scoring.</strong></p>
+<ul>
+<li>Zero independent reviews on G2, Slashdot, Capterra</li>
+<li>1 review on Product Hunt (5.0/5, likely affiliated)</li>
+<li>No Reddit threads found discussing Graphlit user experience</li>
+<li>HN submission has 1 comment (from founder)</li>
+<li>No Twitter/X engagement data accessible</li>
+</ul>
+<p><strong>Proxy sentiment indicators:</strong></p>
+<ul>
+<li>MCP server (373 GitHub stars) suggests developer interest in the MCP use case specifically</li>
+<li>Low Product Hunt engagement on second launch (3 upvotes vs 105 on first) — declining community interest or poor launch timing</li>
+<li>Azure Marketplace listing = credibility signal for enterprise buyers, not community signal</li>
+<li>Deepgram and FlowHunt ecosystem listings = positive partnership signal</li>
+</ul>
+<p><strong>Conclusion:</strong> Graphlit is in an early market-building phase with minimal public social proof. The product likely has a small number of satisfied production users (Zine cited explicitly) but has not yet converted those users into public testimonials or reviews. This is not a negative signal — it is a maturity signal: the product is pre-social-proof stage.</p>
+<hr>
+<h3>6. No Data Protocol</h3>
+<p>The following platforms returned zero Graphlit-specific results:</p>
+<ul>
+<li><strong>G2:</strong> No listing found</li>
+<li><strong>Capterra:</strong> No listing found</li>
+<li><strong>Slashdot:</strong> Listing exists, zero reviews (&quot;No User Reviews. Be the first to provide a review.&quot;)</li>
+<li><strong>Reddit:</strong> No subreddit discussions found about Graphlit as a product (only Graphlit&#39;s own content marketing about Reddit integration)</li>
+<li><strong>Hacker News:</strong> 1 Show HN post (Oct 2023) with 1 comment (founder). No community discussion.</li>
+<li><strong>Twitter/X:</strong> Account exists (@graphlit) but follower count not accessible without login. No independent tweets found.</li>
+</ul>
+<p><strong>Proxy signals used in lieu of reviews:</strong></p>
+<ul>
+<li>GitHub star distribution (MCP: 373, main: 31, samples: 76)</li>
+<li>Product Hunt engagement trajectory (105 → 3 upvotes)</li>
+<li>Funding signals ($3.56M seed, 11 investors)</li>
+<li>Named production customer (Zine)</li>
+<li>Ecosystem listings (Deepgram, FlowHunt, Azure Marketplace)</li>
+</ul>
+<hr>
+<h3>7. Document 3 Sources</h3>
+<ul>
+<li><a href="https://www.producthunt.com/products/graphlit">https://www.producthunt.com/products/graphlit</a></li>
+<li><a href="https://news.ycombinator.com/item?id=38010361">https://news.ycombinator.com/item?id=38010361</a></li>
+<li><a href="https://slashdot.org/software/p/Graphlit/">https://slashdot.org/software/p/Graphlit/</a></li>
+<li><a href="https://github.com/graphlit/graphlit">https://github.com/graphlit/graphlit</a></li>
+<li><a href="https://github.com/graphlit">https://github.com/graphlit</a></li>
+<li><a href="https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/">https://trustgraph.ai/guides/comparisons/trustgraph-vs-graphlit/</a></li>
+<li><a href="https://deepgram.com/ai-apps/graphlit">https://deepgram.com/ai-apps/graphlit</a></li>
+<li><a href="https://www.flowhunt.io/integrations/graphlit/">https://www.flowhunt.io/integrations/graphlit/</a></li>
+<li><a href="https://pitchbook.com/profiles/company/467636-05">https://pitchbook.com/profiles/company/467636-05</a></li>
+<li><a href="https://www.linkedin.com/company/unstruk-data">https://www.linkedin.com/company/unstruk-data</a></li>
+</ul>
+<hr>
+<h2>Strategic Summary for Contexter</h2>
+<h3>Where Graphlit is stronger</h3>
+<ol>
+<li><strong>Breadth of connectors</strong> — 36+ live data connectors vs Contexter&#39;s file/URL upload model. Real-time sync is a qualitatively different product.</li>
+<li><strong>Multimodal pipeline</strong> — Audio/video/image processing is full-stack and production-proven.</li>
+<li><strong>Knowledge graph</strong> — 19-entity-type extraction, GraphRAG, entity-filtered retrieval — Contexter has no equivalent.</li>
+<li><strong>MCP traction</strong> — 373 GitHub stars on MCP server is the primary growth vector; Contexter needs comparable MCP presence.</li>
+<li><strong>SDKs</strong> — TypeScript, Python, .NET SDKs lower the integration barrier significantly.</li>
+</ol>
+<h3>Where Contexter has structural advantage</h3>
+<ol>
+<li><strong>Self-hosted / data sovereignty</strong> — Cloud-only is Graphlit&#39;s single largest structural weakness. GDPR, EU data residency, healthcare, government = locked out. Contexter wins by default.</li>
+<li><strong>Transparent cost</strong> — €4.72/mo Hetzner vs opaque credit system. At high volume, Contexter is predictably cheap.</li>
+<li><strong>REST API</strong> — Lower barrier than GraphQL for most developers.</li>
+<li><strong>Open infrastructure</strong> — Developer can inspect, modify, migrate. No vendor lock-in.</li>
+<li><strong>Social proof gap</strong> — Neither product has significant public reviews. First to build review presence wins the trust race.</li>
+</ol>
+<h3>Positioning recommendation</h3>
+<p>Contexter should explicitly own the <strong>data sovereignty + cost predictability</strong> positioning that Graphlit structurally cannot address. The message: &quot;Your documents stay on your infrastructure. You know exactly what you pay.&quot; This is not a feature comparison — it is a different trust contract with a specific buyer segment.</p>
+<hr>
+<p><em>Report generated: 2026-03-27 | All market data with sources and dates as noted above.</em></p>
+
+</body>
+</html>

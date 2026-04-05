@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-v2-indirect-competitors — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter: Indirect Competitor Analysis — &quot;Context Storage for AI&quot;</h1>
+<blockquote>
+<p>Lead/MarketAnalysis | Generated: 2026-03-27
+Frame: &quot;I need AI to understand my documents&quot; — same pain, different method
+Scope: 15 indirect competitors across 9 categories</p>
+</blockquote>
+<hr>
+<h2>What Contexter Does (Reference Frame)</h2>
+<p>Upload any document → automatic parse/chunk/embed/index → AI models access via API or MCP → answers with sources. Persistent, multi-tenant, model-agnostic. The key differentiators: (1) persistent across sessions, (2) accessible by any model via standard protocol, (3) no UX — pure API/MCP infrastructure.</p>
+<hr>
+<h2>Category 1: Per-Session Context</h2>
+<p><em>Context exists only for the duration of one chat. No persistence. No API access.</em></p>
+<hr>
+<h3>1. ChatGPT File Upload (OpenAI)</h3>
+<p><strong>URL:</strong> <a href="https://chatgpt.com">https://chatgpt.com</a>
+<strong>Category:</strong> Per-Session Context</p>
+<p><strong>One-line:</strong> Upload files directly into a ChatGPT conversation; they exist until the session ends.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Files are uploaded per message or per conversation. OpenAI auto-chunks and embeds them within the active context window (~128K tokens). As of early 2026, pastes over 5,000 characters are auto-converted to file attachments. Free users get 3 uploads/day; Plus users get ~80 files per rolling 3-hour window, max 512MB/file, 2M tokens/file. No external API access — the context is invisible outside the chat UI.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+Zero setup. Already in workflow. No API key, no infrastructure. For one-off document Q&amp;A (&quot;summarize this contract&quot;), it&#39;s instant. GPT-5.x models handle it natively.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Files vanish after the session. Every new conversation starts from zero. No programmatic access — other apps cannot query the uploaded content. Rate limits make it unreliable for production use. No multi-tenancy.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> at per-session use (larger windows, smarter chunking), but OpenAI is intentionally pushing persistent context to Custom GPTs and Projects, not raw file upload. The gap with Contexter grows for API-first use cases.</p>
+<p><strong>Sources:</strong> <a href="https://www.onefileapp.com/blog/chatgpt-file-upload-limits-2025">ChatGPT File Upload Limits 2026</a> | <a href="https://help.openai.com/en/articles/8555545-file-uploads-faq">OpenAI Help Center</a></p>
+<hr>
+<h3>2. Claude Attachments / Gemini File Upload</h3>
+<p><strong>URL:</strong> <a href="https://claude.ai">https://claude.ai</a> / <a href="https://gemini.google.com">https://gemini.google.com</a>
+<strong>Category:</strong> Per-Session Context</p>
+<p><strong>One-line:</strong> Attach files or paste context into Claude or Gemini conversations; processed in-session only.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Claude supports up to ~200K token context windows (files count against this). Gemini 2.0 Flash supports up to 1M tokens. Both convert uploaded PDFs, docs, and images into in-context text. Context is ephemeral — it does not persist beyond the conversation. Neither exposes the parsed content via API.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+Gemini&#39;s 1M token window can fit extremely large documents (entire codebases, long legal contracts) without chunking artifacts. Claude&#39;s reasoning quality on structured documents is best-in-class. Zero infrastructure cost.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Same as ChatGPT file upload: no persistence, no API, no multi-tenancy, no cross-session retrieval. Gemini locks you to Google&#39;s ecosystem; Claude locks you to Anthropic&#39;s. Contexter is model-agnostic and persistent.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> for power users (larger windows, multimodal), but the fundamental per-session limitation is architectural, not a roadmap item. Both companies are steering persistent context toward their walled-garden products.</p>
+<p><strong>Sources:</strong> <a href="https://www.datastudios.org/post/claude-ai-context-window-token-limits-and-memory-how-large-context-reasoning-actually-works-for-l">Claude AI context window 2025/2026</a> | <a href="https://www.sentisight.ai/claudes-2026-trajectory/">Claude&#39;s 2026 Trajectory</a></p>
+<hr>
+<h2>Category 2: Walled-Garden Context</h2>
+<p><em>Persistent, but locked to one model/platform. No external API access.</em></p>
+<hr>
+<h3>3. Claude Projects (Anthropic)</h3>
+<p><strong>URL:</strong> <a href="https://claude.ai/projects">https://claude.ai/projects</a>
+<strong>Category:</strong> Walled-Garden Context</p>
+<p><strong>One-line:</strong> Persistent knowledge bases attached to Claude conversations — but only accessible through Claude&#39;s UI.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Users upload documents to a Project; Claude uses RAG to retrieve relevant chunks across sessions. As of 2026, Claude enables RAG mode automatically when project knowledge approaches context limits, expanding effective capacity ~10x. Paid plans only (Pro $20/mo, Max $100-200/mo). In January 2026, Anthropic blocked OAuth tokens from working outside Claude Code CLI — explicitly tightening the ecosystem.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+Native Claude integration means zero latency, zero prompt engineering overhead. Best reasoning on retrieved content. Projects store conversation history, not just documents. For Claude-only workflows, it is the smoothest path.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Anthropic&#39;s &quot;walled garden crackdown&quot; (Jan 2026) made explicit: your knowledge base is theirs. No API access to the indexed content. Switching models means re-uploading everything. No multi-tenancy for SaaS builders. Contexter is infrastructure you own.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> at Claude-native use, getting <strong>worse</strong> for portability. Anthropic is moving toward ecosystem lock-in, not openness.</p>
+<p><strong>Sources:</strong> <a href="https://elephas.app/blog/claude-projects">What is Claude Projects</a> | <a href="https://paddo.dev/blog/anthropic-walled-garden-crackdown/">Anthropic Walled Garden Crackdown</a> | <a href="https://support.claude.com/en/articles/9517075-what-are-projects">Claude Help Center</a></p>
+<hr>
+<h3>4. Custom GPTs (OpenAI)</h3>
+<p><strong>URL:</strong> <a href="https://chatgpt.com/gpts">https://chatgpt.com/gpts</a>
+<strong>Category:</strong> Walled-Garden Context</p>
+<p><strong>One-line:</strong> Configure a GPT with up to 20 documents as a persistent knowledge base — accessible only through ChatGPT.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Custom GPTs allow uploading up to 20 files (512MB each) that persist across all conversations with that GPT. OpenAI indexes them for retrieval. The GPT can be shared with a team or published publicly. No session limit — the knowledge base is always present. Since 2025, OpenAI has been layering &quot;Library&quot; and persistent memory on top of GPTs.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+No-code setup. Shareable with team in minutes. Free for Plus subscribers. Good enough for internal FAQ bots, support assistants, and onboarding tools where GPT-4o quality is acceptable.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Hard cap of 20 files. No API access to retrieval results. No control over chunking or embedding quality. No multi-tenant isolation (if you share the GPT, everyone hits the same knowledge). No source attribution control. Contexter offers all of these.</p>
+<p><strong>Trajectory:</strong> Getting <strong>marginally better</strong> (OpenAI adding more memory features), but the 20-file cap and walled-garden nature are policy decisions, not technical constraints. OpenAI&#39;s business incentive is to keep users in ChatGPT, not expose the infrastructure.</p>
+<p><strong>Sources:</strong> <a href="https://help.openai.com/en/articles/8843948-knowledge-in-gpts">Knowledge in GPTs — OpenAI Help</a> | <a href="https://elfsight.com/blog/how-to-train-chatgpt-on-your-data/">Train ChatGPT on Your Data</a></p>
+<hr>
+<h3>5. Google NotebookLM</h3>
+<p><strong>URL:</strong> <a href="https://notebooklm.google.com">https://notebooklm.google.com</a>
+<strong>Category:</strong> Walled-Garden Context</p>
+<p><strong>One-line:</strong> Upload sources (PDFs, docs, URLs, YouTube) and chat with them — with Audio/Video Overviews, Infographics; locked to Gemini.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+NotebookLM is explicitly designed around source grounding. Every answer cites the exact source passage. As of March 2026, it runs on Gemini 3 models. Features added in 2025-2026: Video Overviews, Infographics, Slide Decks, Data Tables — transforming documents into multiple output formats. Free tier; Plus via Google Workspace Standard ($14/user/mo); Enterprise via Google Cloud (VPC-SC, audit trails, no training data use).</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+The source-grounding UX is the best in class for non-technical users. Audio Overview (&quot;podcast from your docs&quot;) is a unique output format. Enterprise tier has strong compliance posture. No API knowledge required.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+No API. No MCP. No multi-tenancy. Gemini-only. NotebookLM is a consumer/knowledge-worker tool, not infrastructure. You cannot programmatically query your NotebookLM from another application. Contexter is the infrastructure layer NotebookLM doesn&#39;t expose.</p>
+<p><strong>Trajectory:</strong> Rapidly getting <strong>better</strong> as a consumer product (new output formats every quarter), but moving further from infrastructure use cases. The enterprise tier adds compliance, not openness.</p>
+<p><strong>Sources:</strong> <a href="https://cloud.google.com/resources/notebooklm-enterprise">NotebookLM Enterprise</a> | <a href="https://automatetodominate.ai/blog/google-notebooklm-2025-updates-complete-guide">NotebookLM 2025 Updates</a> | <a href="https://notebooklm.google/plans">NotebookLM Plans</a></p>
+<hr>
+<h2>Category 3: Second Brain / PKM</h2>
+<p><em>Personal knowledge management with AI on top. Designed for individual thinking, not API access.</em></p>
+<hr>
+<h3>6. Notion AI</h3>
+<p><strong>URL:</strong> <a href="https://notion.so">https://notion.so</a>
+<strong>Category:</strong> Second Brain / PKM</p>
+<p><strong>One-line:</strong> Workspace-embedded AI that reasons over your Notion pages, databases, and connected tools — inside Notion only.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Notion AI (included in Business plan at $20/user/mo from May 2025 restructuring) understands your entire workspace: pages, databases, linked docs, Slack, Google Drive, Teams. Notion 3.0 (Sept 2025) introduced multi-model AI (GPT-5, Claude Opus 4.1, o3) and autonomous AI Agents. Notion 3.3 (Feb 2026) added Custom Agents for specialized workflows. The AI can search, summarize, and draft across your full knowledge base.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+For teams already living in Notion, this is zero-friction. The AI understands document structure, database relations, and linking. No ingestion pipeline to manage. Best-in-class for editorial, product, and ops teams.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Notion AI is inaccessible outside Notion. No API endpoint that returns &quot;answer + sources&quot; from your Notion workspace. No support for non-Notion documents (PDFs stored elsewhere, proprietary formats). Contexter accepts any document and exposes it via standard API/MCP — Notion cannot.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> fast (new agent capabilities, multi-model). The gap with Contexter widens for non-Notion-native teams and API-first builders.</p>
+<p><strong>Sources:</strong> <a href="https://max-productive.ai/ai-tools/notion-ai/">Notion AI Review 2026</a> | <a href="https://userjot.com/blog/notion-pricing-2025-plans-ai-costs-explained">Notion Pricing 2026</a></p>
+<hr>
+<h3>7. Obsidian + AI Plugins (CoPilot / Smart Connections)</h3>
+<p><strong>URL:</strong> <a href="https://obsidian.md">https://obsidian.md</a> + <a href="https://github.com/brianpetro/obsidian-smart-connections">https://github.com/brianpetro/obsidian-smart-connections</a>
+<strong>Category:</strong> Second Brain / PKM</p>
+<p><strong>One-line:</strong> Local-first markdown vault with community AI plugins (CoPilot, Smart Connections) that embed your notes and enable RAG chat over them.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+CoPilot uses RAG to let you &quot;chat with your vault.&quot; Smart Connections performs semantic search across all notes using local or API-hosted embeddings. As of Feb 2026, Obsidian crossed 1.5M users (22% YoY growth). The 2026 development frontier: connecting Claude Code to Obsidian via MCP, turning the vault into a live agent workspace.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+Full data sovereignty — everything is local markdown files. No SaaS subscription. Highly customizable embedding pipeline (bring your own model). Privacy-absolute for sensitive knowledge work. Obsidian MCP server is emerging as a bridge to AI agents.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+No multi-tenancy (single-user by design). No managed infrastructure — user must configure and maintain plugins, embedding models, and API keys. No production reliability guarantees. Obsidian is a personal tool; Contexter is a multi-tenant service with SLAs.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> for power users and solo developers (MCP integration is exciting), but the self-managed complexity ceiling prevents enterprise adoption. Obsidian will remain a personal tool.</p>
+<p><strong>Sources:</strong> <a href="https://www.nxcode.io/resources/news/obsidian-ai-second-brain-complete-guide-2026">Obsidian AI Second Brain 2026</a> | <a href="https://www.eesel.ai/blog/obsidian-ai">Obsidian AI Explained</a></p>
+<hr>
+<h3>8. Mem.ai</h3>
+<p><strong>URL:</strong> <a href="https://mem.ai">https://mem.ai</a>
+<strong>Category:</strong> Second Brain / PKM</p>
+<p><strong>One-line:</strong> AI-powered note-taking that auto-organizes, links, and surfaces your notes — with chat over your personal knowledge base.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Mem automatically categorizes and links notes without manual tagging. Mem Chat answers questions, summarizes, and drafts based on your notes. Mem 2.0 (Oct 2025) is a complete rebuild with offline support, voice capture, and an agentic layer that can act on notes (not just organize them). Pricing: Free basic tier; Pro $12/month; Teams custom.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+The &quot;zero-friction capture&quot; UX is unmatched — ideas, notes, and clippings auto-organize without taxonomy decisions. For individual knowledge workers who think in notes rather than documents, Mem&#39;s AI feels natural. No ingestion pipeline visible to the user.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Mem is note-centric, not document-centric. Cannot ingest arbitrary PDFs, proprietary formats, or structured data. No API for external systems to query your Mem knowledge base. No multi-tenancy. Contexter handles arbitrary documents and exposes them to any system.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> as a personal tool (Mem 2.0 rewrite, agentic features). However, the Medium critique (&quot;$40M Second Brain Failure&quot;) points to product-market fit struggles — Mem has not cracked team/enterprise use.</p>
+<p><strong>Sources:</strong> <a href="https://www.salesforge.ai/directory/sales-tools/mem-ai">Mem.ai Overview 2025</a> | <a href="https://www.fahimai.com/mem-ai">I Switched to Mem AI 2026</a> | <a href="https://medium.com/@theo-james/mem-ai-the-40m-second-brain-failure-burning-the-worlds-money-5f3176a34cbd">Mem AI $40M Critique</a></p>
+<hr>
+<h2>Category 4: Enterprise Knowledge</h2>
+<p><em>Corporate knowledge search platforms. Connector-heavy, permission-aware, IT-deployed.</em></p>
+<hr>
+<h3>9. Glean</h3>
+<p><strong>URL:</strong> <a href="https://glean.com">https://glean.com</a>
+<strong>Category:</strong> Enterprise Knowledge</p>
+<p><strong>One-line:</strong> Enterprise AI search across 100+ connected tools (Slack, Confluence, Salesforce, Drive) with permission-aware retrieval.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Glean indexes your entire corporate knowledge graph across all connected sources. It enforces existing access controls — users can only retrieve content they already have permission to see. In 2025, Glean expanded from search to agentic tasks (summarize Jira backlogs, draft Slack updates). 100+ connectors out of the box.</p>
+<p><strong>Pricing (2026):</strong> ~$45-50+/user/month for enterprise search license; ~$15/user/month AI add-on (now being bundled). Minimum contract ~$50-60K/year. Recommended for 1,000+ employee organizations.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+For large enterprises, the permission-aware retrieval is non-negotiable — employees cannot accidentally surface confidential documents. Glean&#39;s 100+ connectors mean no custom ingestion work. The &quot;work AI&quot; positioning resonates with CIOs.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Glean requires minimum $50K/year contract and enterprise IT buy-in. It is not an API for developers to build on — it is an end-user product. No MCP exposure. No self-serve. Contexter gives a development team immediate API access to their documents without procurement cycles.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> for large enterprise (agentic features, more connectors), getting <strong>worse</strong> value for SMBs (price increases at renewal, 7-12% annual escalators).</p>
+<p><strong>Sources:</strong> <a href="https://fritz.ai/glean-review/">Glean Review 2026</a> | <a href="https://www.gosearch.ai/blog/glean-pricing-explained/">Glean Pricing Explained</a> | <a href="https://cybernews.com/ai-tools/glean-ai-review/">Glean AI Review 2026</a></p>
+<hr>
+<h3>10. Microsoft 365 Copilot</h3>
+<p><strong>URL:</strong> <a href="https://microsoft.com/microsoft-365-copilot">https://microsoft.com/microsoft-365-copilot</a>
+<strong>Category:</strong> Enterprise Knowledge</p>
+<p><strong>One-line:</strong> AI assistant embedded in Office 365 that understands your emails, Teams, SharePoint, and OneDrive — within Microsoft&#39;s ecosystem only.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+&quot;Work IQ&quot; is Microsoft&#39;s intelligence layer — it builds a semantic index across your M365 content, line-of-business data via Copilot connectors, and organizational relationships. Copilot can summarize email threads, find relevant documents, and draft context-aware replies. Full Copilot license: $30/user/month on top of M365 subscription. Copilot Chat is free for Entra ID users. Price increases effective July 1, 2026 (E3 up $3/user/mo, E5 up $3/user/mo).</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+For Microsoft-native organizations (vast majority of enterprise), there is zero additional infrastructure. Copilot uses the organization&#39;s existing data residency, compliance, and access controls. No ingestion pipeline to build.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Microsoft-only. No API that returns &quot;answer + sources&quot; from your SharePoint to an external system. No MCP server. If your documents are outside Microsoft&#39;s ecosystem, Copilot cannot see them. Contexter is model-agnostic and source-agnostic.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> rapidly (Copilot connectors expanding, agents improving). The Microsoft moat is growing — organizations already on M365 have less reason to look elsewhere. But organizations building AI products (not just using AI) need Contexter&#39;s infrastructure approach.</p>
+<p><strong>Sources:</strong> <a href="https://www.microsoft.com/en-us/microsoft-365-copilot/pricing-new">Microsoft 365 Copilot Pricing</a> | <a href="https://blog.easi.net/en/microsoft-365-in-2026-new-capabilities-copilot-skus-and-pricing">M365 2026 Capabilities and Pricing</a></p>
+<hr>
+<h2>Category 5: AI Memory Services</h2>
+<p><em>Conversation memory and agent memory — not document storage.</em></p>
+<hr>
+<h3>11. Mem0</h3>
+<p><strong>URL:</strong> <a href="https://mem0.ai">https://mem0.ai</a>
+<strong>Category:</strong> AI Memory Services</p>
+<p><strong>One-line:</strong> Intelligent memory layer for AI agents — extracts, compresses, and retrieves key facts from conversations, not documents.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Mem0 intelligently compresses chat history into optimized memory representations (claims 80% prompt token reduction). On Pro, a knowledge graph links entities and relationships across conversations. It targets developers building agents: Python/JS SDKs, integrations with OpenAI, LangGraph, CrewAI, Vercel AI SDK. Raised $24M (YC, Peak XV, Basis Set — Oct 2025). 186M API calls/month (Q3 2025), growing 30% MoM. 41K+ GitHub stars.</p>
+<p><strong>Pricing:</strong> Free (10K memories, 1K retrievals/mo) → Starter $19/mo → Pro $249/mo (unlimited, graph memory, analytics) → Enterprise custom (SOC2, HIPAA, on-prem, BYOK).</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+If the use case is &quot;remember what the user said in past conversations&quot; (not &quot;search uploaded documents&quot;), Mem0 is the right tool. Mem0 is the category leader for agent conversation memory. Massive developer mindshare.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Mem0 is conversation-memory, not document-retrieval. It does not parse PDFs, index structured files, or return source-attributed answers from a document corpus. Contexter is document-first; Mem0 is interaction-first. For &quot;give AI my PDF library,&quot; Mem0 has no answer.</p>
+<p><strong>Trajectory:</strong> Rapidly getting <strong>better</strong> for agent memory (graph memory, 30% MoM growth). Not converging on document RAG — they are intentionally different products.</p>
+<p><strong>Sources:</strong> <a href="https://mem0.ai/pricing">Mem0 Pricing</a> | <a href="https://techcrunch.com/2025/10/28/mem0-raises-24m-from-yc-peak-xv-and-basis-set-to-build-the-memory-layer-for-ai-apps/">Mem0 $24M Series A</a> | <a href="https://dev.to/anajuliabit/mem0-vs-zep-vs-langmem-vs-memoclaw-ai-agent-memory-comparison-2026-1l1k">Mem0 vs Zep Comparison 2026</a></p>
+<hr>
+<h3>12. Zep</h3>
+<p><strong>URL:</strong> <a href="https://getzep.com">https://getzep.com</a>
+<strong>Category:</strong> AI Memory Services</p>
+<p><strong>One-line:</strong> Temporal knowledge graph memory platform for AI agents — builds an evolving graph of entities, relationships, and facts from conversations and business data.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Zep&#39;s temporal knowledge graph is its killer feature: when facts change, old ones are invalidated. It assembles &quot;context blocks&quot; optimized for your LLM — structured, token-efficient — not just a list of memories. You can push JSON business data (orders, accounts, inventory), not just chat messages. Claims 18.5% higher accuracy and 90% faster performance vs MemGPT. Deployment: Managed Cloud, BYOK, BYOM, BYOC, on-prem VPC (AWS/GCP/Azure). SOC2 Type 2, HIPAA.</p>
+<p><strong>Pricing:</strong> Free (1,000 credits) → credit-based scaling → Enterprise custom. Each &quot;episode&quot; costs 1 credit; auto-topup when balance drops below 20%.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+For enterprise agents that need to reason about changing facts over time (e.g., a customer support agent that needs to know a user&#39;s current subscription tier, not their tier from 6 months ago), Zep&#39;s temporal invalidation is unique. Strong compliance posture.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Zep does not parse documents. It ingests structured data and conversation history. For &quot;give AI my research PDF library,&quot; Zep has no document ingestion pipeline. Contexter is document-first and model-agnostic.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> for enterprise agent memory (business data ingestion, strong compliance). Not converging on document RAG.</p>
+<p><strong>Sources:</strong> <a href="https://www.getzep.com/pricing/">Zep Pricing</a> | <a href="https://dev.to/anajuliabit/mem0-vs-zep-vs-langmem-vs-memoclaw-ai-agent-memory-comparison-2026-1l1k">Mem0 vs Zep vs LangMem 2026</a> | <a href="https://medium.com/@bumurzaqov2/top-10-ai-memory-products-2026-09d7900b5ab1">Top 10 AI Memory 2026</a></p>
+<hr>
+<h2>Category 6: MCP Context Servers</h2>
+<p><em>Raw context delivered via Model Context Protocol. Do-it-yourself infrastructure.</em></p>
+<hr>
+<h3>13. Filesystem MCP / Google Drive MCP</h3>
+<p><strong>URL:</strong> <a href="https://github.com/modelcontextprotocol">https://github.com/modelcontextprotocol</a> (official) | <a href="https://pulsemcp.com/servers/modelcontextprotocol-gdrive">https://pulsemcp.com/servers/modelcontextprotocol-gdrive</a>
+<strong>Category:</strong> MCP Context Servers</p>
+<p><strong>One-line:</strong> Open-source MCP servers that expose your local filesystem or Google Drive directly to MCP-compatible AI clients (Claude Desktop, Cursor, etc.) — no parsing, no embedding, no indexing.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+The filesystem MCP server exposes file read/write tools to any MCP client. The Google Drive MCP server (multiple community implementations, most recent: Dec 2025–Feb 2026) provides OAuth2-authenticated access to Drive files, Sheets, and Docs. The AI model retrieves raw file content on-demand. No preprocessing — the model sees the file as-is, limited by context window.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+Zero cost. Completely local. For developers who want AI to access their working directory or Drive without a SaaS intermediary, MCP servers are the path-of-least-resistance. Growing ecosystem of MCP clients.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+No chunking. No embedding. No semantic search. If the document corpus is larger than the model&#39;s context window, the MCP server fails silently or truncates. No multi-tenancy, no access control, no persistence layer beyond the filesystem itself. Contexter is the production-grade version of this approach.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> as MCP adoption grows (more clients, better tooling). However, raw filesystem MCP remains a developer prototype tool, not a production document retrieval service. The gap with Contexter widens at scale.</p>
+<p><strong>Sources:</strong> <a href="https://www.pulsemcp.com/servers/modelcontextprotocol-gdrive">Google Drive MCP Server by Anthropic — PulseMCP</a> | <a href="https://github.com/piotr-agier/google-drive-mcp">Google Drive MCP implementations</a> | <a href="https://mcpservers.org/servers/modelcontextprotocol-gdrive">Awesome MCP Servers</a></p>
+<hr>
+<h2>Category 7: Vector DB + RAG Starters</h2>
+<p><em>Infrastructure, not service. Teams must build the full pipeline themselves.</em></p>
+<hr>
+<h3>14. Pinecone</h3>
+<p><strong>URL:</strong> <a href="https://pinecone.io">https://pinecone.io</a>
+<strong>Category:</strong> Vector DB + RAG Starters</p>
+<p><strong>One-line:</strong> Serverless vector database for production RAG — you bring chunking, embedding, and retrieval logic; Pinecone stores and searches vectors at scale.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Pinecone is the most popular managed vector database for RAG. In Jan 2025, Pinecone Assistant went GA — it wraps chunking, embedding, search, reranking, and answer generation behind one endpoint, moving Pinecone closer to a managed RAG service. Supports hybrid search (semantic + keyword), integrated reranking, 20-100ms latency on billion-vector datasets. BYOC (Bring Your Own Cloud) on AWS in public preview.</p>
+<p><strong>Pricing:</strong> Free → $50/mo Starter → $500/mo Enterprise. Storage $0.33/GB/month. Read units: $16-24/million on paid plans. Enterprise: private networking, encryption keys, full compliance.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+For engineering teams building custom RAG pipelines, Pinecone gives maximum control over every layer — embedding model choice, chunking strategy, retrieval algorithm. Pinecone Assistant is converging on Contexter&#39;s territory for teams that want managed retrieval.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Even with Pinecone Assistant, teams must manage document ingestion, chunking logic, embedding model selection, and retrieval orchestration. Pinecone is infrastructure; Contexter is a complete service. Pinecone has no MCP server out of the box. Multi-tenancy requires custom implementation.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> and <strong>converging</strong> on Contexter&#39;s use case (Pinecone Assistant). This is the most technically similar competitor — worth monitoring closely. If Pinecone ships a production MCP server and multi-tenant document management, the overlap increases.</p>
+<p><strong>Sources:</strong> <a href="https://www.pinecone.io/pricing/estimate/">Pinecone Pricing</a> | <a href="https://docs.pinecone.io/release-notes/2025">2025 Pinecone Releases</a> | <a href="https://rahulkolekar.com/vector-db-pricing-comparison-pinecone-weaviate-2026/">Vector DB Comparison 2026</a></p>
+<hr>
+<h2>Category 8: No-Code RAG Builders</h2>
+<p><em>Visual pipeline builders for RAG. Configuration over code, but still requires operational overhead.</em></p>
+<hr>
+<h3>15-A. Dify</h3>
+<p><strong>URL:</strong> <a href="https://dify.ai">https://dify.ai</a>
+<strong>Category:</strong> No-Code RAG Builders</p>
+<p><strong>One-line:</strong> Open-source, visual workflow builder for AI apps — includes RAG knowledge bases, agent pipelines, and observability in one canvas.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+Dify offers a drag-and-drop workflow canvas where nodes represent LLM calls, knowledge base retrievals, conditionals, code execution, and HTTP requests. Upload documents → Dify indexes them → connect retrieval to any workflow. Supports PDFs, PPTs, text files. v1.13.0 (2026) adds Human Input node for human-in-the-loop approval. Plans: Free (Sandbox) → $159/mo (Team) → Enterprise custom. Self-hosted option (free, open-source).</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+For teams building AI applications without dedicated engineering resources, Dify provides a complete visual environment — no code for basic RAG pipelines. Self-hosting (Docker) makes it attractive for data-sensitive organizations. 22K+ GitHub stars.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Dify requires operational management of the pipeline (even self-hosted). The RAG knowledge base is Dify-internal — not exposable via standard API/MCP to external consumers. Teams must rebuild the Dify pipeline if they want to use a different AI framework. Contexter is framework-agnostic infrastructure; Dify is a framework with RAG built in.</p>
+<p><strong>Trajectory:</strong> Getting <strong>better</strong> (growing community, frequent releases). But Dify is moving toward AI agent builder, not pure context infrastructure. The RAG component is a feature within Dify, not a standalone service.</p>
+<p><strong>Sources:</strong> <a href="https://dify.ai/pricing">Dify Pricing</a> | <a href="https://similarlabs.com/blog/dify-review">Dify Review 2026</a> | <a href="https://dify.ai/blog/2025-dify-summer-highlights">2025 Dify Summer Highlights</a></p>
+<hr>
+<h2>Category 9: Manual Alternative</h2>
+<p><em>The real incumbent. The behavior Contexter must displace.</em></p>
+<hr>
+<h3>15. Copy-Paste into Prompt</h3>
+<p><strong>URL:</strong> N/A — this is a behavior, not a product
+<strong>Category:</strong> Manual Alternative</p>
+<p><strong>One-line:</strong> User manually copies relevant text from documents and pastes it into the AI prompt for each conversation — the default behavior of every knowledge worker using AI today.</p>
+<p><strong>How it solves &quot;give AI my context&quot; differently:</strong>
+The user acts as the retrieval layer. They decide which documents are relevant, copy the relevant passages, and paste them into the chat. This is the dominant workflow globally. As of early 2026, OpenAI even redesigned ChatGPT&#39;s paste behavior (auto-converting pastes &gt;5,000 chars to file attachments) precisely because this behavior is so common it was degrading UX.</p>
+<p><strong>Why prospect might choose this over Contexter:</strong>
+Zero cost. Zero setup. Complete control over what context the AI sees. Works with every AI tool. No API, no infrastructure, no vendor relationship. For occasional document Q&amp;A (once a week, one document), the ROI of Contexter is zero.</p>
+<p><strong>Critical weakness Contexter addresses:</strong>
+Does not scale. Every conversation starts from zero. Human selection introduces bias — the user might not know which passage is relevant. No programmatic access — other applications cannot query the context. Context window limits mean large documents must be summarized before pasting, introducing information loss. Contexter automates the entire pipeline and makes the knowledge accessible to machines, not just humans.</p>
+<p><strong>Trajectory:</strong> Getting <strong>worse</strong> as a behavior (more documents, more AI usage, more sessions = more re-uploading), creating the pull toward Contexter. The average developer who manually re-pastes their API docs into every Claude session is the highest-intent Contexter prospect.</p>
+<p><strong>Sources:</strong> <a href="https://dev.to/teguh_coding/why-i-stopped-copy-pasting-from-chatgpt-and-what-i-do-now-instead-3d8g">Why I Stopped Copy-Pasting From ChatGPT</a> | <a href="https://www.gsmgotech.com/2026/03/openai-just-changed-how-chatgpt-handles.html">OpenAI Changed How ChatGPT Handles Long Text 2026</a></p>
+<hr>
+<h2>Synthesis: Competitive Positioning Map</h2>
+<table>
+<thead>
+<tr>
+<th>Competitor</th>
+<th>Persistent</th>
+<th>API/MCP</th>
+<th>Multi-tenant</th>
+<th>Model-agnostic</th>
+<th>Self-serve</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Contexter</strong></td>
+<td>YES</td>
+<td>YES (both)</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>ChatGPT File Upload</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Claude Attachments</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Claude Projects</td>
+<td>YES</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Custom GPTs</td>
+<td>YES</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>NotebookLM</td>
+<td>YES</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Notion AI</td>
+<td>YES</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>Obsidian+AI</td>
+<td>YES</td>
+<td>DIY</td>
+<td>NO</td>
+<td>PARTIAL</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Mem.ai</td>
+<td>YES</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Glean</td>
+<td>YES</td>
+<td>LIMITED</td>
+<td>YES</td>
+<td>NO</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>Microsoft Copilot</td>
+<td>YES</td>
+<td>NO</td>
+<td>PARTIAL</td>
+<td>NO</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>Mem0</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Zep</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Filesystem MCP</td>
+<td>N/A</td>
+<td>MCP only</td>
+<td>NO</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Pinecone</td>
+<td>YES</td>
+<td>YES</td>
+<td>DIY</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Dify</td>
+<td>YES</td>
+<td>NO</td>
+<td>DIY</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Copy-Paste</td>
+<td>NO</td>
+<td>NO</td>
+<td>NO</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+</tbody></table>
+<p><strong>Key insight:</strong> No indirect competitor simultaneously offers all five properties Contexter has. The closest are Pinecone (with Pinecone Assistant) and Mem0 — but both are category-specific (vector infra and conversation memory respectively), not general document context storage.</p>
+<hr>
+<h2>Strategic Observations</h2>
+<ol>
+<li><p><strong>The walled-garden trend is accelerating.</strong> Every major AI platform (OpenAI, Anthropic, Google) is building persistent context features locked to their model. This creates the market for model-agnostic context infrastructure like Contexter.</p>
+</li>
+<li><p><strong>MCP is the emerging distribution channel.</strong> Filesystem MCP servers are crude, but they validate that developers want standardized context access. Contexter&#39;s MCP server is a direct answer to this need at production quality.</p>
+</li>
+<li><p><strong>The manual alternative is the real incumbent.</strong> The &quot;copy-paste&quot; behavior represents ~95% of the current market. Contexter&#39;s primary conversion story is developer time saved, not displacement of another SaaS product.</p>
+</li>
+<li><p><strong>Pinecone Assistant is the closest technical competitor.</strong> Monitor closely — if Pinecone ships native MCP and turnkey multi-tenancy, the technical gap narrows significantly.</p>
+</li>
+<li><p><strong>Enterprise knowledge platforms (Glean, Copilot) own the large enterprise segment</strong> with permission-aware retrieval and 100+ connectors. Contexter&#39;s beachhead is the developer/startup segment where procurement cycles don&#39;t exist.</p>
+</li>
+</ol>
+<hr>
+<p><em>Research by Lead/MarketAnalysis | Operator: Eidolon | 2026-03-27</em>
+<em>All pricing data as of Q1 2026. Market data has a shelf-life of ~6 months.</em></p>
+
+</body>
+</html>

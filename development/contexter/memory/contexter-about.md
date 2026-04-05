@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-04-02 (session 229 — quality system, reglaments, orch skills alignment)
+> Last updated: 2026-04-05 (session 231 — cdn.contexter.cc domain, co-founder hub, deployed URLs)
 ---
 
 ## Identity
@@ -59,6 +59,8 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | PG migrations | `drizzle-pg/` (0000–0012, 13 files) |
 | Tests | `tests/` (chunker, embedder, content-filter, parsers, rag, vectorstore — 6 files, 1682 lines) |
 | Memory | `memory/` |
+| Co-founder docs | `docs/artem/` (29 files MD+HTML, index.html, convert.ts) |
+| Research | `nospace/docs/research/` (GTM, competitors, Reddit guide) |
 
 ## Deployed
 
@@ -72,6 +74,9 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Circuit breakers | https://api.contexter.cc/health/circuits |
 | MCP endpoint | https://api.contexter.cc/sse?token={TOKEN} |
 | Monitoring | http://46.62.220.214:19999 (Netdata) |
+| CDN (R2 public) | https://cdn.contexter.cc |
+| Co-founder hub | https://cdn.contexter.cc/public/artem/index.html |
+| Demo video | https://cdn.contexter.cc/public/contexter-screencast.mp4 |
 
 ## Server (Hetzner)
 
@@ -143,6 +148,7 @@ Jurisdiction: user KZ, billing entity AR (RU citizen), server FI (EU). Contact: 
 | Zone (contexter.cc) | fed8fa9deb10ab0e414ab739da428c03 |
 | R2 Bucket | contexter-files (EEUR) |
 | Pages project | contexter-web (contexter.cc custom domain) |
+| R2 CDN domain | cdn.contexter.cc (public access, video + knowledge hub) |
 | D1 Database (legacy) | contexter-db (26e9545b-9d18-48fc-93b7-4493d505a318) |
 | Domain | contexter.cc (CF Registrar, auto-renew 2027-03-27) |
 

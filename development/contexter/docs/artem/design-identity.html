@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>design-identity — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter — Design Identity</h1>
+<blockquote>
+<p>Rooted in Bauhaus. Expressed through Swiss typography. Black, white, blue.
+RAG source: Qdrant bauhaus_knowledge (10,288 vectors, 14 books + 14 journals)</p>
+</blockquote>
+<hr>
+<h2>Core Principles (from RAG)</h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Source</th>
+<th>Application</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Neue Typographie</strong></td>
+<td>Zeitschrift: &quot;Single-typeface, lowercase, functional layout&quot;</td>
+<td>One mono typeface. Lowercase dominant. No decoration.</td>
+</tr>
+<tr>
+<td><strong>Geringste Mittel, größte Wirkung</strong></td>
+<td>Gropius P-05: &quot;minimum means, maximum effect&quot;</td>
+<td>Every pixel earns its place. No ornament.</td>
+</tr>
+<tr>
+<td><strong>Keine Symmetrie</strong></td>
+<td>Mondrian P-17: &quot;through all things equilibrium must be created without symmetry&quot;</td>
+<td>Asymmetric layouts. Modular grid with intentional tension.</td>
+</tr>
+<tr>
+<td><strong>Ökonomisches Arbeitsprinzip</strong></td>
+<td>Moholy-Nagy: &quot;every structural element bears only what is necessary&quot;</td>
+<td>No redundant UI. Data is the interface.</td>
+</tr>
+<tr>
+<td><strong>Reduktion</strong></td>
+<td>Gropius: &quot;Einfachheit im Vielfachen&quot; — simplicity in multiplicity</td>
+<td>Three colors. Two weights. One typeface.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Logo</h2>
+<p><strong>con·text·er</strong></p>
+<ul>
+<li>Font: JetBrains Mono (monospace, geometric construction)</li>
+<li>Weight: 500 (medium)</li>
+<li>Letter-spacing: -4% (-0.04em)</li>
+<li>&quot;text&quot; highlighted in <code>--accent</code> blue (#1E3EA0)</li>
+<li>Всё lowercase</li>
+<li>No logomark — the word IS the mark</li>
+</ul>
+<pre><code>con[text]er
+    ^^^^
+    blue
+</code></pre>
+<p><strong>Rationale:</strong> Mono font = Bauhaus Neue Typographie (systematic, constructed letterform). Negative tracking = density, tension (Mondrian asymmetric compression). &quot;text&quot; highlight = the product&#39;s essence made visible.</p>
+<hr>
+<h2>Color System</h2>
+<p>3 colors. Period.</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--black</code></td>
+<td>#0A0A0A</td>
+<td>Text, borders, primary content</td>
+</tr>
+<tr>
+<td><code>--white</code></td>
+<td>#FAFAFA</td>
+<td>Background, negative space</td>
+</tr>
+<tr>
+<td><code>--accent</code></td>
+<td>#1E3EA0</td>
+<td>Interactive elements, &quot;text&quot; highlight, links, focus</td>
+</tr>
+</tbody></table>
+<h3>Extended (functional only)</h3>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--gray-80</code></td>
+<td>#333333</td>
+<td>Secondary text</td>
+</tr>
+<tr>
+<td><code>--gray-50</code></td>
+<td>#808080</td>
+<td>Tertiary text, disabled</td>
+</tr>
+<tr>
+<td><code>--gray-20</code></td>
+<td>#CCCCCC</td>
+<td>Borders, dividers</td>
+</tr>
+<tr>
+<td><code>--gray-05</code></td>
+<td>#F2F2F2</td>
+<td>Surface (elevation.1)</td>
+</tr>
+<tr>
+<td><code>--error</code></td>
+<td>#D32F2F</td>
+<td>Error state only</td>
+</tr>
+<tr>
+<td><code>--success</code></td>
+<td>#2E7D32</td>
+<td>Success state only</td>
+</tr>
+</tbody></table>
+<p><strong>Rule:</strong> Chromatic color &lt; 5% of any viewport. Blue appears ONLY where interaction or emphasis is needed.</p>
+<hr>
+<h2>Typography</h2>
+<p><strong>One typeface: JetBrains Mono.</strong></p>
+<p>No secondary font. Mono for everything — headings, body, labels, code, data. This IS the Swiss/Bauhaus commitment: single constructed typeface family.</p>
+<h3>Scale (6 sizes)</h3>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Size</th>
+<th>Weight</th>
+<th>Line-height</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--type-display</code></td>
+<td>48px</td>
+<td>700</td>
+<td>1.0</td>
+<td>Hero headline</td>
+</tr>
+<tr>
+<td><code>--type-h1</code></td>
+<td>32px</td>
+<td>700</td>
+<td>1.1</td>
+<td>Page heading</td>
+</tr>
+<tr>
+<td><code>--type-h2</code></td>
+<td>20px</td>
+<td>500</td>
+<td>1.2</td>
+<td>Section heading</td>
+</tr>
+<tr>
+<td><code>--type-body</code></td>
+<td>14px</td>
+<td>400</td>
+<td>1.5</td>
+<td>Body text, content</td>
+</tr>
+<tr>
+<td><code>--type-label</code></td>
+<td>12px</td>
+<td>500</td>
+<td>1.2</td>
+<td>Labels, metadata</td>
+</tr>
+<tr>
+<td><code>--type-caption</code></td>
+<td>10px</td>
+<td>400</td>
+<td>1.2</td>
+<td>Timestamps, hints</td>
+</tr>
+</tbody></table>
+<h3>Rules</h3>
+<ul>
+<li><strong>Lowercase dominant</strong> — headings, buttons, navigation: sentence case or all lowercase</li>
+<li><strong>Letter-spacing:</strong> -0.02em for display/h1, 0em for body, +0.04em for label (tracking opens at small sizes)</li>
+<li><strong>No italic</strong> — weight only for emphasis (400 vs 500 vs 700)</li>
+<li><strong>Monospace alignment</strong> — exploit fixed-width for vertical alignment in tables, data, grids</li>
+</ul>
+<hr>
+<h2>Grid System</h2>
+<p><strong>Modular grid: 8px base, 64px module.</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│  8px │ 8px │ 8px │ 8px │ 8px │ 8px │ 8px │ 8px │    │
+│  ←────────── 64px module ──────────→                 │
+│                                                      │
+│  Columns: 12 × 64px = 768px content                  │
+│  Gutter: 16px (2 modules)                            │
+│  Margin: 32px (4 modules)                            │
+│  Max width: 1280px                                   │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<h3>Asymmetric layouts (Mondrian principle)</h3>
+<p><strong>Hero (screen 1):</strong></p>
+<pre><code>┌─────────────────────────────────────────┐
+│                                         │
+│  ┌─────────────────┐                    │
+│  │ con[text]er      │                    │
+│  │                  │                    │
+│  │ any context →    │  ┌──────────────┐  │
+│  │ knowledge api    │  │  upload      │  │
+│  │                  │  │  zone        │  │
+│  └─────────────────┘  └──────────────┘  │
+│                                         │
+│  8col                    4col           │
+└─────────────────────────────────────────┘
+</code></pre>
+<p><strong>Upload (screen 2):</strong> full-width, horizontal pipeline stages</p>
+<p><strong>Dashboard (screen 3):</strong> asymmetric 2-column, data left (8col), meta right (4col)</p>
+<hr>
+<h2>Spacing</h2>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--space-0</code></td>
+<td>0px</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>--space-1</code></td>
+<td>4px</td>
+<td>Inline icon-text gap</td>
+</tr>
+<tr>
+<td><code>--space-2</code></td>
+<td>8px</td>
+<td>Tight padding (badges)</td>
+</tr>
+<tr>
+<td><code>--space-3</code></td>
+<td>16px</td>
+<td>Component padding</td>
+</tr>
+<tr>
+<td><code>--space-4</code></td>
+<td>24px</td>
+<td>Section gap</td>
+</tr>
+<tr>
+<td><code>--space-5</code></td>
+<td>32px</td>
+<td>Major section gap</td>
+</tr>
+<tr>
+<td><code>--space-6</code></td>
+<td>48px</td>
+<td>Page section gap</td>
+</tr>
+<tr>
+<td><code>--space-7</code></td>
+<td>64px</td>
+<td>Module boundary</td>
+</tr>
+<tr>
+<td><code>--space-8</code></td>
+<td>96px</td>
+<td>Hero breathing room</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Components (minimal set for MVP 3 screens)</h2>
+<h3>Button</h3>
+<ul>
+<li>Border: 1px solid <code>--black</code></li>
+<li>Background: transparent (ghost default)</li>
+<li>Text: JetBrains Mono 14px/500, <code>--black</code></li>
+<li>Padding: 8px 16px</li>
+<li>Corner: 0px (sharp — Bauhaus: no decoration)</li>
+<li>Hover: background <code>--black</code>, text <code>--white</code> (invert)</li>
+<li>Primary variant: background <code>--accent</code>, text <code>--white</code>, no border</li>
+</ul>
+<h3>Input</h3>
+<ul>
+<li>Border: 1px solid <code>--gray-20</code></li>
+<li>Background: <code>--white</code></li>
+<li>Text: JetBrains Mono 14px/400</li>
+<li>Padding: 12px 16px</li>
+<li>Corner: 0px</li>
+<li>Focus: border <code>--accent</code>, 2px</li>
+</ul>
+<h3>Drop zone</h3>
+<ul>
+<li>Border: 1px dashed <code>--gray-20</code></li>
+<li>Background: <code>--gray-05</code></li>
+<li>Hover: border <code>--accent</code>, background white</li>
+<li>Active (drag over): border solid <code>--accent</code>, 2px</li>
+</ul>
+<h3>Pipeline indicator</h3>
+<ul>
+<li>Horizontal row of stages</li>
+<li>Each stage: mono text + status dot</li>
+<li>Active: <code>--accent</code> dot + bold text</li>
+<li>Done: <code>--black</code> dot</li>
+<li>Pending: <code>--gray-50</code> dot</li>
+<li>Error: <code>--error</code> dot</li>
+</ul>
+<h3>Data table</h3>
+<ul>
+<li>Header: JetBrains Mono 12px/500, <code>--gray-80</code>, uppercase, +0.04em tracking</li>
+<li>Row: JetBrains Mono 14px/400, <code>--black</code></li>
+<li>Border: bottom 1px <code>--gray-20</code> per row</li>
+<li>No alternating row colors</li>
+<li>Mono alignment = columns naturally align</li>
+</ul>
+<h3>Status badge</h3>
+<ul>
+<li>Background: transparent</li>
+<li>Border: 1px solid current-color</li>
+<li>Text: 10px/500, uppercase, +0.04em</li>
+<li>Colors: <code>--accent</code> (processing), <code>--success</code> (ready), <code>--error</code> (error), <code>--gray-50</code> (pending)</li>
+</ul>
+<hr>
+<h2>Motion</h2>
+<p>Minimal. Functional only.</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--duration-instant</code></td>
+<td>100ms</td>
+<td>Hover, focus</td>
+</tr>
+<tr>
+<td><code>--duration-fast</code></td>
+<td>200ms</td>
+<td>State change</td>
+</tr>
+<tr>
+<td><code>--duration-standard</code></td>
+<td>300ms</td>
+<td>Panel open/close</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Easing: <code>ease-out</code> for enter, <code>ease-in</code> for exit</li>
+<li><strong>No decorative animations.</strong> No bounces. No springs. No parallax.</li>
+<li><code>prefers-reduced-motion</code>: all durations → 0ms</li>
+</ul>
+<hr>
+<h2>Visual Identity Summary</h2>
+<pre><code>Bauhaus root
+  → Neue Typographie (mono, lowercase, functional)
+  → Sparsamkeit (3 colors, 1 font, 0px radius)
+  → Asymmetrisches Gleichgewicht (modular grid, tension)
+  → Materialwahrheit (screen as medium, no skeuomorphism)
+  → Ökonomie (data IS the interface, no decoration)
+
+Swiss expression
+  → JetBrains Mono everywhere
+  → Black / White / Blue only
+  → Sharp corners (0px radius)
+  → Dense data, generous white space
+  → Modular 64px grid with 8px atom
+</code></pre>
+<p><strong>Contexter looks like:</strong> a well-typeset technical document that happens to be interactive. The Economist meets Terminal meets Bauhaus Zeitschrift. Data-dense, typographically rigorous, visually calm.</p>
+
+</body>
+</html>

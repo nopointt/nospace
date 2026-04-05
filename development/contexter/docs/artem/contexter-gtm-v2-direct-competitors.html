@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-v2-direct-competitors — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter — Direct Competitive Analysis</h1>
+<h2>Frame: &quot;Context Storage for AI&quot;</h2>
+<p><strong>Analyst:</strong> Lead/MarketAnalysis
+<strong>Date:</strong> 2026-03-27
+<strong>Status:</strong> Complete</p>
+<hr>
+<h2>What Contexter Is (Research Frame)</h2>
+<p>Contexter = <strong>persistent context layer for AI models.</strong>
+Upload any document (PDF, DOCX, audio, video, images — 15 formats) → auto-parsed, chunked, embedded, indexed → AI models access context via REST API or MCP (Model Context Protocol) → answers with source citations. Multi-tenant, user isolation. Self-hosted.</p>
+<p>The positioning analogy: <strong>like S3 stores files, Contexter stores context.</strong></p>
+<p><strong>Direct competitor criteria (4+ required):</strong></p>
+<ol>
+<li>Accepts document uploads (not just text/URLs)</li>
+<li>Provides programmatic access (API, MCP, or SDK)</li>
+<li>Context persists (not per-session)</li>
+<li>Works across multiple AI models (not locked to one)</li>
+<li>Primary purpose is context/knowledge management for AI</li>
+</ol>
+<hr>
+<h2>TOP 5 DIRECT COMPETITORS</h2>
+<hr>
+<h3>1. Ragie</h3>
+<p><strong>URL:</strong> <a href="https://www.ragie.ai/">https://www.ragie.ai/</a></p>
+<p><strong>One-line description:</strong> Fully managed RAG-as-a-Service with real-time document indexing, multimodal support, and a retrieval API for AI agents, assistants, and apps.</p>
+<p><strong>How they frame themselves:</strong>
+Ragie calls itself &quot;The Context Engine for Agents, Assistants, and Apps.&quot; Launched August 2024. $5.5M seed from Craft Ventures, Saga VC, Chapter One, Valor. Tagline: fully managed RAG-as-a-Service.</p>
+<p><strong>Why direct competitor in &quot;Context Storage&quot; frame:</strong></p>
+<ul>
+<li>Accepts document and image uploads via POST /documents endpoint</li>
+<li>Persistent indexing (not per-session) with automatic chunking and embedding</li>
+<li>REST API (/retrievals) accessible from any AI model</li>
+<li>Native connectors: Notion, Google Drive, Slack, Confluence, Jira, Salesforce, Dropbox, Gmail</li>
+<li>All major document formats + audio + video</li>
+<li>Multi-tenant partitions with user isolation</li>
+<li>Rerank, Hybrid Search, Hierarchical Search, Entity Extraction out of the box</li>
+</ul>
+<p>Meets all 5 criteria.</p>
+<p><strong>Key differentiator vs Contexter:</strong>
+Ragie has <strong>managed connectors</strong> (OAuth-based sync with SaaS apps like Notion, Google Drive, Slack) — Contexter is upload-first. Ragie also has SOC 2 Type II, HIPAA, GDPR compliance. More mature enterprise trust story.</p>
+<p><strong>Weakness vs Contexter:</strong>
+Cloud-only SaaS. No self-hosted option. Data leaves your infrastructure. Pricing by page volume makes cost unpredictable at scale. No MCP server — REST API only.</p>
+<p><strong>Pricing (as of 2026-03-27):</strong></p>
+<ul>
+<li>Developer (Free): 1,000 docs/images, 1,000 pages processing, unlimited retrievals</li>
+<li>Starter: $100/month — 10,000 pages included, $0.02/page (fast)/$0.05/page (hi-res) overage</li>
+<li>Pro: $500/month — 60,000 pages included</li>
+<li>Enterprise: custom</li>
+<li>Storage: $0.002/page/month + $0.12/GB/month</li>
+<li>Audio: $0.0067/min | Video: $0.025/min</li>
+</ul>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://www.ragie.ai/">https://www.ragie.ai/</a></li>
+<li><a href="https://www.ragie.ai/pricing">https://www.ragie.ai/pricing</a></li>
+<li><a href="https://www.ragie.ai/blog/intoducing-ragie-fully-managed-rag-as-a-service">https://www.ragie.ai/blog/intoducing-ragie-fully-managed-rag-as-a-service</a></li>
+</ul>
+<hr>
+<h3>2. Graphlit</h3>
+<p><strong>URL:</strong> <a href="https://www.graphlit.com/">https://www.graphlit.com/</a></p>
+<p><strong>One-line description:</strong> Cloud-native context layer for AI agents that ingests multimodal content (30+ connectors) and builds a knowledge graph with entity extraction, temporal state, and managed RAG over a single GraphQL API.</p>
+<p><strong>How they frame themselves:</strong>
+&quot;Context Layer for AI Agents&quot; / &quot;The Context Layer AI Agents Actually Need.&quot; Positions as complete semantic infrastructure: one API for ingestion + extraction + enrichment + storage + retrieval. Published a direct feature comparison blog post targeting ex-Carbon customers.</p>
+<p><strong>Why direct competitor in &quot;Context Storage&quot; frame:</strong></p>
+<ul>
+<li>Accepts any content format (PDFs, emails, meeting transcripts, images, Slack messages)</li>
+<li>30+ data connectors (Slack, Gmail, GitHub, Notion, Linear, Jira, Google Drive, OneDrive, S3, RSS)</li>
+<li>Persistent knowledge graph (not per-session) with entity/relationship extraction</li>
+<li>GraphQL API accessible from any AI model</li>
+<li>Multi-tenant with user/project isolation</li>
+<li>MCP integration available (Cursor, Windsurf, Claude Desktop, VS Code)</li>
+<li>Knowledge graph supports GraphRAG and multi-hop reasoning</li>
+</ul>
+<p>Meets all 5 criteria.</p>
+<p><strong>Key differentiator vs Contexter:</strong>
+Knowledge graph architecture — Graphlit auto-extracts entities (Person, Organization, Place, Event), builds relationship graphs, enables multi-hop reasoning across sources. This is GraphRAG, not flat vector search. Also has the most comprehensive connector ecosystem in this category.</p>
+<p><strong>Weakness vs Contexter:</strong>
+Cloud-only, no self-hosted option. GraphQL API has higher learning curve than REST. Credit-based pricing is opaque. No clear MCP-first positioning. Heavier infrastructure than Contexter — overkill for simple document Q&amp;A.</p>
+<p><strong>Pricing (as of 2026-03-27):</strong></p>
+<ul>
+<li>Free: 100 credits/month (no credit card required)</li>
+<li>Starter, Growth tiers: pricing not publicly listed (requires signup to see credit pricing)</li>
+<li>Credits cover Azure AI extraction + embedding + entity extraction + search indexing + conversations</li>
+<li>Enterprise: custom</li>
+</ul>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://www.graphlit.com/">https://www.graphlit.com/</a></li>
+<li><a href="https://www.graphlit.com/blog/context-layer-ai-agents-need">https://www.graphlit.com/blog/context-layer-ai-agents-need</a></li>
+<li><a href="https://www.graphlit.com/blog/feature-comparison-of-rag-as-a-service-providers">https://www.graphlit.com/blog/feature-comparison-of-rag-as-a-service-providers</a></li>
+<li><a href="https://docs.graphlit.dev/getting-started/overview">https://docs.graphlit.dev/getting-started/overview</a></li>
+</ul>
+<hr>
+<h3>3. Morphik</h3>
+<p><strong>URL:</strong> <a href="https://www.morphik.ai/">https://www.morphik.ai/</a></p>
+<p><strong>One-line description:</strong> Open-source multimodal document search and context store for AI apps — embeds whole pages (image + text combined, no OCR loss), auto-builds a knowledge graph, exposes REST API + MCP + SDK.</p>
+<p><strong>How they frame themselves:</strong>
+&quot;The most accurate document search and store for building AI apps.&quot; YC X25 (Winter 2025 cohort). Source-available under BSL 1.1. Self-positions as superior to traditional RAG by embedding entire page images rather than extracted text, eliminating parsing loss on diagrams/schematics.</p>
+<p><strong>Why direct competitor in &quot;Context Storage&quot; frame:</strong></p>
+<ul>
+<li>Accepts PDF, images, video, technical diagrams — multimodal-first</li>
+<li>REST API + MCP (native Model Context Protocol support, documented)</li>
+<li>Persistent knowledge graph built automatically during ingestion</li>
+<li>Works with Claude, Open Web UI, and any MCP client</li>
+<li>Multi-tenant with RBAC and user isolation</li>
+<li>Self-hostable (Docker) or cloud-managed</li>
+<li>96% benchmark accuracy claim, 200ms retrieval latency, 1M+ document scale</li>
+</ul>
+<p>Meets all 5 criteria. <strong>Closest architecture match to Contexter.</strong></p>
+<p><strong>Key differentiator vs Contexter:</strong>
+ColPali-based visual embedding — embeds the entire page as an image+text unit rather than extracting text then embedding. This means zero context loss from complex diagrams, technical schematics, tables. Most accurate retrieval for visual documents. Also has self-hosted option with open-source core.</p>
+<p><strong>Weakness vs Contexter:</strong>
+BSL 1.1 license (not true open source — commercial use above $2K/month revenue requires paid license). Smaller team (YC X25, very early). GPU-dependent infrastructure for visual embedding makes self-hosting expensive. Less mature than Ragie/Graphlit.</p>
+<p><strong>Pricing (as of 2026-03-27):</strong></p>
+<ul>
+<li>Free: $0/month — 200 pages, 3 Research-Agent calls/month, community Discord</li>
+<li>Pro: $59/month — 2,000 pages, 30 Research-Agent calls, priority GPU queue, $0.03/page overage</li>
+<li>Team: $799/month — 10 GB storage, unlimited queries, dedicated VPC, auto-scale GPU ($2.5/GPU-hour)</li>
+<li>Enterprise: custom — BYOC/on-prem, SOC 2, HIPAA, custom models</li>
+</ul>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://www.morphik.ai/">https://www.morphik.ai/</a></li>
+<li><a href="https://www.morphik.ai/pricing">https://www.morphik.ai/pricing</a></li>
+<li><a href="https://www.morphik.ai/docs/using-morphik/mcp">https://www.morphik.ai/docs/using-morphik/mcp</a></li>
+<li><a href="https://github.com/morphik-org/morphik-core">https://github.com/morphik-org/morphik-core</a></li>
+<li><a href="https://www.ycombinator.com/companies/morphik">https://www.ycombinator.com/companies/morphik</a></li>
+</ul>
+<hr>
+<h3>4. Vectorize</h3>
+<p><strong>URL:</strong> <a href="https://vectorize.io/">https://vectorize.io/</a></p>
+<p><strong>One-line description:</strong> End-to-end managed RAG pipeline service — connects to document sources, processes pages (including visual content), and exposes a Retrieval API with built-in reranking and automated RAG evaluation.</p>
+<p><strong>How they frame themselves:</strong>
+&quot;AI Agent Memory Platform.&quot; Positions as production RAG infrastructure that handles document connectors, chunking, embedding, and retrieval in a managed pipeline. Developer-friendly with emphasis on RAG evaluation tooling.</p>
+<p><strong>Why direct competitor in &quot;Context Storage&quot; frame:</strong></p>
+<ul>
+<li>Document upload + connector-based ingestion (PDFs, Word, PowerPoint + data sources)</li>
+<li>REST API (Retrieval API) for programmatic access</li>
+<li>Persistent pipeline with automatic re-sync</li>
+<li>Model-agnostic — works with any LLM via API</li>
+<li>Multi-tenant pipelines with isolation</li>
+<li>Built-in reranking models and RAG evaluation (automated quality metrics)</li>
+</ul>
+<p>Meets all 5 criteria.</p>
+<p><strong>Key differentiator vs Contexter:</strong>
+&quot;Vectorize Iris&quot; intelligent chunking + automated RAG evaluation — the platform scores its own retrieval quality and surfaces accuracy metrics. This is operationally valuable for teams that need to monitor RAG quality over time, not just ship it. Also has vision model processing for complex tables/images.</p>
+<p><strong>Weakness vs Contexter:</strong>
+Cloud-only, no self-hosted. Pipeline model limits (2 on Starter, 3 on Pro) create artificial constraints. No MCP support. Relatively expensive at $99-$399/month for modest page volumes. Less rich document format support vs Ragie or Morphik.</p>
+<p><strong>Pricing (as of 2026-03-27):</strong></p>
+<ul>
+<li>Free: $0/month — 1 pipeline, 1,500 pages/month, 1GB storage, 500 searches/month</li>
+<li>Starter: $99/month — 2 pipelines, 15,000 pages/month, 2GB storage, $0.02/page overage</li>
+<li>Pro: $399/month — 3 pipelines, 65,000 pages/month, 5GB storage, tiered overages</li>
+<li>Enterprise: custom</li>
+</ul>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://vectorize.io/">https://vectorize.io/</a></li>
+<li><a href="https://vectorize.io/pricing">https://vectorize.io/pricing</a></li>
+<li><a href="https://vectorize.io/articles/mem0-alternatives">https://vectorize.io/articles/mem0-alternatives</a></li>
+</ul>
+<hr>
+<h3>5. Langbase Memory</h3>
+<p><strong>URL:</strong> <a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a></p>
+<p><strong>One-line description:</strong> Serverless RAG-as-a-Memory API — upload documents to a persistent vector knowledge base, retrieve context for any LLM with automatic reranking, via REST API and native MCP server.</p>
+<p><strong>How they frame themselves:</strong>
+&quot;AI Memory &amp; RAG API — Serverless Vector Search Engine.&quot; Part of Langbase&#39;s broader developer platform for LLM pipelines. Claims to be &quot;30-50x less expensive than the competition.&quot; Positions memory as a first-class primitive: &quot;millions of personalized RAG knowledge bases&quot; per organization.</p>
+<p><strong>Why direct competitor in &quot;Context Storage&quot; frame:</strong></p>
+<ul>
+<li>Document upload to persistent vector store (PDF, TXT, MD, CSV, code files)</li>
+<li>REST API + native MCP server (upload documents, run pipes, manage workspace from Claude Desktop/IDE)</li>
+<li>Context persists across sessions — named &quot;Memory&quot; objects</li>
+<li>Model-agnostic: works with 100+ LLM providers (OpenAI, Anthropic, Google, etc.)</li>
+<li>Multi-tenant: unlimited end-user memory objects per organization</li>
+<li>Serverless (no infrastructure management)</li>
+</ul>
+<p>Meets all 5 criteria.</p>
+<p><strong>Key differentiator vs Contexter:</strong>
+Langbase Memory is part of a full LLM developer platform (Pipes = agent pipelines, Threads = conversation history, Parser = document processing). The integrated platform means you can build the whole RAG pipeline in one place — memory + agent logic + routing — not just the retrieval layer. Cost claim of 30-50x cheaper than competitors if accurate.</p>
+<p><strong>Weakness vs Contexter:</strong>
+Narrow format support: PDF, TXT, MD, CSV, code files only. No DOCX, no audio, no video — disqualifying for use cases requiring office documents or media. 10MB file size limit. Memory measured in MB not pages (20MB on Individual plan = very small). No self-hosted option. Cloud-only.</p>
+<p><strong>Pricing (as of 2026-03-27):</strong></p>
+<ul>
+<li>Free: $0/month — 500 credits, 5MB memory, 2 memory files, 500 agent runs</li>
+<li>Individual: $100/month — 20K credits, 20MB memory, 20 memory files, unlimited runs</li>
+<li>Growth: $250/month — 75K credits, 50MB memory, 50 memory files, 5 seats</li>
+<li>Enterprise: custom — unlimited memory, SSO, HIPAA, SOC 2</li>
+</ul>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://langbase.com/docs/memory">https://langbase.com/docs/memory</a></li>
+<li><a href="https://langbase.com/pricing">https://langbase.com/pricing</a></li>
+<li><a href="https://langbase.com/docs/mcp-servers">https://langbase.com/docs/mcp-servers</a></li>
+</ul>
+<hr>
+<h2>COMPETITIVE MATRIX (5 Direct Competitors)</h2>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Contexter</th>
+<th>Ragie</th>
+<th>Graphlit</th>
+<th>Morphik</th>
+<th>Vectorize</th>
+<th>Langbase Memory</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Document upload</td>
+<td>Yes (15 formats)</td>
+<td>Yes (multi-format + audio/video)</td>
+<td>Yes (30+ connectors)</td>
+<td>Yes (visual-first)</td>
+<td>Yes (docs + vision)</td>
+<td>Yes (PDF/TXT/MD/CSV only)</td>
+</tr>
+<tr>
+<td>Audio/Video</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Partial</td>
+<td>Partial</td>
+<td>No</td>
+</tr>
+<tr>
+<td>MCP support</td>
+<td>Yes</td>
+<td>No</td>
+<td>Partial (IDE integrations)</td>
+<td>Yes (native)</td>
+<td>No</td>
+<td>Yes (native)</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>GraphQL</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Self-hosted</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (BSL)</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Multi-tenant</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Persistent context</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Model-agnostic</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes (100+ models)</td>
+</tr>
+<tr>
+<td>Knowledge graph</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Pricing entry</td>
+<td>Free/self-hosted</td>
+<td>Free (limited)</td>
+<td>Free (100 credits)</td>
+<td>$0 (200 pages)</td>
+<td>Free (1,500 pages)</td>
+<td>Free (5MB)</td>
+</tr>
+<tr>
+<td>Cloud pricing start</td>
+<td>—</td>
+<td>$100/mo</td>
+<td>Undisclosed</td>
+<td>$59/mo</td>
+<td>$99/mo</td>
+<td>$100/mo</td>
+</tr>
+<tr>
+<td>Open source</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (BSL 1.1)</td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>ALMOST DIRECT (Excluded — Reasons)</h2>
+<p>These products were evaluated and excluded from the Top 5. They match 2-3 criteria but fail on key ones:</p>
+<p><strong>1. Mem0 (mem0.ai)</strong>
+Criteria match: persistent, API, multi-model. Fails: no document upload (conversation/text memory only, not file ingestion). Counts interactions/episodes, not documents. Primary purpose is agent conversation memory, not document context. Excluded. Sources: <a href="https://mem0.ai/pricing">https://mem0.ai/pricing</a>, <a href="https://docs.mem0.ai/platform/overview">https://docs.mem0.ai/platform/overview</a></p>
+<p><strong>2. Zep (getzep.com)</strong>
+Criteria match: persistent, API, multi-model, knowledge graph. Fails: no document upload (ingests &quot;episodes&quot; — text, JSON, message objects, not files). Primarily conversation memory + business data graph. No file ingestion endpoint. Excluded. Sources: <a href="https://www.getzep.com/">https://www.getzep.com/</a>, <a href="https://help.getzep.com/">https://help.getzep.com/</a></p>
+<p><strong>3. Vectara (vectara.com)</strong>
+Criteria match: document upload, API, persistent, multi-model. Fails directness: pricing pivot to $100K+/year SaaS and $250K+ VPC — pure enterprise, not accessible to developers. Out-of-scope price tier vs Contexter&#39;s developer positioning. Excluded. Sources: <a href="https://www.vectara.com/pricing">https://www.vectara.com/pricing</a></p>
+<p><strong>4. LlamaCloud / LlamaParse (llamaindex.ai)</strong>
+Criteria match: document upload, API. Fails: parsing + indexing only, not a full context layer. No retrieval API, no conversational RAG — you still build the query layer yourself. LlamaCloud = infrastructure component, not a complete context storage service. Excluded. Sources: <a href="https://www.llamaindex.ai/pricing">https://www.llamaindex.ai/pricing</a></p>
+<p><strong>5. Reducto (reducto.ai)</strong>
+Criteria match: document upload, API. Fails: document parsing only — extracts and structures text from PDFs/docs but does not embed, index, or provide retrieval. No vector storage. No RAG. An upstream component, not a context layer. $24.5M Series A (YC). Excluded. Sources: <a href="https://reducto.ai/">https://reducto.ai/</a></p>
+<p><strong>6. Airweave (airweave.ai)</strong>
+Criteria match: document upload (DOCX, PDF, PPTX), API, MCP, multi-tenant, model-agnostic. Partial fail: primary focus is <strong>connector-based sync of live SaaS apps</strong> (50+ integrations: Google Drive, Notion, Slack, GitHub, Salesforce) rather than document-upload-first storage. YC S25. $6M seed. Almost qualifies but the product identity is &quot;connect your apps&quot; not &quot;store your documents.&quot; Borderline exclusion. Sources: <a href="https://airweave.ai/">https://airweave.ai/</a>, <a href="https://www.ycombinator.com/companies/airweave">https://www.ycombinator.com/companies/airweave</a></p>
+<p><strong>7. CustomGPT.ai (customgpt.ai)</strong>
+Criteria match: document upload (1400+ formats), API, persistent, multi-model. Fails directness: product identity is end-user chatbot builder, not developer context infrastructure. Target buyer is business owner building a customer support bot, not a developer wiring AI models to context. Limited API programmability relative to the chatbot-first UI orientation. Sources: <a href="https://customgpt.ai/pricing/">https://customgpt.ai/pricing/</a></p>
+<p><strong>8. Pinecone Assistant (pinecone.io/product/assistant)</strong>
+Criteria match: document upload, API, persistent. Partial fail: Pinecone is a vector database first, Assistant is a feature on top of it. Primary buyer is teams already using Pinecone as a DB. Not a standalone context storage product. No MCP. Tightly coupled to Pinecone&#39;s vector DB — not model-agnostic at the storage layer. Sources: <a href="https://www.pinecone.io/product/assistant/">https://www.pinecone.io/product/assistant/</a></p>
+<hr>
+<h2>#1 NON-PRODUCT COMPETITOR</h2>
+<p><strong>The manual RAG stack assembled from parts.</strong></p>
+<p>This is the dominant behavior pattern Contexter displaces:</p>
+<pre><code>Developer behavior today (no Contexter):
+1. Choose a vector DB (Pinecone / Weaviate / Chroma / pgvector)
+2. Choose a document parser (LlamaParse / Reducto / Docling / Unstructured.io)
+3. Write chunking logic
+4. Choose an embedding model (OpenAI / Cohere / local)
+5. Write retrieval logic (vector search + optional reranking)
+6. Wire it all together with LangChain / LlamaIndex
+7. Build metadata filtering and multi-tenant isolation from scratch
+8. Host, monitor, update every component separately
+</code></pre>
+<p>This &quot;DIY RAG stack&quot; pattern is not a product but represents the dominant competitive force in the market. It is chosen when:</p>
+<ul>
+<li>Engineering team has capacity and preferences for control</li>
+<li>Cost sensitivity is high (each component can be minimized separately)</li>
+<li>Existing infrastructure already includes a vector DB</li>
+<li>No deadline pressure</li>
+</ul>
+<p><strong>Why it matters for Contexter positioning:</strong>
+The key message to displace this pattern is not &quot;better than Ragie&quot; — it&#39;s &quot;why build 7 components when you can <code>POST /documents</code> and <code>GET /query</code>?&quot; The self-hosted option directly addresses the control/data-sovereignty objection that keeps teams on the DIY path.</p>
+<hr>
+<h2>KEY STRATEGIC INSIGHTS</h2>
+<p><strong>1. MCP is a genuine differentiator in 2026.</strong>
+Only Morphik and Langbase have native MCP support among the 5 direct competitors. Ragie and Vectorize have no MCP. Graphlit has IDE integrations but not a clean MCP server. Contexter&#39;s MCP-first positioning is ahead of the market curve.</p>
+<p><strong>2. Self-hosted is a small-but-growing segment.</strong>
+Only Morphik offers a self-hosted option (BSL license, GPU-dependent). Contexter is the only pure-cloud + self-hosted player with a permissive license. For regulated industries, financial services, and privacy-conscious teams — this is a real wedge.</p>
+<p><strong>3. Audio/video ingestion is rare.</strong>
+Only Ragie and Graphlit handle audio/video among direct competitors. Langbase, Vectorize, and Morphik (partially) do not. Contexter&#39;s 15-format claim including audio/video is a meaningful breadth advantage.</p>
+<p><strong>4. Pricing compression is aggressive.</strong>
+Ragie at $100/month, Vectorize at $99/month, Morphik at $59/month. The market is converging on $60-100/month entry pricing for the first meaningful tier. Langbase&#39;s Individual plan at $100/month is the most expensive relative to its memory limits (20MB). This creates a pricing opportunity for Contexter at the developer tier.</p>
+<p><strong>5. The market has no dominant winner.</strong>
+Ragie (launched Aug 2024) is the most mature brand in the &quot;RAG-as-a-Service&quot; framing. Graphlit has the most sophisticated architecture (knowledge graphs). Morphik has the best technical story for complex documents. None has escaped the &quot;developer tool&quot; ceiling to become infrastructure-tier. The &quot;Context Storage&quot; reframe is an available positioning move — no one owns it clearly.</p>
+<hr>
+<h2>SOURCES</h2>
+<ul>
+<li><a href="https://www.ragie.ai/">Ragie — The Context Engine for Agents</a></li>
+<li><a href="https://www.ragie.ai/pricing">Ragie Pricing</a></li>
+<li><a href="https://www.ragie.ai/blog/intoducing-ragie-fully-managed-rag-as-a-service">Ragie Launch Announcement</a></li>
+<li><a href="https://www.graphlit.com/">Graphlit — Context Layer for AI Agents</a></li>
+<li><a href="https://www.graphlit.com/blog/context-layer-ai-agents-need">Graphlit Blog — The Context Layer AI Agents Actually Need</a></li>
+<li><a href="https://www.graphlit.com/blog/feature-comparison-of-rag-as-a-service-providers">Graphlit Blog — Feature Comparison of RAG-as-a-Service Providers</a></li>
+<li><a href="https://docs.graphlit.dev">Graphlit Platform Docs</a></li>
+<li><a href="https://www.morphik.ai/">Morphik</a></li>
+<li><a href="https://www.morphik.ai/pricing">Morphik Pricing</a></li>
+<li><a href="https://www.morphik.ai/docs/using-morphik/mcp">Morphik MCP Docs</a></li>
+<li><a href="https://github.com/morphik-org/morphik-core">Morphik GitHub (morphik-core)</a></li>
+<li><a href="https://www.ycombinator.com/companies/morphik">Morphik on Y Combinator</a></li>
+<li><a href="https://vectorize.io/">Vectorize — AI Agent Memory Platform</a></li>
+<li><a href="https://vectorize.io/pricing">Vectorize Pricing</a></li>
+<li><a href="https://langbase.com/docs/memory">Langbase Memory Docs</a></li>
+<li><a href="https://langbase.com/pricing">Langbase Pricing</a></li>
+<li><a href="https://langbase.com/docs/mcp-servers">Langbase MCP Servers</a></li>
+<li><a href="https://mem0.ai/">Mem0 — Memory Layer for AI</a></li>
+<li><a href="https://mem0.ai/pricing">Mem0 Pricing</a></li>
+<li><a href="https://www.getzep.com/">Zep — Context Engineering Platform</a></li>
+<li><a href="https://www.getzep.com/pricing">Zep Pricing</a> (via docs.getzep.com)</li>
+<li><a href="https://www.vectara.com/pricing">Vectara Pricing</a></li>
+<li><a href="https://www.llamaindex.ai/pricing">LlamaIndex / LlamaCloud Pricing</a></li>
+<li><a href="https://reducto.ai/">Reducto — AI Document Parsing</a></li>
+<li><a href="https://www.ycombinator.com/companies/reducto">Reducto on Y Combinator</a></li>
+<li><a href="https://airweave.ai/">Airweave — Context Retrieval Layer</a></li>
+<li><a href="https://www.ycombinator.com/companies/airweave">Airweave on Y Combinator</a></li>
+<li><a href="https://www.pinecone.io/product/assistant/">Pinecone Assistant</a></li>
+<li><a href="https://customgpt.ai/pricing/">CustomGPT.ai Pricing</a></li>
+<li><a href="https://sourceforge.net/software/compare/Graphlit-vs-Ragie/">Graphlit vs Ragie on SourceForge</a></li>
+<li><a href="https://slashdot.org/software/rag-as-a-service-ragaas/">Best RAG-as-a-Service Platforms 2025 (Slashdot)</a></li>
+<li><a href="https://fortune.com/2026/03/23/interloom-ai-agents-raises-16-million-venture-funding/">Interloom raises $16.5M (Fortune, 2026-03-23)</a></li>
+</ul>
+
+</body>
+</html>

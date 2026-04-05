@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-competitor-ragie — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Competitive Intelligence Report: Ragie</h1>
+<p><strong>Prepared by:</strong> Lead/MarketAnalysis
+<strong>Date:</strong> 2026-03-27
+<strong>Subject:</strong> Ragie (ragie.ai) — deep competitive teardown vs. Contexter
+<strong>Context:</strong> Contexter = &quot;Context Storage for AI&quot;. Self-hosted Hetzner, €4.72/mo. 15 formats incl. audio/video. REST + MCP. Developer-first.</p>
+<hr>
+<h2>Document 1: Positioning (Landing Page Teardown)</h2>
+<h3>1. Hero — Verbatim Copy</h3>
+<p><strong>H1:</strong> &quot;Meet Ragie.&quot;
+<strong>Subheadline:</strong> &quot;The Context Engine for Agents, Assistants and Apps&quot;
+<strong>CTA (primary):</strong> &quot;Start for free&quot;
+<strong>CTA (secondary):</strong> &quot;Book a demo&quot;</p>
+<p>Source: <a href="https://www.ragie.ai/">https://www.ragie.ai/</a> (fetched 2026-03-27)</p>
+<hr>
+<h3>2. Five-Second Test</h3>
+<p><strong>Result: YES, it is clear — but with a slight abstraction layer.</strong></p>
+<p>A visitor in 5 seconds reads &quot;Context Engine for Agents, Assistants and Apps&quot; + sees the tagline &quot;Fully Managed RAG-as-a-Service for Developers&quot; in the subtext. The category (RAG infrastructure) is readable immediately. The word &quot;Ragie&quot; itself carries no semantic meaning, so brand clarity depends entirely on the subheadline. The &quot;Meet Ragie.&quot; phrasing adds a friendly warmth but delays the value statement by one beat.</p>
+<p>For a developer audience that knows what RAG is, this passes the 5-second test cleanly. For a non-technical buyer, &quot;Context Engine&quot; requires a second read.</p>
+<hr>
+<h3>3. Category Claim</h3>
+<p>Ragie places itself in two overlapping categories:</p>
+<ol>
+<li><strong>&quot;Context Engine&quot;</strong> — a proprietary category term they are trying to own. Used in the H1. Positions the product as infrastructure-layer rather than an application.</li>
+<li><strong>&quot;RAG-as-a-Service&quot;</strong> — the descriptive category used in PR, docs, and secondary copy. Used in their Product Hunt tagline: &quot;Fully Managed RAG-as-a-Service for Developers.&quot;</li>
+</ol>
+<p>The shift from &quot;RAG-as-a-Service&quot; (functional) to &quot;Context Engine&quot; (conceptual) mirrors a deliberate category creation move — similar to how Twilio called itself &quot;the communication cloud&quot; instead of &quot;SMS API.&quot;</p>
+<p><strong>Implication for Contexter:</strong> Ragie is trying to own a category name. &quot;Context Storage for AI&quot; is similarly category-defining but positions Contexter as a store (passive) vs. Ragie&#39;s engine (active). This is a meaningful distinction to exploit — Contexter stores and serves context reliably; Ragie adds reasoning on top of that but at cloud pricing.</p>
+<hr>
+<h3>4. ICP (Ideal Customer Profile)</h3>
+<p><strong>Primary ICP:</strong> Developers and engineering teams at startups and mid-market SaaS companies building AI-powered features (copilots, search, chatbots, Q&amp;A) who want to ship in weeks, not months.</p>
+<p><strong>Secondary ICP:</strong> Enterprises needing compliance (SOC 2, HIPAA, GDPR) without building RAG infrastructure themselves.</p>
+<p><strong>Evidence from site copy:</strong></p>
+<ul>
+<li>&quot;Made for engineers, by engineers&quot; — explicit developer framing</li>
+<li>SDK support (Python, TypeScript, cURL) — developer-first signal</li>
+<li>&quot;Start for free&quot; + free tier — bottom-up SaaS motion targeting individual devs</li>
+<li>Use cases named: legal drafting, productivity tools, sales tech, EdTech — horizontal platform</li>
+<li>Zapier, Glue, Ellis, Appsmith as customer logos — mix of dev tools and vertical SaaS</li>
+<li>&quot;3 weeks instead of 3 months&quot; (Glue testimonial) — speed-to-market is the primary ROI message</li>
+<li>Compliance badges (SOC 2, HIPAA, GDPR, CCPA) — upmarket enterprise signal on same page</li>
+</ul>
+<p><strong>Pricing ICP signal:</strong></p>
+<ul>
+<li>Free tier: solo devs / prototyping</li>
+<li>$100/mo (10k pages): small teams shipping production features</li>
+<li>$500/mo (60k pages): growth-stage startups or mid-market</li>
+<li>Enterprise: custom — large org with compliance requirements</li>
+</ul>
+<p>Source: <a href="https://www.ragie.ai/">https://www.ragie.ai/</a>, <a href="https://www.ragie.ai/pricing">https://www.ragie.ai/pricing</a> (fetched 2026-03-27)</p>
+<hr>
+<h3>5. Value Proposition Decomposition</h3>
+<p><strong>VP1: Best-in-class indexing and retrieval</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pain</td>
+<td>Building accurate RAG requires assembling chunking, embedding, reranking, and retrieval logic — complex, brittle, constantly evolving</td>
+</tr>
+<tr>
+<td>Result</td>
+<td>&quot;Fast, accurate, context-rich retrieval&quot;</td>
+</tr>
+<tr>
+<td>Mechanism</td>
+<td>&quot;Structured chunking, multi-layered indexing, and LLM-aware optimizations&quot;; hybrid search + reranking + summary index + entity extraction</td>
+</tr>
+<tr>
+<td>Proof</td>
+<td>&quot;99.4% recall accuracy&quot; (cited in legal vertical); Zapier adoption (&quot;LOVE ragie!&quot;)</td>
+</tr>
+</tbody></table>
+<p><strong>VP2: Multimodal — beyond text</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pain</td>
+<td>AI apps need to handle PDFs, images, slides, audio recordings, video — not just plain text</td>
+</tr>
+<tr>
+<td>Result</td>
+<td>One API that handles &quot;text, PDFs, images, audio, video, tables, and more&quot;</td>
+</tr>
+<tr>
+<td>Mechanism</td>
+<td>Purpose-built chunkers per data type; audio/video transcription pipeline; image captioning; table-to-Markdown conversion</td>
+</tr>
+<tr>
+<td>Proof</td>
+<td>Dedicated Audio &amp; Video Support launch (May 2025, 160 upvotes on Product Hunt); 17 audio/video formats listed in docs</td>
+</tr>
+</tbody></table>
+<p><strong>VP3: Ship AI features in weeks, not months</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pain</td>
+<td>Building production RAG infrastructure in-house consumes months of engineering time</td>
+</tr>
+<tr>
+<td>Result</td>
+<td>&quot;Deliver in 3 weeks instead of 3 months&quot;</td>
+</tr>
+<tr>
+<td>Mechanism</td>
+<td>Pre-built connectors (17 sources), SDKs, webhooks, out-of-the-box reranking and partitions</td>
+</tr>
+<tr>
+<td>Proof</td>
+<td>Evan Owen, Glue: &quot;Ragie helped us deliver in 3 weeks instead of 3 months&quot; (verbatim testimonial on homepage)</td>
+</tr>
+</tbody></table>
+<p><strong>VP4: Enterprise-ready from day one</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Pain</td>
+<td>Enterprise customers require compliance evidence before procurement can approve any vendor</td>
+</tr>
+<tr>
+<td>Result</td>
+<td>&quot;Built for enterprise-scale workloads&quot; with zero infrastructure burden</td>
+</tr>
+<tr>
+<td>Mechanism</td>
+<td>SOC 2 Type II, HIPAA, GDPR, CCPA, CASA compliance; AES-256 at rest; TLS in transit; EU-based deployments; multi-tenant architecture</td>
+</tr>
+<tr>
+<td>Proof</td>
+<td>Compliance badges displayed directly on homepage; Advantest, Eigen Labs logos</td>
+</tr>
+</tbody></table>
+<p>Sources: <a href="https://www.ragie.ai/">https://www.ragie.ai/</a> (fetched 2026-03-27), <a href="https://www.ragie.ai/advanced-rag-engine">https://www.ragie.ai/advanced-rag-engine</a> (fetched 2026-03-27)</p>
+<hr>
+<h3>6. Pricing Teardown</h3>
+<p>Source: <a href="https://www.ragie.ai/pricing">https://www.ragie.ai/pricing</a> (fetched 2026-03-27)</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Price</th>
+<th>Pages Included</th>
+<th>Retrievals</th>
+<th>Key Limits</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Developer</td>
+<td>$0/mo</td>
+<td>1,000 docs/images</td>
+<td>1,000/mo</td>
+<td>10 GB streaming; 10 hrs audio/video</td>
+</tr>
+<tr>
+<td>Starter</td>
+<td>$100/mo</td>
+<td>10,000 pages</td>
+<td>Unlimited</td>
+<td>Overage: $0.02/page (fast), $0.05/page (hi-res)</td>
+</tr>
+<tr>
+<td>Pro</td>
+<td>$500/mo</td>
+<td>60,000 pages</td>
+<td>Unlimited</td>
+<td>Storage: $0.12/GB/mo; Streaming: $0.001/MB</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Custom</td>
+<td>Unlimited</td>
+<td>Unlimited</td>
+<td>Dedicated SLAs; whitelabel connectors</td>
+</tr>
+</tbody></table>
+<p><strong>Unit economics signals:</strong></p>
+<ul>
+<li><strong>Per-page model</strong> is the primary billing unit: $0.02 (fast processing) / $0.05 (hi-res processing)</li>
+<li><strong>Storage tax:</strong> $0.002 per page/month (Starter) or $0.12 per GB/month (Pro) — pages cost money to keep indexed</li>
+<li><strong>Audio/Video:</strong> $0.0067/min (audio), $0.025/min (video) — significantly higher per-unit than text</li>
+<li><strong>Connectors:</strong> First connector is free; each additional connector costs <strong>$250/connector/month</strong> — this is a major potential cost multiplier for teams using multiple data sources</li>
+<li><strong>Streaming:</strong> $0.001/MB — relevant for large document serving</li>
+</ul>
+<p><strong>What&#39;s free:</strong></p>
+<ul>
+<li>All advanced features (reranking, hybrid search, entity extraction, partitions, multi-language) are available on every tier including free. This is a strong DX signal — no feature gating.</li>
+</ul>
+<p><strong>Unit economics vs. Contexter:</strong></p>
+<ul>
+<li>Ragie Starter = $100/mo for 10k pages. Contexter runs at €4.72/mo all-in on Hetzner. Even at 10 users each uploading 100 pages = 1,000 pages, Contexter costs are ~21x lower for self-hosted. The gap is the managed infrastructure value Ragie provides.</li>
+<li>The connector fee ($250/connector/month) is a significant upsell that could make a multi-connector enterprise setup cost $750–$1,500+/mo at Pro tier.</li>
+</ul>
+<hr>
+<h3>7. Brand Voice</h3>
+<p><strong>Technical level:</strong> 3.5/5 — uses technical terms (chunking, reranking, hybrid search, entity extraction) freely but wraps them in benefit language. Not PhD-level, but not dumbed down either.</p>
+<p><strong>Tone:</strong> Casual-confident. &quot;Meet Ragie.&quot; is a friendly intro. &quot;Ragie is unbelievable!&quot; (quoted testimonial) is cheered. &quot;Made for engineers, by engineers&quot; is peer-to-peer. Not corporate.</p>
+<p><strong>Hype level:</strong> Moderate. Claims like &quot;world&#39;s first context-aware MCP server&quot; and &quot;best-in-class&quot; are present but anchored by specific numbers (3 weeks, 99.4% recall, $100/mo).</p>
+<p><strong>vs. Contexter:</strong> Contexter is currently more spare / minimal. Ragie&#39;s copy is warmer, more developer-enthusiast. Both target developers, but Ragie&#39;s voice is more like a well-funded YC startup (&quot;we&#39;re building the AWS of RAG&quot;) while Contexter&#39;s positioning is more indie/pragmatist (&quot;it just works, it&#39;s cheap, you own it&quot;). These are different voices for different buyers — not directly competing on tone.</p>
+<hr>
+<h3>8. Trust Signals</h3>
+<p><strong>Compliance &amp; Security (on homepage):</strong></p>
+<ul>
+<li>SOC 2 Type II (explicitly stated)</li>
+<li>GDPR compliant</li>
+<li>HIPAA compliant</li>
+<li>CCPA compliant</li>
+<li>CASA compliant</li>
+<li>AES-256 encryption at rest</li>
+<li>TLS in transit</li>
+<li>EU-based deployments available</li>
+</ul>
+<p><strong>Customer logos (displayed on homepage):</strong>
+Ellis, Wilson, Staffing, Glue, Crypto Counsel, Vambe, Wave, Advantest, Greenleaf, Appsmith, Eigen Labs, Zapier</p>
+<p><strong>Testimonials (verbatim from homepage):</strong></p>
+<ul>
+<li>Luke Thomas, Zapier: &quot;I LOVE ragie!&quot;</li>
+<li>Sampei Omichi, Ellis: &quot;Our legal drafting is now 5-10x faster&quot;</li>
+<li>Evan Owen, Glue: &quot;Ragie helped us deliver in 3 weeks instead of 3 months&quot;</li>
+<li>McKay Wrigley, Takeoff AI: &quot;Ragie is unbelievable! I&#39;ve started to use it for all my retrieval needs in production. And it has an A+ developer experience.&quot;</li>
+</ul>
+<p><strong>Funding signal (off-page):</strong> $5.5M seed from Craft Ventures (led), Valor, Chapter One, Saga — gives enterprise buyers confidence in longevity. David Sacks (Craft, All-In Pod) mentioned Ragie publicly on the All-In Podcast.</p>
+<p><strong>Implication for Contexter:</strong> Ragie has full enterprise trust stack (SOC2+HIPAA+GDPR) which Contexter does not (and cannot at €4.72/mo). This is not a weakness for Contexter&#39;s current ICP (solo devs, small teams, privacy-first), but becomes a blocker if Contexter tries to move upmarket.</p>
+<p>Source: <a href="https://www.ragie.ai/">https://www.ragie.ai/</a> (fetched 2026-03-27)</p>
+<hr>
+<h2>Document 2: Killer Features (Product Teardown)</h2>
+<h3>1. Feature Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Ragie</th>
+<th>Contexter</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>REST API</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>MCP server (hosted, native)</td>
+<td>Yes — per-partition, streamable HTTP</td>
+<td>Yes — Streamable HTTP</td>
+<td>Parity on protocol; Ragie adds per-partition scoping</td>
+</tr>
+<tr>
+<td>Python SDK</td>
+<td>Yes (ragie-python, 57 stars)</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>TypeScript SDK</td>
+<td>Yes (ragie-typescript, 30 stars)</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>PDF ingestion</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>Audio ingestion (MP3, WAV, M4A, AAC, FLAC, OGG)</td>
+<td>Yes</td>
+<td>Yes (15 formats incl. audio)</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>Video ingestion (MP4, MOV, AVI, WebM, MKV, etc.)</td>
+<td>Yes — 11 video formats</td>
+<td>Yes</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>Image ingestion (PNG, JPG, TIFF, BMP, WEBP, HEIC)</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage (explicit)</td>
+</tr>
+<tr>
+<td>Spreadsheet ingestion (CSV, XLSX, XLS, TSV)</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage (explicit)</td>
+</tr>
+<tr>
+<td>Presentation ingestion (PPT, PPTX)</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage (explicit)</td>
+</tr>
+<tr>
+<td>EPUB ingestion</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage (explicit)</td>
+</tr>
+<tr>
+<td>Hybrid search (semantic + keyword)</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Reranking (two-pass retrieval)</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Summary index (hierarchical search)</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Entity extraction (LLM-driven)</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Recency bias</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Metadata filtering</td>
+<td>Yes (arbitrary objects, 1000 values max)</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Partitions (multi-tenant scoping)</td>
+<td>Yes — first-class, per-partition MCP</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Data connectors (Google Drive, Notion, etc.)</td>
+<td>Yes — 17 connectors</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Webhooks</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Self-hosted deployment</td>
+<td>NO — cloud-only (EU region option)</td>
+<td>YES — Hetzner, any server</td>
+<td>Contexter advantage</td>
+</tr>
+<tr>
+<td>Pricing</td>
+<td>$100–$500/mo + overages</td>
+<td>€4.72/mo (infra)</td>
+<td>Contexter advantage (100x cheaper)</td>
+</tr>
+<tr>
+<td>SOC 2 / HIPAA compliance</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Open-source codebase</td>
+<td>Partial (SDKs + Base Chat open-source; core is SaaS)</td>
+<td>Not confirmed</td>
+<td>Unknown</td>
+</tr>
+<tr>
+<td>Agentic retrieval (multi-step)</td>
+<td>Yes — Plan→Search→Answer→Evaluate→Cite</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+<tr>
+<td>Context-aware MCP descriptions</td>
+<td>Yes — dynamic, content-aware tool descriptions</td>
+<td>Not confirmed</td>
+<td>Ragie advantage (claimed &quot;world&#39;s first&quot;)</td>
+</tr>
+<tr>
+<td>LangChain integration</td>
+<td>Yes</td>
+<td>Not confirmed</td>
+<td>Ragie advantage</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>2. Unique Capabilities (Ragie-only or Ragie-first)</h3>
+<p><strong>2.1 Context-Aware MCP Server</strong></p>
+<p>Ragie claims to be &quot;The World&#39;s First Context-Aware MCP Server.&quot; The mechanism: instead of static tool descriptions in MCP (which cause LLMs to default to web search), Ragie dynamically generates descriptions based on actual knowledge base content. As the KB changes, the MCP tool description updates automatically, giving LLMs higher confidence for correct tool selection.</p>
+<p>Implementation: each Partition gets its own MCP server URL (streamable HTTP). No infrastructure required — copy URL from dashboard, paste into Cursor/Claude Desktop config.</p>
+<p>Source: <a href="https://www.ragie.ai/mcp-server">https://www.ragie.ai/mcp-server</a> (fetched 2026-03-27), <a href="https://docs.ragie.ai/docs/mcp-overview">https://docs.ragie.ai/docs/mcp-overview</a> (fetched 2026-03-27)</p>
+<p><strong>2.2 Agentic Retrieval (Deep Search)</strong></p>
+<p>Launched September 2025. A multi-step retrieval loop: Plan → Search → Answer → Evaluate → Cite. Decomposes complex queries, chooses search strategies dynamically, and self-evaluates before returning results. Designed for compositional questions that break classic single-pass RAG.</p>
+<p>Per Ragie CTO mkauffman23 on HN (Oct 2025): &quot;Classic RAG (embed and fetch) breaks down on compositional or scoped questions. Our approach treats retrieval as reasoning with multiple subagents in a loop.&quot;</p>
+<p>Source: <a href="https://news.ycombinator.com/item?id=45658141">https://news.ycombinator.com/item?id=45658141</a> (fetched 2026-03-27), <a href="https://www.ragie.ai/blog">https://www.ragie.ai/blog</a> (fetched 2026-03-27)</p>
+<p><strong>2.3 Summary Index (Hierarchical Search)</strong></p>
+<p>A document-level summary index that enables search across document summaries before descending into chunk-level retrieval. Enables questions like &quot;which documents discuss X?&quot; that chunk-level retrieval cannot answer reliably.</p>
+<p>Source: <a href="https://www.ragie.ai/advanced-rag-engine">https://www.ragie.ai/advanced-rag-engine</a> (fetched 2026-03-27)</p>
+<p><strong>2.4 Entity Extraction with LLM</strong></p>
+<p>LLM-driven extraction of names, dates, contacts, and domain-specific fields from documents at index time. These entities are stored as searchable metadata, enabling structured queries alongside semantic search.</p>
+<p>Source: <a href="https://www.ragie.ai/advanced-rag-engine">https://www.ragie.ai/advanced-rag-engine</a> (fetched 2026-03-27)</p>
+<p><strong>2.5 Connector Network (17 live connectors)</strong></p>
+<p>Automated bidirectional sync with 17 data sources. The connector pricing model ($250/connector/month after first) creates a recurring revenue moat but also a significant switching cost for customers deeply integrated with multiple sources.</p>
+<p>Source: <a href="https://www.ragie.ai/connectors">https://www.ragie.ai/connectors</a> (fetched 2026-03-27)</p>
+<hr>
+<h3>3. MCP Support</h3>
+<p><strong>Status: YES — native, hosted, first-class.</strong></p>
+<p><strong>Details:</strong></p>
+<ul>
+<li>Ragie natively provides streamable-HTTP MCP servers for each partition</li>
+<li>Each partition gets its own MCP server URL — no infrastructure required</li>
+<li>Tool exposed: single <code>retrieve</code> tool with parameters: <code>query</code> (required), <code>topK</code> (default 8), <code>rerank</code> (default true), <code>recencyBias</code> (default false)</li>
+<li>MCP is enabled for ALL partitions on all plans including free</li>
+<li>Context-aware descriptions update dynamically as KB content changes</li>
+<li>npm package (<code>@ragieai/mcp-server</code>) also available but now deprecated — native MCP is the recommended path</li>
+<li>GitHub MCP server repo: 87 stars, 19 forks (<a href="https://github.com/ragieai/ragie-mcp-server">https://github.com/ragieai/ragie-mcp-server</a>)</li>
+<li>MCP Gateway repo also available for OAuth-protected enterprise access (12 stars)</li>
+<li>Compatible clients documented: Cursor, Claude Desktop, Goose</li>
+</ul>
+<p><strong>Implication for Contexter:</strong> Both products offer MCP. Ragie&#39;s differentiation is the per-partition scoping and dynamic context-aware descriptions. Contexter should evaluate whether its MCP tool descriptions are static or dynamic, and whether partition-level granularity is supported.</p>
+<p>Sources: <a href="https://docs.ragie.ai/docs/mcp-overview">https://docs.ragie.ai/docs/mcp-overview</a> (fetched 2026-03-27), <a href="https://github.com/ragieai/ragie-mcp-server">https://github.com/ragieai/ragie-mcp-server</a> (fetched 2026-03-27), <a href="https://www.ragie.ai/mcp-server">https://www.ragie.ai/mcp-server</a> (fetched 2026-03-27)</p>
+<hr>
+<h3>4. Format Support</h3>
+<p><strong>Complete list from Ragie API docs</strong> (source: <a href="https://docs.ragie.ai/reference/createdocument">https://docs.ragie.ai/reference/createdocument</a>, fetched 2026-03-27):</p>
+<p><strong>Plain Text formats:</strong>
+<code>.eml</code>, <code>.html</code>, <code>.json</code>, <code>.md</code>, <code>.msg</code>, <code>.rst</code>, <code>.rtf</code>, <code>.txt</code>, <code>.xml</code></p>
+<p><strong>Image formats:</strong>
+<code>.png</code>, <code>.webp</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.tiff</code>, <code>.bmp</code>, <code>.heic</code></p>
+<p><strong>Document formats:</strong>
+<code>.csv</code>, <code>.doc</code>, <code>.docx</code>, <code>.epub</code>, <code>.epub+zip</code>, <code>.odt</code>, <code>.pdf</code>, <code>.ppt</code>, <code>.pptx</code>, <code>.tsv</code>, <code>.xlsx</code>, <code>.xls</code></p>
+<p><strong>Audio formats (from docs):</strong>
+<code>.mp3</code>, <code>.wav</code>, <code>.m4a</code>, <code>.ogg</code>, <code>.aac</code>, <code>.flac</code> (6 formats)</p>
+<p><strong>Video formats (from docs):</strong>
+<code>.mp4</code>, <code>.webm</code>, <code>.mov</code>, <code>.avi</code>, <code>.flv</code>, <code>.mkv</code>, <code>.mpeg</code>, <code>.mpegs</code>, <code>.mpg</code>, <code>.wmv</code>, <code>.3gpp</code> (11 formats)</p>
+<p><strong>Total: ~40 distinct file formats</strong> across 5 categories.</p>
+<p><strong>Processing modes:</strong> <code>fast</code> (text extraction only) vs <code>hi_res</code> (extracts embedded images and tables). PDF hi_res limit: 2,000 pages.</p>
+<p><strong>vs. Contexter (15 formats):</strong> Ragie has a substantially larger format footprint, particularly:</p>
+<ul>
+<li>Image formats (7 vs. Contexter: not confirmed)</li>
+<li>Spreadsheet formats (CSV, XLSX, XLS, TSV)</li>
+<li>Presentation formats (PPT, PPTX)</li>
+<li>Legacy doc formats (RTF, RST, MSG, ODT)</li>
+<li>11 video formats vs. Contexter&#39;s unspecified video support</li>
+</ul>
+<p>Contexter&#39;s &quot;15 formats including audio/video&quot; is the key claim — verifying the exact list against Ragie&#39;s ~40 is a priority for Contexter&#39;s positioning.</p>
+<hr>
+<h3>5. API Design</h3>
+<p><strong>Protocol:</strong> REST only. No GraphQL.</p>
+<p><strong>Authentication:</strong> Bearer token via HTTP header: <code>authorization: Bearer &lt;api_key&gt;</code>. Keys created in dashboard.</p>
+<p><strong>Key endpoints:</strong></p>
+<ul>
+<li><code>POST /documents</code> — upload document (multipart form data)</li>
+<li><code>GET /documents/{id}</code> — get document status</li>
+<li><code>POST /retrievals</code> — semantic search / retrieval</li>
+<li>Connections, workflows, webhooks endpoints also present</li>
+</ul>
+<p><strong>Processing states:</strong> <code>pending</code> → <code>partitioning</code> → <code>partitioned</code> → <code>refined</code> → <code>chunked</code> → <code>indexed</code> → <code>summary_indexed</code> → <code>keyword_indexed</code> → <code>ready</code> | <code>failed</code></p>
+<p><strong>Rate limits:</strong> 429 responses documented; specific thresholds not publicly disclosed.</p>
+<p><strong>SDKs:</strong></p>
+<ul>
+<li>Python: <code>ragie-python</code> (pip install ragie), 57 stars</li>
+<li>TypeScript: <code>ragie-typescript</code>, 30 stars</li>
+<li>CLI: <code>ragie-cli</code> (Go), 6 stars</li>
+</ul>
+<p><strong>Framework integrations:</strong> LangChain, Mastra, Pipedream, Nango, Leap AI</p>
+<p><strong>Implication for Contexter:</strong> Same REST paradigm. Ragie has official SDKs (Contexter: not confirmed). SDK availability lowers adoption friction significantly for Python and TypeScript developers.</p>
+<p>Source: <a href="https://docs.ragie.ai/reference/createdocument">https://docs.ragie.ai/reference/createdocument</a> (fetched 2026-03-27), <a href="https://docs.ragie.ai">https://docs.ragie.ai</a> (fetched 2026-03-27)</p>
+<hr>
+<h3>6. Integrations / Connectors</h3>
+<p><strong>17 managed connectors</strong> (source: <a href="https://www.ragie.ai/connectors">https://www.ragie.ai/connectors</a>, fetched 2026-03-27):</p>
+<table>
+<thead>
+<tr>
+<th>Connector</th>
+<th>Category</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Amazon S3</td>
+<td>Cloud Storage</td>
+</tr>
+<tr>
+<td>Backblaze</td>
+<td>Cloud Storage</td>
+</tr>
+<tr>
+<td>Google Cloud Storage</td>
+<td>Cloud Storage</td>
+</tr>
+<tr>
+<td>Google Drive</td>
+<td>Productivity</td>
+</tr>
+<tr>
+<td>OneDrive</td>
+<td>Productivity</td>
+</tr>
+<tr>
+<td>Dropbox</td>
+<td>Productivity</td>
+</tr>
+<tr>
+<td>SharePoint</td>
+<td>Enterprise Productivity</td>
+</tr>
+<tr>
+<td>Confluence</td>
+<td>Knowledge Management</td>
+</tr>
+<tr>
+<td>Notion</td>
+<td>Knowledge Management</td>
+</tr>
+<tr>
+<td>Gmail</td>
+<td>Communication</td>
+</tr>
+<tr>
+<td>Slack</td>
+<td>Communication</td>
+</tr>
+<tr>
+<td>Jira</td>
+<td>Project Management</td>
+</tr>
+<tr>
+<td>HubSpot</td>
+<td>CRM</td>
+</tr>
+<tr>
+<td>Salesforce</td>
+<td>CRM</td>
+</tr>
+<tr>
+<td>Freshdesk</td>
+<td>Support</td>
+</tr>
+<tr>
+<td>Zendesk</td>
+<td>Support</td>
+</tr>
+<tr>
+<td>Intercom</td>
+<td>Support</td>
+</tr>
+<tr>
+<td>Web Crawler</td>
+<td>Web</td>
+</tr>
+</tbody></table>
+<p><strong>Connector economics:</strong></p>
+<ul>
+<li>First connector: free (included in all plans)</li>
+<li>Additional connectors: $250/connector/month</li>
+<li>Page limits can be set per connection (cost control feature)</li>
+</ul>
+<p><strong>Implication for Contexter:</strong> Connectors are Ragie&#39;s most significant moat against a self-hosted alternative. A team using Google Drive + Notion + Zendesk with Ragie is looking at $600/mo just in connector fees (3 connectors × $250 = $500 + $100 base) versus Contexter&#39;s €4.72/mo with manual uploads. The connector sync automation is the key value — Contexter would need to offer sync connectors or a strong push-based ingestion story to compete in this dimension.</p>
+<hr>
+<h3>7. Architecture Signals</h3>
+<p><strong>Deployment model:</strong> Cloud-only SaaS. No self-hosted option.</p>
+<p><strong>Data residency:</strong> EU-based deployments available (GDPR requirement).</p>
+<p><strong>Single-tenant option:</strong> Mentioned in enterprise tier for sensitive workloads.</p>
+<p><strong>Embedding models:</strong> Not publicly disclosed in documentation. Ragie abstracts the embedding model from users — this is intentional (allows them to swap underlying models as the field evolves without customer-facing changes).</p>
+<p><strong>LLM usage:</strong> LLM-driven entity extraction and content enhancement (image captioning, table-to-Markdown). LLM model not disclosed.</p>
+<p><strong>Search infrastructure:</strong> Multi-index architecture: vector index + keyword index + summary index. Two-pass retrieval (fast recall + precision reranker).</p>
+<p><strong>Processing pipeline:</strong> Asynchronous, distributed document processing. Documents move through 9 named states from <code>pending</code> to <code>ready</code>.</p>
+<p><strong>Infra:</strong> Cloud-native, fully managed. Scale-to-zero for developer tier implied (1,000 retrieval limit). No infrastructure details disclosed (AWS/GCP/Azure not confirmed).</p>
+<p><strong>Open-source footprint:</strong></p>
+<ul>
+<li><code>basechat</code> — 157 stars — full open-source multi-tenant chatbot built on Ragie</li>
+<li><code>ragie-python</code> / <code>ragie-typescript</code> — SDK clients, open source</li>
+<li><code>ragie-mcp-server</code> — deprecated npm MCP package, open source</li>
+<li><code>dynamic-fastmcp</code> — 45 stars — extends FastMCP for context-aware tools</li>
+<li>Core RAG engine: proprietary / closed</li>
+</ul>
+<p><strong>Implication for Contexter:</strong> Ragie&#39;s cloud-only model is the core architectural contrast with Contexter&#39;s self-hosted approach. This is Contexter&#39;s primary defensible position: full data ownership, no vendor lock-in, no per-page billing surprises, no compliance audit of a third party required.</p>
+<p>Sources: <a href="https://docs.ragie.ai">https://docs.ragie.ai</a> (fetched 2026-03-27), <a href="https://github.com/ragieai">https://github.com/ragieai</a> (fetched 2026-03-27), search results (2026-03-27)</p>
+<hr>
+<h2>Document 3: Audience Voice (&quot;Love / Hate / Want&quot;)</h2>
+<h3>1. Love — Exact Quotes</h3>
+<p><strong>Quote 1</strong></p>
+<blockquote>
+<p>&quot;Ragie is unbelievable! I&#39;ve started to use it for all my retrieval needs in production. And it has an A+ developer experience. Really, really excited for more people to start building with it — it&#39;s a gem.&quot;
+— McKay Wrigley, Takeoff AI
+Source: <a href="https://www.ragie.ai/">https://www.ragie.ai/</a> (homepage testimonial, verified 2026-03-27)</p>
+</blockquote>
+<p><strong>Quote 2</strong></p>
+<blockquote>
+<p>&quot;Our legal drafting is now 5-10x faster&quot;
+— Sampei Omichi, Ellis
+Source: <a href="https://www.ragie.ai/">https://www.ragie.ai/</a> (homepage testimonial, verified 2026-03-27)</p>
+</blockquote>
+<p><strong>Quote 3</strong></p>
+<blockquote>
+<p>&quot;Ragie helped us deliver in 3 weeks instead of 3 months&quot;
+— Evan Owen, Glue
+Source: <a href="https://www.ragie.ai/">https://www.ragie.ai/</a> (homepage testimonial, verified 2026-03-27)</p>
+</blockquote>
+<p><strong>Quote 4</strong></p>
+<blockquote>
+<p>&quot;I LOVE ragie!&quot;
+— Luke Thomas, Zapier
+Source: <a href="https://www.ragie.ai/">https://www.ragie.ai/</a> (homepage testimonial, verified 2026-03-27)</p>
+</blockquote>
+<p><strong>Quote 5</strong> (from Craft Ventures investor thesis, Medium, 2024)</p>
+<blockquote>
+<p>&quot;Ragie is doing for RAG infrastructure what AWS did for the cloud&quot;
+— David Sacks / Craft Ventures framing
+Source: <a href="https://medium.com/craft-ventures/why-we-invested-in-ragie-b3d07c642d3d">https://medium.com/craft-ventures/why-we-invested-in-ragie-b3d07c642d3d</a> (fetched 2026-03-27)</p>
+</blockquote>
+<p><strong>Note:</strong> Quotes 1–4 are from the official Ragie homepage and should be treated as curated marketing testimonials, not independent user reviews. No independent review aggregator (G2, Slashdot, Capterra, Reddit) had published user reviews as of 2026-03-27.</p>
+<hr>
+<h3>2. Hate — Exact Quotes</h3>
+<p><strong>NO INDEPENDENT NEGATIVE REVIEWS FOUND</strong> on G2, Slashdot, Reddit, Hacker News, or Product Hunt as of 2026-03-27.</p>
+<p>The following criticisms are inferred from comparative analysis and structural signals, not direct user quotes:</p>
+<p><strong>Inferred criticism 1 — Vendor lock-in concern:</strong>
+From RAGFlow vs. Ragie comparison article (skywork.ai, 2025): &quot;Potential for vendor lock-in&quot; listed as an explicit Ragie weakness. &quot;Feature limitations tied to Ragie&#39;s product roadmap rather than user customization.&quot;
+Source: <a href="https://skywork.ai/skypage/en/RAGFlow-vs.-Ragie-Which-RAG-Platform-is-Right-for-You-in-2025/1976482607423090688">https://skywork.ai/skypage/en/RAGFlow-vs.-Ragie-Which-RAG-Platform-is-Right-for-You-in-2025/1976482607423090688</a> (fetched 2026-03-27)</p>
+<p><strong>Inferred criticism 2 — Cost vs. open-source:</strong>
+From same comparative source: &quot;Subscription costs versus free open-source license&quot; listed as a Ragie weakness. The comparison explicitly favors RAGFlow for &quot;AI researchers and experts needing maximum control.&quot;
+Source: same as above.</p>
+<p><strong>Inferred criticism 3 — Cost at scale (connector pricing):</strong>
+Connector model ($250/connector/month) creates significant cost escalation for multi-source workflows. First connector is free, but a team using 4 connectors pays $750+/mo before page overages.
+Source: <a href="https://www.ragie.ai/pricing">https://www.ragie.ai/pricing</a> (fetched 2026-03-27)</p>
+<p><strong>Inferred criticism 4 — No self-hosted option:</strong>
+For teams with strict data sovereignty requirements beyond EU region deployment, no on-premise option exists. Noted in search results: &quot;Ragie does not appear to offer a traditional self-hosted or on-premise deployment option.&quot;
+Source: web search results, 2026-03-27</p>
+<hr>
+<h3>3. Want — Feature Requests</h3>
+<p>No direct user feature requests were found in public forums. The following are inferred from Ragie&#39;s own launch cadence and comparative gaps:</p>
+<p><strong>Want 1:</strong> On-premise / private cloud deployment option
+Signal: Repeated queries in HN thread (40441098) about RAG-as-a-Service vs. self-hosted; Ragie&#39;s EU deployment option suggests demand exists.</p>
+<p><strong>Want 2:</strong> More transparent embedding model selection
+Signal: Ragie abstracts embedding models entirely. Developers building domain-specific apps (legal, medical) often want control over embedding model choice.</p>
+<p><strong>Want 3:</strong> Transparent rate limits
+Signal: Rate limits exist (429 documented) but thresholds are not published. Developer-facing tooling typically demands clear rate limit documentation.</p>
+<p><strong>Want 4:</strong> Cheaper or unlimited connectors
+Signal: $250/connector/month is a significant recurring cost. The connector pricing is the most likely churn driver for multi-source teams.</p>
+<p><strong>Want 5:</strong> Free tier with more retrievals (beyond 1,000/mo)
+Signal: The free tier&#39;s 1,000 retrieval limit is low for teams testing in pre-production with real query loads.</p>
+<hr>
+<h3>4. Switching Triggers</h3>
+<p><strong>Why people come TO Ragie:</strong></p>
+<ol>
+<li><strong>Speed to production</strong> — &quot;3 weeks instead of 3 months&quot; is the primary acquisition message. Teams that tried to build RAG in-house and hit infrastructure complexity are the clearest switchers.</li>
+<li><strong>Multimodal needs</strong> — teams with audio/video content that can&#39;t find a self-built solution for transcription + indexing.</li>
+<li><strong>Enterprise compliance requirements</strong> — SOC 2 + HIPAA blocks the build-it-yourself path for regulated industries (legal, healthcare, finance).</li>
+<li><strong>Craft Ventures / Glue halo</strong> — David Sacks mentioned Ragie on the All-In Podcast (verified via Ragie&#39;s own X post: <a href="https://x.com/ragieai/status/1791603229874389205">https://x.com/ragieai/status/1791603229874389205</a>, May 2024). This drove developer awareness in the VC-adjacent tech community.</li>
+</ol>
+<p><strong>Why people might leave Ragie (inferred, no direct evidence):</strong></p>
+<ol>
+<li><strong>Cost at scale</strong> — connector pricing ($250/mo each) + page overages make the total cost unpredictable and potentially very high for data-heavy use cases.</li>
+<li><strong>Vendor lock-in</strong> — proprietary chunking, indexing, and retrieval pipeline with no export path visible. Migrating away means re-indexing everything.</li>
+<li><strong>No control over embedding models</strong> — advanced teams hit this wall when they need fine-tuned or domain-specific embeddings.</li>
+<li><strong>Cloud-only</strong> — hard blocker for on-prem regulated environments.</li>
+</ol>
+<hr>
+<h3>5. Traction Signals</h3>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Value</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Funding</td>
+<td>$5.5M seed (August 2024)</td>
+<td>Crunchbase, 2024</td>
+</tr>
+<tr>
+<td>Investors</td>
+<td>Craft Ventures (lead), Valor, Chapter One, Saga, Plug &amp; Play</td>
+<td>Crunchbase, 2024</td>
+</tr>
+<tr>
+<td>Employees</td>
+<td>~8 (as of 2025)</td>
+<td>Tracxn, 2025</td>
+</tr>
+<tr>
+<td>Founded</td>
+<td>2024</td>
+<td>Tracxn, 2025</td>
+</tr>
+<tr>
+<td>Product Hunt — Base Chat launch</td>
+<td>242 comments (February 2025)</td>
+<td>Product Hunt</td>
+</tr>
+<tr>
+<td>Product Hunt — Audio/Video launch</td>
+<td>160 upvotes, Daily Rank #11 (May 2025)</td>
+<td>Product Hunt</td>
+</tr>
+<tr>
+<td>Product Hunt — Agent-Ready RAG</td>
+<td>Daily Rank #12 (September 2025)</td>
+<td>Product Hunt</td>
+</tr>
+<tr>
+<td>Product Hunt — Ragie Connect</td>
+<td>Daily Rank #3, Top Post badge (January 2025)</td>
+<td>Product Hunt</td>
+</tr>
+<tr>
+<td>Product Hunt followers</td>
+<td>795</td>
+<td>Product Hunt (fetched 2026-03-27)</td>
+</tr>
+<tr>
+<td>GitHub — basechat</td>
+<td>157 stars</td>
+<td>github.com/ragieai (fetched 2026-03-27)</td>
+</tr>
+<tr>
+<td>GitHub — ragie-mcp-server</td>
+<td>87 stars</td>
+<td>github.com/ragieai (fetched 2026-03-27)</td>
+</tr>
+<tr>
+<td>GitHub — dynamic-fastmcp</td>
+<td>45 stars</td>
+<td>github.com/ragieai (fetched 2026-03-27)</td>
+</tr>
+<tr>
+<td>GitHub — ragie-python</td>
+<td>57 stars</td>
+<td>github.com/ragieai (fetched 2026-03-27)</td>
+</tr>
+<tr>
+<td>G2 reviews</td>
+<td>NOT FOUND — no G2 profile confirmed</td>
+<td>G2 search, 2026-03-27</td>
+</tr>
+<tr>
+<td>Slashdot reviews</td>
+<td>0 reviews (&quot;No User Reviews. Be the first.&quot;)</td>
+<td>slashdot.org/software/p/Ragie/ (fetched 2026-03-27)</td>
+</tr>
+<tr>
+<td>Twitter/X followers</td>
+<td>@ragieai present; exact count not retrieved</td>
+<td>x.com/ragieai</td>
+</tr>
+<tr>
+<td>MRR</td>
+<td>NOT DISCLOSED</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p><strong>Key traction observation:</strong> Ragie has 5 Product Hunt launches in ~18 months (August 2024 – September 2025), with growing engagement per launch. The 242-comment Base Chat launch in February 2025 is unusually high for a dev-tools product and suggests real community traction.</p>
+<hr>
+<h3>6. Sentiment</h3>
+<p><strong>Overall: POSITIVE — but with insufficient independent data to verify</strong></p>
+<p>Sentiment is positive based on available signals (testimonials, Product Hunt engagement, investor thesis, developer quotes). However, all strong positive quotes originate from:</p>
+<ul>
+<li>Official homepage testimonials (curated by Ragie)</li>
+<li>Investor writing (Craft Ventures — conflicted)</li>
+<li>Product Hunt launch comments (launch day enthusiasm)</li>
+</ul>
+<p>No independent aggregator (G2, Capterra, Trustpilot, Reddit, HN) has published user reviews as of 2026-03-27. The product is ~18 months old and may simply not have reached review volume yet.</p>
+<p><strong>Verdict: POSITIVE / INSUFFICIENT INDEPENDENT DATA</strong></p>
+<hr>
+<h3>7. No Data Protocol</h3>
+<p><strong>Platforms checked with no Ragie reviews found:</strong></p>
+<ul>
+<li>G2: no confirmed profile (search returns Regie.ai and Ragic, not Ragie)</li>
+<li>Slashdot: page exists, 0 reviews (&quot;No User Reviews. Be the first.&quot;)</li>
+<li>Reddit (r/LocalLLaMA, r/LangChain, r/MachineLearning): no threads found via search</li>
+<li>Hacker News: 2 threads found — one with minimal engagement; one is Ragie team self-post</li>
+<li>Product Hunt: 5 launches but minimal detailed review text retrieved; aggregate score 5.0/5 from 1 review</li>
+</ul>
+<p><strong>Proxy signals used in lieu of reviews:</strong></p>
+<ul>
+<li>5 consecutive Product Hunt launches with growing comment counts → sustained developer interest</li>
+<li>GitHub repo stars (basechat 157, mcp-server 87) → modest but real developer adoption</li>
+<li>Zapier as a customer (Luke Thomas testimonial) → enterprise-grade validation from a known developer platform</li>
+<li>$5.5M seed from Craft Ventures → institutional confidence in the market thesis</li>
+<li>David Sacks All-In Podcast mention → organic PR, not paid placement</li>
+</ul>
+<hr>
+<h3>8. Source Index</h3>
+<p>All sources consulted in this report:</p>
+<ul>
+<li><a href="https://www.ragie.ai/">https://www.ragie.ai/</a> — homepage (fetched 2026-03-27)</li>
+<li><a href="https://www.ragie.ai/pricing">https://www.ragie.ai/pricing</a> — pricing page (fetched 2026-03-27)</li>
+<li><a href="https://www.ragie.ai/advanced-rag-engine">https://www.ragie.ai/advanced-rag-engine</a> — RAG engine detail (fetched 2026-03-27)</li>
+<li><a href="https://www.ragie.ai/mcp-server">https://www.ragie.ai/mcp-server</a> — MCP server page (fetched 2026-03-27)</li>
+<li><a href="https://www.ragie.ai/connectors">https://www.ragie.ai/connectors</a> — connectors list (fetched 2026-03-27)</li>
+<li><a href="https://www.ragie.ai/blog">https://www.ragie.ai/blog</a> — blog index (fetched 2026-03-27)</li>
+<li><a href="https://docs.ragie.ai">https://docs.ragie.ai</a> — documentation root (fetched 2026-03-27)</li>
+<li><a href="https://docs.ragie.ai/docs/mcp-overview">https://docs.ragie.ai/docs/mcp-overview</a> — MCP documentation (fetched 2026-03-27)</li>
+<li><a href="https://docs.ragie.ai/reference/createdocument">https://docs.ragie.ai/reference/createdocument</a> — API reference, file types (fetched 2026-03-27)</li>
+<li><a href="https://github.com/ragieai">https://github.com/ragieai</a> — GitHub organization (fetched 2026-03-27)</li>
+<li><a href="https://github.com/ragieai/ragie-mcp-server">https://github.com/ragieai/ragie-mcp-server</a> — MCP server repo (fetched 2026-03-27)</li>
+<li><a href="https://medium.com/craft-ventures/why-we-invested-in-ragie-b3d07c642d3d">https://medium.com/craft-ventures/why-we-invested-in-ragie-b3d07c642d3d</a> — investor thesis (fetched 2026-03-27)</li>
+<li><a href="https://www.producthunt.com/products/ragie">https://www.producthunt.com/products/ragie</a> — Product Hunt profile (fetched 2026-03-27)</li>
+<li><a href="https://news.ycombinator.com/item?id=40441098">https://news.ycombinator.com/item?id=40441098</a> — HN: &quot;Ask HN: RAG as a Service?&quot; (fetched 2026-03-27)</li>
+<li><a href="https://news.ycombinator.com/item?id=45658141">https://news.ycombinator.com/item?id=45658141</a> — HN: &quot;How we built agentic retrieval ragie.ai&quot; (fetched 2026-03-27)</li>
+<li><a href="https://skywork.ai/skypage/en/RAGFlow-vs.-Ragie-Which-RAG-Platform-is-Right-for-You-in-2025/1976482607423090688">https://skywork.ai/skypage/en/RAGFlow-vs.-Ragie-Which-RAG-Platform-is-Right-for-You-in-2025/1976482607423090688</a> — RAGFlow vs. Ragie comparison (fetched 2026-03-27)</li>
+<li><a href="https://x.com/ragieai/status/1791603229874389205">https://x.com/ragieai/status/1791603229874389205</a> — Ragie X post re: All-In Pod mention</li>
+<li><a href="https://slashdot.org/software/p/Ragie/">https://slashdot.org/software/p/Ragie/</a> — Slashdot product page (fetched 2026-03-27)</li>
+</ul>
+<hr>
+<h2>Strategic Summary for Contexter</h2>
+<p><strong>Where Ragie wins:</strong></p>
+<ol>
+<li>Managed connectors — sync with 17 data sources automatically</li>
+<li>Advanced retrieval pipeline — reranking, entity extraction, summary index, agentic multi-step retrieval</li>
+<li>Enterprise compliance stack — SOC 2, HIPAA, GDPR out of the box</li>
+<li>SDK ecosystem — Python + TypeScript + CLI + LangChain</li>
+<li>Brand and community — 5 PH launches, Craft-backed, Zapier/Glue customers</li>
+<li>Format breadth — ~40 formats vs. Contexter&#39;s 15</li>
+</ol>
+<p><strong>Where Contexter wins (or can win):</strong></p>
+<ol>
+<li>Price — €4.72/mo vs. $100–$500/mo + connector fees. ~21–100x cheaper.</li>
+<li>Self-hosted / data sovereignty — no cloud vendor, no vendor lock-in, no data residency trade-off</li>
+<li>Simplicity — &quot;upload → query&quot; without multi-step retrieval complexity</li>
+<li>Privacy-first ICP — developers who cannot send data to a US cloud SaaS (regulated EU companies, security-conscious devs, local-first builders)</li>
+<li>No per-page billing surprises — flat Hetzner infra cost regardless of document volume</li>
+</ol>
+<p><strong>Sharpest strategic knife:</strong>
+Ragie&#39;s $250/connector/month model creates a &quot;connector tax&quot; that compounds quickly. A team using Google Drive + Notion + Zendesk spends $750+/mo before a single page is processed. Contexter can position directly against this: &quot;Your documents, your server, no connector tax, no per-page meter.&quot; The connector pricing is the most likely pain point that drives Ragie customers to seek alternatives.</p>
+
+</body>
+</html>

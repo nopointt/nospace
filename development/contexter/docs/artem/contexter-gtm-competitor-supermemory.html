@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-competitor-supermemory — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Competitive Intelligence Report: Supermemory</h1>
+<p><strong>Analyst:</strong> Lead/MarketAnalysis
+<strong>Date:</strong> 2026-03-27
+<strong>Subject:</strong> Supermemory (supermemory.ai) — deep analysis as Contexter competitor
+<strong>Comparison lens:</strong> Every finding evaluated against Contexter positioning (&quot;Context Storage for AI&quot;, self-hosted Hetzner, €4.72/mo, developer-first, 15 formats incl. audio/video)</p>
+<hr>
+<h1>Document 1: Positioning — Landing Page Teardown</h1>
+<h2>1. Hero Verbatim</h2>
+<p><strong>H1 (exact):</strong> &quot;Your AI is only as good as what it remembers&quot;</p>
+<p><strong>Subheadline (exact):</strong> &quot;Context infrastructure for your AI agents: user profiles, memory graph, retrieval, extractors, and connectors.&quot;</p>
+<p><strong>CTAs (exact):</strong></p>
+<ul>
+<li>&quot;Start Building →&quot; → <code>console.supermemory.ai</code></li>
+<li>&quot;Talk to Founder&quot; → calendar booking</li>
+<li>&quot;Get a personal supermemory ↗&quot; → <code>app.supermemory.ai</code></li>
+</ul>
+<p><strong>Source:</strong> <a href="https://supermemory.ai/">https://supermemory.ai/</a> (fetched 2026-03-27)</p>
+<hr>
+<h2>2. Five-Second Test</h2>
+<p><strong>Clear what they do?</strong> Yes — with one caveat.</p>
+<p>&quot;Your AI is only as good as what it remembers&quot; communicates the problem space immediately. A developer landing here understands this is about persistent AI memory. The subheadline adds structural specificity (user profiles, memory graph, retrieval) that confirms it is infrastructure, not an app.</p>
+<p>Caveat: the dual product confusion (infrastructure API + consumer app) takes ~10 seconds to parse. Two CTAs point to two different products (<code>console.</code> = API, <code>app.</code> = consumer). A new visitor may not immediately grasp which lane applies to them.</p>
+<p><strong>Contexter comparison:</strong> Contexter&#39;s positioning (&quot;Context Storage for AI&quot;) is narrower and unambiguous — upload → parse → query. Less impressive but clearer on first contact.</p>
+<hr>
+<h2>3. Category Claim</h2>
+<p>Supermemory explicitly claims the <strong>&quot;context infrastructure&quot;</strong> category (subheadline), not merely &quot;memory layer&quot; (though that phrase appears in press coverage and their own blog). On the landing page, the framing is infrastructure-first:</p>
+<ul>
+<li>&quot;Context infrastructure for your AI agents&quot;</li>
+<li>&quot;#1 on MemoryBench&quot; (benchmark ownership = category definition play)</li>
+<li>Comparison table: &quot;Supports 5 context layers (competitors offer 1-2)&quot;</li>
+</ul>
+<p>This is a deliberate category-creation move. They are not just a vector store or RAG tool — they position above that layer and frame Mem0 and Zep as inferior within their defined category.</p>
+<p><strong>Contexter comparison:</strong> Contexter does not yet claim a category. &quot;Context Storage for AI&quot; is a description, not a category name. This is a gap.</p>
+<hr>
+<h2>4. ICP — Who Is This For?</h2>
+<p><strong>Primary ICP: Developer / AI engineer building agent products</strong></p>
+<p>Evidence from landing page:</p>
+<ul>
+<li>Code example shown in TypeScript as first interaction</li>
+<li>SDK list: TypeScript, Python, REST API, LangChain, LangGraph, CrewAI, Vercel AI SDK, OpenAI SDK, Mastra</li>
+<li>CTA: &quot;Start Building →&quot; (imperative for builders)</li>
+<li>&quot;Talk to Founder&quot; as secondary CTA (founder-led sales, startup-to-startup)</li>
+</ul>
+<p><strong>Secondary ICP: Enterprise AI teams (emerging)</strong></p>
+<p>Evidence:</p>
+<ul>
+<li>SOC 2 + HIPAA + GDPR compliance listed</li>
+<li>Named enterprise customers: Adapta, Nissan, OpenNote, Composio</li>
+<li>Enterprise tier: custom pricing, dedicated engineering</li>
+<li>Startup program: $1,000 credits</li>
+</ul>
+<p><strong>Tertiary: Power-user consumer (separate product)</strong></p>
+<p>Evidence: <code>app.supermemory.ai</code> is a separate consumer product — &quot;10,000+ power users&quot;, browser extension, &quot;one-click saving.&quot; This is a separate motion, not the landing page focus.</p>
+<p><strong>Contexter ICP alignment:</strong> Both target developers. Supermemory reaches further toward enterprise. Contexter&#39;s €4.72/mo self-hosted positioning targets cost-conscious indie developers and small teams — a different point on the same spectrum.</p>
+<hr>
+<h2>5. Value Proposition Decomposition</h2>
+<h3>VP-1: Memory Graph</h3>
+<ul>
+<li><strong>Pain:</strong> AI agents lose context; existing solutions &quot;append&quot; data without understanding relationships</li>
+<li><strong>Result:</strong> &quot;Ontology-aware relationships that evolve knowledge rather than append it&quot;</li>
+<li><strong>Mechanism:</strong> Custom vector engine with knowledge graph layer; cross-conversation entity linking</li>
+<li><strong>Proof:</strong> &quot;#1 on MemoryBench&quot;, &quot;85.2% accuracy on LongMemEval&quot;</li>
+<li><strong>Contexter gap:</strong> Contexter stores and retrieves chunks; no claimed graph/relationship layer</li>
+</ul>
+<h3>VP-2: Sub-300ms Retrieval</h3>
+<ul>
+<li><strong>Pain:</strong> Slow memory retrieval breaks conversational latency budgets</li>
+<li><strong>Result:</strong> &quot;Sub-300ms p95 at any scale&quot;</li>
+<li><strong>Mechanism:</strong> Hybrid search (vector + keyword) with context-aware reranking</li>
+<li><strong>Proof:</strong> &quot;10x faster than Zep, 25x faster than Mem0&quot; (AI Founder Kit review, 2025)</li>
+<li><strong>Contexter gap:</strong> No published latency benchmarks</li>
+</ul>
+<h3>VP-3: User Profiles</h3>
+<ul>
+<li><strong>Pain:</strong> Agents treat every user as a stranger; no persistent understanding of behavior</li>
+<li><strong>Result:</strong> &quot;Deep understanding from behavior patterns, not simple recall&quot;</li>
+<li><strong>Mechanism:</strong> Static + dynamic profile layers auto-built from conversation history</li>
+<li><strong>Proof:</strong> Testimonial: &quot;response time from 40s → 12s, 40-50% fewer tokens&quot;</li>
+<li><strong>Contexter gap:</strong> Contexter does not offer user profile abstraction — pure document storage</li>
+</ul>
+<h3>VP-4: Connectors (Notion, Slack, Google Drive, Gmail, S3)</h3>
+<ul>
+<li><strong>Pain:</strong> Data lives in tools; manual import is a bottleneck</li>
+<li><strong>Result:</strong> &quot;Automatic sync&quot; from existing sources</li>
+<li><strong>Mechanism:</strong> Pre-built connectors with real-time webhooks</li>
+<li><strong>Proof:</strong> Named connector list on landing page</li>
+<li><strong>Contexter gap:</strong> Contexter requires manual upload (15 formats); no connector ecosystem</li>
+</ul>
+<h3>VP-5: Multi-format Extraction</h3>
+<ul>
+<li><strong>Pain:</strong> Documents, PDFs, images, audio — all need different processing pipelines</li>
+<li><strong>Result:</strong> &quot;Meaning-preserving chunking&quot; across formats</li>
+<li><strong>Mechanism:</strong> Extractors layer — OCR for images, transcription for audio/video</li>
+<li><strong>Proof:</strong> Listed in feature breakdown on landing page</li>
+<li><strong>Contexter gap:</strong> Contexter supports 15 formats including audio/video — this is parity or advantage for Contexter</li>
+</ul>
+<hr>
+<h2>6. Pricing Teardown</h2>
+<p><strong>Source:</strong> Landing page (<a href="https://supermemory.ai/">https://supermemory.ai/</a>, fetched 2026-03-27). Dedicated /pricing page returned 404 at time of research.</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Price</th>
+<th>Tokens/mo</th>
+<th>Queries/mo</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free</td>
+<td>$0</td>
+<td>1M tokens</td>
+<td>10K queries</td>
+<td>Unlimited storage, unlimited users, free multi-modal extraction</td>
+</tr>
+<tr>
+<td>Pro</td>
+<td>$19/mo</td>
+<td>3M tokens</td>
+<td>100K queries</td>
+<td>Unlimited storage, unlimited users</td>
+</tr>
+<tr>
+<td>Scale</td>
+<td>$399/mo</td>
+<td>80M tokens</td>
+<td>20M queries</td>
+<td>Unlimited storage, unlimited users</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Custom</td>
+<td>Unlimited</td>
+<td>Unlimited</td>
+<td>Dedicated engineering, SLA</td>
+</tr>
+</tbody></table>
+<p><strong>Overage rates:</strong></p>
+<ul>
+<li>$0.01 per 1,000 tokens</li>
+<li>$0.10 per 1,000 queries</li>
+</ul>
+<p><strong>Startup program:</strong> $1,000 in free credits, 6-month build period</p>
+<p><strong>Key observation — &quot;unlimited storage, unlimited users&quot; across all tiers:</strong> Supermemory monetizes on compute (tokens processed + queries), not seats or storage. This is a consumption model.</p>
+<p><strong>Contexter comparison:</strong></p>
+<ul>
+<li>Contexter: €4.72/mo flat (self-hosted, Hetzner) — no usage ceiling by design</li>
+<li>Supermemory Free: 10K queries/mo — hits ceiling for any meaningful agent workload</li>
+<li>Supermemory Pro at $19/mo: 100K queries — more headroom, but cloud-only</li>
+<li><strong>Contexter&#39;s structural advantage:</strong> unlimited queries for €4.72/mo (self-hosted). For high-query workloads, this gap becomes enormous at scale.</li>
+<li><strong>Supermemory&#39;s advantage:</strong> zero-friction onboarding (no infra), connectors, graph layer</li>
+</ul>
+<p><strong>JTBD framing:</strong> Developers &quot;hiring&quot; a memory layer for a prototype use Supermemory Free. Teams scaling past 100K queries/mo face $399 or enterprise. Self-hosters with cost sensitivity hire Contexter.</p>
+<hr>
+<h2>7. Brand Voice</h2>
+<p><strong>Technical level:</strong> 4/5 — assumes developer audience; uses terms like &quot;ontology-aware,&quot; &quot;hybrid search,&quot; &quot;context-aware reranking,&quot; &quot;memory graph&quot; without definition. The hero CTA is &quot;Start Building&quot; not &quot;Try Free.&quot;</p>
+<p><strong>Tone:</strong> Confident, benchmark-forward, slightly evangelical. Heavy use of superlatives anchored to metrics (#1 on MemoryBench, 99% SOTA, 85.2% LongMemEval). Startup voice — founder-accessible (&quot;Talk to Founder&quot; CTA).</p>
+<p><strong>Emotional register:</strong> &quot;Life-changing,&quot; &quot;the only thing that works reliably&quot; (testimonials) — they cultivate strong conviction language from users.</p>
+<p><strong>Contexter comparison:</strong> Contexter&#39;s voice (based on product description) is functional and developer-precise: upload → parse → chunk → embed → query. Lower emotional register, higher specificity. Supermemory out-narratives Contexter at the positioning layer while Contexter wins on operational clarity.</p>
+<hr>
+<h2>8. Trust Signals</h2>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Benchmarks</td>
+<td>#1 on MemoryBench, 85.2% LongMemEval, #1 on LoCoMo, #1 on ConvoMem</td>
+</tr>
+<tr>
+<td>Named customers</td>
+<td>Adapta, Nissan, OpenNote, Composio, Cluely, Montra, Scira</td>
+</tr>
+<tr>
+<td>Testimonials</td>
+<td>Spencer Jones (MedTechVendors), Zaid Mukaddam (Scira.ai — &quot;60% recall accuracy improvement&quot;)</td>
+</tr>
+<tr>
+<td>Compliance</td>
+<td>SOC 2, HIPAA, GDPR</td>
+</tr>
+<tr>
+<td>Volume</td>
+<td>&quot;100B+ tokens processed monthly&quot;</td>
+</tr>
+<tr>
+<td>Funding</td>
+<td>$3M seed (Oct 2025), investors: Jeff Dean (Google DeepMind), Cloudflare CTO Dane Knecht, Sentry founder David Cramer, + OpenAI/Meta/Google executives. Led by Susa Ventures, Browder Capital, SF1.vc</td>
+</tr>
+<tr>
+<td>GitHub</td>
+<td>19.8K stars, 1.8K forks (MIT license)</td>
+</tr>
+<tr>
+<td>Press</td>
+<td>TechCrunch coverage (Oct 6, 2025)</td>
+</tr>
+</tbody></table>
+<p><strong>Source:</strong> <a href="https://supermemory.ai/">https://supermemory.ai/</a> + <a href="https://techcrunch.com/2025/10/06/">https://techcrunch.com/2025/10/06/</a> (fetched 2026-03-27)</p>
+<p><strong>Contexter comparison:</strong> Contexter has none of these signals publicly visible. This is the most significant asymmetry — Supermemory is a funded, press-covered product with named enterprise customers. Contexter is in early/stealth positioning.</p>
+<hr>
+<h2>9. Document 1 Sources</h2>
+<ul>
+<li><a href="https://supermemory.ai/">https://supermemory.ai/</a> (landing page, fetched 2026-03-27)</li>
+<li><a href="https://techcrunch.com/2025/10/06/a-19-year-old-nabs-backing-from-google-execs-for-his-ai-memory-startup-supermemory/">https://techcrunch.com/2025/10/06/a-19-year-old-nabs-backing-from-google-execs-for-his-ai-memory-startup-supermemory/</a></li>
+<li><a href="https://aifounderkit.com/tool/supermemory-review-features-pricing-alternatives/">https://aifounderkit.com/tool/supermemory-review-features-pricing-alternatives/</a></li>
+<li><a href="https://blog.logrocket.com/building-ai-apps-mem0-supermemory/">https://blog.logrocket.com/building-ai-apps-mem0-supermemory/</a></li>
+</ul>
+<hr>
+<hr>
+<h1>Document 2: Killer Features — Product Teardown</h1>
+<h2>1. Feature Matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Supermemory</th>
+<th>Contexter</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Memory / vector storage</td>
+<td>Yes — custom vector engine</td>
+<td>Yes — embed + index pipeline</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>MCP Server</td>
+<td>Yes — native, MCP 4.0, <code>mcp.supermemory.ai/mcp</code></td>
+<td>Yes</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>Python SDK</td>
+<td>Yes (<code>pip install supermemory</code>)</td>
+<td>Not specified in brief</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>TypeScript SDK</td>
+<td>Yes (<code>npm install supermemory</code>)</td>
+<td>Not specified</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>Knowledge/memory graph</td>
+<td>Yes — ontology-aware entity linking</td>
+<td>Not present</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>User profiles (per-user memory)</td>
+<td>Yes — static + dynamic auto-built</td>
+<td>Not present</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>Connectors (Notion, Slack, Drive)</td>
+<td>Yes — 5+ native connectors</td>
+<td>Not present</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>Audio/video ingestion</td>
+<td>Yes — transcription pipeline</td>
+<td>Yes — 15 formats incl. audio/video</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>PDF ingestion</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Parity</td>
+</tr>
+<tr>
+<td>Image OCR</td>
+<td>Yes</td>
+<td>Not specified</td>
+<td>Supermemory advantage (if Contexter lacks)</td>
+</tr>
+<tr>
+<td>Self-hosted deployment</td>
+<td>Yes — but requires enterprise agreement</td>
+<td>Yes — full self-hosted (Hetzner €4.72/mo)</td>
+<td>Contexter advantage (true self-host)</td>
+</tr>
+<tr>
+<td>Open source (core)</td>
+<td>Partial — MIT on GitHub (19.8K stars) but production self-host = enterprise</td>
+<td>Core product (check)</td>
+<td>Contexter advantage if fully open</td>
+</tr>
+<tr>
+<td>Sub-300ms retrieval (claimed)</td>
+<td>Yes — p95 guarantee</td>
+<td>Not benchmarked publicly</td>
+<td>Supermemory advantage (claimed)</td>
+</tr>
+<tr>
+<td>LangChain/LangGraph integration</td>
+<td>Yes — official</td>
+<td>Not specified</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>CrewAI/Mastra integration</td>
+<td>Yes</td>
+<td>Not specified</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>Browser extension</td>
+<td>Yes — Chrome</td>
+<td>No</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>Consumer app</td>
+<td>Yes — <code>app.supermemory.ai</code></td>
+<td>No</td>
+<td>Supermemory advantage (different market)</td>
+</tr>
+<tr>
+<td>Benchmark leadership</td>
+<td>Yes — MemoryBench #1</td>
+<td>None published</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>SOC 2 / HIPAA / GDPR</td>
+<td>Yes</td>
+<td>Not specified</td>
+<td>Supermemory advantage</td>
+</tr>
+<tr>
+<td>Pricing</td>
+<td>$0–$399/mo (consumption)</td>
+<td>€4.72/mo flat (self-hosted)</td>
+<td>Context-dependent</td>
+</tr>
+<tr>
+<td>Hybrid search (vector + keyword)</td>
+<td>Yes</td>
+<td>Not specified</td>
+<td>Supermemory advantage (if Contexter lacks)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>2. Unique Capabilities</h2>
+<h3>Memory Graph (most differentiated feature)</h3>
+<p>The memory graph is Supermemory&#39;s core technical moat claim. Unlike pure vector similarity search, the graph layer maintains ontology-aware relationships between entities — connecting facts across conversations and documents without requiring explicit user tagging.</p>
+<p>Landing page claim: &quot;custom vector engine with ontology-aware relationships that evolve knowledge rather than append it.&quot;</p>
+<p>No documentation URL was accessible at time of research that reveals implementation details. Architecture signals (TypeScript monorepo, Cloudflare Durable Objects) suggest a serverless graph overlay on top of vector search.</p>
+<p><strong>Contexter implication:</strong> Contexter&#39;s chunking → embedding → retrieval pipeline is a standard RAG architecture. No graph layer = no cross-document entity resolution. This limits Contexter to &quot;find relevant chunks&quot; while Supermemory claims &quot;understand relationships.&quot;</p>
+<h3>User Profiles (second most differentiated)</h3>
+<p>Auto-built profiles that combine static facts (name, preferences) and dynamic context (behavioral patterns). Returned in ~50ms per the GitHub README.</p>
+<p>This is an agentic memory primitive that Contexter does not offer. It targets the use case: &quot;my coding agent should remember I prefer TypeScript&quot; — which is a different layer than document retrieval.</p>
+<p><strong>Contexter implication:</strong> Contexter is document-centric storage. Supermemory adds a conversation/behavioral memory layer on top. These are adjacent but different primitives. Contexter could add user profiles without competing with Supermemory&#39;s graph if scoped narrowly.</p>
+<h3>MCP Server 4.0</h3>
+<ul>
+<li>Endpoint: <code>https://mcp.supermemory.ai/mcp</code></li>
+<li>Tools exposed: <code>memory</code> (store) + <code>recall</code> (retrieve)</li>
+<li>Auth: OAuth + API keys (<code>sm_</code> prefix)</li>
+<li>Built on: Cloudflare Workers + Durable Objects</li>
+<li>Clients: Claude Desktop, Cursor, Windsurf, VS Code, Cline/Roo-Cline, any MCP-compatible app</li>
+<li>Source: <a href="https://supermemory.ai/docs/supermemory-mcp/introduction">https://supermemory.ai/docs/supermemory-mcp/introduction</a> (fetched 2026-03-27)</li>
+</ul>
+<p>The &quot;Universal Memory MCP&quot; product (PH launch April 2025, 447 upvotes) positions the MCP server as making &quot;your memories available to every single LLM&quot; — cross-platform memory portability is the core pitch.</p>
+<p><strong>Contexter comparison:</strong> Contexter also has MCP support. The differentiation is in what the MCP exposes: Supermemory&#39;s MCP is memory-centric (user facts + conversation history); Contexter&#39;s MCP is likely document-centric (query knowledge base). These can coexist in the same agent stack.</p>
+<hr>
+<h2>3. MCP Support — Detail</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Supermemory</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MCP endpoint</td>
+<td><code>https://mcp.supermemory.ai/mcp</code></td>
+</tr>
+<tr>
+<td>MCP version</td>
+<td>4.0 (as of April 2025 PH launch)</td>
+</tr>
+<tr>
+<td>Tools</td>
+<td><code>memory</code>, <code>recall</code></td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>OAuth (primary) + API key</td>
+</tr>
+<tr>
+<td>Project scoping</td>
+<td><code>x-sm-project</code> header</td>
+</tr>
+<tr>
+<td>Supported clients</td>
+<td>Claude Desktop, Cursor, Windsurf, VS Code, Cline</td>
+</tr>
+<tr>
+<td>Open source</td>
+<td>Yes — <code>github.com/supermemoryai/supermemory/tree/main/apps/mcp</code></td>
+</tr>
+<tr>
+<td>Separate repo</td>
+<td>Yes — <code>github.com/supermemoryai/supermemory-mcp</code> (no-login version)</td>
+</tr>
+</tbody></table>
+<p>The separate <code>supermemory-mcp</code> repo is notable: &quot;Your memories are in ChatGPT... But nowhere else. Universal Memory MCP makes your memories available to every single LLM. No logins or paywall. One command to set it up.&quot; This is a freemium distribution strategy — lower friction MCP entry point that captures mindshare before upselling to API.</p>
+<hr>
+<h2>4. Format Support</h2>
+<table>
+<thead>
+<tr>
+<th>Format Category</th>
+<th>Supermemory</th>
+<th>Contexter</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PDFs</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Web pages</td>
+<td>Yes (Chrome extension + direct)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Images (OCR)</td>
+<td>Yes</td>
+<td>Not specified</td>
+</tr>
+<tr>
+<td>Audio (transcription)</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Video (transcription)</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Tweets</td>
+<td>Yes (import)</td>
+<td>Not specified</td>
+</tr>
+<tr>
+<td>Google Drive docs</td>
+<td>Yes (connector)</td>
+<td>Not specified</td>
+</tr>
+<tr>
+<td>Gmail</td>
+<td>Yes (connector)</td>
+<td>Not specified</td>
+</tr>
+<tr>
+<td>Notion</td>
+<td>Yes (connector)</td>
+<td>Not specified</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>Yes (connector)</td>
+<td>Not specified</td>
+</tr>
+<tr>
+<td>Code files</td>
+<td>Yes (GitHub connector)</td>
+<td>Not specified</td>
+</tr>
+<tr>
+<td>Total formats</td>
+<td>Not enumerated</td>
+<td>15 (claimed)</td>
+</tr>
+</tbody></table>
+<p><strong>Assessment:</strong> Supermemory&#39;s format coverage is broader when connectors are included, but connectors are fundamentally a sync mechanism (live data), while Contexter&#39;s 15-format ingestion is a processing pipeline (one-time or manual). The &quot;15 formats&quot; claim for Contexter needs verification against Supermemory&#39;s actual extractor list — both likely cover the same base formats (PDF, audio, video, web).</p>
+<p><strong>Contexter advantage:</strong> The &quot;15 formats&quot; claim is a concrete differentiator in developer communication. Supermemory does not enumerate their format count on the landing page — Contexter can win this positioning battle by being specific.</p>
+<hr>
+<h2>5. API Design</h2>
+<p><strong>TypeScript SDK:</strong></p>
+<pre><code class="language-typescript">import Supermemory from &#39;supermemory&#39;
+const client = new Supermemory()
+await client.add({ content: &quot;User preference&quot;, containerTags: [&quot;user_123&quot;] })
+</code></pre>
+<p>Source: Landing page code example (<a href="https://supermemory.ai/">https://supermemory.ai/</a>, 2026-03-27)</p>
+<p><strong>Key API primitives:</strong></p>
+<ul>
+<li><code>add()</code> — store content with container tags (user isolation)</li>
+<li>Implicit: query/search (not shown on landing, documented in <code>/docs</code>)</li>
+<li><code>containerTags</code> = the user isolation mechanism</li>
+</ul>
+<p><strong>Auth:</strong> API keys prefixed <code>sm_</code> + OAuth (for MCP)</p>
+<p><strong>SDKs:</strong> TypeScript (<code>npm install supermemory</code>), Python (<code>pip install supermemory</code>)</p>
+<p><strong>Framework integrations (from landing):</strong> Vercel AI SDK, LangChain, LangGraph, CrewAI, OpenAI SDK, Mastra, Zapier, n8n, Pipecat</p>
+<p><strong>API documentation:</strong> <a href="https://supermemory.ai/docs">https://supermemory.ai/docs</a> (not fully fetched at time of research; <code>https://supermemory.ai/docs/llms.txt</code> exists for LLM-readable docs — a developer-experience signal)</p>
+<p><strong>Contexter comparison:</strong> Contexter&#39;s REST API is the primary interface. Supermemory&#39;s SDK abstraction (especially with Vercel AI SDK + LangChain integrations) lowers the integration surface area significantly. Contexter needs SDKs to compete at developer adoption velocity.</p>
+<hr>
+<h2>6. Integrations</h2>
+<p><strong>Browser extension:</strong> Chrome one-click save (links, PDFs, images, videos) — consumer product, <code>app.supermemory.ai</code></p>
+<p><strong>Coding agent plugins:</strong></p>
+<ul>
+<li>Claude Code plugin (persistent memory for coding sessions)</li>
+<li>Cursor plugin</li>
+<li>OpenCode plugin (<code>github.com/supermemoryai/opencode-supermemory</code>)</li>
+<li>OpenClaw plugin (<code>github.com/supermemoryai/openclaw-supermemory</code>)</li>
+<li>Windsurf</li>
+<li>VS Code (via Cline/Roo-Cline)</li>
+</ul>
+<p><strong>Data source connectors:</strong></p>
+<ul>
+<li>Notion, Slack, Google Drive, Gmail, OneDrive, S3, GitHub (per GitHub README)</li>
+<li>Real-time webhooks for sync</li>
+</ul>
+<p><strong>Automation platforms:</strong> Zapier, n8n, Pipecat</p>
+<p><strong>AI framework integrations:</strong> LangChain, LangGraph, CrewAI, Vercel AI SDK, OpenAI SDK, Mastra</p>
+<p><strong>Source:</strong> <a href="https://supermemory.ai/">https://supermemory.ai/</a> + <a href="https://github.com/supermemoryai/supermemory">https://github.com/supermemoryai/supermemory</a> (fetched 2026-03-27)</p>
+<p><strong>Contexter comparison:</strong> Contexter has no comparable integration ecosystem. This is the widest product moat Supermemory has built — integrations create network stickiness that pure API products cannot easily replicate.</p>
+<hr>
+<h2>7. Architecture Signals</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Supermemory</th>
+<th>Signal</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Deployment</td>
+<td>Cloud-first (SaaS), self-host requires enterprise agreement</td>
+<td>Vendor-controlled</td>
+</tr>
+<tr>
+<td>Infrastructure</td>
+<td>Cloudflare Workers + Durable Objects (MCP server)</td>
+<td>Serverless-native</td>
+</tr>
+<tr>
+<td>Language</td>
+<td>TypeScript + Python (monorepo, Turbo + Bun build)</td>
+<td>Modern toolchain</td>
+</tr>
+<tr>
+<td>Repo structure</td>
+<td>Monorepo: <code>/apps</code>, <code>/packages</code>, <code>/skills</code></td>
+<td>Modular, plugin-ready</td>
+</tr>
+<tr>
+<td>License</td>
+<td>MIT (GitHub repo)</td>
+<td>Open source surface</td>
+</tr>
+<tr>
+<td>Open source depth</td>
+<td>Core engine on GitHub (19.8K stars); production self-host = enterprise agreement</td>
+<td>Open core model</td>
+</tr>
+<tr>
+<td>Vector engine</td>
+<td>Custom (not Pinecone/Weaviate — proprietary)</td>
+<td>Vertical integration</td>
+</tr>
+<tr>
+<td>Scale claims</td>
+<td>&quot;100B+ tokens processed monthly&quot;</td>
+<td>Significant throughput</td>
+</tr>
+</tbody></table>
+<p><strong>Open source nuance:</strong> The GitHub repo (MIT, 19.8K stars) gives the impression of full open source, but vectorize.io&#39;s analysis reveals: &quot;self-hosting requires enterprise agreements — no standalone deployment.&quot; This is a common open-core deception pattern: open code ≠ open deployment.</p>
+<p><strong>Contexter structural advantage:</strong> True self-hosted at €4.72/mo with no enterprise agreement. For developers evaluating build-vs-buy, Contexter&#39;s operational independence is a genuine differentiator that Supermemory cannot match without breaking their business model.</p>
+<hr>
+<h2>8. Document 2 Sources</h2>
+<ul>
+<li><a href="https://supermemory.ai/">https://supermemory.ai/</a> (landing page, fetched 2026-03-27)</li>
+<li><a href="https://github.com/supermemoryai/supermemory">https://github.com/supermemoryai/supermemory</a> (fetched 2026-03-27)</li>
+<li><a href="https://supermemory.ai/docs/supermemory-mcp/introduction">https://supermemory.ai/docs/supermemory-mcp/introduction</a> (fetched 2026-03-27)</li>
+<li><a href="https://github.com/supermemoryai/supermemory-mcp">https://github.com/supermemoryai/supermemory-mcp</a></li>
+<li><a href="https://blog.logrocket.com/building-ai-apps-mem0-supermemory/">https://blog.logrocket.com/building-ai-apps-mem0-supermemory/</a></li>
+<li><a href="https://vectorize.io/articles/supermemory-alternatives">https://vectorize.io/articles/supermemory-alternatives</a></li>
+<li><a href="https://glama.ai/mcp/servers/@supermemoryai/supermemory-mcp">https://glama.ai/mcp/servers/@supermemoryai/supermemory-mcp</a></li>
+</ul>
+<hr>
+<hr>
+<h1>Document 3: Audience Voice — &quot;Love / Hate / Want&quot;</h1>
+<h2>Research Note on Data Quality</h2>
+<p>Supermemory was founded in 2024, raised seed funding October 2025, and is an early-stage product. Review volume on third-party platforms (Slashdot, G2, Capterra) is near-zero. The primary signals come from: GitHub issues (9 open), Product Hunt launch comments, one HN discussion, developer blog posts, and press coverage. Proxy signals are explicitly flagged.</p>
+<hr>
+<h2>1. Love — What Users Praise</h2>
+<p><strong>Verbatim quotes collected:</strong></p>
+<blockquote>
+<p>&quot;A thousand times better than the competition.&quot; — Zaid Mukaddam, Scira.ai (via AI Founder Kit review, 2025, <a href="https://aifounderkit.com/tool/supermemory-review-features-pricing-alternatives/">https://aifounderkit.com/tool/supermemory-review-features-pricing-alternatives/</a>)</p>
+</blockquote>
+<blockquote>
+<p>&quot;Supermemory unlocked clarity in our sourcing — context-rich vendor matches, lightning speed &amp; consistency that transformed procurement overnight.&quot; — Spencer Jones, MedTechVendors (via AI Founder Kit review, 2025)</p>
+</blockquote>
+<blockquote>
+<p>&quot;Life-changing&quot; / &quot;best products I&#39;ve used in a long time&quot; / &quot;integration achievable in 120 seconds&quot; — Unnamed users (paraphrased from landing page testimonials, <a href="https://supermemory.ai/">https://supermemory.ai/</a>, 2026-03-27)</p>
+</blockquote>
+<blockquote>
+<p>&quot;The memory graph grow and start connecting context across projects&quot; — Developer testimonial (paraphrased from landing page)</p>
+</blockquote>
+<blockquote>
+<p>&quot;The only thing that works reliably&quot; — CEO testimonial (paraphrased from landing page)</p>
+</blockquote>
+<p><strong>Proxy signal — PH launch comment volume:</strong> 64 comments on July 2024 launch (PH #1 that day, 715 upvotes). 64 comments on a PH launch indicates active engagement, not passive clicking.</p>
+<p><strong>Patterns in praise:</strong></p>
+<ul>
+<li>Speed (sub-300ms framing resonates)</li>
+<li>Graph-based memory (&quot;connects context across projects&quot;)</li>
+<li>Integration simplicity (&quot;120 seconds&quot;)</li>
+<li>Reliability vs. competitors</li>
+</ul>
+<hr>
+<h2>2. Hate — What Users Criticize</h2>
+<p><strong>Verbatim quotes:</strong></p>
+<blockquote>
+<p>&quot;it&#39;s essentially a memory layer on top of an LLM: store user facts, retrieve them later, personalize responses. Novel? I&#39;m not convinced. We&#39;ve had embeddings + vector search + profile stores for years. [It&#39;s] a polished repackaging of known ideas rather than a breakthrough.&quot; — gabrycina, Hacker News (<a href="https://news.ycombinator.com/item?id=46426762">https://news.ycombinator.com/item?id=46426762</a>, ~87 days before 2026-03-27, approx. Dec 2025)</p>
+</blockquote>
+<blockquote>
+<p>&quot;Can&#39;t edit memories — I would prefer to go back and edit existing memories rather than creating separate ones.&quot; — Olivia, Product Hunt review (4.0/5, via PH product page, 2024)</p>
+</blockquote>
+<p><strong>GitHub issues as proxy for hate:</strong></p>
+<p>From <code>github.com/supermemoryai/supermemory/issues</code> (fetched 2026-03-27, 9 open issues):</p>
+<ul>
+<li>Issue #792: &quot;Claude Code plugin writes memories but recall/search returns empty&quot; — <strong>asymmetrical write/read failure</strong>. Memory saves silently but retrieval returns nothing. This is a trust-destroying bug pattern.</li>
+<li>Issue #801: &quot;Supermemory login failing. Platform seems to be down&quot; — service availability complaint</li>
+<li>Issue #802: &quot;Dashboard: JSON parse error on &#39;Total memories stored&#39; display&quot; — UI reliability</li>
+<li>Issue #758: SSL certificate error on organization invites — onboarding friction</li>
+</ul>
+<p><strong>October 2025 incident (documented):</strong> Service degradation Oct 18, 2025, 1:17–1:45 PM PDT. Two enterprise customers doing simultaneous backfills overwhelmed the database; retry logic created a cascading failure. Free-tier users were queued behind enterprise retries. Platform looked like it was &quot;failing&quot; rather than &quot;queuing&quot; from the customer perspective.</p>
+<p>Source: <a href="https://blog.supermemory.ai/incident-report-october-2025-service-degradation/">https://blog.supermemory.ai/incident-report-october-2025-service-degradation/</a></p>
+<p><strong>Patterns in criticism:</strong></p>
+<ul>
+<li>&quot;Is this really novel?&quot; — technical skepticism from experienced developers (HN audience)</li>
+<li>Silent retrieval failures (write succeeds, read returns empty) — most damaging UX bug</li>
+<li>Platform instability (login, SSL)</li>
+<li>Memory immutability (no edit capability)</li>
+<li>Closed self-host (enterprise agreement required)</li>
+</ul>
+<hr>
+<h2>3. Want — Feature Requests</h2>
+<p>From GitHub issues (fetched 2026-03-27):</p>
+<ul>
+<li><strong>Issue #783:</strong> Gemini CLI extension with persistent memory via MCP — expanding beyond Claude/Cursor/OpenCode ecosystem</li>
+<li><strong>Issue #808:</strong> Collective intelligence capabilities — shared memory across agents/users</li>
+<li><strong>Issue #803:</strong> Payment processing integration within memory-enhanced agents</li>
+<li><strong>Issue #795–796:</strong> Transparency on benchmark methodology (LoCoMo score questions, SOTA claims scrutiny)</li>
+</ul>
+<p><strong>From HN discussion (gabrycina, Dec 2025):</strong> Questions about how Supermemory handles &quot;memory decay and contradictions at scale&quot; — a feature the community wants answered/documented but hasn&#39;t seen addressed publicly.</p>
+<p><strong>Implied wants from review gaps:</strong></p>
+<ul>
+<li>Edit/delete individual memories (Olivia&#39;s PH review)</li>
+<li>No-code interface for non-developer users (noted as limitation in AI Founder Kit review)</li>
+<li>Self-host without enterprise agreement (identified in vectorize.io alternatives piece)</li>
+<li>Better observability into what was stored and why (HN skeptic, LogRocket comparison)</li>
+</ul>
+<hr>
+<h2>4. Switching Triggers</h2>
+<p><strong>What would make a developer switch FROM Supermemory TO Contexter (or build own):</strong></p>
+<ol>
+<li><strong>Cost at scale:</strong> Free tier (10K queries/mo) exhausted quickly; Scale tier ($399/mo) is a sharp jump. Teams with high query volume look for alternatives.</li>
+<li><strong>Closed self-host:</strong> Developers who need on-premise or VPC deployment without enterprise negotiation.</li>
+<li><strong>Silent retrieval failures:</strong> Issue #792 (write works, recall empty) destroys trust. Developers who hit this bug immediately evaluate alternatives.</li>
+<li><strong>&quot;Is this just RAG?&quot;:</strong> The HN skeptic voice represents a developer segment that will build their own rather than pay for &quot;polished repackaging.&quot;</li>
+<li><strong>Vendor lock-in:</strong> <code>sm_</code> API keys, proprietary memory graph format — teams worried about data portability.</li>
+<li><strong>Benchmark skepticism:</strong> Questions about LoCoMo score validity (GitHub issues #795-796) and the independent benchmark (dev.to, 2026) placing Supermemory at 70% vs. Hindsight at 91.4%.</li>
+</ol>
+<hr>
+<h2>5. Traction Signals</h2>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Value</th>
+<th>Source</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GitHub stars</td>
+<td>19.8K</td>
+<td>github.com/supermemoryai/supermemory</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>GitHub forks</td>
+<td>1.8K</td>
+<td>github.com/supermemoryai/supermemory</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>GitHub commits</td>
+<td>1,477</td>
+<td>github.com/supermemoryai/supermemory</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>PH launch 1 (Jul 2024)</td>
+<td>715 upvotes, 64 comments, #1 daily</td>
+<td>producthunt.com/products/supermemory</td>
+<td>Jul 21, 2024</td>
+</tr>
+<tr>
+<td>PH launch 2 (Apr 2025)</td>
+<td>447 upvotes, 24 comments, #2 daily</td>
+<td>producthunt.com/products/supermemory</td>
+<td>Apr 18, 2025</td>
+</tr>
+<tr>
+<td>PH followers</td>
+<td>1,307</td>
+<td>producthunt.com</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>Funding</td>
+<td>$3M seed</td>
+<td>TechCrunch</td>
+<td>Oct 6, 2025</td>
+</tr>
+<tr>
+<td>Consumer users</td>
+<td>&quot;10,000+ power users&quot;</td>
+<td>supermemory.ai</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>Token throughput</td>
+<td>&quot;100B+ tokens/month&quot;</td>
+<td>supermemory.ai</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>Named enterprise customers</td>
+<td>Adapta, Nissan, OpenNote, Composio, Cluely, Montra, Scira</td>
+<td>supermemory.ai + TechCrunch</td>
+<td>2026-03-27</td>
+</tr>
+<tr>
+<td>Open source alternate repo</td>
+<td>supermemoryai/supermemory-mcp</td>
+<td>github.com</td>
+<td>2026-03-27</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>6. Overall Sentiment</h2>
+<p><strong>Positive:</strong> Developer community reception was strong on launch (PH #1, 19.8K GitHub stars). Named enterprise customers and $3M funding from credible technical investors (Jeff Dean, Cloudflare CTO) signal institutional validation.</p>
+<p><strong>Skeptical:</strong> HN technical community questions novelty (&quot;polished repackaging of known ideas&quot;). Independent benchmarks place Supermemory lower than self-published numbers (70% on LoCoMo per dev.to 2026 vs. their claimed #1 status). Benchmark methodology questions in GitHub issues.</p>
+<p><strong>Critical gaps:</strong> Small review volume (4 PH reviews, 0 on Slashdot/G2/Capterra) means the product is pre-mainstream. The audience has not yet formed a strong consensus negative narrative — but the retrieval failure bug (Issue #792) is the most dangerous open issue for trust.</p>
+<p><strong>Net sentiment:</strong> Cautiously positive among early adopters; skeptical among experienced infrastructure developers; no mainstream negative narrative yet.</p>
+<hr>
+<h2>7. No Data Protocol</h2>
+<p>The following signals were sought but not found:</p>
+<ul>
+<li>Reddit discussions: No specific r/ threads about Supermemory found via web search</li>
+<li>Twitter/X user complaints: Platform paywalled ($402 on WebFetch); only founder tweets accessible</li>
+<li>G2/Capterra reviews: 0 reviews on both platforms as of 2026-03-27</li>
+<li>Slashdot: 0 user reviews (&quot;Be the first to provide a review&quot;)</li>
+<li>Detailed PH comment content: GraphQL cache returned, no readable comment text</li>
+</ul>
+<p><strong>Proxy signals used in lieu of direct reviews:</strong></p>
+<ul>
+<li>GitHub issues (direct user friction signal, unfiltered)</li>
+<li>Incident report blog post (company acknowledgment of real failures)</li>
+<li>Third-party developer blog comparisons (LogRocket, AI Founder Kit, dev.to)</li>
+<li>HN discussion (small N but high-quality technical signal)</li>
+</ul>
+<hr>
+<h2>8. Document 3 Sources</h2>
+<ul>
+<li><a href="https://github.com/supermemoryai/supermemory/issues">https://github.com/supermemoryai/supermemory/issues</a> (fetched 2026-03-27)</li>
+<li><a href="https://news.ycombinator.com/item?id=46426762">https://news.ycombinator.com/item?id=46426762</a></li>
+<li><a href="https://www.producthunt.com/products/supermemory">https://www.producthunt.com/products/supermemory</a></li>
+<li><a href="https://blog.supermemory.ai/incident-report-october-2025-service-degradation/">https://blog.supermemory.ai/incident-report-october-2025-service-degradation/</a></li>
+<li><a href="https://aifounderkit.com/tool/supermemory-review-features-pricing-alternatives/">https://aifounderkit.com/tool/supermemory-review-features-pricing-alternatives/</a></li>
+<li><a href="https://dev.to/varun_pratapbhardwaj_b13/5-ai-agent-memory-systems-compared-mem0-zep-letta-supermemory-superlocalmemory-2026-benchmark-59p3">https://dev.to/varun_pratapbhardwaj_b13/5-ai-agent-memory-systems-compared-mem0-zep-letta-supermemory-superlocalmemory-2026-benchmark-59p3</a></li>
+<li><a href="https://vectorize.io/articles/supermemory-alternatives">https://vectorize.io/articles/supermemory-alternatives</a></li>
+<li><a href="https://techcrunch.com/2025/10/06/a-19-year-old-nabs-backing-from-google-execs-for-his-ai-memory-startup-supermemory/">https://techcrunch.com/2025/10/06/a-19-year-old-nabs-backing-from-google-execs-for-his-ai-memory-startup-supermemory/</a></li>
+<li><a href="https://blog.logrocket.com/building-ai-apps-mem0-supermemory/">https://blog.logrocket.com/building-ai-apps-mem0-supermemory/</a></li>
+</ul>
+<hr>
+<hr>
+<h1>Strategic Summary for Contexter</h1>
+<h2>What Supermemory Does That Contexter Does Not</h2>
+<ol>
+<li>Memory graph (entity relationships across documents)</li>
+<li>Per-user profiles (static + dynamic, auto-built)</li>
+<li>Native connectors (Notion, Slack, Drive, Gmail, S3)</li>
+<li>SDKs (TypeScript + Python)</li>
+<li>Framework integrations (LangChain, LangGraph, CrewAI, Vercel AI SDK)</li>
+<li>Coding agent plugins (Claude Code, Cursor, OpenCode)</li>
+<li>Browser extension</li>
+</ol>
+<h2>What Contexter Does That Supermemory Cannot (Without Enterprise Agreement)</h2>
+<ol>
+<li>True self-hosted deployment — no vendor, no agreement, full data sovereignty</li>
+<li>Flat €4.72/mo — no query/token ceiling</li>
+<li>No vendor lock-in (Contexter data stays on Hetzner)</li>
+</ol>
+<h2>Contexter&#39;s Defensible Positioning Against Supermemory</h2>
+<ul>
+<li>&quot;Context storage you own&quot; vs. &quot;memory layer you rent&quot;</li>
+<li>Unlimited queries at fixed cost vs. consumption pricing with cliff at $399/mo</li>
+<li>15 explicit formats vs. unspecified extractor list</li>
+<li>Self-hosted = GDPR compliance by default (no data leaves your server)</li>
+</ul>
+<h2>Risks Supermemory Presents to Contexter</h2>
+<ul>
+<li>GitHub stars (19.8K) generate organic discovery; Contexter has none comparable</li>
+<li>$3M funding = 18–24 months of active product development and marketing</li>
+<li>Integrations ecosystem creates developer stickiness before Contexter reaches developers</li>
+<li>&quot;Memory layer for AI agents&quot; narrative is capturing the category before Contexter defines its own</li>
+</ul>
+<h2>Recommended Monitoring</h2>
+<ul>
+<li>GitHub issues tracker for recurring retrieval failures (trust signal)</li>
+<li>Pricing changes (free tier reduction = forcing function for Contexter acquisition)</li>
+<li>MCP ecosystem adoption velocity</li>
+<li>Second benchmark publication (SOTA claims under scrutiny from community)</li>
+</ul>
+
+</body>
+</html>

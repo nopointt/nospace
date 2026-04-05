@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-mcp-connection-instructions — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter — Инструкции подключения MCP клиентов</h1>
+<blockquote>
+<p>Исследование: март 2026. Для popup-инструкций на лендинге Contexter.
+MCP endpoint: <code>https://contexter.nopoint.workers.dev/sse?token={USER_TOKEN}</code>
+Протокол: Streamable HTTP (JSON-RPC over POST). Путь <code>/sse</code>, но транспорт — HTTP, не SSE.</p>
+</blockquote>
+<hr>
+<h2>Claude Desktop</h2>
+<p><strong>Тип подключения:</strong> через mcp-remote bridge (npx)
+<strong>Сложность:</strong> 3 шага</p>
+<blockquote>
+<p>Claude Desktop поддерживает remote MCP нативно через Settings &gt; Connectors, но только с OAuth. Contexter использует token-in-URL, поэтому нужен mcp-remote bridge через JSON-конфиг.</p>
+</blockquote>
+<h3>Шаги</h3>
+<ol>
+<li><p><strong>Откройте конфигурацию</strong>
+Claude Desktop → Settings (иконка шестерёнки) → Developer → Edit Config</p>
+</li>
+<li><p><strong>Вставьте JSON</strong>
+В открывшийся файл <code>claude_desktop_config.json</code> добавьте:</p>
+</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;contexter&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [
+        &quot;-y&quot;,
+        &quot;@anthropic-ai/mcp-remote&quot;,
+        &quot;https://contexter.nopoint.workers.dev/sse?token=ВАШ_ТОКЕН&quot;
+      ]
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li><strong>Перезапустите и проверьте</strong>
+Полностью закройте и откройте Claude Desktop. В нижнем правом углу чата появится иконка молотка — это значит MCP подключён. Спросите: <strong>«какие документы загружены?»</strong></li>
+</ol>
+<h3>Нюансы</h3>
+<ul>
+<li>Требуется Node.js (для npx). Если нет — установите с nodejs.org</li>
+<li>После сохранения конфига обязательно полный перезапуск (не просто закрыть окно, а Quit из меню)</li>
+<li>Если уже есть другие серверы в конфиге — добавьте <code>&quot;contexter&quot;: {...}</code> внутрь существующего объекта <code>mcpServers</code></li>
+</ul>
+<hr>
+<h2>ChatGPT</h2>
+<p><strong>Тип подключения:</strong> нативный (Streamable HTTP)
+<strong>Сложность:</strong> 3 шага</p>
+<blockquote>
+<p>ChatGPT поддерживает MCP через Developer Mode (доступен на Plus/Pro/Team/Enterprise). Подключение по URL без OAuth — выберите &quot;No authentication&quot;, токен уже в URL.</p>
+</blockquote>
+<h3>Шаги</h3>
+<ol>
+<li><p><strong>Включите Developer Mode</strong>
+Настройки (аватар слева внизу) → Settings → Connectors → Advanced settings → включите Developer mode</p>
+</li>
+<li><p><strong>Создайте коннектор</strong>
+Вернитесь в Connectors → кнопка <strong>Create</strong> (вверху справа). Заполните:</p>
+<ul>
+<li>Имя: <code>Contexter</code></li>
+<li>MCP Server URL: <code>https://contexter.nopoint.workers.dev/sse?token=ВАШ_ТОКЕН</code></li>
+<li>Authentication: <strong>No authentication</strong></li>
+</ul>
+</li>
+<li><p><strong>Подключите в чате и проверьте</strong>
+Новый чат → нажмите <strong>+</strong> в строке ввода → More → Developer Mode → Add sources → включите Contexter. Спросите: <strong>«какие документы загружены?»</strong></p>
+</li>
+</ol>
+<h3>Нюансы</h3>
+<ul>
+<li>Developer Mode доступен только на платных планах (Plus, Pro, Team, Enterprise)</li>
+<li>При первом вызове инструмента ChatGPT спросит разрешение — нажмите Allow</li>
+<li>URL с <code>/sse</code> в конце — это правильно, несмотря на то что транспорт HTTP</li>
+</ul>
+<hr>
+<h2>Cursor</h2>
+<p><strong>Тип подключения:</strong> нативный (Streamable HTTP)
+<strong>Сложность:</strong> 3 шага</p>
+<blockquote>
+<p>Cursor поддерживает Streamable HTTP нативно через поле <code>url</code> в mcp.json. При подключении по URL автоматически пробует Streamable HTTP.</p>
+</blockquote>
+<h3>Шаги</h3>
+<ol>
+<li><p><strong>Откройте настройки MCP</strong>
+Cursor Settings (Ctrl+Shift+J) → вкладка MCP → кнопка <strong>+ Add new MCP server</strong></p>
+<p>Или создайте файл <code>~/.cursor/mcp.json</code> вручную.</p>
+</li>
+<li><p><strong>Добавьте сервер</strong>
+Тип: <strong>Streamable HTTP</strong>. Если через JSON-файл:</p>
+</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;contexter&quot;: {
+      &quot;url&quot;: &quot;https://contexter.nopoint.workers.dev/sse?token=ВАШ_ТОКЕН&quot;
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li><strong>Проверьте подключение</strong>
+В чате Cursor (Cmd+L / Ctrl+L) появится индикатор MCP-серверов. Спросите: <strong>«какие документы загружены?»</strong> — Cursor вызовет инструмент <code>list_documents</code>.</li>
+</ol>
+<h3>Нюансы</h3>
+<ul>
+<li>Для глобального доступа: файл <code>~/.cursor/mcp.json</code>. Для проекта: <code>.cursor/mcp.json</code> в корне проекта</li>
+<li>Cursor автоматически определяет Streamable HTTP по наличию поля <code>url</code> (без <code>command</code>)</li>
+<li>Если не работает — перезапустите Cursor полностью</li>
+</ul>
+<hr>
+<h2>Windsurf</h2>
+<p><strong>Тип подключения:</strong> нативный (Streamable HTTP)
+<strong>Сложность:</strong> 3 шага</p>
+<blockquote>
+<p>Windsurf поддерживает Streamable HTTP нативно. Укажите <code>type: &quot;streamable-http&quot;</code> и <code>serverUrl</code> в конфиге.</p>
+</blockquote>
+<h3>Шаги</h3>
+<ol>
+<li><p><strong>Откройте конфиг MCP</strong>
+Windsurf Settings (Ctrl+Shift+P → &quot;Open Windsurf Settings&quot;) → Cascade → убедитесь что MCP включён.</p>
+<p>Затем откройте файл конфигурации:</p>
+<ul>
+<li>Windows: <code>%USERPROFILE%\.codeium\windsurf\mcp_config.json</code></li>
+<li>macOS/Linux: <code>~/.codeium/windsurf/mcp_config.json</code></li>
+</ul>
+</li>
+<li><p><strong>Добавьте сервер</strong></p>
+</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;contexter&quot;: {
+      &quot;type&quot;: &quot;streamable-http&quot;,
+      &quot;serverUrl&quot;: &quot;https://contexter.nopoint.workers.dev/sse?token=ВАШ_ТОКЕН&quot;
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li><strong>Перезапустите и проверьте</strong>
+Перезапустите Windsurf. В Cascade чате спросите: <strong>«какие документы загружены?»</strong></li>
+</ol>
+<h3>Нюансы</h3>
+<ul>
+<li>Обязательно укажите <code>&quot;type&quot;: &quot;streamable-http&quot;</code> — без этого Windsurf попробует stdio и не подключится</li>
+<li>Используйте <code>serverUrl</code> (не <code>url</code>) — это официальное имя поля в Windsurf</li>
+<li>MCP должен быть включён в Windsurf Settings → Cascade → Model Context Protocol</li>
+</ul>
+<hr>
+<h2>Cline</h2>
+<p><strong>Тип подключения:</strong> нативный (HTTP URL)
+<strong>Сложность:</strong> 3 шага</p>
+<blockquote>
+<p>Cline (расширение VS Code) поддерживает remote MCP серверы нативно через поле <code>url</code> в настройках.</p>
+</blockquote>
+<h3>Шаги</h3>
+<ol>
+<li><p><strong>Откройте настройки MCP</strong>
+В VS Code откройте панель Cline → иконка MCP Servers (вверху панели) → вкладка Configure → кнопка <strong>Configure MCP Servers</strong></p>
+</li>
+<li><p><strong>Добавьте сервер в JSON</strong>
+В открывшемся <code>cline_mcp_settings.json</code>:</p>
+</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;contexter&quot;: {
+      &quot;url&quot;: &quot;https://contexter.nopoint.workers.dev/sse?token=ВАШ_ТОКЕН&quot;,
+      &quot;disabled&quot;: false
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li><strong>Проверьте подключение</strong>
+Вернитесь в панель MCP Servers — Contexter должен показать зелёный статус. В чате Cline спросите: <strong>«какие документы загружены?»</strong></li>
+</ol>
+<h3>Нюансы</h3>
+<ul>
+<li>Cline работает с любым LLM-провайдером (Claude, GPT-4, и др.) — MCP серверы доступны со всеми</li>
+<li>Если сервер показывает красный статус — нажмите кнопку Restart рядом с ним</li>
+<li>Использование MCP увеличивает расход токенов</li>
+</ul>
+<hr>
+<h2>Сводная таблица</h2>
+<table>
+<thead>
+<tr>
+<th>Клиент</th>
+<th>Транспорт</th>
+<th>Конфиг</th>
+<th>Нужен Node.js</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Claude Desktop</td>
+<td>mcp-remote bridge</td>
+<td>JSON файл</td>
+<td>Да</td>
+</tr>
+<tr>
+<td>ChatGPT</td>
+<td>нативный HTTP</td>
+<td>UI (Settings)</td>
+<td>Нет</td>
+</tr>
+<tr>
+<td>Cursor</td>
+<td>нативный HTTP</td>
+<td>JSON файл или UI</td>
+<td>Нет</td>
+</tr>
+<tr>
+<td>Windsurf</td>
+<td>нативный HTTP</td>
+<td>JSON файл</td>
+<td>Нет</td>
+</tr>
+<tr>
+<td>Cline</td>
+<td>нативный HTTP</td>
+<td>JSON файл</td>
+<td>Нет</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Общие gotchas</h2>
+<ul>
+<li><strong>Токен в URL</strong> — не потеряйте <code>?token=</code> часть. Без токена сервер вернёт ошибку авторизации</li>
+<li><strong>Путь <code>/sse</code></strong> — это правильный путь, хотя транспорт Streamable HTTP (не SSE). Не меняйте на <code>/mcp</code></li>
+<li><strong>Проверка</strong> — во всех клиентах задайте вопрос «какие документы загружены?» — MCP должен вернуть список через инструмент <code>list_documents</code></li>
+<li><strong>Если не работает</strong> — убедитесь что URL правильный, токен действительный, и клиент перезапущен после изменения конфига</li>
+</ul>
+
+</body>
+</html>

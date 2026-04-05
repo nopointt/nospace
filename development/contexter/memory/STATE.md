@@ -2,9 +2,9 @@
 
 ## Position
 - **Phase:** GTM Launch (CTX-10) — 100 paying supporters by April 8
-- **Status:** Product ready. Research plan restructured (4 SEED done, 2 DEEP pending). LemonSqueezy pending approval. MCP connection fixed.
-- **Last session:** 2026-04-02 (Axis, session 229 — quality standards system, reglaments, orch skills audit, system-guide rewrite)
-- **Sessions total:** 229
+- **Status:** Product ready. Co-founder briefing + knowledge hub created. Nav fix deployed. Reddit guide extracted. LemonSqueezy pending.
+- **Last session:** 2026-04-05 (Axis, session 231 — nav fix, co-founder briefing, knowledge hub cdn.contexter.cc/public/artem/, Reddit guide)
+- **Sessions total:** 231
 
 ## Key Completions
 - i18n: EN/RU toggle, 500+ translation keys, all 24 pages/components
@@ -16,6 +16,11 @@
 - Landing: 12+ sections (EN/RU), fully bilingual
 - 14 GTM research files (market, competitors, positioning, copy, pain)
 - Copy audit: 50+ jargon issues found (NOT YET APPLIED)
+- Co-founder briefing: docs/cofounder-briefing-artem.md (11 sections, full product/market/GTM)
+- Knowledge hub: cdn.contexter.cc/public/artem/ (29 files as HTML, index page)
+- Reddit marketing guide: nospace/docs/research/reddit-marketing-guide-smetnyov.md (Smetnyov/Skyeng, 13 chapters)
+- CDN custom domain: cdn.contexter.cc (R2 public access)
+- Landing nav fix: absolute centering → flex justify-between (deployed)
 
 ## Active Decisions
 - D-01 through D-25: unchanged from previous
@@ -32,6 +37,9 @@
 - D-36: HN > PH as primary launch channel. Stagger: HN Day 1 → Reddit Day 2 → PH Day 3.
 - D-37: First 100 audience = 70-80 developers + 20-30 knowledge workers
 - D-38: MCP directories (7+) + GitHub awesome-mcp PRs = submit before launch
+- D-39: Artem (CPO ProxyMarket) = co-founder GTM/marketing. Revenue share model.
+- D-40: cdn.contexter.cc = R2 custom domain for public assets (video, knowledge hub)
+- D-41: Knowledge hub at cdn.contexter.cc/public/artem/ — shared materials for co-founder
 
 ## Blockers
 - Copy audit not applied — jargon kills non-tech conversion (CTX-10 W1-01)
@@ -49,7 +57,7 @@
 - Full analytics suite (CTX-11)
 
 ## Metrics
-- Sessions: 229
+- Sessions: 231
 - Real users: 2 (nopointttt@gmail.com, danchoachona@gmail.com)
 - Documents: 26, Chunks: 519
 - MCP search p50: 110ms

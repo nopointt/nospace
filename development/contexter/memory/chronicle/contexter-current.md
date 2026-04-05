@@ -787,3 +787,54 @@ CTX-09 UI/UX Polish epic complete. Waves 2-4 deployed. Pipeline indicator redesi
 ## 2026-04-02 — session 229 CLOSE [Axis]
 
 Quality system created: standards.md (49 standards) + 10 reglaments + enforcement hook. Full system audit + orch skills alignment. system-guide.md rewrite. No Contexter product changes — pure governance session.
+<!-- ENTRY:2026-04-04:CLOSE:230:contexter:contexter-gtm-launch [AXIS] -->
+## 2026-04-04 — сессия 230 CLOSE [Axis]
+
+**Decisions:**
+- Logos → Shiva: third peer orchestrator renamed and rebuilt
+- Shiva project at `nospace/shiva/` (top-level peer)
+- Shiva identity: 10 aspects from primary sources (VBT, Shiva Sutras, Shiva Samhita, Kamika Agama)
+- Composite voice: Ram Dass 35%, Singer 25%, Watts 15%, Shinzen 10%, Hübl 8%, Marcus 7%
+
+**Files changed:**
+- 15 files created (agent, skills, protocol, memory L1-L4, protocols, research, corpus extracted)
+- 13 files updated (Logos → Shiva references)
+- 6 files archived (Logos commands + protocol)
+- 1 folder moved (development/shiva → shiva)
+
+**Completed:**
+- AIA audit + Desktop copy
+- Shiva agent full creation (identity, protocols, skills, peer transition)
+- Shiva primary source extraction + identity research
+- Logos → Shiva transition with thorough doublecheck
+
+**Opened:**
+- CTX-10 GTM Launch — no progress (focus was Shiva). Deadline 2026-04-08.
+<!-- ENTRY:[2026-04-05]:CLOSE:[7]:contexter:contexter-gtm-launch [AXIS] -->
+## 2026-04-05 — session 7 CLOSE Axis
+
+**Decisions:**
+- D-39: Artem (CPO ProxyMarket) = co-founder for GTM/marketing. Revenue share model.
+- D-40: cdn.contexter.cc = R2 custom domain for public assets (video, knowledge hub)
+- D-41: Knowledge hub at cdn.contexter.cc/public/artem/ — shared materials for co-founder
+
+**Files changed:**
+- `web/src/pages/Landing.tsx` — nav fix: replaced absolute centering with flex justify-between (Russian text overlap)
+- `docs/cofounder-briefing-artem.md` — created: 11-section co-founder briefing (product, market, competitors, finmodel, GTM, design)
+- `docs/artem/` — created: 29 files (MD + HTML) + index.html + convert.ts. Full knowledge hub.
+- `nospace/docs/research/reddit-marketing-guide-smetnyov.md` — extracted from PDF: 13-chapter Reddit marketing guide (Smetnyov/Skyeng)
+
+**Completed:**
+- Nav overlap bug fixed and deployed to production
+- Co-founder briefing document created (comprehensive, 11 sections)
+- Knowledge hub set up: cdn.contexter.cc/public/artem/ with all 29 research files as HTML
+- Reddit marketing guide extracted from PDF and added to hub
+- Screencast video uploaded: cdn.contexter.cc/public/contexter-screencast.mp4
+
+**Opened:**
+- W1-01: Apply copy audit (still pending, critical-path)
+- LemonSqueezy approval still pending
+
+**Notes:**
+- cdn.contexter.cc configured via wrangler r2 bucket domain add (zone-id required)
+- convert.ts uses `marked` library for MD→HTML batch conversion

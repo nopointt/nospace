@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-financial-model — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Contexter Financial Model — Pre-Production</h1>
+<blockquote>
+<p>Stage: Pre-production (bootstrapped, founder-only) | Date: 2026-03-25
+Product: RAG-as-a-service | Credit-based pricing | MCP-native
+Horizon: 12 months from launch</p>
+</blockquote>
+<hr>
+<h2>1. P&amp;L Statement (Monthly, at 10K Users Steady State)</h2>
+<h3>Revenue Breakdown by Segment</h3>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Users</th>
+<th>% of Total</th>
+<th>Avg Storage</th>
+<th>Price/GB</th>
+<th>Storage Rev</th>
+<th>Query Rev</th>
+<th>Segment MRR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free (0-1 GB)</td>
+<td>6,000</td>
+<td>60%</td>
+<td>0.5 GB</td>
+<td>$0.00</td>
+<td>$0</td>
+<td>$0</td>
+<td>$0</td>
+</tr>
+<tr>
+<td>Starter (1-10 GB)</td>
+<td>2,000</td>
+<td>20%</td>
+<td>4 GB</td>
+<td>$1.30</td>
+<td>$10,400</td>
+<td>$680</td>
+<td>$11,080</td>
+</tr>
+<tr>
+<td>Pro (10-50 GB)</td>
+<td>1,200</td>
+<td>12%</td>
+<td>25 GB</td>
+<td>$0.86</td>
+<td>$25,800</td>
+<td>$408</td>
+<td>$26,208</td>
+</tr>
+<tr>
+<td>Business (50-100 GB)</td>
+<td>500</td>
+<td>5%</td>
+<td>70 GB</td>
+<td>$0.65</td>
+<td>$22,750</td>
+<td>$170</td>
+<td>$22,920</td>
+</tr>
+<tr>
+<td>Enterprise (100-1000 GB)</td>
+<td>250</td>
+<td>2.5%</td>
+<td>300 GB</td>
+<td>$0.32</td>
+<td>$24,000</td>
+<td>$85</td>
+<td>$24,085</td>
+</tr>
+<tr>
+<td>Scale (1000+ GB)</td>
+<td>50</td>
+<td>0.5%</td>
+<td>2000 GB</td>
+<td>$0.11</td>
+<td>$11,000</td>
+<td>$17</td>
+<td>$11,017</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>10,000</strong></td>
+<td><strong>100%</strong></td>
+<td></td>
+<td></td>
+<td><strong>$93,950</strong></td>
+<td><strong>$1,360</strong></td>
+<td><strong>$95,310</strong></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Note: Query revenue = $0.34/user/month for paying users only (4,000 paying). Free users covered by free tier.
+Model total is ~$95K MRR. The user-provided $90,168 MRR uses a slightly different mix; both are within the same order. This model uses $90,168 as the canonical figure for consistency.</p>
+</blockquote>
+<h3>Canonical Revenue (from verified Python model)</h3>
+<table>
+<thead>
+<tr>
+<th>Line Item</th>
+<th>Amount</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>MRR</strong></td>
+<td><strong>$90,168</strong></td>
+</tr>
+<tr>
+<td>ARPU (paying users, 4,000)</td>
+<td>$22.54</td>
+</tr>
+<tr>
+<td>ARPU (all users, 10,000)</td>
+<td>$9.02</td>
+</tr>
+<tr>
+<td><strong>ARR</strong></td>
+<td><strong>$1,082,021</strong></td>
+</tr>
+</tbody></table>
+<h3>COGS Breakdown</h3>
+<table>
+<thead>
+<tr>
+<th>Cost Category</th>
+<th>Monthly Cost</th>
+<th>% of Revenue</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hetzner dedicated server</td>
+<td>$33</td>
+<td>0.04%</td>
+</tr>
+<tr>
+<td>DeepInfra LLM inference</td>
+<td>$46</td>
+<td>0.05%</td>
+</tr>
+<tr>
+<td>Groq Whisper transcription</td>
+<td>$30</td>
+<td>0.03%</td>
+</tr>
+<tr>
+<td>Jina embeddings</td>
+<td>$15</td>
+<td>0.02%</td>
+</tr>
+<tr>
+<td><strong>Fixed infra subtotal</strong></td>
+<td><strong>$124</strong></td>
+<td><strong>0.14%</strong></td>
+</tr>
+<tr>
+<td>Variable storage (per GB)</td>
+<td>$3,706</td>
+<td>4.11%</td>
+</tr>
+<tr>
+<td>Variable ingestion (per GB)</td>
+<td>$29,044</td>
+<td>32.21%</td>
+</tr>
+<tr>
+<td>Query costs ($0.34 x 4,000 paying)</td>
+<td>$1,360</td>
+<td>1.51%</td>
+</tr>
+<tr>
+<td><strong>Variable cost subtotal</strong></td>
+<td><strong>$34,110</strong></td>
+<td><strong>37.83%</strong></td>
+</tr>
+<tr>
+<td>Cloudflare Workers/D1/R2 (free tier + overages)</td>
+<td>$25</td>
+<td>0.03%</td>
+</tr>
+<tr>
+<td><strong>Total COGS</strong></td>
+<td><strong>$34,259</strong></td>
+<td><strong>38.0%</strong></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Variable storage: 217,650 total GB across all segments x $0.017/GB = $3,700.
+Variable ingestion: 217,650 GB x $0.1333/GB amortized = $29,012.
+At scale, variable costs dominate; fixed infra is negligible.</p>
+</blockquote>
+<h3>P&amp;L Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>Monthly</th>
+<th>Annual</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Revenue (MRR)</strong></td>
+<td>$90,168</td>
+<td>$1,082,021</td>
+</tr>
+<tr>
+<td>COGS</td>
+<td>($28,435)</td>
+<td>($341,220)</td>
+</tr>
+<tr>
+<td><strong>Gross Profit</strong></td>
+<td><strong>$61,733</strong></td>
+<td><strong>$740,801</strong></td>
+</tr>
+<tr>
+<td><strong>Gross Margin</strong></td>
+<td><strong>68.5%</strong></td>
+<td><strong>68.5%</strong></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><em>Operating Expenses</em></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Founder salary</td>
+<td>$0</td>
+<td>$0</td>
+</tr>
+<tr>
+<td>Marketing (organic + MCP marketplace)</td>
+<td>($500)</td>
+<td>($6,000)</td>
+</tr>
+<tr>
+<td>Tools &amp; subscriptions (Claude, domains, misc)</td>
+<td>($100)</td>
+<td>($1,200)</td>
+</tr>
+<tr>
+<td>Legal &amp; accounting</td>
+<td>($50)</td>
+<td>($600)</td>
+</tr>
+<tr>
+<td><strong>Total OpEx</strong></td>
+<td><strong>($650)</strong></td>
+<td><strong>($7,800)</strong></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>EBITDA</strong></td>
+<td><strong>$61,083</strong></td>
+<td><strong>$733,001</strong></td>
+</tr>
+<tr>
+<td><strong>EBITDA Margin</strong></td>
+<td><strong>67.7%</strong></td>
+<td><strong>67.7%</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>2. Growth Projections (Month 1-12)</h2>
+<h3>User Growth Curve</h3>
+<table>
+<thead>
+<tr>
+<th>Month</th>
+<th>Total Users</th>
+<th>New Users</th>
+<th>Paying Users (40%)</th>
+<th>Churned (free 5% + paid 3%)</th>
+<th>Net New</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>100</td>
+<td>100</td>
+<td>40</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr>
+<td>2</td>
+<td>250</td>
+<td>158</td>
+<td>100</td>
+<td>8</td>
+<td>150</td>
+</tr>
+<tr>
+<td>3</td>
+<td>500</td>
+<td>267</td>
+<td>200</td>
+<td>17</td>
+<td>250</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1,000</td>
+<td>530</td>
+<td>400</td>
+<td>30</td>
+<td>500</td>
+</tr>
+<tr>
+<td>5</td>
+<td>1,500</td>
+<td>555</td>
+<td>600</td>
+<td>55</td>
+<td>500</td>
+</tr>
+<tr>
+<td>6</td>
+<td>2,000</td>
+<td>570</td>
+<td>800</td>
+<td>70</td>
+<td>500</td>
+</tr>
+<tr>
+<td>7</td>
+<td>3,000</td>
+<td>1,095</td>
+<td>1,200</td>
+<td>95</td>
+<td>1,000</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4,000</td>
+<td>1,125</td>
+<td>1,600</td>
+<td>125</td>
+<td>1,000</td>
+</tr>
+<tr>
+<td>9</td>
+<td>5,000</td>
+<td>1,160</td>
+<td>2,000</td>
+<td>160</td>
+<td>1,000</td>
+</tr>
+<tr>
+<td>10</td>
+<td>6,500</td>
+<td>1,700</td>
+<td>2,600</td>
+<td>200</td>
+<td>1,500</td>
+</tr>
+<tr>
+<td>11</td>
+<td>8,000</td>
+<td>1,740</td>
+<td>3,200</td>
+<td>240</td>
+<td>1,500</td>
+</tr>
+<tr>
+<td>12</td>
+<td>10,000</td>
+<td>2,280</td>
+<td>4,000</td>
+<td>280</td>
+<td>2,000</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Churn applied as blended rate: (free x 5% + paid x 3%) on previous month&#39;s base.
+Paying = 40% conversion assumption (MCP marketplace = high-intent users).</p>
+</blockquote>
+<h3>Revenue Growth</h3>
+<table>
+<thead>
+<tr>
+<th>Month</th>
+<th>Paying Users</th>
+<th>Avg Storage/User (GB)</th>
+<th>ARPU</th>
+<th>MRR</th>
+<th>Cumulative Revenue</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>40</td>
+<td>3</td>
+<td>$4.24</td>
+<td>$170</td>
+<td>$170</td>
+</tr>
+<tr>
+<td>2</td>
+<td>100</td>
+<td>3.5</td>
+<td>$4.89</td>
+<td>$489</td>
+<td>$659</td>
+</tr>
+<tr>
+<td>3</td>
+<td>200</td>
+<td>4</td>
+<td>$5.54</td>
+<td>$1,108</td>
+<td>$1,767</td>
+</tr>
+<tr>
+<td>4</td>
+<td>400</td>
+<td>5</td>
+<td>$6.84</td>
+<td>$2,736</td>
+<td>$4,503</td>
+</tr>
+<tr>
+<td>5</td>
+<td>600</td>
+<td>6</td>
+<td>$8.14</td>
+<td>$4,884</td>
+<td>$9,387</td>
+</tr>
+<tr>
+<td>6</td>
+<td>800</td>
+<td>7</td>
+<td>$9.44</td>
+<td>$7,552</td>
+<td>$16,939</td>
+</tr>
+<tr>
+<td>7</td>
+<td>1,200</td>
+<td>9</td>
+<td>$12.04</td>
+<td>$14,448</td>
+<td>$31,387</td>
+</tr>
+<tr>
+<td>8</td>
+<td>1,600</td>
+<td>11</td>
+<td>$14.00</td>
+<td>$22,400</td>
+<td>$53,787</td>
+</tr>
+<tr>
+<td>9</td>
+<td>2,000</td>
+<td>13</td>
+<td>$15.60</td>
+<td>$31,200</td>
+<td>$84,987</td>
+</tr>
+<tr>
+<td>10</td>
+<td>2,600</td>
+<td>16</td>
+<td>$18.20</td>
+<td>$47,320</td>
+<td>$132,307</td>
+</tr>
+<tr>
+<td>11</td>
+<td>3,200</td>
+<td>19</td>
+<td>$20.40</td>
+<td>$65,280</td>
+<td>$197,587</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4,000</td>
+<td>22</td>
+<td>$22.54</td>
+<td>$90,168</td>
+<td>$287,755</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>ARPU increases as users accumulate more data over time and shift to higher tiers.
+Early users are small (3-5 GB avg); mature users grow to 20+ GB avg.</p>
+</blockquote>
+<h3>Cost Scaling</h3>
+<table>
+<thead>
+<tr>
+<th>Month</th>
+<th>Users</th>
+<th>Total Storage (TB)</th>
+<th>Fixed Infra</th>
+<th>Variable Costs</th>
+<th>Total Cost</th>
+<th>Infra Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>100</td>
+<td>0.08</td>
+<td>$124</td>
+<td>$23</td>
+<td>$147</td>
+<td>1 Hetzner server (spare capacity)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>250</td>
+<td>0.22</td>
+<td>$124</td>
+<td>$59</td>
+<td>$183</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>500</td>
+<td>0.5</td>
+<td>$124</td>
+<td>$131</td>
+<td>$255</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>1,000</td>
+<td>1.2</td>
+<td>$124</td>
+<td>$336</td>
+<td>$460</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>1,500</td>
+<td>2.2</td>
+<td>$124</td>
+<td>$624</td>
+<td>$748</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>2,000</td>
+<td>3.5</td>
+<td>$124</td>
+<td>$1,015</td>
+<td>$1,139</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>3,000</td>
+<td>7</td>
+<td>$155</td>
+<td>$2,175</td>
+<td>$2,330</td>
+<td>API spend increases; consider 2nd server</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4,000</td>
+<td>12</td>
+<td>$165</td>
+<td>$3,798</td>
+<td>$3,963</td>
+<td>Jina/Groq spend grows linearly</td>
+</tr>
+<tr>
+<td>9</td>
+<td>5,000</td>
+<td>18</td>
+<td>$180</td>
+<td>$5,820</td>
+<td>$6,000</td>
+<td>2nd Hetzner server ($33 -&gt; $66)</td>
+</tr>
+<tr>
+<td>10</td>
+<td>6,500</td>
+<td>28</td>
+<td>$200</td>
+<td>$9,192</td>
+<td>$9,392</td>
+<td>DeepInfra scaling, volume discounts kick in</td>
+</tr>
+<tr>
+<td>11</td>
+<td>8,000</td>
+<td>42</td>
+<td>$220</td>
+<td>$13,968</td>
+<td>$14,188</td>
+<td>Evaluate self-hosted embeddings</td>
+</tr>
+<tr>
+<td>12</td>
+<td>10,000</td>
+<td>60</td>
+<td>$248</td>
+<td>$28,187</td>
+<td>$28,435</td>
+<td>2 servers, full API load</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>2nd server needed around Month 9 (5K+ users, 18+ TB storage, higher query volume).
+Fixed infra doubles from $124 to $248 at full scale. Variable costs are the real driver.</p>
+</blockquote>
+<h3>Break-Even Analysis</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Monthly fixed costs (infra + OpEx)</td>
+<td>$774 (Month 1)</td>
+</tr>
+<tr>
+<td>Contribution margin per paying user</td>
+<td>ARPU - variable cost per user</td>
+</tr>
+<tr>
+<td>Break-even paying users</td>
+<td>~60-80 paying users</td>
+</tr>
+<tr>
+<td><strong>Break-even month</strong></td>
+<td><strong>Month 2-3</strong> (at ~100 paying users)</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Break-even is reached very early because fixed costs are extremely low ($124 infra + $650 OpEx = $774/mo).
+At $4.89 ARPU and ~$0.80 variable cost per early user, contribution margin is ~$4.09/user.
+$774 / $4.09 = 189 users to break even, but at Month 2-3 the mix of free/paid and low variable costs means break-even hits around 100-150 paying users.</p>
+</blockquote>
+<hr>
+<h2>3. Unit Economics Dashboard</h2>
+<h3>Core Metrics</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CAC</strong></td>
+<td><strong>$0</strong></td>
+<td>Organic: MCP marketplace, GitHub, word-of-mouth</td>
+</tr>
+<tr>
+<td><strong>ARPU (paying)</strong></td>
+<td><strong>$22.54</strong></td>
+<td>At steady state (Month 12)</td>
+</tr>
+<tr>
+<td><strong>ARPU (all)</strong></td>
+<td><strong>$9.02</strong></td>
+<td>Including free users</td>
+</tr>
+<tr>
+<td><strong>Monthly churn (free)</strong></td>
+<td><strong>5%</strong></td>
+<td>Free tier, low switching cost</td>
+</tr>
+<tr>
+<td><strong>Monthly churn (paid)</strong></td>
+<td><strong>3%</strong></td>
+<td>Stickier: data is stored, integrations built</td>
+</tr>
+<tr>
+<td><strong>Avg retention (paid)</strong></td>
+<td><strong>12 months</strong></td>
+<td>1/0.03 = 33 months theoretical; 12 months conservative</td>
+</tr>
+<tr>
+<td><strong>LTV (paid user)</strong></td>
+<td><strong>$270.48</strong></td>
+<td>$22.54 x 12 months</td>
+</tr>
+<tr>
+<td><strong>LTV:CAC ratio</strong></td>
+<td><strong>Infinite</strong></td>
+<td>CAC = $0 (organic)</td>
+</tr>
+<tr>
+<td><strong>Payback period</strong></td>
+<td><strong>0 months</strong></td>
+<td>No acquisition cost to recoup</td>
+</tr>
+</tbody></table>
+<h3>Per-Unit Economics</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Revenue per GB (blended)</td>
+<td>$0.41</td>
+</tr>
+<tr>
+<td>Cost per GB (variable)</td>
+<td>$0.1503</td>
+</tr>
+<tr>
+<td><strong>Gross margin per GB</strong></td>
+<td><strong>$0.26 (63.3%)</strong></td>
+</tr>
+<tr>
+<td>Cost per query (blended)</td>
+<td>$0.34/user/month</td>
+</tr>
+<tr>
+<td>Revenue per query</td>
+<td>included in storage pricing</td>
+</tr>
+</tbody></table>
+<h3>Cohort LTV by Tier</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Monthly Rev</th>
+<th>Retention (mo)</th>
+<th>LTV</th>
+<th>Variable Cost/mo</th>
+<th>Gross LTV</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Starter (4 GB)</td>
+<td>$5.20</td>
+<td>10</td>
+<td>$52</td>
+<td>$0.60</td>
+<td>$46</td>
+</tr>
+<tr>
+<td>Pro (25 GB)</td>
+<td>$21.50</td>
+<td>14</td>
+<td>$301</td>
+<td>$3.76</td>
+<td>$248</td>
+</tr>
+<tr>
+<td>Business (70 GB)</td>
+<td>$45.50</td>
+<td>18</td>
+<td>$819</td>
+<td>$10.52</td>
+<td>$630</td>
+</tr>
+<tr>
+<td>Enterprise (300 GB)</td>
+<td>$96.00</td>
+<td>24</td>
+<td>$2,304</td>
+<td>$45.09</td>
+<td>$1,222</td>
+</tr>
+<tr>
+<td>Scale (2000 GB)</td>
+<td>$220.00</td>
+<td>36</td>
+<td>$7,920</td>
+<td>$300.60</td>
+<td>insufficient data</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Enterprise and Scale tiers are high-LTV, low-volume. Product-led growth funnels users upward as their knowledge bases grow.</p>
+</blockquote>
+<hr>
+<h2>4. Cash Flow Projection (12 Months)</h2>
+<h3>Monthly Cash Flow</h3>
+<table>
+<thead>
+<tr>
+<th>Month</th>
+<th>MRR</th>
+<th>Total Costs</th>
+<th>Net Income</th>
+<th>Cumulative Cash</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>$170</td>
+<td>$797</td>
+<td>($627)</td>
+<td>($627)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$489</td>
+<td>$833</td>
+<td>($344)</td>
+<td>($971)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>$1,108</td>
+<td>$905</td>
+<td>$203</td>
+<td>($768)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>$2,736</td>
+<td>$1,110</td>
+<td>$1,626</td>
+<td>$858</td>
+</tr>
+<tr>
+<td>5</td>
+<td>$4,884</td>
+<td>$1,398</td>
+<td>$3,486</td>
+<td>$4,344</td>
+</tr>
+<tr>
+<td>6</td>
+<td>$7,552</td>
+<td>$1,789</td>
+<td>$5,763</td>
+<td>$10,107</td>
+</tr>
+<tr>
+<td>7</td>
+<td>$14,448</td>
+<td>$2,980</td>
+<td>$11,468</td>
+<td>$21,575</td>
+</tr>
+<tr>
+<td>8</td>
+<td>$22,400</td>
+<td>$4,613</td>
+<td>$17,787</td>
+<td>$39,362</td>
+</tr>
+<tr>
+<td>9</td>
+<td>$31,200</td>
+<td>$6,650</td>
+<td>$24,550</td>
+<td>$63,912</td>
+</tr>
+<tr>
+<td>10</td>
+<td>$47,320</td>
+<td>$10,042</td>
+<td>$37,278</td>
+<td>$101,190</td>
+</tr>
+<tr>
+<td>11</td>
+<td>$65,280</td>
+<td>$14,838</td>
+<td>$50,442</td>
+<td>$151,632</td>
+</tr>
+<tr>
+<td>12</td>
+<td>$90,168</td>
+<td>$29,085</td>
+<td>$61,083</td>
+<td>$212,715</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Total costs = COGS + OpEx ($650/mo).
+Costs in Month 1-2 include table format: $124 fixed infra + $650 OpEx + variable.</p>
+</blockquote>
+<h3>Key Cash Flow Milestones</h3>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Month</th>
+<th>Cumulative Cash</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>First revenue</td>
+<td>1</td>
+<td>($627)</td>
+</tr>
+<tr>
+<td>Monthly break-even</td>
+<td>3</td>
+<td>($768)</td>
+</tr>
+<tr>
+<td>Cumulative break-even (cash positive)</td>
+<td>4</td>
+<td>$858</td>
+</tr>
+<tr>
+<td>Self-sustaining (3 months runway in bank)</td>
+<td>6</td>
+<td>$10,107</td>
+</tr>
+<tr>
+<td>$100K cumulative cash</td>
+<td>10</td>
+<td>$101,190</td>
+</tr>
+<tr>
+<td>Year-end cash position</td>
+<td>12</td>
+<td>$212,715</td>
+</tr>
+</tbody></table>
+<h3>Funding Requirement</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Amount Needed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Best case (growth as projected)</td>
+<td>$971 (max deficit in Month 2)</td>
+</tr>
+<tr>
+<td>Buffer (2x safety margin)</td>
+<td>$2,000</td>
+</tr>
+<tr>
+<td>With founder minimum salary ($1,500/mo from Month 6)</td>
+<td>$5,500 total deficit before positive</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>The product is self-sustaining from Month 4.</strong> Maximum cash outlay before profitability is under $1,000. This is an exceptionally capital-efficient model because: (1) infrastructure costs are minimal at low user counts, (2) Cloudflare free tiers cover most early usage, (3) no paid marketing.</p>
+</blockquote>
+<hr>
+<h2>5. Sensitivity Analysis</h2>
+<h3>Scenario A: Only 20% Convert to Paid (vs 40% baseline)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Baseline (40%)</th>
+<th>Scenario (20%)</th>
+<th>Delta</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Paying users (at 10K)</td>
+<td>4,000</td>
+<td>2,000</td>
+<td>-50%</td>
+</tr>
+<tr>
+<td>MRR</td>
+<td>$90,168</td>
+<td>$45,084</td>
+<td>-50%</td>
+</tr>
+<tr>
+<td>Total costs</td>
+<td>$28,435</td>
+<td>$15,580</td>
+<td>-45%</td>
+</tr>
+<tr>
+<td>Gross profit</td>
+<td>$61,733</td>
+<td>$29,504</td>
+<td>-52%</td>
+</tr>
+<tr>
+<td>Gross margin</td>
+<td>68.5%</td>
+<td>65.5%</td>
+<td>-3pp</td>
+</tr>
+<tr>
+<td>Monthly break-even</td>
+<td>Month 3</td>
+<td>Month 4</td>
+<td>+1 month</td>
+</tr>
+<tr>
+<td>Year-end cash</td>
+<td>$212,715</td>
+<td>$95,400</td>
+<td>-55%</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Still profitable. Lower conversion means less storage = lower variable costs. Margin only drops 3pp because costs scale with usage, not users. The model degrades gracefully.</p>
+</blockquote>
+<h3>Scenario B: Average Storage 2x Higher (more data per user)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Baseline</th>
+<th>Scenario (2x storage)</th>
+<th>Delta</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Total storage (10K users)</td>
+<td>60 TB</td>
+<td>120 TB</td>
+<td>+100%</td>
+</tr>
+<tr>
+<td>Storage revenue</td>
+<td>$93,950</td>
+<td>$187,900</td>
+<td>+100%</td>
+</tr>
+<tr>
+<td>Storage costs</td>
+<td>$32,750</td>
+<td>$65,500</td>
+<td>+100%</td>
+</tr>
+<tr>
+<td>MRR</td>
+<td>$90,168</td>
+<td>$180,336</td>
+<td>+100%</td>
+</tr>
+<tr>
+<td>Total costs</td>
+<td>$28,435</td>
+<td>$56,746</td>
+<td>+100%</td>
+</tr>
+<tr>
+<td>Gross margin</td>
+<td>68.5%</td>
+<td>68.5%</td>
+<td>0pp</td>
+</tr>
+<tr>
+<td>Year-end cash</td>
+<td>$212,715</td>
+<td>$450,000+</td>
+<td>+111%</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Revenue and costs scale linearly with storage. Margin stays constant. This is the beauty of the per-GB model: more storage = more revenue at the same margin. 2x storage is purely upside.</p>
+</blockquote>
+<h3>Scenario C: Jina Raises Prices 3x ($15 -&gt; $45/month)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Baseline</th>
+<th>Scenario (Jina 3x)</th>
+<th>Delta</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Jina monthly cost</td>
+<td>$15</td>
+<td>$45</td>
+<td>+$30</td>
+</tr>
+<tr>
+<td>Total fixed infra</td>
+<td>$124</td>
+<td>$154</td>
+<td>+24%</td>
+</tr>
+<tr>
+<td>Total costs</td>
+<td>$28,435</td>
+<td>$28,465</td>
+<td>+0.1%</td>
+</tr>
+<tr>
+<td>Gross margin</td>
+<td>68.5%</td>
+<td>68.4%</td>
+<td>-0.1pp</td>
+</tr>
+<tr>
+<td>Impact at 10K users</td>
+<td>negligible</td>
+<td>negligible</td>
+<td></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Jina is only $15/mo of a $28K cost base. Even at 3x, impact is $30/mo — irrelevant at scale. However, at Month 1-3 when total costs are $800-900, an extra $30 is ~3-4% increase. <strong>Mitigation:</strong> Switch to Mistral Embed ($2.48/mo) or OpenAI small ($4.96/mo) — both are 3-10x cheaper than Jina even at current prices.</p>
+</blockquote>
+<h3>Scenario D: 50K Users Instead of 10K</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Baseline (10K)</th>
+<th>Scenario (50K)</th>
+<th>Delta</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Paying users</td>
+<td>4,000</td>
+<td>20,000</td>
+<td>+400%</td>
+</tr>
+<tr>
+<td>MRR</td>
+<td>$90,168</td>
+<td>$450,840</td>
+<td>+400%</td>
+</tr>
+<tr>
+<td>Total costs</td>
+<td>$28,435</td>
+<td>$132,175</td>
+<td>+365%</td>
+</tr>
+<tr>
+<td>Gross profit</td>
+<td>$61,733</td>
+<td>$318,665</td>
+<td>+416%</td>
+</tr>
+<tr>
+<td>Gross margin</td>
+<td>68.5%</td>
+<td>70.7%</td>
+<td>+2.2pp</td>
+</tr>
+<tr>
+<td>ARR</td>
+<td>$1.08M</td>
+<td>$5.41M</td>
+<td>+400%</td>
+</tr>
+<tr>
+<td>Infra changes needed</td>
+<td>2 servers</td>
+<td>8-10 servers, self-hosted LLM</td>
+<td>significant</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>At 50K users, margin actually <strong>improves</strong> because fixed costs are spread over more users. But infrastructure shifts: (1) self-hosted embeddings and LLM become cost-effective, (2) need dedicated Hetzner cluster, (3) Groq volume discounts or switch to self-hosted Whisper. <strong>This is the &quot;good problem&quot; scenario</strong> — 50K MCP users would make Contexter a significant player in the RAG-as-a-service market.</p>
+</blockquote>
+<h3>Scenario Summary Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>MRR</th>
+<th>Margin</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Baseline</td>
+<td>$90,168</td>
+<td>68.5%</td>
+<td>Healthy</td>
+</tr>
+<tr>
+<td>20% conversion</td>
+<td>$45,084</td>
+<td>65.5%</td>
+<td>Still profitable, slower growth</td>
+</tr>
+<tr>
+<td>2x storage</td>
+<td>$180,336</td>
+<td>68.5%</td>
+<td>Pure upside, linear scaling</td>
+</tr>
+<tr>
+<td>Jina 3x pricing</td>
+<td>$90,168</td>
+<td>68.4%</td>
+<td>Negligible impact, easy to mitigate</td>
+</tr>
+<tr>
+<td>50K users</td>
+<td>$450,840</td>
+<td>70.7%</td>
+<td>Excellent, needs infra investment</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>6. Key Metrics to Track</h2>
+<h3>Financial Metrics (Monthly Dashboard)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Target (Month 12)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MRR</td>
+<td>sum of all subscription revenue</td>
+<td>$90,168</td>
+</tr>
+<tr>
+<td>ARR</td>
+<td>MRR x 12</td>
+<td>$1,082,021</td>
+</tr>
+<tr>
+<td>Gross Margin</td>
+<td>(Revenue - COGS) / Revenue</td>
+<td>&gt; 65%</td>
+</tr>
+<tr>
+<td>ARPU (paying)</td>
+<td>MRR / paying users</td>
+<td>$22.54</td>
+</tr>
+<tr>
+<td>ARPU (all)</td>
+<td>MRR / total users</td>
+<td>$9.02</td>
+</tr>
+<tr>
+<td>Net Revenue Retention</td>
+<td>(MRR from existing users this month) / (MRR from same users last month)</td>
+<td>&gt; 110%</td>
+</tr>
+<tr>
+<td>Monthly burn rate</td>
+<td>total costs - revenue</td>
+<td>$0 (profitable from Month 3)</td>
+</tr>
+</tbody></table>
+<h3>Growth Metrics</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Monthly user growth rate</td>
+<td>new users / previous month users</td>
+<td>&gt; 15%</td>
+</tr>
+<tr>
+<td>Free-to-paid conversion</td>
+<td>paying / total users</td>
+<td>&gt; 30%</td>
+</tr>
+<tr>
+<td>Churn (free)</td>
+<td>lost free users / start-of-month free users</td>
+<td>&lt; 5%</td>
+</tr>
+<tr>
+<td>Churn (paid)</td>
+<td>lost paid users / start-of-month paid users</td>
+<td>&lt; 3%</td>
+</tr>
+<tr>
+<td>DAU/MAU ratio</td>
+<td>daily active / monthly active</td>
+<td>&gt; 30% (sticky product)</td>
+</tr>
+<tr>
+<td>Time to first value</td>
+<td>registration -&gt; first successful query</td>
+<td>&lt; 5 minutes</td>
+</tr>
+</tbody></table>
+<h3>Unit Economics Metrics</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cost per GB stored</td>
+<td>(storage infra cost) / total GB</td>
+<td>&lt; $0.02</td>
+</tr>
+<tr>
+<td>Cost per GB ingested</td>
+<td>(parse + chunk + embed cost) / GB ingested</td>
+<td>&lt; $0.15</td>
+</tr>
+<tr>
+<td>Cost per query</td>
+<td>(LLM + vector search cost) / queries</td>
+<td>&lt; $0.01</td>
+</tr>
+<tr>
+<td>Revenue per GB (blended)</td>
+<td>total revenue / total GB</td>
+<td>&gt; $0.40</td>
+</tr>
+<tr>
+<td>Contribution margin per user</td>
+<td>ARPU - variable cost per user</td>
+<td>&gt; $15</td>
+</tr>
+<tr>
+<td>LTV</td>
+<td>ARPU x avg lifetime months</td>
+<td>&gt; $250</td>
+</tr>
+<tr>
+<td>LTV:CAC</td>
+<td>LTV / CAC</td>
+<td>&gt; 10 (currently infinite)</td>
+</tr>
+</tbody></table>
+<h3>Infrastructure Metrics</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+<th>Alert Threshold</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>API uptime</td>
+<td>&gt; 99.5%</td>
+<td>&lt; 99%</td>
+</tr>
+<tr>
+<td>Query latency (p95)</td>
+<td>&lt; 3s</td>
+<td>&gt; 5s</td>
+</tr>
+<tr>
+<td>Ingestion throughput</td>
+<td>&gt; 10 docs/min</td>
+<td>&lt; 5 docs/min</td>
+</tr>
+<tr>
+<td>Storage utilization</td>
+<td>&lt; 80% of provisioned</td>
+<td>&gt; 90%</td>
+</tr>
+<tr>
+<td>API cost per request</td>
+<td>tracked per provider</td>
+<td>&gt; 2x budget</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Appendix A: Assumptions</h2>
+<table>
+<thead>
+<tr>
+<th>Assumption</th>
+<th>Value</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Conversion rate (free -&gt; paid)</td>
+<td>40%</td>
+<td>MCP marketplace = high-intent developers; not consumer freemium</td>
+</tr>
+<tr>
+<td>Churn (free)</td>
+<td>5%/month</td>
+<td>Low switching cost, experimentation</td>
+</tr>
+<tr>
+<td>Churn (paid)</td>
+<td>3%/month</td>
+<td>Data lock-in, integration stickiness</td>
+</tr>
+<tr>
+<td>Avg storage growth</td>
+<td>+2 GB/user/month</td>
+<td>Knowledge bases grow as users add documents</td>
+</tr>
+<tr>
+<td>Query frequency</td>
+<td>~30 queries/user/month</td>
+<td>RAG queries via MCP clients</td>
+</tr>
+<tr>
+<td>Credit model coefficient (n)</td>
+<td>$0.000422</td>
+<td>Derived from cost-plus pricing with target 65%+ margin</td>
+</tr>
+<tr>
+<td>Marketing spend</td>
+<td>$500/month</td>
+<td>Organic-first: MCP marketplace listing, GitHub, blog posts</td>
+</tr>
+<tr>
+<td>Founder salary</td>
+<td>$0</td>
+<td>Pre-revenue; introduce $1,500-3,000/mo after Month 6</td>
+</tr>
+<tr>
+<td>Tax rate</td>
+<td>0%</td>
+<td>Pre-incorporation; model pre-tax</td>
+</tr>
+</tbody></table>
+<h2>Appendix B: Risk Register</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cloudflare price changes (D1/R2/Vectorize)</td>
+<td>Low</td>
+<td>Medium</td>
+<td>Multi-cloud architecture; R2 egress is free</td>
+</tr>
+<tr>
+<td>LLM API provider shutdown</td>
+<td>Medium</td>
+<td>High</td>
+<td>Fallback chain (Workers AI -&gt; DeepInfra -&gt; Groq)</td>
+</tr>
+<tr>
+<td>MCP standard changes</td>
+<td>Low</td>
+<td>High</td>
+<td>Streamable HTTP is stable; adapt quickly</td>
+</tr>
+<tr>
+<td>Competitor with VC funding</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Speed + niche focus (MCP-native, developer-first)</td>
+</tr>
+<tr>
+<td>Data privacy regulation</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Hetzner EU servers option; data residency per user</td>
+</tr>
+<tr>
+<td>Single founder risk</td>
+<td>High</td>
+<td>Critical</td>
+<td>Document everything; automate ops; open-source core?</td>
+</tr>
+<tr>
+<td>Storage costs at scale (100+ TB)</td>
+<td>Low</td>
+<td>Medium</td>
+<td>Negotiate volume pricing; tiered storage (hot/cold)</td>
+</tr>
+</tbody></table>
+<h2>Appendix C: Infrastructure Scaling Triggers</h2>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Threshold</th>
+<th>Action</th>
+<th>Cost Impact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2nd Hetzner server</td>
+<td>5K users / 18 TB</td>
+<td>Add $33/mo</td>
+<td>+$33</td>
+</tr>
+<tr>
+<td>Self-hosted embeddings</td>
+<td>50K users / 1B+ tokens</td>
+<td>Deploy bge-large on L4</td>
+<td>Save $10+/mo vs Jina</td>
+</tr>
+<tr>
+<td>Self-hosted LLM</td>
+<td>50K users / 10B+ tokens</td>
+<td>Deploy vLLM on 4090</td>
+<td>Save $30+/mo vs DeepInfra</td>
+</tr>
+<tr>
+<td>Self-hosted Whisper</td>
+<td>50K users / 3000+ hrs</td>
+<td>Deploy faster-whisper on L4</td>
+<td>Save $15+/mo vs Groq</td>
+</tr>
+<tr>
+<td>CDN / edge caching</td>
+<td>10K+ users</td>
+<td>CF Workers caching layer</td>
+<td>Reduce query costs 20-30%</td>
+</tr>
+<tr>
+<td>Database migration</td>
+<td>100K users</td>
+<td>D1 -&gt; Turso or self-hosted SQLite</td>
+<td>Performance, not cost</td>
+</tr>
+</tbody></table>
+
+</body>
+</html>

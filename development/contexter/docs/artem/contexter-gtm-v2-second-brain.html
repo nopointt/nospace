@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-v2-second-brain — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Second Brain / PKM Competitive Analysis — Contexter</h1>
+<blockquote>
+<p>Analyst: Lead/MarketAnalysis
+Date: 2026-03-27
+Purpose: Assess whether Second Brain / PKM products are converging on Contexter&#39;s &quot;Context Storage for AI&quot; positioning</p>
+</blockquote>
+<hr>
+<h2>Research Question</h2>
+<p>Contexter = &quot;Context Storage for AI&quot;: upload docs → persistent context → any AI model accesses via API/MCP.
+Second Brain products are adding AI features. Are they becoming the same thing?</p>
+<hr>
+<h2>1. Mem.ai</h2>
+<p><strong>Positioning:</strong> &quot;AI-first second brain&quot; / &quot;AI Thought Partner&quot; (Mem 2.0)</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li><strong>Mem Chat</strong>: conversational Q&amp;A over personal notes</li>
+<li><strong>Auto-organization</strong>: AI auto-categorizes and links notes without manual tagging</li>
+<li><strong>Smart Search</strong>: natural language queries across knowledge base</li>
+<li><strong>Collections</strong>: AI-curated groups of notes</li>
+<li><strong>Contextual surfacing</strong>: proactively shows relevant notes</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li>Yes — Mem offers a developer API (programmatic access to the knowledge graph)</li>
+<li>Available on Pro plan ($12/month or $14/month billed monthly)</li>
+<li>Powers Zapier integration, custom automation</li>
+<li>REST-based; primary use case is write (ingest from external sources) + read (retrieve notes)</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li>No confirmed native MCP server as of research date</li>
+<li>Community has built unofficial MCP integrations (via Mem API)</li>
+<li>Not officially supported or promoted</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Notes export available (Markdown)</li>
+<li>API allows bulk export</li>
+<li>Not fully open: graph relationships and AI metadata are platform-specific</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>Voice memo transcription (Whisper-based)</li>
+<li>Web clipper (URLs → notes)</li>
+<li>No native PDF ingestion or video support confirmed</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>Free: 25 notes, 25 chat messages/month</li>
+<li>Pro: $12/month — unlimited notes, chat, deep search, API access</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>Partially, but not as infrastructure.</strong> Mem is a note-taking interface first. Its API allows external reads but it&#39;s not designed as a context layer for other AI tools. No MCP, no programmatic chunk retrieval optimized for RAG. A user who only needs &quot;chat with my notes&quot; might not need Contexter, but a developer wanting to feed context to Claude/GPT via API would find Mem&#39;s API insufficient for that use case.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://help.mem.ai/features/api">https://help.mem.ai/features/api</a></li>
+<li><a href="https://get.mem.ai/blog/introducing-mem-2-0">https://get.mem.ai/blog/introducing-mem-2-0</a></li>
+<li><a href="https://www.salesforge.ai/directory/sales-tools/mem-ai">https://www.salesforge.ai/directory/sales-tools/mem-ai</a></li>
+<li><a href="https://kausiktrivedi.medium.com/coming-home-why-mem-2-0s-final-release-proved-me-right-all-along-da20e6fab246">https://kausiktrivedi.medium.com/coming-home-why-mem-2-0s-final-release-proved-me-right-all-along-da20e6fab246</a></li>
+</ul>
+<hr>
+<h2>2. Reflect</h2>
+<p><strong>Positioning:</strong> &quot;AI notes&quot; — private, encrypted personal knowledge</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li>GPT-4 powered writing assistance (improve, expand, rewrite)</li>
+<li>Whisper voice transcription</li>
+<li>AI summarization of long notes</li>
+<li>Daily task generation from notes</li>
+<li>AI summaries for saved links (added Sep 2025)</li>
+<li>ChatGPT plugin — send content from ChatGPT into Reflect</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li><strong>No public API</strong> — explicitly confirmed as unavailable</li>
+<li>Third-party integrations: Zapier, Readwise, calendar (Google/Outlook)</li>
+<li>No programmatic read/write for external AI tools</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li>No MCP support</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Unknown — likely limited export options</li>
+<li>Encrypted storage (end-to-end) — this is a selling point but limits third-party access</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>Voice memos (Whisper transcription)</li>
+<li>No PDF or video ingestion confirmed</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>$10/month or $99/year — all AI features included, no separate tier</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>No.</strong> Reflect has no API. Knowledge is locked in the app. It cannot serve as an external context source for AI models. The AI features are fully internal (in-app only). Completely different use case from Contexter.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://reflect.app">https://reflect.app</a></li>
+<li><a href="https://reflect.academy/artificial-intelligence">https://reflect.academy/artificial-intelligence</a></li>
+<li><a href="https://votars.ai/en/blog/reflect-review-2025/">https://votars.ai/en/blog/reflect-review-2025/</a></li>
+<li><a href="https://aijet.cc/item/reflect-notes">https://aijet.cc/item/reflect-notes</a></li>
+</ul>
+<hr>
+<h2>3. Tana</h2>
+<p><strong>Positioning:</strong> AI-native structured knowledge workspace (supertags, knowledge graph)</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li>AI Chat over full knowledge base (GPT-4, GPT-5, GPT-5 Mini/Nano available)</li>
+<li>AI-enhanced fields (auto-populate structured data)</li>
+<li>Command nodes (custom AI workflows)</li>
+<li>Custom AI agents built on top of Tana knowledge</li>
+<li>Voice memos → articles/ideas</li>
+<li>Supertags enable structured AI queries</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li><strong>Tana Local API</strong>: TypeScript-based local API for workspace/node/tag/field/calendar/import operations</li>
+<li>Designed for AI interaction — &quot;AI can interact with Tana by writing TypeScript code&quot;</li>
+<li>Powers community-built MCP server</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li><strong>Yes</strong> — community MCP server exists (Tana MCP Server, listed on mcp.aibase.com)</li>
+<li>Supports multiple operations via Local API</li>
+<li>Not an official first-party release but functional</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Export available</li>
+<li>Structured graph format — relationships exportable</li>
+<li>Local API enables custom pipelines</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>Voice memos (transcribed)</li>
+<li>Web capture</li>
+<li>No native PDF/video processing confirmed</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>Tana is in beta/invite phase; pricing not fully public as of research date</li>
+<li>AI features included in workspace subscription</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>Closest competitor in the PKM space.</strong> Tana has a Local API + community MCP server, enabling external AI tools to query and update the knowledge base. However, it&#39;s still primarily a structured note-taking tool. The MCP integration is community-driven, not production-grade infrastructure. A developer building an AI product would not rely on Tana as a context backend — it lacks the ingestion pipelines, chunking, embedding management, and retrieval APIs that Contexter provides.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://mcp.aibase.com/server/1639702931983048952">https://mcp.aibase.com/server/1639702931983048952</a></li>
+<li><a href="https://pages.fisfraga.com/tana-ai-knowledge-agents">https://pages.fisfraga.com/tana-ai-knowledge-agents</a></li>
+<li><a href="https://outliner.tana.inc/pkm">https://outliner.tana.inc/pkm</a></li>
+<li><a href="https://app.aibase.com/details/36041">https://app.aibase.com/details/36041</a></li>
+</ul>
+<hr>
+<h2>4. Capacities</h2>
+<p><strong>Positioning:</strong> &quot;A studio for your mind&quot; — object-based personal knowledge management</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li>AI Chat assistant (in-app Q&amp;A over notes)</li>
+<li>Planned: &quot;Smarter Context&quot; — chatting with multiple notes + calendar data</li>
+<li>Planned: &quot;Agentic Chat&quot; — analyzes questions, searches notes, remembers preferences, suggests edits</li>
+<li>Planned: Understanding media (images, audio, video transcripts) in AI context</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li><strong>Capacities API</strong> (current): supports spaces, search, save web links, add to daily notes</li>
+<li><strong>API 2.0</strong> (planned): full read/write/create access — &quot;extensive API for developers&quot;</li>
+<li>Currently limited scope vs planned expansion</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li><strong>Yes</strong> — MCP server exists (community-built by Jem Gold, <code>capacities-mcp</code>)</li>
+<li>Available on npm (<code>capacities-mcp-plus 1.1.0</code>)</li>
+<li>Also listed on MCP marketplaces (mcpmarket.com, pulsemcp.com, lobehub.com)</li>
+<li>Supports: list spaces, retrieve space info, search content, save web links, add to daily notes</li>
+<li>Official roadmap includes &quot;AI Connectors &amp; MCP Server&quot; — connecting Claude/ChatGPT to Capacities</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Export available</li>
+<li>API allows programmatic read (limited now, expanding)</li>
+<li>Object-based structure may be exportable as structured data</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>Planned: audio, video, image understanding in AI context</li>
+<li>Current: web links with metadata</li>
+<li>No confirmed PDF processing in current version</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>Free tier available</li>
+<li>Pro plan required for full AI features (exact price not confirmed in sources)</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>Partially, with roadmap convergence.</strong> Capacities already has an MCP server and API. Their roadmap explicitly includes AI Connectors + MCP for Claude/ChatGPT access. This is the most deliberate convergence toward &quot;context layer&quot; thinking among PKM tools. However, Capacities is still a knowledge management interface — its API is designed for productivity automation, not for RAG pipelines. No chunking, embedding management, or retrieval optimization. Could replace Contexter for simple &quot;read my notes&quot; use cases once API 2.0 ships.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://mcpmarket.com/es/server/capacities">https://mcpmarket.com/es/server/capacities</a></li>
+<li><a href="https://github.com/jem-computer/capacities-mcp">https://github.com/jem-computer/capacities-mcp</a></li>
+<li><a href="https://capacities.io/whats-next/">https://capacities.io/whats-next/</a></li>
+<li><a href="https://www.pulsemcp.com/servers/jemgold-capacities">https://www.pulsemcp.com/servers/jemgold-capacities</a></li>
+<li><a href="https://skywork.ai/skypage/en/Capacities-App-Your-AI-Powered-Knowledge-Hub-for-2025/1972880957352112128">https://skywork.ai/skypage/en/Capacities-App-Your-AI-Powered-Knowledge-Hub-for-2025/1972880957352112128</a></li>
+</ul>
+<hr>
+<h2>5. Heptabase</h2>
+<p><strong>Positioning:</strong> Visual knowledge management — whiteboards + card-based notes</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li>AI Chat (BYOK: requires own OpenAI API key)</li>
+<li>AI-suggested questions for exploration</li>
+<li>Audio/video/podcast transcription via Whisper (BYOK OpenAI key)</li>
+<li>Zotero integration (Feb 2026 update)</li>
+<li>Monthly credits model coming (no BYOK required in future)</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li>No public API as of research date (planned for future, per Aug 2024 AMA)</li>
+<li>Local backup-based MCP server workaround exists</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li><strong>Yes</strong> — Heptabase MCP server (official: support.heptabase.com article exists)</li>
+<li>Works via Heptabase backup data (local files, not live API)</li>
+<li>Capabilities: read, search, write to knowledge base; AI assistants can discover notes/whiteboards, understand context, save new insights as cards/journal entries</li>
+<li>External tools (Claude, ChatGPT) can interact with Heptabase space directly</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Local backup-based system — files are local</li>
+<li>Backup data is primary access method for MCP</li>
+<li>Good portability compared to cloud-locked tools</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>Audio, video, podcast transcription (Whisper)</li>
+<li>Whiteboard visual structures</li>
+<li>No confirmed PDF ingestion (Zotero integration may cover academic papers)</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>BYOK model (pay OpenAI directly for usage)</li>
+<li>Base Heptabase subscription required (pricing not specified in sources)</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>No for infrastructure use cases, partial for personal use.</strong> Heptabase has a functioning MCP server (official) that lets external AI access the knowledge base. But it&#39;s backup-file-based (not live API), BYOK model adds friction, and there&#39;s no public REST API. A developer building AI products cannot rely on Heptabase as a context backend. Personal users who want Claude to access their Heptabase notes could get partial functionality via MCP.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://support.heptabase.com/en/articles/12679581-how-to-use-heptabase-mcp">https://support.heptabase.com/en/articles/12679581-how-to-use-heptabase-mcp</a></li>
+<li><a href="https://mcpmarket.com/server/heptabase">https://mcpmarket.com/server/heptabase</a></li>
+<li><a href="https://support.heptabase.com/en/articles/10505755-how-can-i-get-an-api-key-to-use-ai-in-heptabase">https://support.heptabase.com/en/articles/10505755-how-can-i-get-an-api-key-to-use-ai-in-heptabase</a></li>
+<li><a href="https://wiki.heptabase.com/newsletters/2026-02-27">https://wiki.heptabase.com/newsletters/2026-02-27</a></li>
+<li><a href="https://skywork.ai/skypage/en/unlocking-second-brain-heptabase-server/1978301825238880256">https://skywork.ai/skypage/en/unlocking-second-brain-heptabase-server/1978301825238880256</a></li>
+</ul>
+<hr>
+<h2>6. Obsidian + AI Plugins (Smart Connections, Copilot)</h2>
+<p><strong>Positioning:</strong> Open, local-first note-taking with extensive plugin ecosystem</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li><strong>Smart Connections</strong>: RAG over full vault; chat with notes; finds related content via AI embeddings; supports Claude, Gemini, ChatGPT, Llama 3, 100+ models via API; local models supported</li>
+<li><strong>Copilot for Obsidian</strong>: chat-based vault search, web + YouTube support, context processing, agentic capabilities; BYOK for multiple providers</li>
+<li><strong>Smart Composer</strong>: vault-aware conversations, semantic search, local model support, one-click edits; can connect to external MCP servers</li>
+<li>Vault-wide Q&amp;A, link discovery, AI-driven organization (fully local — no data leaves vault)</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li>Obsidian itself has no public API</li>
+<li>Vault is local Markdown files — inherently accessible/portable</li>
+<li>Plugins expose vault to AI models via their own mechanisms</li>
+<li>Smart Connections built on Smart Environments framework (emerging standard)</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li><strong>Smart Composer</strong> supports connecting to external MCP servers (use third-party tools in chat)</li>
+<li>Community obsidian-mcp project exists for Claude Code integration (read/search/create/modify notes via MCP)</li>
+<li>MCP support described as &quot;coming&quot; for Smart Connections (as of late 2025)</li>
+<li>Effective vault-as-MCP-server possible via community tooling</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Maximum portability: plain Markdown files, stored locally</li>
+<li>No vendor lock-in</li>
+<li>Any tool can read the vault directory</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>PDF ingestion via community plugins</li>
+<li>Audio transcription via plugins</li>
+<li>Images embedded; OCR via plugins</li>
+<li>No native video processing</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>Obsidian: free for personal use; $50/year Sync (optional)</li>
+<li>Smart Connections: free plugin + Smart Connections Pro (pricing varies)</li>
+<li>Copilot: free plugin, BYOK (user pays API provider)</li>
+<li>Total AI cost: essentially free software + API call costs</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>Closest existing alternative for technical users, but requires significant DIY.</strong> Obsidian&#39;s vault is local Markdown — any AI model with filesystem access or MCP can read it. Smart Connections effectively creates a local RAG system. For a developer who self-hosts: Obsidian vault + Smart Connections + community MCP = functional context storage. Key gaps: no hosted API endpoint for Contexter-style &quot;upload → URL → any model accesses,&quot; no access management, no production reliability. Would not replace Contexter for team use or API-based integration.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://github.com/brianpetro/obsidian-smart-connections">https://github.com/brianpetro/obsidian-smart-connections</a></li>
+<li><a href="https://github.com/logancyang/obsidian-copilot">https://github.com/logancyang/obsidian-copilot</a></li>
+<li><a href="https://github.com/glowingjade/obsidian-smart-composer">https://github.com/glowingjade/obsidian-smart-composer</a></li>
+<li><a href="https://www.obsidiancopilot.com/en">https://www.obsidiancopilot.com/en</a></li>
+<li><a href="https://www.nxcode.io/resources/news/obsidian-ai-second-brain-complete-guide-2026">https://www.nxcode.io/resources/news/obsidian-ai-second-brain-complete-guide-2026</a></li>
+</ul>
+<hr>
+<h2>7. Notion AI</h2>
+<p><strong>Positioning:</strong> All-in-one workspace with deeply integrated AI (&quot;AI that executes&quot;)</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li><strong>Notion AI</strong> (Notion 3.0, Sep 2025): autonomous AI Agents performing 20 min of work across 100s of pages simultaneously</li>
+<li>Multi-model support: toggle between GPT-5.2, Claude Opus 4.5, Gemini 3 (as of Notion 3.2, Jan 2026)</li>
+<li>Q&amp;A over workspace: instant answers from knowledge base</li>
+<li>Content generation, summarization, database analysis</li>
+<li>Cross-platform context: Slack, Google Drive, Microsoft Teams integrations</li>
+<li>AI Add-on discontinued (May 2025): AI now bundled into Business/Enterprise plans</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li><strong>Official Notion API</strong>: full REST API — read/write pages, databases, blocks</li>
+<li>Mature, well-documented (developers.notion.com)</li>
+<li>Permission-scoped: integrations only see explicitly shared pages</li>
+<li>Rate limits: standard REST API limits apply</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li><strong>Yes — official Notion MCP Server</strong> (github.com/makenotion/notion-mcp-server)</li>
+<li>Hosted URL: <code>https://mcp.notion.com/mcp</code> — any MCP client can connect</li>
+<li>Tools: search, retrieve_page, query_database, create/update pages</li>
+<li>Free tier available</li>
+<li>Explicitly designed for Claude Code, Cursor, VS Code, ChatGPT integration</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Export to Markdown/HTML/CSV available</li>
+<li>Full API access enables custom export pipelines</li>
+<li>Content is cloud-stored on Notion servers</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>PDF viewing (not deep ingestion/search)</li>
+<li>Image embedding</li>
+<li>Audio/video via embed (no transcription native)</li>
+<li>File attachments</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>Free plan: basic Notion, no AI agents</li>
+<li>Plus ($10/user/mo): basic AI features</li>
+<li>Business ($15/user/mo): full Notion AI, agent capabilities</li>
+<li>Enterprise: custom pricing, full AI suite</li>
+<li>AI add-on ($8/user/mo) discontinued May 2025</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>For team knowledge use cases — significant overlap.</strong> Notion has a production-grade REST API + official MCP server. External AI tools can query any Notion database or page. For a team that already lives in Notion, it can serve as a context layer via MCP. Key gaps vs Contexter: permission complexity (must manually share each page), no document ingestion pipeline (upload PDF → searchable chunks), no RAG optimization, no embedding management. Contexter is simpler and purpose-built; Notion requires integration overhead. However, Notion&#39;s scale (30M+ users) and official MCP make it a real indirect threat — users may ask &quot;why Contexter when Notion MCP exists?&quot;</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://developers.notion.com/guides/mcp/mcp">https://developers.notion.com/guides/mcp/mcp</a></li>
+<li><a href="https://github.com/makenotion/notion-mcp-server">https://github.com/makenotion/notion-mcp-server</a></li>
+<li><a href="https://max-productive.ai/ai-tools/notion-ai/">https://max-productive.ai/ai-tools/notion-ai/</a></li>
+<li><a href="https://markaicode.com/mcp-notion-server-ai-knowledge-base/">https://markaicode.com/mcp-notion-server-ai-knowledge-base/</a></li>
+<li><a href="https://userjot.com/blog/notion-pricing-2025-plans-ai-costs-explained">https://userjot.com/blog/notion-pricing-2025-plans-ai-costs-explained</a></li>
+</ul>
+<hr>
+<h2>8. Roam Research</h2>
+<p><strong>Positioning:</strong> Networked thought — bi-directional links, outliner-first PKM for researchers</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li>No native AI assistant in core product</li>
+<li>Third-party extension: <strong>roam-extension-live-ai-assistant</strong> — &quot;chat with your graph&quot; using query results to generate insights; supports OpenAI and Anthropic models (most tested), plus other providers</li>
+<li>Third-party integrations: Zapier, Slack, Readwise for AI workflows</li>
+<li>Developer ecosystem approach: Roam leans on community plugins rather than building AI internally</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li>Roam Graph API: exists but throttled (1,000 calls/day on Pro plans, enterprise for more)</li>
+<li>Enables read/write to graph programmatically</li>
+<li>Used by third-party tools and extensions</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li><strong>Yes</strong> — community MCP server: <code>roam-research-mcp</code> (github.com/2b3pro/roam-research-mcp)</li>
+<li>Exposes tools to AI assistants (Claude, etc.) to read, write, organize Roam graph</li>
+<li>Not an official first-party product</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Export to Markdown, JSON, EDN</li>
+<li>Graph structure exportable</li>
+<li>Local backup available</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>PDFs linked (not natively indexed)</li>
+<li>Images embedded</li>
+<li>No audio/video transcription native</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>Roam Research: $15/month or $165/year or $500 lifetime</li>
+<li>No separate AI tier — AI via third-party extensions (user pays API provider)</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>No.</strong> Roam has no native AI features — all AI is via community extensions. The MCP server is community-built. API throttling (1K calls/day) makes it unsuitable as an infrastructure layer. Roam&#39;s user base skews toward researchers/academics who likely already have complex setups. For Contexter&#39;s use case (programmatic context access for AI products), Roam is irrelevant.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://github.com/fbgallet/roam-extension-live-ai-assistant">https://github.com/fbgallet/roam-extension-live-ai-assistant</a></li>
+<li><a href="https://github.com/2b3pro/roam-research-mcp">https://github.com/2b3pro/roam-research-mcp</a></li>
+<li><a href="https://skywork.ai/skypage/en/unlocking-second-brain-ai-engineer-roam-research/1980889424461492224">https://skywork.ai/skypage/en/unlocking-second-brain-ai-engineer-roam-research/1980889424461492224</a></li>
+<li><a href="https://aiproductivity.ai/tools/roam-research/">https://aiproductivity.ai/tools/roam-research/</a></li>
+</ul>
+<hr>
+<h2>9. Anytype</h2>
+<p><strong>Positioning:</strong> Open-source, E2E encrypted, local-first PKM — &quot;private Notion&quot;</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li><strong>Custom AI Models &amp; API Keys Support</strong> (in active development, Feb 2026 roadmap)</li>
+<li><strong>AI Assistant Integration</strong> (in exploration — experimental, no timeline)</li>
+<li><strong>AI Agents</strong> (in exploration)</li>
+<li><strong>Whisper Integration</strong> (on horizon — voice-to-text)</li>
+<li>Current: no shipping AI assistant in core product</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li><strong>Official Anytype API</strong> (launched): developer portal at developers.anytype.io</li>
+<li>Connects to local API endpoint <code>http://127.0.0.1:31009</code> (local-first architecture)</li>
+<li>Bearer token auth</li>
+<li>Covers: spaces, objects, lists, properties, tags, types, templates</li>
+<li>Files API and Chats API in active development (Feb 2026 roadmap)</li>
+<li>API 2.0 in exploration (full redesign)</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li><strong>Yes — official Anytype MCP Server</strong> (github.com/anyproto/anytype-mcp)</li>
+<li>Converts OpenAPI spec → MCP tools</li>
+<li>Capabilities: global/space search, spaces/members, objects/lists CRUD, properties/tags, types/templates, export to Markdown</li>
+<li>Semantic search MCP variant also exists (community contribution on official dev docs)</li>
+<li>Listed on multiple MCP marketplaces</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Maximum: local-first, E2E encrypted, export to Markdown</li>
+<li>Open-source clients — no vendor lock-in</li>
+<li>Can self-host</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>Whisper integration planned (not yet shipped)</li>
+<li>Current: text, images, file attachments</li>
+<li>No native PDF/video processing</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>Free plan: generous (local-first, limited cloud backup)</li>
+<li>Paid plans for cloud sync/backup; AI features not yet a separate charge</li>
+<li>Open-source: free to self-host entirely</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>Potentially for self-hosting technical users, not for product builders.</strong> Anytype has the most developer-friendly posture of all PKM tools: official API, official MCP, open-source. For a developer who wants to self-host their own context storage and doesn&#39;t need a hosted service, Anytype+MCP could work. Key gaps: local-first architecture means no cloud API endpoint (context access requires local Anytype running), no document ingestion pipeline, no RAG optimization. Contexter&#39;s value is as a hosted service with an API endpoint — Anytype doesn&#39;t compete in that dimension.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://github.com/anyproto/anytype-mcp">https://github.com/anyproto/anytype-mcp</a></li>
+<li><a href="https://developers.anytype.io/docs/examples/featured/mcp/">https://developers.anytype.io/docs/examples/featured/mcp/</a></li>
+<li><a href="https://community.anytype.io/t/api-developer-portal-mcp/27945">https://community.anytype.io/t/api-developer-portal-mcp/27945</a></li>
+<li><a href="https://community.anytype.io/t/roadmap-update-2026-feb/30112">https://community.anytype.io/t/roadmap-update-2026-feb/30112</a></li>
+<li><a href="https://github.com/anyproto/anytype-api">https://github.com/anyproto/anytype-api</a></li>
+</ul>
+<hr>
+<h2>10. Apple Notes + Apple Intelligence</h2>
+<p><strong>Positioning:</strong> Default notes app + on-device AI (iOS/iPadOS/macOS)</p>
+<h3>AI Features (as of 2026-03)</h3>
+<ul>
+<li><strong>Writing Tools</strong>: proofread, rewrite, summarize, tone adjustment (iOS 18.1+, iPadOS 18.1+)</li>
+<li><strong>Audio transcription summary</strong>: auto-summarize recorded audio in Notes</li>
+<li><strong>On-device processing</strong>: all AI runs locally — no cloud, no data collection</li>
+<li><strong>Foundation Models framework</strong>: third-party apps can use the same on-device LLM to build experiences (e.g., quiz from user&#39;s notes)</li>
+<li>Apple Intelligence across system: Siri can surface content from Notes in response to queries</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li>No public API for Apple Notes</li>
+<li>Foundation Models framework: developer API for on-device model (not for Notes data specifically)</li>
+<li>Notes data not accessible to third-party apps via API (sandboxed)</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li>No MCP support</li>
+<li>On-device model accessible via Foundation Models framework for app developers, not as an MCP server</li>
+</ul>
+<h3>Knowledge Portability</h3>
+<ul>
+<li>Export: Notes can be exported as PDF (manual, per-note)</li>
+<li>No bulk export or programmatic access</li>
+<li>Fully locked into Apple ecosystem</li>
+</ul>
+<h3>Non-text Formats</h3>
+<ul>
+<li>Audio recording + transcription (Whisper-class on-device)</li>
+<li>Image attachments</li>
+<li>PDF attachments (viewing only)</li>
+<li>Scanning documents (OCR for text, but not AI-searchable)</li>
+</ul>
+<h3>Pricing for AI Features</h3>
+<ul>
+<li>Free with Apple devices (iPhone 15 Pro+, iPhone 16, M1+ Mac/iPad)</li>
+<li>No separate subscription for Apple Intelligence</li>
+</ul>
+<h3>Can it replace Contexter?</h3>
+<p><strong>No — completely different paradigm.</strong> Apple Notes + Apple Intelligence is on-device, sandboxed, and non-programmable. There&#39;s no API, no MCP, no external access. It&#39;s the opposite of Contexter&#39;s value proposition (shared accessible context layer). The only potential threat: Apple making on-device notes accessible to third-party AI tools in future OS versions, but this is not on any public roadmap.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://www.apple.com/apple-intelligence/">https://www.apple.com/apple-intelligence/</a></li>
+<li><a href="https://support.apple.com/guide/iphone/use-apple-intelligence-in-notes-iph59143007d/ios">https://support.apple.com/guide/iphone/use-apple-intelligence-in-notes-iph59143007d/ios</a></li>
+<li><a href="https://www.apple.com/newsroom/2025/09/new-apple-intelligence-features-are-available-today/">https://www.apple.com/newsroom/2025/09/new-apple-intelligence-features-are-available-today/</a></li>
+<li><a href="https://applemagazine.com/apple-intelligence-2026-deep-dive/">https://applemagazine.com/apple-intelligence-2026-deep-dive/</a></li>
+</ul>
+<hr>
+<h2>Bonus Finding: Supermemory — Direct Competitor (Not PKM)</h2>
+<p><strong>Positioning:</strong> &quot;The memory layer for AI agents&quot; — explicitly infrastructure play</p>
+<p>This product emerged during research and is NOT a PKM tool. It directly occupies Contexter&#39;s exact intended positioning.</p>
+<h3>What it does</h3>
+<ul>
+<li>Hosted context infrastructure API: upload → persistent context → any AI model accesses via API/MCP</li>
+<li>Custom vector graph engine with ontology-aware edges</li>
+<li>User understanding model (builds deep user profiles from behavioral patterns)</li>
+<li>Hybrid vector + keyword search, sub-300ms latency</li>
+<li>Multi-format extractors: PDFs, web pages, images, audio</li>
+<li>Automatic connectors: Notion, Slack, Google Drive, S3, Gmail, custom sources</li>
+</ul>
+<h3>API</h3>
+<ul>
+<li>Full REST API + TypeScript/Python SDKs</li>
+<li>Framework integrations: LangChain, LangGraph, CrewAI, Vercel AI SDK, OpenAI SDK, Mastra, Pipecat</li>
+<li>Automation: Zapier, n8n</li>
+</ul>
+<h3>MCP Support</h3>
+<ul>
+<li><strong>Yes</strong> — Supermemory MCP Server 4.0</li>
+<li>&quot;Universal memory layer for LLMs across applications and sessions&quot;</li>
+<li>Works with: Cursor, Claude Desktop, VS Code, Gemini CLI, Cline, Claude Code</li>
+<li>Cross-client memory: store context in Cursor, retrieve in Claude</li>
+</ul>
+<h3>Pricing</h3>
+<table>
+<thead>
+<tr>
+<th>Plan</th>
+<th>Price</th>
+<th>Tokens/month</th>
+<th>Queries</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free</td>
+<td>$0</td>
+<td>1M</td>
+<td>10K</td>
+</tr>
+<tr>
+<td>Pro</td>
+<td>$19/mo</td>
+<td>3M</td>
+<td>100K</td>
+</tr>
+<tr>
+<td>Scale</td>
+<td>$399/mo</td>
+<td>80M</td>
+<td>20M</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Custom</td>
+<td>Unlimited</td>
+<td>Unlimited</td>
+</tr>
+</tbody></table>
+<p>Overage: $0.01/1K tokens, $0.10/1K queries. All plans: unlimited storage, unlimited users, free multi-modal extraction.</p>
+<h3>Can it replace Contexter?</h3>
+<p><strong>Yes — this is Contexter&#39;s direct functional equivalent.</strong> Supermemory is the most important competitive finding in this research. Same positioning, same mechanism (API/MCP), same use case (persistent context for AI agents). The main differentiation questions for Contexter: privacy model, pricing, deployment options (CF Workers vs Supermemory&#39;s infrastructure), and vertical focus.</p>
+<p><strong>Sources:</strong></p>
+<ul>
+<li><a href="https://supermemory.ai/">https://supermemory.ai/</a></li>
+<li><a href="https://github.com/supermemoryai/supermemory">https://github.com/supermemoryai/supermemory</a></li>
+<li><a href="https://supermemory.ai/blog/how-to-make-your-mcp-clients-share-context-with-supermemory-mcp/">https://supermemory.ai/blog/how-to-make-your-mcp-clients-share-context-with-supermemory-mcp/</a></li>
+<li><a href="https://supermemory.ai/docs/supermemory-mcp/introduction">https://supermemory.ai/docs/supermemory-mcp/introduction</a></li>
+</ul>
+<hr>
+<h2>Synthesis</h2>
+<h3>1. Which Second Brain Products Are Closest to Becoming &quot;Context Storage&quot;?</h3>
+<p><strong>Tier 1 — Functional API + MCP today (real overlap):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>API</th>
+<th>MCP</th>
+<th>RAG-ready</th>
+<th>Assessment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Notion</td>
+<td>Full REST, production-grade</td>
+<td>Official hosted MCP</td>
+<td>No (permission-gated)</td>
+<td>Biggest indirect threat by installed base</td>
+</tr>
+<tr>
+<td>Anytype</td>
+<td>Official API + Developer Portal</td>
+<td>Official MCP server</td>
+<td>No</td>
+<td>Most developer-forward PKM, self-host angle</td>
+</tr>
+<tr>
+<td>Capacities</td>
+<td>Limited API, API 2.0 roadmap</td>
+<td>Community MCP</td>
+<td>No</td>
+<td>Fastest roadmap convergence</td>
+</tr>
+<tr>
+<td>Tana</td>
+<td>Local API (TypeScript)</td>
+<td>Community MCP</td>
+<td>No</td>
+<td>Structured data angle</td>
+</tr>
+<tr>
+<td>Heptabase</td>
+<td>No public API</td>
+<td>Official MCP (backup-based)</td>
+<td>No</td>
+<td>MCP works but limited by local architecture</td>
+</tr>
+</tbody></table>
+<p><strong>Tier 2 — Community MCP, no real API:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>API</th>
+<th>MCP</th>
+<th>Assessment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Obsidian</td>
+<td>No API (local files)</td>
+<td>Community MCP, Smart Composer</td>
+<td>DIY infrastructure for technical users</td>
+</tr>
+<tr>
+<td>Roam Research</td>
+<td>Throttled API (1K/day)</td>
+<td>Community MCP</td>
+<td>Developer ecosystem but throttled/niche</td>
+</tr>
+<tr>
+<td>Mem.ai</td>
+<td>REST API (Pro)</td>
+<td>No native MCP</td>
+<td>Interface-first, not infrastructure</td>
+</tr>
+</tbody></table>
+<p><strong>Tier 3 — No API, closed:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Assessment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Reflect</td>
+<td>No API, locked in</td>
+</tr>
+<tr>
+<td>Apple Notes</td>
+<td>Sandboxed, no external access</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>2. Gap Between Best PKM+AI and Contexter</h3>
+<p>The fundamental architectural gap is <strong>purpose</strong>:</p>
+<p>PKM tools are built for human knowledge management first. Their APIs and MCP servers are byproducts — &quot;you can also access your notes from Claude.&quot; They are not designed as:</p>
+<ul>
+<li>Ingestion pipelines (drag PDF → processed chunks → searchable)</li>
+<li>RAG infrastructure (chunking strategies, embedding management, retrieval optimization)</li>
+<li>Hosted API endpoints (give any AI model access via a URL, no app install required)</li>
+<li>Access management layer (token-based access for AI applications, not just personal tools)</li>
+<li>Multi-tenant context isolation</li>
+</ul>
+<p>Even the most developer-forward PKM (Anytype) requires running the local app, connects via localhost, and doesn&#39;t provide a production-grade hosted endpoint.</p>
+<p><strong>The gap in four dimensions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Best PKM (Anytype/Notion)</th>
+<th>Contexter</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ingestion</td>
+<td>Manual note entry + web clip</td>
+<td>Upload any format → auto-processed</td>
+</tr>
+<tr>
+<td>Architecture</td>
+<td>App-first, API as side feature</td>
+<td>API-first, purpose-built context layer</td>
+</tr>
+<tr>
+<td>Access model</td>
+<td>Personal/team workspace</td>
+<td>Programmatic token-based, multi-model</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Cloud service / local app</td>
+<td>Edge (Cloudflare Workers) — globally distributed</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>3. Should Contexter Worry About This Category?</h3>
+<p><strong>Short answer:</strong> Not about PKM tools directly. The real threat is different.</p>
+<p><strong>PKM is not the threat.</strong> The 10 products analyzed are converging on &quot;AI in notes&quot; — making their own interface smarter. They are not converging on &quot;my notes as API for other AI tools.&quot; Even when they build MCP servers, the primary value proposition remains the note-taking interface. A Notion user who wants Claude to read their notes will set up Notion MCP — but they are still a Notion user, not a Contexter user.</p>
+<p><strong>The actual threat found during research: Supermemory.</strong> This is not a PKM product — it explicitly positions as &quot;context storage for AI agents.&quot; It has the same architecture (hosted API + MCP), overlapping use cases, and a real pricing model. Supermemory is the direct competitive threat that Contexter should track.</p>
+<p><strong>Adjacent threat: the &quot;context engine&quot; category emerging from RAG infrastructure.</strong> Tools like Supermemory, Mem0, and the general MCP+RAG ecosystem are coalescing around the same positioning Contexter aims for. This is a positioning race, not a PKM race.</p>
+<p><strong>Second-order threat from PKM:</strong> Notion&#39;s scale (30M+ users) and its official MCP server mean that many potential Contexter users will hit &quot;Notion MCP is good enough&quot; before they find Contexter. The question is not whether Notion replaces Contexter&#39;s architecture — it doesn&#39;t — but whether it satisfies enough of the use case to prevent users from seeking a dedicated tool.</p>
+<hr>
+<h3>4. Contexter&#39;s Defensible Advantages vs the PKM Category</h3>
+<ol>
+<li><strong>Simplicity of ingestion</strong>: Upload any document (PDF, audio, web) → available immediately. No note-taking app needed, no formatting, no workspace setup.</li>
+<li><strong>Infrastructure posture</strong>: CF Workers edge deployment means globally distributed, low-latency retrieval. PKM tools are cloud services or local apps.</li>
+<li><strong>No opinionated interface</strong>: Contexter stores context without forcing a knowledge management workflow. Users who want structured notes should use Notion. Users who want AI-accessible context without the overhead should use Contexter.</li>
+<li><strong>Token-based multi-model access</strong>: Any AI model, any framework, via a single API key — without installing an app, configuring a workspace, or sharing specific pages manually.</li>
+<li><strong>RAG optimization</strong>: Purpose-built chunking and retrieval (not a side feature of a notes app).</li>
+</ol>
+<hr>
+<h3>5. Recommended Positioning Response</h3>
+<p>Based on this research, Contexter&#39;s clearest differentiation message against PKM tools is:</p>
+<blockquote>
+<p>&quot;PKM tools give your AI access to your notes. Contexter gives your AI access to everything — without the note-taking overhead.&quot;</p>
+</blockquote>
+<p>Against Supermemory and the &quot;context engine&quot; category, differentiation should focus on:</p>
+<ul>
+<li>Privacy architecture (Contexter on CF Workers, data sovereignty)</li>
+<li>Pricing model transparency</li>
+<li>Developer experience (ease of integration)</li>
+<li>Verticalization opportunity (Contexter for specific domains vs generic memory)</li>
+</ul>
+<hr>
+<h3>Sources Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Key Sources</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mem.ai</td>
+<td>help.mem.ai/features/api, get.mem.ai/blog/introducing-mem-2-0</td>
+</tr>
+<tr>
+<td>Reflect</td>
+<td>reflect.app, reflect.academy/artificial-intelligence</td>
+</tr>
+<tr>
+<td>Tana</td>
+<td>mcp.aibase.com/server/1639702931983048952, pages.fisfraga.com/tana-ai-knowledge-agents</td>
+</tr>
+<tr>
+<td>Capacities</td>
+<td>capacities.io/whats-next, github.com/jem-computer/capacities-mcp</td>
+</tr>
+<tr>
+<td>Heptabase</td>
+<td>support.heptabase.com, wiki.heptabase.com/newsletters/2026-02-27</td>
+</tr>
+<tr>
+<td>Obsidian</td>
+<td>github.com/brianpetro/obsidian-smart-connections, github.com/logancyang/obsidian-copilot</td>
+</tr>
+<tr>
+<td>Notion</td>
+<td>developers.notion.com/guides/mcp/mcp, github.com/makenotion/notion-mcp-server</td>
+</tr>
+<tr>
+<td>Roam</td>
+<td>github.com/2b3pro/roam-research-mcp, aiproductivity.ai/tools/roam-research</td>
+</tr>
+<tr>
+<td>Anytype</td>
+<td>github.com/anyproto/anytype-mcp, developers.anytype.io, community.anytype.io</td>
+</tr>
+<tr>
+<td>Apple Intelligence</td>
+<td>apple.com/apple-intelligence, support.apple.com</td>
+</tr>
+<tr>
+<td>Supermemory</td>
+<td>supermemory.ai, supermemory.ai/docs/supermemory-mcp/introduction</td>
+</tr>
+<tr>
+<td>Market context</td>
+<td>ragflow.io/blog/rag-review-2025, kanerika.com/blogs/mcp-vs-rag</td>
+</tr>
+</tbody></table>
+
+</body>
+</html>

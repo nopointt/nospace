@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>contexter-gtm-competitor-vectorize — Contexter</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; background: #FAFAFA; color: #0A0A0A; max-width: 860px; margin: 0 auto; padding: 40px 24px; line-height: 1.7; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+  h2 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; border-bottom: 2px solid #0A0A0A; padding-bottom: 4px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+  p { font-size: 14px; margin: 8px 0; }
+  li { font-size: 14px; margin: 4px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  a { color: #1E3EA0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid #1E3EA0; padding: 8px 16px; margin: 12px 0; background: #f0f4ff; font-size: 13px; }
+  code { background: #e8e8e8; padding: 2px 6px; font-size: 12px; border-radius: 0; }
+  pre { background: #1a1a1a; color: #e0e0e0; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 13px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; }
+  th { font-weight: 700; background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+  .nav { margin-bottom: 24px; font-size: 13px; }
+  .nav a { margin-right: 16px; }
+  img { max-width: 100%; }
+</style>
+
+</head>
+<body>
+<div class="nav">
+  <a href="https://cdn.contexter.cc/public/artem/index.html">← Индекс</a>
+  <a href="https://cdn.contexter.cc/public/artem/cofounder-briefing-artem.html">Briefing</a>
+</div>
+<h1>Competitive Intelligence: Vectorize.io</h1>
+<p><strong>Date:</strong> 2026-03-27
+<strong>Analyst:</strong> Lead/MarketAnalysis
+<strong>Context lens:</strong> Contexter = &quot;Context Storage for AI&quot; (self-hosted Hetzner, €4.72/mo, 15 formats incl. audio/video, REST API + MCP, developer-first)</p>
+<hr>
+<h2>Document 1: Positioning (Landing Page Teardown)</h2>
+<h3>1.1 Hero — Verbatim</h3>
+<p><strong>H1 (current, as of 2026-03-27):</strong></p>
+<blockquote>
+<p>&quot;Agents that remember. Agent memory that learns.&quot;</p>
+</blockquote>
+<p><strong>Subheadline:</strong></p>
+<blockquote>
+<p>&quot;Introducing Hindsight™, a new approach to agent memory. Best in the world on benchmarks. Best in production for your agents.&quot;</p>
+</blockquote>
+<p><strong>CTA buttons:</strong></p>
+<ul>
+<li>&quot;Try on GitHub&quot;</li>
+<li>&quot;Try Hindsight Cloud&quot;</li>
+<li>&quot;Learn more →&quot;</li>
+</ul>
+<p>Source: <a href="https://vectorize.io/">https://vectorize.io/</a> (fetched 2026-03-27)</p>
+<p><strong>Note — pivot signal:</strong> This hero represents a ~Q4 2025 pivot. Original (2024) hero positioned Vectorize as a RAG pipeline builder. Current hero leads with agent memory / Hindsight. The RAG pipeline product still exists and is sold, but is no longer the identity claim. This is a significant strategic shift.</p>
+<hr>
+<h3>1.2 Five-Second Test</h3>
+<p><strong>Question:</strong> Is it clear what they do in 5 seconds?</p>
+<p><strong>Answer:</strong> Partially. For an AI-native audience — yes. For a general developer — no.</p>
+<p><strong>Why:</strong> &quot;Agents that remember&quot; is evocative but ambiguous at first read. It does not say what the product is (managed cloud service? library? API?). The Hindsight brand name requires follow-up to understand. A developer arriving via Google searching &quot;RAG pipeline tool&quot; or &quot;document indexing API&quot; will not immediately recognize themselves in the hero. The secondary content (connectors, data sources, pricing) is below the fold and resolves ambiguity — but the 5-second window has closed.</p>
+<p>Contrast: The 2024 positioning (&quot;Build RAG pipelines that are optimized for your data&quot;) was clearer for the developer ICP, but narrower. The current messaging aims higher (agent memory is a larger market) but loses specificity.</p>
+<hr>
+<h3>1.3 Category Claim</h3>
+<ul>
+<li><strong>Self-declared category (current):</strong> &quot;AI Agent Memory Platform&quot;</li>
+<li><strong>Sub-category claim:</strong> &quot;New Leader in Agent Memory&quot;</li>
+<li><strong>Benchmark-based authority:</strong> &quot;State-of-the-art on key industry benchmarks&quot; (LongMemEval 91.4% — see Document 2)</li>
+<li><strong>Research legitimacy signal:</strong> &quot;Research published for peer review on ArXiv&quot; — paper: &quot;Hindsight is 20/20: Building Agent Memory that Retains, Recalls, and Reflects&quot; (arxiv.org/html/2512.12818v1)</li>
+</ul>
+<p>The category claim is aggressive: &quot;agent memory&quot; as a standalone category is contested (competing with Mem0, LangMem, MemGPT/Letta, LangChain&#39;s memory modules). Vectorize is claiming category leadership via benchmark performance, not just product features.</p>
+<p>Source: <a href="https://vectorize.io/">https://vectorize.io/</a>, <a href="https://www.prnewswire.com/news-releases/vectorize-breaks-90-on-longmemeval-with-open-source-ai-agent-memory-system-302643146.html">https://www.prnewswire.com/news-releases/vectorize-breaks-90-on-longmemeval-with-open-source-ai-agent-memory-system-302643146.html</a></p>
+<hr>
+<h3>1.4 ICP — Who and Evidence</h3>
+<p><strong>Primary ICP (inferred from landing copy, pricing, docs, integrations):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Developers building AI agents / copilots</td>
+<td>&quot;Any agent framework can connect and query your data in seconds&quot; — docs.vectorize.io</td>
+</tr>
+<tr>
+<td>Teams with non-technical stakeholders</td>
+<td>&quot;No-code RAG pipeline builder&quot; — G2 reviews, Product Hunt copy</td>
+</tr>
+<tr>
+<td>SMB to mid-market scale</td>
+<td>Pricing tops at $399/mo Pro before Enterprise; 3 pipelines max on Pro</td>
+</tr>
+<tr>
+<td>Organizations using cloud SaaS data (Google Drive, Confluence, Sharepoint)</td>
+<td>Connector list dominated by SaaS platforms</td>
+</tr>
+<tr>
+<td>AI-first startups</td>
+<td>$3.6M seed, True Ventures, &quot;20,000+ developers&quot; claim</td>
+</tr>
+<tr>
+<td>Enterprises needing governance</td>
+<td>SOC2 Type 2, &quot;end-to-end traceability&quot;, 99%+ uptime SLA</td>
+</tr>
+</tbody></table>
+<p><strong>Evidence for developer-first ICP:</strong></p>
+<ul>
+<li>GitHub CTA on hero (&quot;Try on GitHub&quot;) is above-the-fold — unusual for a SaaS landing page, signals developer identity</li>
+<li>Hindsight is MIT-licensed open source — classic developer acquisition strategy</li>
+<li>MCP server published to npm (59 weekly downloads as of 2026-03-27)</li>
+<li>LangChain and LlamaIndex integrations listed</li>
+<li>Docs-first navigation</li>
+</ul>
+<p><strong>Evidence for enterprise ICP expansion:</strong></p>
+<ul>
+<li>SOC2 Type 2 certification badge prominently displayed</li>
+<li>Custom Enterprise tier</li>
+<li>&quot;Trusted by over 20,000 developers at leading companies worldwide&quot; — implies enterprise accounts</li>
+<li>Groq Inc. named as customer (enterprise AI company)</li>
+</ul>
+<p>Source: <a href="https://vectorize.io/">https://vectorize.io/</a>, <a href="https://vectorize.io/about">https://vectorize.io/about</a>, <a href="https://docs.vectorize.io/">https://docs.vectorize.io/</a></p>
+<hr>
+<h3>1.5 Value Proposition Decomposition</h3>
+<p>Each proposition in Pain → Result → Mechanism → Proof format.</p>
+<p><strong>VP1: RAG pipeline automation</strong></p>
+<ul>
+<li>Pain: &quot;Managing and vectorizing unstructured information is a major headache for data scientists&quot; (SiliconAngle, 2024-10-08)</li>
+<li>Result: &quot;Reduce data preparation from weeks or months to just a few hours&quot;</li>
+<li>Mechanism: Automated pipeline — import data source → Iris extracts/chunks → embeddings generated → vector index populated → real-time sync</li>
+<li>Proof: Groq Inc. uses Vectorize to power AI support agents; 100+ customers as of Feb 2025</li>
+</ul>
+<p><strong>VP2: RAG quality optimization (RAG Evaluation)</strong></p>
+<ul>
+<li>Pain: Developers don&#39;t know which embedding model + chunking strategy is optimal for their data</li>
+<li>Result: Find the best configuration &quot;usually in less than one minute&quot;</li>
+<li>Mechanism: Runs parallel evaluations using synthetic question generation + NDCG / relevancy / context recall metrics; compares configurations quantitatively</li>
+<li>Proof: Feature documented at docs.vectorize.io/rag-evaluation/; described in G2 reviews as a differentiator</li>
+</ul>
+<p><strong>VP3: Iris — intelligent document extraction</strong></p>
+<ul>
+<li>Pain: PDFs, scanned docs, and complex layouts break standard extractors (PyPDF + RecursiveSplitter = fragile, multi-failure-point stack)</li>
+<li>Result: &quot;99.2% extraction accuracy on complex multi-page documents&quot;; &quot;85% faster processing compared to traditional pipelines&quot;</li>
+<li>Mechanism: Model-based extraction combining extraction + chunking in one step; handles multi-column, nested tables, 100+ languages, embedded images</li>
+<li>Proof: Vectorize Iris product page (vectorize.io/ai-data-platform/vectorize-iris) — Note: claimed accuracy figures are from Vectorize&#39;s own marketing; no independent validation found</li>
+</ul>
+<p><strong>VP4: Agent memory (Hindsight)</strong></p>
+<ul>
+<li>Pain: &quot;Agents built on stateless foundations can&#39;t truly learn&quot;; current memory approaches &quot;retrieve fragments of the past, but they don&#39;t build understanding over time&quot;</li>
+<li>Result: &quot;91.4% on LongMemEval, the highest score ever reported&quot; as of Dec 2025; &quot;+44.6 points over full-context baseline&quot;</li>
+<li>Mechanism: TEMPR (Temporal Entity Memory Priming Retrieval) — four parallel searches: semantic vector similarity, BM25 keyword, graph traversal, temporal filtering; merged via Reciprocal Rank Fusion + neural reranker; three operations: Retain, Recall, Reflect</li>
+<li>Proof: ArXiv paper 2512.12818; validated by researchers from Washington Post and Virginia Tech; independently reproduced scores claim</li>
+</ul>
+<p>Source: <a href="https://vectorize.io/ai-data-platform/vectorize-iris">https://vectorize.io/ai-data-platform/vectorize-iris</a>, <a href="https://vectorize.io/blog/introducing-hindsight-agent-memory-that-works-like-human-memory">https://vectorize.io/blog/introducing-hindsight-agent-memory-that-works-like-human-memory</a>, <a href="https://siliconangle.com/2024/10/08/rag-data-preparation-startup-vectorize-launches-3-6m-seed-funding/">https://siliconangle.com/2024/10/08/rag-data-preparation-startup-vectorize-launches-3-6m-seed-funding/</a></p>
+<hr>
+<h3>1.6 Pricing Teardown</h3>
+<p>All data from <a href="https://vectorize.io/pricing">https://vectorize.io/pricing</a> (fetched 2026-03-27)</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Price</th>
+<th>Pipelines</th>
+<th>Monthly Pages</th>
+<th>Storage</th>
+<th>Vision Pages</th>
+<th>Vector Queries/mo</th>
+<th>Support</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free</td>
+<td>$0/mo</td>
+<td>1</td>
+<td>1,500</td>
+<td>1 GB</td>
+<td>500</td>
+<td>500</td>
+<td>Community only</td>
+</tr>
+<tr>
+<td>Starter</td>
+<td>$99/mo</td>
+<td>2</td>
+<td>15,000</td>
+<td>2 GB</td>
+<td>3,000</td>
+<td>1,000</td>
+<td>Community</td>
+</tr>
+<tr>
+<td>Pro</td>
+<td>$399/mo</td>
+<td>3</td>
+<td>65,000</td>
+<td>5 GB</td>
+<td>10,000</td>
+<td>5,000</td>
+<td>Email/chat, 12h SLA, 99% uptime</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Custom</td>
+<td>Custom</td>
+<td>Custom</td>
+<td>Custom</td>
+<td>Custom</td>
+<td>Custom</td>
+<td>24x7, 30-min SLA, 99.95% uptime</td>
+</tr>
+</tbody></table>
+<p><strong>Overage pricing:</strong></p>
+<ul>
+<li>Starter: $0.02/page additional</li>
+<li>Pro: Tiered $0.01–$0.001/page additional</li>
+<li>Additional storage: $2/mo per GB (all plans)</li>
+</ul>
+<p><strong>Unit economics analysis:</strong></p>
+<p>The pipeline limit is the most aggressive constraint — not pages or storage. Pro at $399/mo gives only 3 pipelines. This severely limits multi-tenant use cases. A developer building a product for 10 clients cannot use Pro; they need Enterprise (custom pricing, sales call required).</p>
+<p>Page limits reveal implied use case: 15,000 pages/mo on Starter ($99) = $0.0066/page fully loaded. 65,000 pages/mo on Pro ($399) = $0.0061/page. Cheap for document-heavy enterprise workflows; expensive for developers with many small use cases.</p>
+<p><strong>Free tier as acquisition funnel:</strong> 1 pipeline, 500 vector queries/mo, 1,500 pages. Enough to build and demo a proof of concept. Not enough for any production use case. Forces upgrade within 30-60 days of serious use.</p>
+<p><strong>Comparison to Contexter:</strong> Contexter at €4.72/mo (Hetzner self-hosted) is ~21x cheaper than Vectorize Starter. Unlimited pipelines, no page limits beyond storage. The comparison is infrastructure cost vs. managed SaaS, but the gap is stark for cost-sensitive developers.</p>
+<hr>
+<h3>1.7 Brand Voice</h3>
+<p><strong>Technical level:</strong> 3 out of 5 — accessible to technical non-engineers, not deep into infra. Uses words like &quot;vector index,&quot; &quot;embeddings,&quot; &quot;chunking&quot; without explanation, but avoids going deep into architecture.</p>
+<p><strong>Tone characteristics:</strong></p>
+<ul>
+<li>Confident, benchmark-driven (&quot;Best in the world&quot;, &quot;Highest score ever reported&quot;)</li>
+<li>Research-credibility lean (ArXiv paper, academic validation)</li>
+<li>Human metaphor-heavy for technical concepts (&quot;works like human memory&quot;, &quot;biomimetic&quot;, &quot;Hindsight is 20/20&quot;)</li>
+<li>Startup energy — &quot;we&#39;re making it simple for every organization&quot;</li>
+<li>Not developer-irreverent (unlike Cloudflare or Vercel marketing); more enterprise-adjacent</li>
+</ul>
+<p><strong>Comparison to Contexter:</strong> Contexter&#39;s implied voice (from product description) is infrastructure-first, developer-minimal-friction. &quot;Upload → parse → query&quot; is a zero-copy pitch. Vectorize by contrast has a richer narrative but also more cognitive overhead. Contexter&#39;s €4.72/mo self-hosted angle implies a utility-belt identity vs. Vectorize&#39;s platform identity.</p>
+<hr>
+<h3>1.8 Trust Signals</h3>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SOC2 Type 2</td>
+<td>Certified badge on homepage — enterprise sales unlock</td>
+</tr>
+<tr>
+<td>Academic validation</td>
+<td>ArXiv paper co-authored with Washington Post, Virginia Tech researchers</td>
+</tr>
+<tr>
+<td>Customer reference</td>
+<td>Groq Inc. named publicly as customer</td>
+</tr>
+<tr>
+<td>Traction claim</td>
+<td>&quot;20,000+ developers at leading companies worldwide&quot; (unverified)</td>
+</tr>
+<tr>
+<td>Seed funding</td>
+<td>$3.6M from True Ventures (April 2024) — credibility signal</td>
+</tr>
+<tr>
+<td>G2 reviews</td>
+<td>12 reviews as of 2025; 4+ stars average (exact count from G2 search)</td>
+</tr>
+<tr>
+<td>Open source</td>
+<td>Hindsight MIT-licensed on GitHub (105 stars as of 2026-03-27)</td>
+</tr>
+<tr>
+<td>Team pedigree</td>
+<td>&quot;Both leaders previously scaled data platforms at major tech companies&quot; (unspecific)</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>1.9 Source URLs — Document 1</h3>
+<ul>
+<li><a href="https://vectorize.io/">https://vectorize.io/</a></li>
+<li><a href="https://vectorize.io/pricing">https://vectorize.io/pricing</a></li>
+<li><a href="https://vectorize.io/about">https://vectorize.io/about</a></li>
+<li><a href="https://vectorize.io/ai-data-platform/vectorize-iris">https://vectorize.io/ai-data-platform/vectorize-iris</a></li>
+<li><a href="https://vectorize.io/solutions/context-engineering">https://vectorize.io/solutions/context-engineering</a></li>
+<li><a href="https://vectorize.io/blog/introducing-hindsight-agent-memory-that-works-like-human-memory">https://vectorize.io/blog/introducing-hindsight-agent-memory-that-works-like-human-memory</a></li>
+<li><a href="https://siliconangle.com/2024/10/08/rag-data-preparation-startup-vectorize-launches-3-6m-seed-funding/">https://siliconangle.com/2024/10/08/rag-data-preparation-startup-vectorize-launches-3-6m-seed-funding/</a></li>
+<li><a href="https://www.prnewswire.com/news-releases/vectorize-breaks-90-on-longmemeval-with-open-source-ai-agent-memory-system-302643146.html">https://www.prnewswire.com/news-releases/vectorize-breaks-90-on-longmemeval-with-open-source-ai-agent-memory-system-302643146.html</a></li>
+<li><a href="https://arxiv.org/html/2512.12818v1">https://arxiv.org/html/2512.12818v1</a></li>
+</ul>
+<hr>
+<h2>Document 2: Killer Features (Product Teardown)</h2>
+<h3>2.1 Feature Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Vectorize</th>
+<th>Contexter</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Document ingestion (upload)</td>
+<td>Yes — UI + API + CLI</td>
+<td>Yes — REST API</td>
+<td>Tie</td>
+</tr>
+<tr>
+<td>Supported formats — documents</td>
+<td>PDF, DOCX, DOC, ODT, RTF, EPUB, TXT, HTML, MD</td>
+<td>PDF, DOCX, TXT, HTML, MD (15 total per claim)</td>
+<td>Comparable</td>
+</tr>
+<tr>
+<td>Supported formats — spreadsheets</td>
+<td>XLS, XLSX, ODS, CSV, Google Sheets</td>
+<td>Unknown</td>
+<td>Vectorize advantage</td>
+</tr>
+<tr>
+<td>Supported formats — presentations</td>
+<td>PPT, PPTX, Google Slides</td>
+<td>Unknown</td>
+<td>Vectorize advantage</td>
+</tr>
+<tr>
+<td>Supported formats — images</td>
+<td>JPEG, PNG, WebP, SVG, GIF (via Iris vision)</td>
+<td>Unknown</td>
+<td>Vectorize advantage</td>
+</tr>
+<tr>
+<td>Supported formats — audio</td>
+<td><strong>Not supported</strong></td>
+<td>Yes (per product claim)</td>
+<td>Contexter advantage</td>
+</tr>
+<tr>
+<td>Supported formats — video</td>
+<td><strong>Not supported</strong></td>
+<td>Yes (per product claim)</td>
+<td>Contexter advantage</td>
+</tr>
+<tr>
+<td>Supported formats — email</td>
+<td>EML, MSG (Outlook)</td>
+<td>Unknown</td>
+<td>Vectorize advantage</td>
+</tr>
+<tr>
+<td>Intelligent chunking</td>
+<td>Yes — Vectorize Iris (model-based, AI vision)</td>
+<td>Unknown — standard chunking assumed</td>
+<td>Vectorize likely advantage</td>
+</tr>
+<tr>
+<td>RAG quality evaluation</td>
+<td>Yes — built-in, NDCG + context recall metrics</td>
+<td>Not mentioned</td>
+<td>Vectorize unique</td>
+</tr>
+<tr>
+<td>Agent memory (stateful)</td>
+<td>Yes — Hindsight (TEMPR, open source)</td>
+<td>Not mentioned</td>
+<td>Vectorize unique</td>
+</tr>
+<tr>
+<td>MCP server</td>
+<td>Yes — hosted MCP, 3 tools, npm package</td>
+<td>Yes — per product description</td>
+<td>Tie</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>Yes — retrieval + management API</td>
+<td>Yes — per product description</td>
+<td>Tie</td>
+</tr>
+<tr>
+<td>Source connectors (SaaS)</td>
+<td>Yes — Google Drive, Dropbox, OneDrive, SharePoint, Confluence, Discord, Intercom, S3, Azure Blob, GCS, Firecrawl, GitHub</td>
+<td>Not mentioned</td>
+<td>Vectorize strong advantage</td>
+</tr>
+<tr>
+<td>Real-time pipeline sync</td>
+<td>Yes — automatic re-embedding on source update</td>
+<td>Unknown</td>
+<td>Vectorize likely advantage</td>
+</tr>
+<tr>
+<td>Vector DB choice</td>
+<td>User-owned (Pinecone, Elastic, Weaviate, Qdrant, PostgreSQL, Milvus, SingleStore, built-in)</td>
+<td>Internal index (self-hosted)</td>
+<td>Different model — Vectorize BYO-DB</td>
+</tr>
+<tr>
+<td>Self-hosting</td>
+<td>Not available — fully managed cloud only</td>
+<td>Yes — Hetzner, €4.72/mo</td>
+<td>Contexter advantage</td>
+</tr>
+<tr>
+<td>No-code pipeline builder</td>
+<td>Yes — visual editor, chat agents, widgets</td>
+<td>No — API/developer-only</td>
+<td>Vectorize advantage for non-devs</td>
+</tr>
+<tr>
+<td>Hybrid search</td>
+<td>Yes — Vector + Text + Hybrid Search modes</td>
+<td>Unknown</td>
+<td>Vectorize likely advantage</td>
+</tr>
+<tr>
+<td>Multi-language support</td>
+<td>100+ languages (Iris)</td>
+<td>Unknown</td>
+<td>Vectorize likely advantage</td>
+</tr>
+<tr>
+<td>Pricing floor</td>
+<td>$0/mo (free tier, 1 pipeline)</td>
+<td>€4.72/mo (server cost)</td>
+<td>Vectorize has free; Contexter is cheaper at scale</td>
+</tr>
+<tr>
+<td>SOC2 compliance</td>
+<td>Yes — Type 2</td>
+<td>Not mentioned</td>
+<td>Vectorize advantage for enterprise</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>2.2 Unique Capabilities</h3>
+<p><strong>Vectorize Iris — Intelligent Document Extraction</strong></p>
+<p>Iris is Vectorize&#39;s proprietary model-based extraction system. Key differentiation from standard extractors (PyPDF, Unstructured, etc.):</p>
+<ul>
+<li>Combines extraction + chunking into a single model inference (eliminates two-step pipeline fragility)</li>
+<li>Handles: multi-column PDF layouts, nested tables, scanned docs (OCR), embedded images, mixed content</li>
+<li>Semantic preservation when converting to markdown — context is not lost at chunk boundaries</li>
+<li>100+ language support (Hindi, Arabic, Chinese confirmed in docs)</li>
+<li>Available as: RAG Pipeline selection, API endpoint, CLI tool for batch/CI usage</li>
+<li>&quot;99.2% extraction accuracy on complex multi-page documents&quot; and &quot;85% faster processing&quot; — self-reported marketing figures, no third-party audit found</li>
+</ul>
+<p>Source: <a href="https://docs.vectorize.io/build-deploy/extract-information/understanding-iris/">https://docs.vectorize.io/build-deploy/extract-information/understanding-iris/</a>, <a href="https://vectorize.io/ai-data-platform/vectorize-iris">https://vectorize.io/ai-data-platform/vectorize-iris</a></p>
+<p><strong>RAG Evaluation Engine</strong></p>
+<p>A differentiator with no direct equivalent found in Contexter:</p>
+<ul>
+<li>Runs parallel vectorization strategies against user-provided sample documents</li>
+<li>Automatically generates synthetic Q&amp;A pairs from documents</li>
+<li>Evaluates configurations using: NDCG (Normalized Discounted Cumulative Gain), relevancy scores, context recall metric</li>
+<li>Comparison runs &quot;in less than one minute&quot;</li>
+<li>Outputs: ranked leaderboard of configurations, actionable &quot;use this strategy&quot; recommendation</li>
+<li>Purpose: removes guesswork from embedding model + chunk size + overlap decisions</li>
+</ul>
+<p>Source: <a href="https://docs.vectorize.io/rag-evaluation/creating-an-evaluation/">https://docs.vectorize.io/rag-evaluation/creating-an-evaluation/</a>, <a href="https://docs.vectorize.io/welcome/core-concepts/rag-evaluation/">https://docs.vectorize.io/welcome/core-concepts/rag-evaluation/</a></p>
+<p><strong>Hindsight — Open Source Agent Memory</strong></p>
+<p>Released December 16, 2025. MIT licensed.</p>
+<ul>
+<li>Architecture: TEMPR (Temporal Entity Memory Priming Retrieval)</li>
+<li>Four parallel recall strategies merged via Reciprocal Rank Fusion: semantic vector similarity, BM25 keyword matching, entity graph traversal, temporal filtering</li>
+<li>Three operations: Retain (extract time-aware facts from interactions), Recall (token-budget-aware retrieval), Reflect (belief update and contradiction resolution)</li>
+<li>LangChain/LangGraph native integration (<code>hindsight-langgraph</code> package, 2026-03-24)</li>
+<li>MCP-compatible</li>
+<li>Benchmark: 91.4% on LongMemEval (vs. 75.78% strongest prior open-source system)</li>
+<li>Cloud version: &quot;Hindsight Cloud&quot; (try via vectorize.io)</li>
+</ul>
+<p>This capability is categorically different from what Contexter does. Hindsight is about episodic/semantic long-term agent memory across sessions. Contexter is about document/knowledge storage with retrieval. Different jobs-to-be-done.</p>
+<p>Source: <a href="https://github.com/vectorize-io/hindsight">https://github.com/vectorize-io/hindsight</a>, <a href="https://hindsight.vectorize.io/">https://hindsight.vectorize.io/</a>, <a href="https://arxiv.org/html/2512.12818v1">https://arxiv.org/html/2512.12818v1</a>, <a href="https://venturebeat.com/data/with-91-accuracy-open-source-hindsight-agentic-memory-provides-20-20-vision">https://venturebeat.com/data/with-91-accuracy-open-source-hindsight-agentic-memory-provides-20-20-vision</a></p>
+<hr>
+<h3>2.3 MCP Support</h3>
+<p><strong>Status: Yes — production, hosted</strong></p>
+<p>Details:</p>
+<ul>
+<li>Package: <code>@vectorize-io/vectorize-mcp-server</code> on npm</li>
+<li>Weekly npm downloads: 59 (as of 2026-03-27 per glama.ai data)</li>
+<li>GitHub stars: 105</li>
+<li>Version: v1.0.0</li>
+</ul>
+<p><strong>Three MCP tools exposed:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+<th>Parameters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>retrieve_documents</code></td>
+<td>Vector search across pipeline</td>
+<td><code>question</code> (string), <code>k</code> (int — result count)</td>
+</tr>
+<tr>
+<td><code>text_extraction_and_chunking</code></td>
+<td>Process document to Markdown</td>
+<td><code>base64document</code> (encoded file), <code>contentType</code> (MIME)</td>
+</tr>
+<tr>
+<td><code>deep_research</code></td>
+<td>Generate research report from pipeline + optional web search</td>
+<td><code>query</code> (string), <code>webSearch</code> (boolean)</td>
+</tr>
+</tbody></table>
+<p><strong>Authentication:</strong> Three environment variables: <code>VECTORIZE_ORG_ID</code>, <code>VECTORIZE_TOKEN</code>, <code>VECTORIZE_PIPELINE_ID</code></p>
+<p><strong>Compatibility confirmed:</strong> Claude Desktop, Cursor IDE, Windsurf, VS Code (one-click install), Cline</p>
+<p><strong>Deployment:</strong> NPX command or JSON config</p>
+<p>Source: <a href="https://vectorize.io/blog/introducing-the-vectorize-mcp-server-connect-ai-assistants-to-your-data">https://vectorize.io/blog/introducing-the-vectorize-mcp-server-connect-ai-assistants-to-your-data</a>, <a href="https://glama.ai/mcp/servers/@vectorize-io/vectorize-mcp-server">https://glama.ai/mcp/servers/@vectorize-io/vectorize-mcp-server</a>, <a href="https://www.pulsemcp.com/servers/vectorize-io">https://www.pulsemcp.com/servers/vectorize-io</a></p>
+<hr>
+<h3>2.4 Format Support — Full List vs. Contexter</h3>
+<p><strong>Vectorize supported formats (confirmed from docs.vectorize.io/build-deploy/connect-your-data/source-connectors/file-upload/):</strong></p>
+<p>Documents: PDF, DOC, DOCX, GDOC, ODT, RTF, EPUB
+Presentations: PPT, PPTX, GSLIDES
+Spreadsheets: XLS, XLSX, GSHEETS, ODS
+Email: EML, MSG
+Text/Web: TXT, HTML, HTM, MD
+Images: JPG/JPEG, PNG, WebP, SVG, GIF (processed via Iris vision model)
+Data: JSON, CSV</p>
+<p><strong>Total unique formats: ~30+ (Vectorize marketing claims &quot;30+ document types&quot;)</strong></p>
+<p><strong>Audio/Video: NOT SUPPORTED</strong> — confirmed absence in file upload docs</p>
+<p><strong>Contexter claims &quot;15 formats incl. audio/video&quot;</strong> — this is a significant differentiator vs. Vectorize</p>
+<p><strong>Gap summary:</strong> Vectorize has breadth on office/document/image formats; Contexter has audio/video that Vectorize lacks entirely. Contexter&#39;s 15-format claim is narrower in document types but covers media that Vectorize cannot ingest.</p>
+<hr>
+<h3>2.5 API Design</h3>
+<p><strong>Retrieval API:</strong></p>
+<ul>
+<li>Endpoint: REST (full API docs at docs.vectorize.io/api/vectorize-api)</li>
+<li>Auth: Token-based (<code>VECTORIZE_TOKEN</code> — org-scoped bearer token)</li>
+<li>Functions: vector search, query rewriting (conversation history-aware), result re-ranking, metadata enrichment, cosine similarity scoring</li>
+<li>Rate limits: Not publicly documented</li>
+</ul>
+<p><strong>Management API (Beta as of 2025 updates):</strong></p>
+<ul>
+<li>Manage: connectors, platforms, vector databases, pipelines programmatically</li>
+<li>Status: Beta — implies instability risk for production dependence</li>
+</ul>
+<p><strong>Pipeline Editor API (Sep 2025 update):</strong> Visual RAG pipeline editor launched — no-code interface over the underlying API</p>
+<p><strong>Hybrid Search modes (Sep 2025):</strong> Vector Search, Text Search, Hybrid Search — selectable per query</p>
+<p><strong>Notable:</strong> The API is not open-source. Vectorize is a managed SaaS — you access their processing infrastructure via API, not deploy your own. This is the fundamental architectural difference from Contexter.</p>
+<p>Source: <a href="https://docs.vectorize.io/">https://docs.vectorize.io/</a>, <a href="https://docs.vectorize.io/whats-new/updates/">https://docs.vectorize.io/whats-new/updates/</a></p>
+<hr>
+<h3>2.6 Integrations — Source Connectors</h3>
+<p><strong>Cloud Storage:</strong></p>
+<ul>
+<li>Amazon S3</li>
+<li>Azure Blob Storage</li>
+<li>Google Cloud Storage</li>
+</ul>
+<p><strong>Productivity / Knowledge Bases:</strong></p>
+<ul>
+<li>Google Drive (OAuth multi-tenant, added 2025)</li>
+<li>Dropbox (OAuth multi-tenant)</li>
+<li>OneDrive</li>
+<li>SharePoint</li>
+<li>Confluence</li>
+<li>Notion (OAuth, added 2025)</li>
+<li>GitHub</li>
+</ul>
+<p><strong>Communication:</strong></p>
+<ul>
+<li>Discord</li>
+<li>Intercom</li>
+</ul>
+<p><strong>Web:</strong></p>
+<ul>
+<li>Firecrawl (web crawler integration)</li>
+<li>Generic Web Crawler</li>
+</ul>
+<p><strong>Direct Upload:</strong></p>
+<ul>
+<li>File Upload (UI — up to 25 files/batch; API — unlimited)</li>
+</ul>
+<p><strong>Vector Database Outputs (destinations):</strong>
+Pinecone, Elastic, Weaviate, Qdrant, PostgreSQL, Milvus, SingleStore, Couchbase, DataStax, Built-in (no external DB required — added Feb 2025)</p>
+<p><strong>LLM / Framework integrations:</strong></p>
+<ul>
+<li>LangChain (official integration in python.langchain.com/docs)</li>
+<li>LlamaIndex (mentioned in partner list)</li>
+<li>OpenAI embeddings (text-embedding-v3 small/large)</li>
+<li>Voyage AI embeddings</li>
+<li>MCP-compatible agents (Claude, GPT, any MCP client)</li>
+</ul>
+<p>Source: <a href="https://docs.vectorize.io/">https://docs.vectorize.io/</a>, product update changelog (docs.vectorize.io/whats-new/updates/)</p>
+<hr>
+<h3>2.7 Architecture Signals</h3>
+<p><strong>Infrastructure:</strong></p>
+<ul>
+<li>Fully managed cloud SaaS — no self-hosting option documented or offered</li>
+<li>Apache Pulsar for event-streaming / real-time pipeline architecture</li>
+<li>Separated compute and storage layers</li>
+<li>Distributed ledger for multi-node event replication</li>
+<li>&quot;Cloud-scale RAG pipeline engine&quot; positioning</li>
+</ul>
+<p><strong>Data ownership model:</strong></p>
+<ul>
+<li>Vectorize processes your data but outputs to YOUR vector database (BYO-DB model)</li>
+<li>Built-in vector database added Feb 2025 — but users can still choose external DBs</li>
+<li>&quot;Full data ownership and control&quot; claimed — your vectors live in your DB, not Vectorize&#39;s</li>
+</ul>
+<p><strong>Embedding models available:</strong></p>
+<ul>
+<li>OpenAI: text-embedding-v3 large and small</li>
+<li>Voyage AI models</li>
+<li>Other models not listed in public docs</li>
+</ul>
+<p><strong>No self-hosting = key strategic difference from Contexter:</strong>
+Vectorize is not designed for on-premises or private-cloud deployment. The entire value proposition assumes managed SaaS. This makes it incompatible with data-sensitive environments that require local processing. Contexter on Hetzner directly addresses this gap.</p>
+<hr>
+<h3>2.8 Source URLs — Document 2</h3>
+<ul>
+<li><a href="https://docs.vectorize.io/">https://docs.vectorize.io/</a></li>
+<li><a href="https://docs.vectorize.io/build-deploy/connect-your-data/source-connectors/file-upload/">https://docs.vectorize.io/build-deploy/connect-your-data/source-connectors/file-upload/</a></li>
+<li><a href="https://docs.vectorize.io/build-deploy/extract-information/understanding-iris/">https://docs.vectorize.io/build-deploy/extract-information/understanding-iris/</a></li>
+<li><a href="https://docs.vectorize.io/welcome/core-concepts/vectorize-architecture/">https://docs.vectorize.io/welcome/core-concepts/vectorize-architecture/</a></li>
+<li><a href="https://docs.vectorize.io/rag-evaluation/creating-an-evaluation/">https://docs.vectorize.io/rag-evaluation/creating-an-evaluation/</a></li>
+<li><a href="https://docs.vectorize.io/whats-new/updates/">https://docs.vectorize.io/whats-new/updates/</a></li>
+<li><a href="https://docs.vectorize.io/reference/api/api-mcp-server/">https://docs.vectorize.io/reference/api/api-mcp-server/</a> (404 at time of fetch)</li>
+<li><a href="https://vectorize.io/blog/introducing-the-vectorize-mcp-server-connect-ai-assistants-to-your-data">https://vectorize.io/blog/introducing-the-vectorize-mcp-server-connect-ai-assistants-to-your-data</a></li>
+<li><a href="https://vectorize.io/ai-data-platform/vectorize-iris">https://vectorize.io/ai-data-platform/vectorize-iris</a></li>
+<li><a href="https://glama.ai/mcp/servers/@vectorize-io/vectorize-mcp-server">https://glama.ai/mcp/servers/@vectorize-io/vectorize-mcp-server</a></li>
+<li><a href="https://www.pulsemcp.com/servers/vectorize-io">https://www.pulsemcp.com/servers/vectorize-io</a></li>
+<li><a href="https://github.com/vectorize-io/hindsight">https://github.com/vectorize-io/hindsight</a></li>
+<li><a href="https://hindsight.vectorize.io/">https://hindsight.vectorize.io/</a></li>
+<li><a href="https://arxiv.org/html/2512.12818v1">https://arxiv.org/html/2512.12818v1</a></li>
+<li><a href="https://venturebeat.com/data/with-91-accuracy-open-source-hindsight-agentic-memory-provides-20-20-vision">https://venturebeat.com/data/with-91-accuracy-open-source-hindsight-agentic-memory-provides-20-20-vision</a></li>
+<li><a href="https://python.langchain.com/docs/integrations/providers/vectorize/">https://python.langchain.com/docs/integrations/providers/vectorize/</a></li>
+</ul>
+<hr>
+<h2>Document 3: Audience Voice (&quot;Love / Hate / Want&quot;)</h2>
+<p><strong>Research note:</strong> G2 (403 on direct fetch), SoftwareWorld (403), Reddit (no indexed threads found for vectorize.io). Data sourced from: G2 search summaries, Product Hunt aggregates, SiliconAngle article, Futurepedia, ai-workflows.dev editorial, and WebSearch-mediated review extracts. All quotes marked with confidence level.</p>
+<hr>
+<h3>3.1 Love — What Users Praise</h3>
+<p><strong>Quote 1 — G2 (extracted via search summary, high confidence):</strong></p>
+<blockquote>
+<p>&quot;Building RAG pipelines has become smooth as silk.&quot;</p>
+</blockquote>
+<p>Source context: G2 pros section, reviewer not named in search extract. Source: <a href="https://www.g2.com/products/vectorize-io/reviews">https://www.g2.com/products/vectorize-io/reviews</a></p>
+<p><strong>Quote 2 — G2 (extracted via search summary, high confidence):</strong></p>
+<blockquote>
+<p>&quot;Very intuitive no-code system for testing and setting up various embeddings APIs&quot; with &quot;lots of options for which components to integrate your RAG system.&quot;</p>
+</blockquote>
+<p>Source: <a href="https://www.g2.com/products/vectorize-io/reviews">https://www.g2.com/products/vectorize-io/reviews</a></p>
+<p><strong>Quote 3 — G2 via search extract (high confidence):</strong></p>
+<blockquote>
+<p>&quot;This pipeline is automatically updating weekly with new/updated content&quot; and &quot;makes it easy to connect RAG sources for places where non-technical users want to store them.&quot;</p>
+</blockquote>
+<p>Source: <a href="https://www.g2.com/products/vectorize-io/reviews">https://www.g2.com/products/vectorize-io/reviews</a></p>
+<p><strong>Quote 4 — G2 via search extract (high confidence):</strong></p>
+<blockquote>
+<p>&quot;Chris and the team are very responsive to their customers in evolving the offering to meet their evolving needs.&quot;</p>
+</blockquote>
+<p>Source: <a href="https://www.g2.com/products/vectorize-io/reviews">https://www.g2.com/products/vectorize-io/reviews</a> (customer support praise pattern)</p>
+<p><strong>Quote 5 — Blog / editorial paraphrase (medium confidence — editorial synthesis, not verbatim user):</strong></p>
+<blockquote>
+<p>User &quot;was able to get started for free, creating a RAG pipeline with very little effort in about an hour.&quot;</p>
+</blockquote>
+<p>Source context: ai-workflows.dev editorial referencing Reddit discovery story. Source: <a href="https://www.ai-workflows.dev/blog/revolutionizing-ai-with-rag-model-integration-and-vectorize-io/">https://www.ai-workflows.dev/blog/revolutionizing-ai-with-rag-model-integration-and-vectorize-io/</a></p>
+<p><strong>Themes in positive reviews:</strong></p>
+<ul>
+<li>Ease of setup (no-code accessibility)</li>
+<li>Connector breadth (Google Drive, Dropbox, S3, Confluence, Discord)</li>
+<li>Team responsiveness and developer relations</li>
+<li>Automatic pipeline sync as a time-saver</li>
+<li>RAG evaluation / strategy testing as a genuine differentiator</li>
+</ul>
+<hr>
+<h3>3.2 Hate — What Users Criticize</h3>
+<p><strong>Quote 1 — G2 (extracted via search summary, high confidence):</strong></p>
+<blockquote>
+<p>&quot;Poor UI with Vectorize.io, feeling it lacks polish and functionality despite some improvements.&quot;</p>
+</blockquote>
+<p>Source: <a href="https://www.g2.com/products/vectorize-io/reviews?qs=pros-and-cons">https://www.g2.com/products/vectorize-io/reviews?qs=pros-and-cons</a></p>
+<p><strong>Quote 2 — G2 (extracted via search summary, high confidence):</strong></p>
+<blockquote>
+<p>&quot;Some users had difficulties with the UI and felt it was barebones, and hoped this could be improved.&quot;</p>
+</blockquote>
+<p>Source: <a href="https://www.g2.com/products/vectorize-io/reviews">https://www.g2.com/products/vectorize-io/reviews</a></p>
+<p><strong>Quote 3 — Futurepedia editorial (medium confidence — aggregated finding, not direct quote):</strong></p>
+<blockquote>
+<p>&quot;Initial learning curve for advanced features&quot; and &quot;Variable pricing affecting budgeting.&quot;</p>
+</blockquote>
+<p>Source: <a href="https://www.futurepedia.io/tool/vectorize">https://www.futurepedia.io/tool/vectorize</a></p>
+<p><strong>Quote 4 — Product Hunt aggregate (low confidence — AI-aggregated tag, not verbatim):</strong>
+&quot;complex setup&quot; (1 mention out of 3 reviews)</p>
+<p>Source: <a href="https://www.producthunt.com/products/vectorize">https://www.producthunt.com/products/vectorize</a></p>
+<p><strong>Quote 5 — Structural criticism (inferred from pricing page analysis, analyst observation):</strong>
+Pipeline count limits (1/2/3 on Free/Starter/Pro) are disproportionately restrictive relative to the page and query limits. This forces multi-project users to Enterprise with no published price.</p>
+<p><strong>Themes in negative feedback:</strong></p>
+<ul>
+<li>UI polish consistently cited — the visual interface is functional but not competitive with Notion-like UX standards</li>
+<li>Pipeline limits force early enterprise conversation</li>
+<li>Pricing unpredictability on overages</li>
+<li>&quot;Barebones&quot; feedback suggests the product was built infrastructure-first, UX second</li>
+</ul>
+<hr>
+<h3>3.3 Want — Feature Requests</h3>
+<p>Based on review patterns, changelog analysis (what was shipped = what was requested), and editorial summaries:</p>
+<ol>
+<li><strong>Better UI / visual pipeline editor</strong> — shipped Sep 2025 (confirms it was a pain point severe enough to address)</li>
+<li><strong>More vector database options</strong> — Weaviate, Qdrant, PostgreSQL, Milvus shipped 2024 (confirms demand for BYO-DB flexibility)</li>
+<li><strong>OAuth connectors for Google Drive, Dropbox, Notion</strong> — shipped 2025 (multi-tenant demand)</li>
+<li><strong>Built-in vector database (no external DB required)</strong> — shipped Feb 2025 (lowers barrier for new users)</li>
+<li><strong>Hybrid search</strong> — shipped Sep 2025</li>
+<li><strong>Chat agent / embeddable widget</strong> — shipped Sep 2025 (non-technical user demand)</li>
+<li><strong>External MCP tool support</strong> — shipped Sep 2025 (agent ecosystem demand)</li>
+<li><strong>More pipeline slots</strong> — not yet addressed; still 3 max on Pro</li>
+<li><strong>Clearer pricing for overage scenarios</strong> — not addressed; still complex tiered overage</li>
+</ol>
+<p>Source: <a href="https://docs.vectorize.io/whats-new/updates/">https://docs.vectorize.io/whats-new/updates/</a></p>
+<hr>
+<h3>3.4 Switching Triggers</h3>
+<p><strong>Triggers that bring users TO Vectorize:</strong></p>
+<ul>
+<li>Frustration with building custom RAG pipelines from scratch (LangChain + Pinecone DIY)</li>
+<li>Need for automatic data sync (Google Drive → always-fresh vector index)</li>
+<li>Non-technical stakeholders needing to use RAG without developer dependency</li>
+<li>RAG evaluation problem (not knowing which embedding/chunking is best)</li>
+<li>Groq/OpenAI API usage but no vector infrastructure</li>
+</ul>
+<p><strong>Triggers that push users AWAY from Vectorize (inferred):</strong></p>
+<ul>
+<li>Pipeline count hitting ceiling (3 max) → forces Enterprise conversation or churn</li>
+<li>No self-hosting → data sovereignty / compliance requirements</li>
+<li>Audio/video not supported → use cases with meeting transcripts, podcasts, video content</li>
+<li>UI frustration → competitors with better UX (Ragie, VectorShift)</li>
+<li>Price sensitivity → DIY stack or Contexter-type self-hosted alternative</li>
+</ul>
+<p><strong>Contexter&#39;s entry angle:</strong> The self-hosted + audio/video + €4.72/mo combination directly addresses the &quot;pushed away&quot; triggers, not the &quot;brought to&quot; triggers. This suggests Contexter competes for a different initial segment (cost-sensitive, privacy-first, media-rich) rather than trying to win Vectorize&#39;s no-code SMB market.</p>
+<hr>
+<h3>3.5 Traction Signals</h3>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Value</th>
+<th>Date</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Developer claim</td>
+<td>&quot;20,000+ developers&quot;</td>
+<td>2026-03-27 (current homepage)</td>
+<td>vectorize.io</td>
+</tr>
+<tr>
+<td>Customer count</td>
+<td>100+ customers</td>
+<td>Feb 2025</td>
+<td>vectorize.io/about</td>
+</tr>
+<tr>
+<td>G2 reviews</td>
+<td>12 reviews (estimated)</td>
+<td>2025</td>
+<td>G2 search result</td>
+</tr>
+<tr>
+<td>Product Hunt followers</td>
+<td>1,253</td>
+<td>2026-03-27</td>
+<td>producthunt.com/products/vectorize</td>
+</tr>
+<tr>
+<td>Hindsight GitHub stars</td>
+<td>105</td>
+<td>2026-03-27</td>
+<td>glama.ai MCP listing</td>
+</tr>
+<tr>
+<td>MCP server npm downloads</td>
+<td>59/week</td>
+<td>2026-03-27</td>
+<td>glama.ai</td>
+</tr>
+<tr>
+<td>Seed funding</td>
+<td>$3.6M from True Ventures</td>
+<td>April 2024</td>
+<td>siliconangle.com</td>
+</tr>
+<tr>
+<td>Founded</td>
+<td>January 2024</td>
+<td>—</td>
+<td>vectorize.io/about</td>
+</tr>
+<tr>
+<td>Notable customer</td>
+<td>Groq Inc.</td>
+<td>2024</td>
+<td>siliconangle.com</td>
+</tr>
+</tbody></table>
+<p><strong>Traction assessment:</strong> The numbers suggest a real but early-stage product. 12 G2 reviews after 1+ year is thin. 105 GitHub stars for an open-source memory system with benchmark-leading claims (91.4% LongMemEval) suggests Hindsight is very new (Dec 2025 release). 59 npm downloads/week for MCP is small. The &quot;20,000+ developers&quot; claim is hard to verify against the thin review/GitHub footprint — likely includes free tier sign-ups and email subscribers.</p>
+<hr>
+<h3>3.6 Sentiment</h3>
+<p><strong>Overall: Positive-leaning with known friction points</strong></p>
+<p>Positive drivers: team responsiveness, genuine no-code value, connector breadth, auto-sync, RAG evaluation uniqueness.</p>
+<p>Negative drivers: UI polish, pipeline count constraints, pricing opacity at scale.</p>
+<p>The Hindsight pivot (Q4 2025) is too new to have meaningful third-party sentiment. The open-source release strategy should generate more GitHub/HN signal over Q1–Q2 2026.</p>
+<p><strong>Sentiment score (analyst estimate):</strong> 3.8 / 5.0 — Good product for specific use cases; not a universally loved developer tool yet.</p>
+<hr>
+<h3>3.7 No Data Protocol</h3>
+<p>The following sources were attempted but returned no usable verbatim quotes:</p>
+<ul>
+<li>Reddit: no indexed threads found for &quot;vectorize.io&quot; across r/MachineLearning, r/LangChain, r/artificial</li>
+<li>Hacker News: no dedicated thread found (only Redpanda / vectorized.io confusion)</li>
+<li>Twitter/X: no indexed results for user sentiment</li>
+<li>G2 direct page: 403 Forbidden</li>
+<li>SoftwareWorld: 403 Forbidden</li>
+</ul>
+<p>All quotes in Section 3.1 and 3.2 are labeled with confidence levels. Where verbatim extraction was impossible, paraphrases are labeled as such and not presented as direct quotes.</p>
+<hr>
+<h3>3.8 Source URLs — Document 3</h3>
+<ul>
+<li><a href="https://www.g2.com/products/vectorize-io/reviews">https://www.g2.com/products/vectorize-io/reviews</a></li>
+<li><a href="https://www.g2.com/products/vectorize-io/reviews?qs=pros-and-cons">https://www.g2.com/products/vectorize-io/reviews?qs=pros-and-cons</a></li>
+<li><a href="https://www.producthunt.com/products/vectorize">https://www.producthunt.com/products/vectorize</a></li>
+<li><a href="https://www.producthunt.com/products/vectorize?launch=vectorize-2-0">https://www.producthunt.com/products/vectorize?launch=vectorize-2-0</a></li>
+<li><a href="https://www.ai-workflows.dev/blog/revolutionizing-ai-with-rag-model-integration-and-vectorize-io/">https://www.ai-workflows.dev/blog/revolutionizing-ai-with-rag-model-integration-and-vectorize-io/</a></li>
+<li><a href="https://www.futurepedia.io/tool/vectorize">https://www.futurepedia.io/tool/vectorize</a></li>
+<li><a href="https://siliconangle.com/2024/10/08/rag-data-preparation-startup-vectorize-launches-3-6m-seed-funding/">https://siliconangle.com/2024/10/08/rag-data-preparation-startup-vectorize-launches-3-6m-seed-funding/</a></li>
+<li><a href="https://venturebeat.com/data/with-91-accuracy-open-source-hindsight-agentic-memory-provides-20-20-vision">https://venturebeat.com/data/with-91-accuracy-open-source-hindsight-agentic-memory-provides-20-20-vision</a></li>
+<li><a href="https://vectorize.io/about">https://vectorize.io/about</a></li>
+</ul>
+<hr>
+<h2>Summary: Contexter vs. Vectorize — Strategic Positioning Map</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Vectorize</th>
+<th>Contexter</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Core identity (current)</td>
+<td>AI Agent Memory Platform (pivoted Q4 2025)</td>
+<td>Context Storage for AI (document/knowledge retrieval)</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Managed SaaS only</td>
+<td>Self-hosted (Hetzner)</td>
+</tr>
+<tr>
+<td>Price floor</td>
+<td>$0/mo (free tier)</td>
+<td>~€4.72/mo (server cost)</td>
+</tr>
+<tr>
+<td>Price at scale</td>
+<td>$399/mo (3 pipelines) → Enterprise (custom)</td>
+<td>Fixed server cost (scales with storage, not usage)</td>
+</tr>
+<tr>
+<td>Audio/video ingestion</td>
+<td>Not supported</td>
+<td>Yes (unique differentiator)</td>
+</tr>
+<tr>
+<td>No-code UX</td>
+<td>Yes — visual pipeline editor, chat agents, widgets</td>
+<td>No — developer-only</td>
+</tr>
+<tr>
+<td>Source connectors</td>
+<td>12+ SaaS connectors (Google Drive, Confluence, etc.)</td>
+<td>Not mentioned</td>
+</tr>
+<tr>
+<td>MCP support</td>
+<td>Yes — 3 tools, hosted</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>RAG evaluation</td>
+<td>Yes — proprietary, benchmark-driven</td>
+<td>Not mentioned</td>
+</tr>
+<tr>
+<td>Agent memory</td>
+<td>Yes — Hindsight (open-source, 91.4% LongMemEval)</td>
+<td>Not mentioned</td>
+</tr>
+<tr>
+<td>Data sovereignty</td>
+<td>Partial (BYO-DB for output; processing in Vectorize infra)</td>
+<td>Full (all processing on user&#39;s Hetzner)</td>
+</tr>
+<tr>
+<td>SOC2 compliance</td>
+<td>Yes — Type 2</td>
+<td>Not mentioned</td>
+</tr>
+<tr>
+<td>Target market</td>
+<td>AI-first startups → enterprise</td>
+<td>Privacy-first developers, cost-sensitive builders</td>
+</tr>
+<tr>
+<td>Competitive moat</td>
+<td>RAG evaluation + Iris extraction + Hindsight memory</td>
+<td>Self-hosted + audio/video + price</td>
+</tr>
+</tbody></table>
+<p><strong>Key insight for Contexter GTM:</strong> Vectorize and Contexter are not direct head-to-head competitors for the same buyer. Vectorize targets teams who want managed infrastructure, no-code access, and scale. Contexter targets developers who need data sovereignty, audio/video support, and minimal cost. The clearest competitive wedge for Contexter is: &quot;Vectorize can&#39;t run on your server, can&#39;t process your audio, and costs $99/mo before you&#39;ve done anything meaningful.&quot;</p>
+
+</body>
+</html>
