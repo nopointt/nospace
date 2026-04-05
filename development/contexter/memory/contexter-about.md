@@ -146,7 +146,7 @@ Jurisdiction: user KZ, billing entity AR (RU citizen), server FI (EU). Contact: 
 |---|---|
 | Account ID | 4710622840b4d1605ba24d6a0d965bda |
 | Zone (contexter.cc) | fed8fa9deb10ab0e414ab739da428c03 |
-| R2 Bucket | contexter-files (EEUR) |
+| R2 Bucket | contexter-files (EEUR, r2.dev public access enabled) |
 | Pages project | contexter-web (contexter.cc custom domain) |
 | R2 CDN domain | cdn.contexter.cc (public access, video + knowledge hub) |
 | D1 Database (legacy) | contexter-db (26e9545b-9d18-48fc-93b7-4493d505a318) |

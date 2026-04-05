@@ -35,7 +35,7 @@ CTX-08 (closed 2026-03-30) дал:
 - D-02: **EN global market** primary. RU secondary (landing bilingual, but launch content EN).
 - D-03: **CTX-08 renamed** to "GTM Strategy" (was "GTM Strategy & Positioning") — no conflict with CTX-10 "GTM Launch".
 - D-04: **All free channels**: ProductHunt, HackerNews, Reddit, Twitter/X, MCP directories, IndieHackers, Dev.to, AI Discord/Telegram communities.
-- D-05: **Co-founder search** — revenue share model (% от LTV привлечённых юзеров). Platforms: YC Co-Founder Matching, IndieHackers, Twitter/X, AngelList Talent.
+- D-05: **Co-founder FOUND** — Artem (CPO ProxyMarket), GTM/marketing. Revenue share model (% от LTV привлечённых юзеров). Knowledge hub: cdn.contexter.cc/public/artem/
 - D-06: **Copy audit MUST be applied** before any public launch — jargon kills non-tech conversion.
 - D-07: **Analytics** — separate epic (CTX-11), but basic tracking (Plausible/Umami) deployed as part of CTX-10.
 - D-08: **Research methodology** — two-phase (SEED 20% → DEEP 80%), save to `nospace/docs/research/` as you go, ≥2 sources per claim, self-check protocol.
@@ -171,7 +171,7 @@ Create all accounts and prepare launch assets.
 - [ ] W2-06: IndieHackers profile + launch story draft
 - [ ] W2-07: Dev.to — article "I built an AI memory that works with every LLM"
 - [ ] W2-08: GitHub README optimization — add badges, demo GIF, clear value prop
-- [ ] W2-09: Co-founder search — post on YC Co-Founder Matching, IndieHackers, Twitter
+- [x] W2-09: Co-founder found — Artem (CPO ProxyMarket), GTM/marketing, revenue share model
 - [x] W2-10: Artem co-founder engagement — briefing doc + knowledge hub (cdn.contexter.cc/public/artem/) created
 
 ### Wave 3: Launch Execution (April 3-5)

@@ -27,7 +27,7 @@
 - D-26: $10 = support donation (not subscription). Supporters get Pro manually after launch.
 - D-27: EN global market primary. Launch content EN.
 - D-28: All free channels: PH, HN, Reddit, Twitter/X, MCP dirs, IndieHackers, Dev.to
-- D-29: Co-founder search: revenue share (% of LTV from attracted users)
+- D-29: Co-founder FOUND: Artem (CPO ProxyMarket), GTM/marketing, revenue share (% of LTV from attracted users)
 - D-30: Copy audit MUST be applied before public launch
 - D-31: Analytics = separate epic (CTX-11), basic tracking in CTX-10
 - D-32: Research plan restructured — 11 R-topics → 4 SEED domains + 2 targeted DEEPs
