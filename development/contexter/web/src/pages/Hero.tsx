@@ -8,6 +8,7 @@ import {
   type Component,
 } from "solid-js"
 import Nav from "../components/Nav"
+import { t } from "../lib/i18n"
 import Button from "../components/Button"
 import Badge from "../components/Badge"
 import PipelineIndicator, { getTimeEstimate } from "../components/PipelineIndicator"
@@ -23,6 +24,7 @@ import {
   confirmUpload,
   uploadToR2,
   API_BASE,
+  createSupportInvoice,
 } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
 import { formatSize, statusToVariant, humanizeError } from "../lib/helpers"
@@ -49,11 +51,27 @@ import type { PipelineStage, StageStatus } from "../components/PipelineIndicator
 // --- Constants ---
 
 const POLL_INTERVAL = 2000
+// Alpha: text-only formats (TextParser, zero external deps)
+// Post-alpha formats (pdf, docx, audio, video, images) re-enabled after alpha.
 const SUPPORTED_EXTENSIONS = new Set([
-  "pdf", "docx", "xlsx", "pptx", "csv", "json", "txt", "md",
-  "png", "jpg", "jpeg", "webp", "svg",
-  "mp3", "wav", "ogg", "m4a",
-  "mp4", "webm", "mov",
+  // Documents
+  "txt", "md", "csv", "json", "xml", "odt", "html",
+  "yaml", "yml", "toml", "tsv", "log", "rst", "tex", "ini", "cfg",
+  // Environment / config
+  "env", "conf", "hcl", "tf",
+  // Subtitles
+  "srt", "vtt",
+  // Data
+  "sql", "ndjson", "jsonl", "geojson",
+  // Source code
+  "py", "js", "ts", "jsx", "tsx",
+  "go", "rs", "java", "c", "cpp", "h", "hpp",
+  "cs", "rb", "php", "swift", "kt", "scala",
+  "lua", "r", "pl", "sh", "bash", "zsh", "bat", "ps1",
+  // Named configs (no extension — matched by extension check)
+  "dockerfile", "makefile", "gitignore", "dockerignore", "editorconfig", "nginx",
+  // Markup
+  "adoc", "org", "wiki", "textile",
 ])
 const STAGE_NAMES = ["parse", "chunk", "embed", "index"] as const
 const YOUTUBE_REGEX = /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)/
@@ -102,8 +120,8 @@ function updateEntry(entries: readonly FileEntry[], id: string, patch: Partial<F
 }
 
 async function copyText(text: string) {
-  try { await navigator.clipboard.writeText(text); showToast("Скопировано", "success") }
-  catch { showToast("Не удалось скопировать", "error") }
+  try { await navigator.clipboard.writeText(text); showToast(t("common.copied"), "success") }
+  catch { showToast(t("common.copyFailed"), "error") }
 }
 
 // --- Component ---
@@ -121,6 +139,10 @@ const Hero: Component = () => {
   const [connectionOpen, setConnectionOpen] = createSignal(false)
   const [connectionClient, setConnectionClient] = createSignal<"chatgpt" | "claude-web" | "claude-desktop" | "perplexity" | "cursor" | "antigravity">("chatgpt")
   const [pendingAction, setPendingAction] = createSignal<(() => void) | null>(null)
+  const [pasteDisplay, setPasteDisplay] = createSignal("")
+  const [supportAmount, setSupportAmount] = createSignal(10)
+  const [supportLoading, setSupportLoading] = createSignal(false)
+  let pasteImageCount = 0
   let fileInputRef: HTMLInputElement | undefined
   let pollTimer: ReturnType<typeof setInterval> | undefined
 
@@ -190,10 +212,10 @@ const Hero: Component = () => {
 
   // Validation
   function validateFile(file: File): string | null {
-    if (file.size === 0) return `${file.name}: Пустой файл`
+    if (file.size === 0) return t("toast.emptyFile", { name: file.name })
     // No file size limit — presigned upload handles any size
     const ext = getExtension(file.name)
-    if (ext && !SUPPORTED_EXTENSIONS.has(ext)) return `${file.name}: .${ext} не поддерживается`
+    if (ext && !SUPPORTED_EXTENSIONS.has(ext)) return t("toast.unsupportedFormat", { name: file.name, ext })
     return null
   }
 
@@ -218,7 +240,7 @@ const Hero: Component = () => {
       }))
     } catch (e) {
       setFiles((prev) => updateEntry(prev, entry.id, {
-        status: "error", error: e instanceof Error ? e.message : "Ошибка загрузки",
+        status: "error", error: e instanceof Error ? e.message : t("toast.uploadError"),
       }))
     }
   }
@@ -235,7 +257,7 @@ const Hero: Component = () => {
       }))
     } catch (e) {
       setFiles((prev) => updateEntry(prev, entry.id, {
-        status: "error", error: e instanceof Error ? e.message : "Ошибка загрузки",
+        status: "error", error: e instanceof Error ? e.message : t("toast.uploadError"),
       }))
     }
   }
@@ -248,7 +270,7 @@ const Hero: Component = () => {
       for (const file of incoming) {
         const err = validateFile(file)
         if (err) { errors.push(err); continue }
-        if (isDuplicate(file) && !window.confirm(`"${file.name}" уже загружен. Повторно?`)) continue
+        if (isDuplicate(file) && !window.confirm(t("toast.duplicateConfirm", { name: file.name }))) continue
         newEntries.push({
           id: generateId(), name: file.name, size: file.size,
           mimeType: file.type || "application/octet-stream",
@@ -259,7 +281,7 @@ const Hero: Component = () => {
       if (errors.length > 0) { setDropError(errors.join("; ")); showToast(errors[0], "error") }
       if (newEntries.length === 0) return
       setFiles((prev) => [...prev, ...newEntries])
-      if (newEntries.length > 1) showToast(`${newEntries.length} файлов добавлено`, "success")
+      if (newEntries.length > 1) showToast(t("toast.filesAdded", { count: newEntries.length }), "success")
       if (!selectedId()) setSelectedId(newEntries[0].id)
       for (const entry of newEntries) {
         const file = incoming.find((f) => f.name === entry.name && f.size === entry.size)
@@ -274,12 +296,11 @@ const Hero: Component = () => {
     setDropError("")
     const trimmed = text.trim()
     if (!trimmed) return
-    const isYT = YOUTUBE_REGEX.test(trimmed)
     const isUrl = URL_REGEX.test(trimmed)
     const action = () => {
       const entry: FileEntry = {
         id: generateId(),
-        name: isYT ? `youtube: ${trimmed.slice(0, 60)}` : isUrl ? `url: ${trimmed.slice(0, 60)}` : `текст (${trimmed.length} символов)`,
+        name: isUrl ? `url: ${trimmed.slice(0, 60)}` : `Text (${trimmed.length} chars)`,
         size: new Blob([trimmed]).size, mimeType: isUrl ? "text/uri-list" : "text/plain",
         documentId: null, status: "pending", stages: makeInitialStages(),
         preview: isUrl ? null : trimmed.slice(0, 2000), error: null, stats: null,
@@ -304,6 +325,77 @@ const Hero: Component = () => {
     }))
   }
 
+  // Support payment
+  async function handleSupportPay() {
+    const amount = supportAmount()
+    if (amount < 10) { showToast("Minimum $10", "error"); return }
+    setSupportLoading(true)
+    try {
+      const { invoiceUrl } = await createSupportInvoice(amount)
+      window.open(invoiceUrl, "_blank")
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : "Failed to create invoice", "error")
+    } finally {
+      setSupportLoading(false)
+    }
+  }
+
+  // Paste input handler
+  function handlePasteInput(e: ClipboardEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    // 1. Files (images, documents, etc.)
+    let pasteFiles = Array.from(e.clipboardData?.files ?? [])
+
+    // Fallback: extract files from clipboardData.items (some browsers)
+    if (pasteFiles.length === 0 && e.clipboardData?.items) {
+      for (const item of Array.from(e.clipboardData.items)) {
+        if (item.kind === "file") {
+          const f = item.getAsFile()
+          if (f) pasteFiles.push(f)
+        }
+      }
+    }
+
+    if (pasteFiles.length > 0) {
+      const labels = pasteFiles.map((f) => {
+        if (f.type.startsWith("image/")) {
+          pasteImageCount++
+          return `[image #${pasteImageCount}]`
+        }
+        return `[file: ${f.name}]`
+      })
+      setPasteDisplay(labels.join(", "))
+      handleFiles(pasteFiles)
+      return
+    }
+
+    // 2. Text (plain text, URLs, YouTube links)
+    const text = e.clipboardData?.getData("text/plain")
+    if (text?.trim()) {
+      const trimmed = text.trim()
+      if (URL_REGEX.test(trimmed)) {
+        const domain = trimmed.replace(/^https?:\/\//, "").split("/")[0]
+        setPasteDisplay(`[link: ${domain}]`)
+      } else {
+        setPasteDisplay(`[pasted text ${trimmed.length} chars]`)
+      }
+      handleText(trimmed)
+      return
+    }
+
+    // 3. HTML without plain text (rare)
+    const html = e.clipboardData?.getData("text/html")
+    if (html?.trim()) {
+      const stripped = html.replace(/<[^>]*>/g, "").trim()
+      if (stripped) {
+        setPasteDisplay(`[pasted text ${stripped.length} chars]`)
+        handleText(stripped)
+      }
+    }
+  }
+
   // Polling
   function startPolling() {
     if (pollTimer) return
@@ -325,14 +417,19 @@ const Hero: Component = () => {
           if (allDone && entry.status === "processing") {
             const totalDuration = stages.reduce((sum, s) => sum + (s.duration ?? 0), 0)
             if (totalDuration > 5000) {
-              showToast(`«${data.name || entry.name}» готов к поиску`, "success")
+              showToast(t("toast.readyForSearch", { name: data.name || entry.name }), "success")
             }
           }
+          const newStatus = allDone ? "ready" : hasError ? "error" : isStuck ? "error" : "processing"
           setFiles((prev) => updateEntry(prev, entry.id, {
-            status: allDone ? "ready" : hasError ? "error" : isStuck ? "error" : "processing",
-            stages, error: errStage?.error ?? (isStuck ? "Обработка заняла слишком долго" : null),
+            status: newStatus,
+            stages, error: errStage?.error ?? (isStuck ? t("toast.processingTooLong") : null),
             name: data.name || entry.name, mimeType: data.mime_type || entry.mimeType, size: data.size || entry.size,
           }))
+          // Auto-remove error entries after 10s
+          if (newStatus === "error") {
+            setTimeout(() => setFiles((prev) => prev.filter((f) => f.id !== entry.id)), 10_000)
+          }
         } catch {}
       }
     }, POLL_INTERVAL)
@@ -409,34 +506,36 @@ const Hero: Component = () => {
         </svg>
 
         <span class="text-[20px] font-medium text-white mt-6 text-center">
-          Перетащите файлы или вставьте текст
+          {t("hero.dropTitle")}
         </span>
         <span class="text-[14px] text-text-disabled mt-3 text-center">
-          PDF · DOCX · XLSX · Аудио · YouTube · Изображения · или просто текст
+          {t("hero.dropFormats")}
         </span>
 
-        <div class="flex items-center gap-3 mt-5">
+        <div class="flex flex-col items-center gap-3 mt-5 w-full" style={{ "max-width": "480px" }}>
           <button
             class="border border-text-secondary py-2 px-6 text-sm text-text-disabled bg-transparent cursor-pointer transition-[border-color,color] duration-[80ms]"
             onClick={(e) => { e.stopPropagation(); fileInputRef?.click() }}
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-white)" }}
             onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-text-secondary)"; e.currentTarget.style.color = "var(--color-text-disabled)" }}
           >
-            Выбрать файлы
+            {t("hero.selectFiles")}
           </button>
-          <span class="text-text-disabled text-xs">или</span>
-          <button
-            class="border border-text-secondary py-2 px-6 text-sm text-text-disabled bg-transparent cursor-pointer transition-[border-color,color] duration-[80ms]"
-            onClick={(e) => { e.stopPropagation() }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-white)" }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-text-secondary)"; e.currentTarget.style.color = "var(--color-text-disabled)" }}
-          >
-            ctrl+v
-          </button>
+          <input
+            type="text"
+            value={pasteDisplay()}
+            placeholder={t("hero.pastePlaceholder")}
+            onPaste={handlePasteInput}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              const isModifier = e.ctrlKey || e.metaKey
+              const isShortcut = isModifier && ["KeyV", "KeyC", "KeyA"].includes(e.code)
+              const isNav = ["Tab", "Backspace", "Delete", "Escape", "ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)
+              if (!isShortcut && !isNav) e.preventDefault()
+            }}
+            class="w-full bg-transparent border border-text-secondary text-text-disabled text-sm py-2 px-4 text-center outline-hidden placeholder:text-text-disabled transition-[border-color] duration-[80ms] focus:border-accent"
+          />
         </div>
-        <span class="text-text-disabled text-xs mt-3 text-center">
-          Скопировали что-то? Просто нажмите ctrl+v — мы всё подхватим
-        </span>
 
         {dropError() && (
           <span class="text-signal-error text-[10px] mt-3">{dropError()}</span>
@@ -463,13 +562,24 @@ const Hero: Component = () => {
                       <span class="text-sm text-text-primary truncate">{entry.name}</span>
                       <span class="text-[10px] text-text-tertiary shrink-0">{formatSize(entry.size)}</span>
                     </div>
-                    <Badge variant={fileBadgeVariant(entry.status)} />
+                    <div class="flex items-center gap-2 shrink-0">
+                      <Badge variant={fileBadgeVariant(entry.status)} />
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setFiles((prev) => prev.filter((f) => f.id !== entry.id)) }}
+                        class="text-text-disabled hover:text-text-primary transition-colors duration-[80ms] p-1"
+                        aria-label="close"
+                      >
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <line x1="2" y1="2" x2="10" y2="10" /><line x1="10" y1="2" x2="2" y2="10" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   <Show when={entry.status !== "pending"}>
                     <PipelineIndicator stages={entry.stages} mimeType={entry.mimeType} />
                     <Show when={entry.status === "processing" && getTimeEstimate(entry.mimeType) !== null}>
                       <span class="text-[10px] text-text-tertiary mt-1">
-                        ожидаемое время: {getTimeEstimate(entry.mimeType)}
+                        {t("pipeline.estimatedTime")} {getTimeEstimate(entry.mimeType)}
                       </span>
                     </Show>
                   </Show>
@@ -479,14 +589,14 @@ const Hero: Component = () => {
                         <span class="text-xs text-signal-error">{humanizeError(entry.error)}</span>
                         <Show when={entry.stages?.find((s) => s.status === "error")}>
                           {(failedStage) => (
-                            <span class="text-[10px] text-text-tertiary">этап: {
-                              {parse: "распознавание", chunk: "разбивка", embed: "векторизация", index: "сохранение"}[failedStage().name] ?? failedStage().name
+                            <span class="text-[10px] text-text-tertiary">stage: {
+                              {parse: "parsing", chunk: "chunking", embed: "vectorizing", index: "saving"}[failedStage().name] ?? failedStage().name
                             }</span>
                           )}
                         </Show>
                       </div>
                       <Show when={entry.documentId}>
-                        <Button variant="ghost" onClick={() => handleRetry(entry.id)}>Повторить</Button>
+                        <Button variant="ghost" onClick={() => handleRetry(entry.id)}>{t("common.retry")}</Button>
                       </Show>
                     </div>
                   </Show>
@@ -501,11 +611,11 @@ const Hero: Component = () => {
       <section class="px-4 py-12 md:px-16 flex-1">
         <div class="flex items-center justify-between" style={{ "margin-bottom": "24px" }}>
           <h2 class="text-black" style={{ "font-size": "24px", "font-weight": "700", "letter-spacing": "-0.5px" }}>
-            Ваши документы
+            {t("hero.yourDocs")}
           </h2>
           <Show when={isAuthenticated() && landingDocs().length > 5}>
             <A href="/dashboard" class="text-accent" style={{ "font-size": "12px" }}>
-              Все документы →
+              {t("hero.allDocs")}
             </A>
           </Show>
         </div>
@@ -515,7 +625,7 @@ const Hero: Component = () => {
           fallback={
             <div class="flex flex-col items-center gap-4" style={{ padding: "48px 0" }}>
               <span class="text-text-tertiary" style={{ "font-size": "14px" }}>
-                {isAuthenticated() ? "Загрузите первый файл, чтобы создать базу знаний" : "Войдите, чтобы увидеть ваши документы"}
+                {isAuthenticated() ? t("hero.noDocs") : t("hero.noDocsAuth")}
               </span>
             </div>
           }
@@ -523,8 +633,8 @@ const Hero: Component = () => {
           {/* Stats row */}
           <div class="flex flex-wrap gap-4 mb-6">
             {([
-              [landingDocs().length, "документов"],
-              [landingChunks(), "фрагментов"],
+              [landingDocs().length, t("hero.documents")],
+              [landingChunks(), t("hero.chunks")],
             ] as [number, string][]).map(([v, l]) => (
               <div class="flex items-baseline gap-2 bg-bg-canvas" style={{ padding: "16px 20px" }}>
                 <span class="text-black" style={{ "font-size": "32px", "font-weight": "700", "line-height": "1" }}>{v}</span>
@@ -536,9 +646,9 @@ const Hero: Component = () => {
           {/* Document table */}
           <div class="bg-bg-canvas border border-border-subtle">
             <div class="flex items-center border-b border-border-subtle" style={{ padding: "10px 16px" }}>
-              <span class="flex-1 text-text-tertiary" style={{ "font-size": "10px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>документ</span>
-              <span class="text-text-tertiary" style={{ width: "80px", "font-size": "10px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>фрагменты</span>
-              <span class="text-text-tertiary" style={{ width: "100px", "font-size": "10px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>статус</span>
+              <span class="flex-1 text-text-tertiary" style={{ "font-size": "10px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>{t("hero.docHeader")}</span>
+              <span class="text-text-tertiary" style={{ width: "80px", "font-size": "10px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>{t("hero.chunksHeader")}</span>
+              <span class="text-text-tertiary" style={{ width: "100px", "font-size": "10px", "text-transform": "uppercase", "letter-spacing": "0.08em" }}>{t("hero.statusHeader")}</span>
             </div>
             <For each={landingDocs().slice(0, 10)}>
               {(doc) => (
@@ -558,97 +668,245 @@ const Hero: Component = () => {
         </Show>
       </section>
 
-      {/* 4. CONNECTION */}
+      {/* 4. CONNECT YOUR AI */}
       <Show when={isAuthenticated()}>
-        <section class="border-t border-border-subtle px-4 py-12 md:px-16">
-          <div class="flex flex-col md:flex-row gap-8 md:gap-16">
-            <div class="flex-1 flex flex-col" style={{ gap: "20px" }}>
-              <h2 class="text-black" style={{ "font-size": "24px", "font-weight": "700", "letter-spacing": "-0.5px" }}>Подключение</h2>
-              <p class="text-text-tertiary" style={{ "font-size": "14px", "line-height": "1.5" }}>
-                Откройте ChatGPT, Claude или Cursor — и спросите по вашим файлам
-              </p>
-              <div class="flex flex-col" style={{ gap: "16px" }}>
-                {([
-                  ["1", "Скопируйте ссылку подключения", "Нажмите «скопировать» справа"],
-                  ["2", "Вставьте в настройки нейросети", "Нажмите на нужную нейросеть ниже — покажем куда"],
-                  ["3", "Спросите что-нибудь", "«Какие документы загружены?»"],
-                ] as const).map(([num, title, desc]) => (
-                  <div class="flex" style={{ gap: "12px" }}>
-                    <span class="text-accent" style={{ "font-size": "14px", "font-weight": "700", width: "20px", "flex-shrink": "0" }}>{num}</span>
-                    <div class="flex flex-col" style={{ gap: "2px" }}>
-                      <span class="text-black" style={{ "font-size": "14px", "font-weight": "700" }}>{title}</span>
-                      <span class="text-text-tertiary" style={{ "font-size": "12px" }}>{desc}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div class="flex flex-col shrink-0 w-full md:w-[440px]" style={{ gap: "20px" }}>
-              {/* MCP URL card */}
-              <div class="flex flex-col" style={{ gap: "8px" }}>
-                <span class="text-text-tertiary" style={{ "font-size": "10px", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
-                  Ссылка подключения
-                </span>
-                <div class="flex flex-col" style={{ gap: "8px" }}>
-                  <div class="border-2 border-accent" style={{ padding: "12px 16px" }}>
-                    <span class="font-mono block truncate text-accent" style={{ "font-size": "12px" }}>{mcpUrl()}</span>
-                  </div>
-                  <div class="flex" style={{ gap: "8px" }}>
-                    <button
-                      onClick={() => copyText(mcpUrl())}
-                      style={{
-                        padding: "6px 16px", "font-size": "12px", "font-weight": "700", cursor: "pointer", "white-space": "nowrap",
-                      }}
-                      class="text-white bg-accent border border-accent"
-                    >Скопировать ссылку</button>
-                    <button
-                      onClick={() => copyText(mcpUrl().match(/token=(.+)$/)?.[1] ?? "")}
-                      style={{
-                        padding: "6px 16px", "font-size": "12px", "font-weight": "700", cursor: "pointer", "white-space": "nowrap",
-                      }}
-                      class="text-accent bg-transparent border border-accent"
-                    >Скопировать токен</button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Client buttons */}
-              <div class="flex flex-col" style={{ gap: "8px" }}>
-                <span class="text-text-tertiary" style={{ "font-size": "10px", "letter-spacing": "0.08em", "text-transform": "uppercase", "font-weight": "500" }}>
-                  Инструкция для
-                </span>
-                <div class="flex items-center flex-wrap" style={{ gap: "8px" }}>
-                  {([["chatgpt", "ChatGPT"], ["claude-web", "Claude.ai"], ["claude-desktop", "Claude Desktop"], ["perplexity", "Perplexity"], ["cursor", "Cursor"]] as const).map(([id, name]) => (
-                    <button
-                      class="font-mono text-text-tertiary border border-border-subtle bg-transparent"
-                      style={{
-                        padding: "6px 14px", "font-size": "12px", "font-weight": "500",
-                        cursor: "pointer", transition: "all 80ms",
-                      }}
-                      onClick={() => { setConnectionClient(id as any); setConnectionOpen(true) }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.color = "var(--color-accent)" }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--color-border-subtle)"; e.currentTarget.style.color = "var(--color-text-tertiary)" }}
-                    >{name}</button>
-                  ))}
-                </div>
-              </div>
-            </div>
+        <section class="border-t border-border-subtle px-4 py-16 md:px-16">
+          <div class="flex flex-col items-center text-center" style={{ gap: "16px" }}>
+            <h2 class="text-[24px] font-bold text-text-primary leading-[1.2]" style={{ "letter-spacing": "-0.03em" }}>
+              Connect your AI
+            </h2>
+            <p class="text-[14px] text-text-secondary leading-[1.5]" style={{ "max-width": "480px" }}>
+              Link ChatGPT, Claude, Gemini, Perplexity, or Cursor to your knowledge base. Takes 2 minutes.
+            </p>
+            <a
+              href="/api"
+              class="text-[14px] font-medium bg-accent text-white px-8 py-3 hover:bg-accent-hover transition-colors duration-[80ms] mt-2"
+            >
+              Connect
+            </a>
           </div>
         </section>
       </Show>
 
-      {/* 5. FOOTER */}
+      {/* 5. PRE-ORDER */}
+      <section id="preorder" class="bg-bg-surface border-t border-border-subtle px-4 py-16 md:px-16">
+        {/* Header */}
+        <div class="flex flex-col items-center text-center mx-auto" style={{ "max-width": "720px" }}>
+          <span class="text-[10px] font-medium text-accent uppercase tracking-[0.04em]">
+            {t("preorder.betaNote")}
+          </span>
+          <h2
+            class="text-[32px] font-bold text-text-primary leading-[1.2] mt-2"
+            style={{ "letter-spacing": "-0.03em" }}
+          >
+            {t("preorder.title")}
+          </h2>
+          <p
+            class="text-[14px] text-text-secondary leading-[1.5] mt-3 mx-auto"
+            style={{ "max-width": "480px" }}
+          >
+            {t("preorder.subtitle")}
+          </p>
+        </div>
+
+        {/* Benefits Bar */}
+        <div class="flex flex-wrap justify-center items-center mt-8" style={{ gap: "12px" }}>
+          <span class="bg-bg-elevated px-3 py-1 inline-flex items-center" style={{ gap: "8px" }}>
+            <span class="text-[12px] font-bold text-accent">—</span>
+            <span class="text-[12px] text-text-secondary">{t("preorder.benefit1")}</span>
+          </span>
+          <span class="bg-bg-elevated px-3 py-1 inline-flex items-center" style={{ gap: "8px" }}>
+            <span class="text-[12px] font-bold text-accent">—</span>
+            <span class="text-[12px] text-text-secondary">{t("preorder.benefit2")}</span>
+          </span>
+          <span class="bg-bg-elevated px-3 py-1 inline-flex items-center" style={{ gap: "8px" }}>
+            <span class="text-[12px] font-bold text-accent">—</span>
+            <span class="text-[12px] text-text-secondary">{t("preorder.benefit3")}</span>
+          </span>
+        </div>
+
+        {/* Payment Block — Crypto */}
+        <div
+          class="border border-border-default bg-bg-canvas p-6 flex flex-col mt-8 mx-auto w-full"
+          style={{ gap: "16px", "max-width": "720px" }}
+        >
+          <span class="text-[10px] font-medium text-accent uppercase tracking-[0.04em]">
+            {t("preorder.crypto")}
+          </span>
+          <p class="text-[12px] text-text-tertiary leading-[1.5]">
+            {t("preorder.cryptoDesc")}
+          </p>
+          <div class="flex items-center" style={{ gap: "8px" }}>
+            <div class="flex items-stretch border border-border-default" style={{ height: "40px" }}>
+              <span class="px-3 text-[14px] text-text-tertiary flex items-center border-r border-border-default">
+                $
+              </span>
+              <input
+                type="number"
+                min="10"
+                step="10"
+                value={supportAmount()}
+                onInput={(e) => setSupportAmount(Math.max(10, Number((e.target as HTMLInputElement).value)))}
+                class="w-20 px-3 font-mono text-[16px] text-text-primary bg-transparent border-none outline-hidden"
+              />
+            </div>
+            <button
+              onClick={handleSupportPay}
+              disabled={supportLoading()}
+              class="bg-accent text-white text-[14px] font-medium px-6 border border-accent cursor-pointer disabled:opacity-50"
+              style={{ height: "40px" }}
+            >
+              {supportLoading() ? "..." : t("preorder.crypto")}
+            </button>
+            <span class="text-[12px] text-text-tertiary whitespace-nowrap">
+              = {Math.floor(supportAmount() / 10)} mo Pro
+            </span>
+          </div>
+        </div>
+
+        {/* Payment Block — Bank transfer / Card */}
+        <div
+          class="border border-border-default bg-bg-canvas p-6 flex flex-col mx-auto w-full"
+          style={{ gap: "16px", "max-width": "720px", "margin-top": "12px" }}
+        >
+          <span class="text-[10px] font-medium text-accent uppercase tracking-[0.04em]">
+            {t("preorder.card")}
+          </span>
+          {/* Card number */}
+          <div class="flex items-center" style={{ gap: "12px" }}>
+            <span
+              class="font-mono text-[16px] font-bold text-text-primary"
+              style={{ "letter-spacing": "0.08em" }}
+            >
+              {t("preorder.cardNumber")}
+            </span>
+            <span class="text-[12px] text-text-tertiary">Visa</span>
+            <button
+              onClick={() => copyText("4405639710713882")}
+              class="border border-border-default bg-transparent text-[12px] font-medium text-text-secondary px-3 py-1 cursor-pointer hover:border-accent hover:text-accent transition-colors duration-[80ms]"
+            >
+              {t("preorder.copyNumber")}
+            </button>
+          </div>
+          {/* Wire transfer details */}
+          <div class="flex flex-col" style={{ gap: "8px" }}>
+            <div class="flex items-baseline" style={{ gap: "12px" }}>
+              <span class="text-[10px] text-text-tertiary uppercase tracking-[0.04em]" style={{ width: "80px", "flex-shrink": "0" }}>Beneficiary</span>
+              <span class="font-mono text-[12px] text-text-primary">{t("preorder.beneficiary")}</span>
+            </div>
+            <div class="flex items-baseline" style={{ gap: "12px" }}>
+              <span class="text-[10px] text-text-tertiary uppercase tracking-[0.04em]" style={{ width: "80px", "flex-shrink": "0" }}>Bank</span>
+              <span class="text-[12px] text-text-primary">{t("preorder.cardBank")}</span>
+            </div>
+            <div class="flex items-baseline" style={{ gap: "12px" }}>
+              <span class="text-[10px] text-text-tertiary uppercase tracking-[0.04em]" style={{ width: "80px", "flex-shrink": "0" }}>SWIFT</span>
+              <span class="font-mono text-[12px] text-text-primary">{t("preorder.swift")}</span>
+            </div>
+            <div class="flex items-baseline" style={{ gap: "12px" }}>
+              <span class="text-[10px] text-text-tertiary uppercase tracking-[0.04em]" style={{ width: "80px", "flex-shrink": "0" }}>IBAN (USD)</span>
+              <span class="font-mono text-[12px] text-text-primary">{t("preorder.ibanUsd")}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* After-payment Note */}
+        <p
+          class="text-[12px] text-text-tertiary leading-[1.5] mt-4 mx-auto"
+          style={{ "max-width": "720px" }}
+        >
+          {t("preorder.afterPayment", { email: "nopoint@contexter.cc" })}
+        </p>
+
+        {/* Why $500 Disclosure */}
+        <div
+          class="border-t border-border-subtle pt-6 mt-8 mx-auto"
+          style={{ "max-width": "720px" }}
+        >
+          <p class="text-[10px] font-medium text-text-tertiary uppercase tracking-[0.04em] mb-3">
+            {t("preorder.whyTitle")}
+          </p>
+          <div class="flex justify-between items-baseline py-2 border-b border-border-subtle">
+            <span class="text-[12px] text-text-secondary">Jina AI embeddings</span>
+            <span class="text-[12px] font-bold text-text-primary">$50</span>
+          </div>
+          <div class="flex justify-between items-baseline py-2 border-b border-border-subtle">
+            <span class="text-[12px] text-text-secondary">Server + API credits</span>
+            <span class="text-[12px] font-bold text-text-primary">$150</span>
+          </div>
+          <div class="flex justify-between items-baseline py-2">
+            <span class="text-[12px] text-text-secondary">Banking setup (Stripe)</span>
+            <span class="text-[12px] font-bold text-text-primary">$300</span>
+          </div>
+          <div class="flex justify-between items-baseline mt-2 border-t border-border-default pt-2">
+            <span class="text-[10px] font-medium text-text-secondary uppercase tracking-[0.04em]">TOTAL</span>
+            <span class="text-[14px] font-bold text-text-primary">$500</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. ROADMAP */}
+      <section class="border-t border-border-subtle px-4 py-12 md:px-16 bg-bg-canvas">
+        <p class="text-[12px] uppercase tracking-[0.15em] text-accent font-medium mb-3">
+          {t("roadmap.label")}
+        </p>
+        <h2 class="text-black mb-8" style={{ "font-size": "20px", "font-weight": "700", "letter-spacing": "-0.04em" }}>
+          {t("roadmap.title")}
+        </h2>
+        <div
+          class="grid grid-cols-1 md:grid-cols-3"
+          style={{ gap: "1px", background: "var(--color-border-subtle)" }}
+        >
+          {([
+            { labelKey: "roadmap.now", descKey: "roadmap.nowDesc", featureKeys: ["roadmap.now.f1","roadmap.now.f2","roadmap.now.f3","roadmap.now.f4","roadmap.now.f5"], isNow: true },
+            { labelKey: "roadmap.q2",  descKey: "roadmap.q2Desc",  featureKeys: ["roadmap.q2.f1","roadmap.q2.f2","roadmap.q2.f3","roadmap.q2.f4","roadmap.q2.f5","roadmap.q2.f6","roadmap.q2.f7","roadmap.q2.f8"],   isNow: false },
+            { labelKey: "roadmap.q3",  descKey: "roadmap.q3Desc",  featureKeys: ["roadmap.q3.f1","roadmap.q3.f2","roadmap.q3.f3","roadmap.q3.f4","roadmap.q3.f5","roadmap.q3.f6"],   isNow: false },
+          ] as { labelKey: string; descKey: string; featureKeys: string[]; isNow: boolean }[]).map((phase) => (
+            <div
+              class={`bg-bg-canvas p-6 flex flex-col${phase.isNow ? " border-l-2 border-accent" : ""}`}
+              style={{ gap: "16px" }}
+            >
+              <div class="flex flex-col" style={{ gap: "6px" }}>
+                <span
+                  style={{ "font-size": "11px", "text-transform": "uppercase", "letter-spacing": "0.15em", "font-weight": "500" }}
+                  class={phase.isNow ? "text-accent" : "text-text-tertiary"}
+                >
+                  {t(phase.labelKey)}
+                </span>
+                <span class="text-black" style={{ "font-size": "15px", "font-weight": "700", "letter-spacing": "-0.03em" }}>
+                  {t(phase.descKey)}
+                </span>
+              </div>
+              <div class="flex flex-col" style={{ gap: "10px" }}>
+                {phase.featureKeys.map((key) => (
+                  <div class="flex items-start" style={{ gap: "10px" }}>
+                    <span
+                      class={phase.isNow ? "text-accent" : "text-text-tertiary"}
+                      style={{ "font-size": "12px", "font-weight": "700", "line-height": "1.5", "flex-shrink": "0" }}
+                    >
+                      {phase.isNow ? "✓" : "—"}
+                    </span>
+                    <span class="text-text-secondary" style={{ "font-size": "13px", "line-height": "1.5" }}>
+                      {t(key)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 7. FOOTER */}
       <footer class="border-t border-border-subtle mt-auto px-4 py-5 md:px-16">
         <div class="flex items-center flex-wrap" style={{ gap: "32px" }}>
           <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
-            Ваши файлы хранятся на серверах в Европе
+            {t("hero.footerEurope")}
           </span>
           <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
-            Данные не используются для обучения ИИ
+            {t("hero.footerNoTraining")}
           </span>
           <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
-            Вы можете удалить все файлы в любой момент
+            {t("hero.footerDelete")}
           </span>
           <span style={{ flex: "1" }} />
           <span class="text-text-tertiary" style={{ "font-size": "12px" }}>
