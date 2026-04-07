@@ -30,8 +30,15 @@ const TOOLS = [
       properties: {
         query: { type: "string", description: "Search query in natural language" },
         topK: { type: "number", description: "Number of results to return (default 5, max 20)" },
+        roomId: { type: "string", description: "Optional room ID to restrict search to a specific room" },
       },
       required: ["query"],
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
     },
   },
   {
@@ -39,7 +46,15 @@ const TOOLS = [
     description: "List all documents in the Contexter knowledge base with their processing status.",
     inputSchema: {
       type: "object" as const,
-      properties: {},
+      properties: {
+        roomId: { type: "string", description: "Optional room ID to list documents from a specific room only" },
+      },
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
     },
   },
   {
@@ -52,6 +67,12 @@ const TOOLS = [
       },
       required: ["documentId"],
     },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
   },
   {
     name: "add_context",
@@ -61,8 +82,15 @@ const TOOLS = [
       properties: {
         content: { type: "string", description: "Text content to add to the knowledge base" },
         title: { type: "string", description: "Title or name for this content (optional, default: auto-generated)" },
+        roomId: { type: "string", description: "Optional room ID to add this content to a specific room" },
       },
       required: ["content"],
+    },
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
     },
   },
   {
@@ -74,8 +102,15 @@ const TOOLS = [
         fileName: { type: "string", description: "File name with extension (e.g. 'report.pdf')" },
         contentBase64: { type: "string", description: "File content encoded as base64 string" },
         mimeType: { type: "string", description: "MIME type (optional, auto-detected from extension)" },
+        roomId: { type: "string", description: "Optional room ID to upload this file into a specific room" },
       },
       required: ["fileName", "contentBase64"],
+    },
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
     },
   },
   {
@@ -88,6 +123,12 @@ const TOOLS = [
       },
       required: ["documentId"],
     },
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
   },
   {
     name: "get_document_content",
@@ -98,6 +139,12 @@ const TOOLS = [
         documentId: { type: "string", description: "Document ID" },
       },
       required: ["documentId"],
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
     },
   },
   {
@@ -111,6 +158,12 @@ const TOOLS = [
       },
       required: ["documentId", "question"],
     },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
+    },
   },
   {
     name: "get_stats",
@@ -118,6 +171,12 @@ const TOOLS = [
     inputSchema: {
       type: "object" as const,
       properties: {},
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
     },
   },
   {
@@ -130,6 +189,12 @@ const TOOLS = [
         expiresInHours: { type: "number", description: "Link expiration in hours (optional, default: never)" },
       },
     },
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
+    },
   },
   {
     name: "summarize_document",
@@ -140,6 +205,12 @@ const TOOLS = [
         documentId: { type: "string", description: "Document ID to summarize" },
       },
       required: ["documentId"],
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
     },
   },
   {
@@ -152,6 +223,61 @@ const TOOLS = [
         newName: { type: "string", description: "New name for the document" },
       },
       required: ["documentId", "newName"],
+    },
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+  },
+  {
+    name: "create_room",
+    description: "Create a new room — an isolated knowledge base within your account. Documents and searches can be scoped to a specific room.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        name: { type: "string", description: "Unique room name (within your account)" },
+        description: { type: "string", description: "Optional description for the room" },
+      },
+      required: ["name"],
+    },
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
+    },
+  },
+  {
+    name: "list_rooms",
+    description: "List all rooms in your account.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+  },
+  {
+    name: "get_room_stats",
+    description: "Get statistics for a specific room: document count and total chunk count.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        roomId: { type: "string", description: "Room ID" },
+      },
+      required: ["roomId"],
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
     },
   },
 ]
@@ -336,6 +462,7 @@ async function handleToolCall(
         const reranker = new RerankerService({ apiKey: env.JINA_API_KEY })
 
         const topK = Math.min((args.topK as number) ?? 5, 20)
+        const searchRoomId = (args.roomId as string | undefined) || undefined
 
         // Embed query
         const queryEmbedding = await embedder.embed(rawQuery)
@@ -344,7 +471,7 @@ async function handleToolCall(
         const searchResults = await vectorStore.search(
           queryEmbedding.vector,
           rawQuery,
-          { topK: topK * 2, scoreThreshold: 0, userId: authCtx.userId },
+          { topK: topK * 2, scoreThreshold: 0, userId: authCtx.userId, roomId: searchRoomId },
         )
 
         // Rerank with cross-encoder
@@ -407,10 +534,16 @@ async function handleToolCall(
       }
 
       case "list_documents": {
-        const docs = await sql<{ id: string; name: string; mime_type: string; size: number; status: string; created_at: string }[]>`
-          SELECT id, name, mime_type, size, status, created_at
-          FROM documents WHERE user_id = ${authCtx.userId} ORDER BY created_at DESC LIMIT 100
-        `
+        const listRoomId = (args.roomId as string | undefined) || undefined
+        const docs = listRoomId
+          ? await sql<{ id: string; name: string; mime_type: string; size: number; status: string; created_at: string }[]>`
+              SELECT id, name, mime_type, size, status, created_at
+              FROM documents WHERE user_id = ${authCtx.userId} AND room_id = ${listRoomId} ORDER BY created_at DESC LIMIT 100
+            `
+          : await sql<{ id: string; name: string; mime_type: string; size: number; status: string; created_at: string }[]>`
+              SELECT id, name, mime_type, size, status, created_at
+              FROM documents WHERE user_id = ${authCtx.userId} ORDER BY created_at DESC LIMIT 100
+            `
 
         const list = docs
           .map((d) => `- **${d.name}** (${d.mime_type}, ${(d.size / 1024).toFixed(1)} KB) — ${d.status} — ID: ${d.id}`)
@@ -496,6 +629,8 @@ async function handleToolCall(
         const blob = new Blob([content], { type: "text/plain" })
         const buffer = await blob.arrayBuffer()
 
+        const addCtxRoomId = (args.roomId as string | undefined) || null
+
         // P3-013: use 16-char documentId
         const documentId = crypto.randomUUID().slice(0, 16)
         const r2Key = `${authCtx.userId}/${documentId}/${title}`
@@ -507,8 +642,8 @@ async function handleToolCall(
           ContentType: "text/plain",
         }))
         await sql`
-          INSERT INTO documents (id, user_id, name, mime_type, size, r2_key, status)
-          VALUES (${documentId}, ${authCtx.userId}, ${title}, ${"text/plain"}, ${blob.size}, ${r2Key}, 'processing')
+          INSERT INTO documents (id, user_id, room_id, name, mime_type, size, r2_key, status)
+          VALUES (${documentId}, ${authCtx.userId}, ${addCtxRoomId}, ${title}, ${"text/plain"}, ${blob.size}, ${r2Key}, 'processing')
         `
 
         const jobIds = await createPendingJobs(sql, documentId, authCtx.userId)
@@ -639,6 +774,8 @@ async function handleToolCall(
           })
         }
 
+        const uploadRoomId = (args.roomId as string | undefined) || null
+
         // P3-013: use 16-char documentId
         const documentId = crypto.randomUUID().slice(0, 16)
         const r2Key = `${authCtx.userId}/${documentId}/${fileName}`
@@ -651,8 +788,8 @@ async function handleToolCall(
           Metadata: { fileName, mimeType, documentId, userId: authCtx.userId },
         }))
         await sql`
-          INSERT INTO documents (id, user_id, name, mime_type, size, r2_key, status)
-          VALUES (${documentId}, ${authCtx.userId}, ${fileName}, ${mimeType}, ${buffer.byteLength}, ${r2Key}, 'processing')
+          INSERT INTO documents (id, user_id, room_id, name, mime_type, size, r2_key, status)
+          VALUES (${documentId}, ${authCtx.userId}, ${uploadRoomId}, ${fileName}, ${mimeType}, ${buffer.byteLength}, ${r2Key}, 'processing')
         `
 
         const jobIds = await createPendingJobs(sql, documentId, authCtx.userId)
@@ -852,10 +989,11 @@ async function handleToolCall(
           VALUES (${shareId}, ${authCtx.userId}, ${shareToken}, 'all', ${permission}, ${expiresAt})
         `
 
-        const shareUrl = `${env.BASE_URL}/sse?share=${shareToken}`
+        const mcpUrl = `${env.BASE_URL}/mcp?share=${shareToken}`
+        const sseUrl = `${env.BASE_URL}/sse?share=${shareToken}`
 
         return makeResult(req.id, {
-          content: [{ type: "text", text: `**Share link created**\n- URL: ${shareUrl}\n- Permission: ${permission}\n- Expires: ${expiresAt ?? "never"}\n\nAnyone with this URL can connect via MCP and ${permission === "read_write" ? "search + upload" : "search only"}.` }],
+          content: [{ type: "text", text: `**Share link created**\n- MCP URL: ${mcpUrl}\n- Legacy SSE URL: ${sseUrl}\n- Permission: ${permission}\n- Expires: ${expiresAt ?? "never"}\n\nAnyone with this URL can connect via MCP and ${permission === "read_write" ? "search + upload" : "search only"}.` }],
         })
       }
 
@@ -944,6 +1082,114 @@ async function handleToolCall(
 
         return makeResult(req.id, {
           content: [{ type: "text", text: `Renamed "${doc.name}" to "${newName}"` }],
+        })
+      }
+
+      case "create_room": {
+        if (authCtx.permission !== "read_write") {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "Write access required to create rooms." }],
+            isError: true,
+          })
+        }
+
+        const roomName = (args.name as string ?? "").trim()
+        if (!roomName) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "name is required" }],
+            isError: true,
+          })
+        }
+        if (roomName.length > 255) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "name exceeds 255 character limit" }],
+            isError: true,
+          })
+        }
+
+        const roomDescription = (args.description as string | undefined)?.trim() || null
+        const roomId = crypto.randomUUID().replace(/-/g, "").slice(0, 16)
+
+        try {
+          await sql`
+            INSERT INTO rooms (id, user_id, name, description)
+            VALUES (${roomId}, ${authCtx.userId}, ${roomName}, ${roomDescription})
+          `
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : String(e)
+          if (msg.includes("unique") || msg.includes("duplicate")) {
+            return makeResult(req.id, {
+              content: [{ type: "text", text: `A room named "${roomName}" already exists.` }],
+              isError: true,
+            })
+          }
+          throw e
+        }
+
+        return makeResult(req.id, {
+          content: [{ type: "text", text: `Room created: "${roomName}" (ID: ${roomId})${roomDescription ? ` — ${roomDescription}` : ""}` }],
+        })
+      }
+
+      case "list_rooms": {
+        const roomRows = await sql<{ id: string; name: string; description: string | null; created_at: string }[]>`
+          SELECT id, name, description, created_at
+          FROM rooms WHERE user_id = ${authCtx.userId} ORDER BY created_at ASC
+        `
+
+        if (roomRows.length === 0) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "No rooms found. Use create_room to create your first room." }],
+          })
+        }
+
+        const list = roomRows
+          .map((r) => `- **${r.name}** (ID: ${r.id})${r.description ? ` — ${r.description}` : ""}`)
+          .join("\n")
+
+        return makeResult(req.id, {
+          content: [{ type: "text", text: `**Rooms (${roomRows.length})**\n\n${list}` }],
+        })
+      }
+
+      case "get_room_stats": {
+        const statsRoomId = (args.roomId as string ?? "").trim()
+        if (!statsRoomId) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: "roomId is required" }],
+            isError: true,
+          })
+        }
+
+        const [room] = await sql<{ id: string; name: string }[]>`
+          SELECT id, name FROM rooms WHERE id = ${statsRoomId} AND user_id = ${authCtx.userId}
+        `
+
+        if (!room) {
+          return makeResult(req.id, {
+            content: [{ type: "text", text: `Room not found: ${statsRoomId}` }],
+            isError: true,
+          })
+        }
+
+        // P1-008: COUNT(*) returns bigint — cast to int
+        const [docCount] = await sql<{ cnt: number }[]>`
+          SELECT COUNT(*)::int as cnt FROM documents WHERE room_id = ${statsRoomId} AND user_id = ${authCtx.userId}
+        `
+
+        const [chunkCount] = await sql<{ cnt: number }[]>`
+          SELECT COUNT(*)::int as cnt FROM chunks
+          WHERE document_id IN (SELECT id FROM documents WHERE room_id = ${statsRoomId} AND user_id = ${authCtx.userId})
+        `
+
+        const text = [
+          `**Room: ${room.name}** (ID: ${room.id})`,
+          `- Documents: ${docCount?.cnt ?? 0}`,
+          `- Chunks: ${chunkCount?.cnt ?? 0}`,
+        ].join("\n")
+
+        return makeResult(req.id, {
+          content: [{ type: "text", text }],
         })
       }
 
@@ -1085,7 +1331,12 @@ function makeError(id: string | number | null | undefined, code: number, message
 // (Claude Desktop, Perplexity, etc.) that connect directly. We keep the SSE CORS origin as the
 // configured domain list but note that MCP tool clients are not browser-origin requests.
 // For the plain JSON fallback path (curl, direct clients) we also restrict.
-const SSE_CORS_ORIGINS = ["https://contexter.cc", "https://www.contexter.cc"]
+const SSE_CORS_ORIGINS = [
+  "https://contexter.cc",
+  "https://www.contexter.cc",
+  "https://chatgpt.com",
+  "https://chat.openai.com",
+]
 
 function sseResponse(data: JsonRpcResponse | JsonRpcResponse[], sessionId: string | null, requestOrigin?: string): Response {
   const items = Array.isArray(data) ? data : [data]

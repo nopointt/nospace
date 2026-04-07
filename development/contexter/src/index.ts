@@ -145,7 +145,12 @@ app.use("*", async (c, next) => {
 
 // P3-006: restrict CORS — credentials: true required for better-auth Set-Cookie cross-origin
 app.use("*", cors({
-  origin: ["https://contexter.cc", "https://www.contexter.cc"],
+  origin: [
+    "https://contexter.cc",
+    "https://www.contexter.cc",
+    "https://chatgpt.com",
+    "https://chat.openai.com",
+  ],
   allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization"],
   exposeHeaders: ["Mcp-Session-Id"],
@@ -252,8 +257,8 @@ app.route("/api/upload", upload)
 // /api/query removed — MCP search_knowledge is the primary query path
 app.route("/api/status", status)
 app.route("/api/documents", documents)
-// P1-010: /mcp route removed (legacy CF Workers scaffold)
 app.route("/sse", mcpRemote)
+app.route("/mcp", mcpRemote)
 app.route("/api/auth", auth)
 app.route("/api/auth", authSocial)
 app.route("/api/retry", retry)
