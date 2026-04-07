@@ -132,11 +132,17 @@ export class DoclingParser implements Parser {
 
 /**
  * Simple text parser for formats that don't need Docling.
- * Handles: TXT, MD, CSV, JSON, XML, SVG, ODT.
+ * Handles: TXT, MD, CSV, JSON, XML, SVG, ODT, HTML, YAML, TOML, TSV, RST, TEX,
+ * SQL, SRT, VTT, source code (PY, JS, TS, Go, Rust, Java, C/C++, etc.), configs.
  * Note: ODS (spreadsheet) moved to DoclingParser — ZIP-based, TextDecoder garbles it.
+ * Note: text/html also in DoclingParser — DoclingParser checked first, TextParser is fallback.
  */
 export class TextParser implements Parser {
+  // Handles all text-based formats for alpha.
+  // application/octet-stream: catch-all for code files that browsers label as binary.
+  // Frontend is the primary gate — only alpha text extensions reach this parser.
   readonly formats = [
+    // Core text
     "text/plain",
     "text/markdown",
     "text/csv",
@@ -144,9 +150,64 @@ export class TextParser implements Parser {
     "text/xml",
     "image/svg+xml",
     "application/vnd.oasis.opendocument.text",
+    // New text formats
+    "text/html",
+    "text/yaml",
+    "application/x-yaml",
+    "text/tab-separated-values",
+    "application/toml",
+    "text/x-rst",
+    "text/x-tex",
+    "text/x-log",
+    "application/sql",
+    "application/x-sql",
+    "application/geo+json",
+    "application/x-ndjson",
+    "text/vtt",
+    "application/x-subrip",
+    // Source code MIME types (explicit)
+    "text/x-python",
+    "text/javascript",
+    "application/javascript",
+    "text/typescript",
+    "application/typescript",
+    "text/x-go",
+    "text/x-rustsrc",
+    "text/x-java-source",
+    "text/x-c",
+    "text/x-c++src",
+    "text/x-csrc",
+    "text/x-csharp",
+    "text/x-ruby",
+    "application/x-ruby",
+    "text/x-php",
+    "application/x-php",
+    "text/x-swift",
+    "text/x-kotlin",
+    "text/x-scala",
+    "text/x-lua",
+    "text/x-r",
+    "text/x-perl",
+    "text/x-shellscript",
+    "application/x-sh",
+    "application/x-bat",
+    "application/x-msdos-program",
+    // Config formats
+    "text/x-ini",
+    "text/x-properties",
+    // Catch-all for code/config files browsers label as binary
+    "application/octet-stream",
   ]
 
   async parse(input: ParserInput): Promise<ParseResult> {
+    if (input.mimeType === "application/octet-stream") {
+      console.warn(JSON.stringify({
+        event: "text_parser_octet_stream_fallback",
+        fileName: input.fileName,
+        warning: "File arrived as application/octet-stream — decoded as UTF-8 text. Verify the file is a text-based format.",
+      }))
+    }
+
     const buffer = input.file instanceof ArrayBuffer
       ? input.file
       : await streamToBuffer(input.file)
@@ -289,20 +350,69 @@ function extractDoclingElements(doc: DoclingDocumentJson): DoclingElement[] {
 
 function detectFormat(mimeType: string): string {
   const map: Record<string, string> = {
+    // Document parsers (Docling)
     "application/pdf": "pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
     "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
-    "text/csv": "csv",
-    "application/json": "json",
-    "text/plain": "txt",
-    "text/markdown": "md",
-    "text/html": "html",
-    "text/xml": "xml",
+    "application/vnd.oasis.opendocument.spreadsheet": "ods",
     "image/png": "png",
     "image/jpeg": "jpg",
     "image/webp": "webp",
     "image/svg+xml": "svg",
+    // Text formats (TextParser)
+    "text/plain": "txt",
+    "text/markdown": "md",
+    "text/csv": "csv",
+    "application/json": "json",
+    "text/xml": "xml",
+    "text/html": "html",
+    "application/vnd.oasis.opendocument.text": "odt",
+    "text/yaml": "yaml",
+    "application/x-yaml": "yaml",
+    "text/tab-separated-values": "tsv",
+    "application/toml": "toml",
+    "text/x-rst": "rst",
+    "text/x-tex": "tex",
+    "text/x-log": "log",
+    "application/sql": "sql",
+    "application/x-sql": "sql",
+    "application/geo+json": "geojson",
+    "application/x-ndjson": "ndjson",
+    "text/vtt": "vtt",
+    "application/x-subrip": "srt",
+    // Source code
+    "text/x-python": "py",
+    "text/javascript": "js",
+    "application/javascript": "js",
+    "text/typescript": "ts",
+    "application/typescript": "ts",
+    "text/x-go": "go",
+    "text/x-rustsrc": "rs",
+    "text/x-java-source": "java",
+    "text/x-c": "c",
+    "text/x-c++src": "cpp",
+    "text/x-csrc": "c",
+    "text/x-csharp": "cs",
+    "text/x-ruby": "rb",
+    "application/x-ruby": "rb",
+    "text/x-php": "php",
+    "application/x-php": "php",
+    "text/x-swift": "swift",
+    "text/x-kotlin": "kt",
+    "text/x-scala": "scala",
+    "text/x-lua": "lua",
+    "text/x-r": "r",
+    "text/x-perl": "pl",
+    "text/x-shellscript": "sh",
+    "application/x-sh": "sh",
+    "application/x-bat": "bat",
+    "application/x-msdos-program": "bat",
+    // Config
+    "text/x-ini": "ini",
+    "text/x-properties": "cfg",
+    // Catch-all
+    "application/octet-stream": "bin",
   }
   return map[mimeType] || "unknown"
 }
