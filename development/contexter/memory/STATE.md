@@ -2,9 +2,9 @@
 
 ## Position
 - **Phase:** GTM Launch (CTX-10) — 100 paying supporters by April 8
-- **Status:** Product ready. Co-founder briefing + knowledge hub created. Nav fix deployed. Reddit guide extracted. LemonSqueezy pending.
-- **Last session:** 2026-04-05 (Axis, session 231 — nav fix, co-founder briefing, knowledge hub cdn.contexter.cc/public/artem/, Reddit guide)
-- **Sessions total:** 231
+- **Status:** LemonSqueezy APPROVED. ChatGPT MCP compat deployed (/mcp + CORS + tool annotations). OpenAI App Directory draft saved (needs $5 for identity verification). Alpha text formats in progress.
+- **Last session:** 2026-04-07 (Axis, session 232 — LemonSqueezy approved, ChatGPT /mcp endpoint, OpenAI App Directory submission, alpha format restriction)
+- **Sessions total:** 232
 
 ## Key Completions
 - i18n: EN/RU toggle, 500+ translation keys, all 24 pages/components
@@ -21,6 +21,10 @@
 - Reddit marketing guide: nospace/docs/research/reddit-marketing-guide-smetnyov.md (Smetnyov/Skyeng, 13 chapters)
 - CDN custom domain: cdn.contexter.cc (R2 public access)
 - Landing nav fix: absolute centering → flex justify-between (deployed)
+- LemonSqueezy approved (2026-04-07): card payments enabled, MoR, no entity needed
+- ChatGPT MCP compat: /mcp endpoint + CORS + 15 tool annotations deployed
+- OpenAI App Directory: draft complete (app info, MCP server, testing, screenshots), domain verified. Pending: $5 individual verification.
+- $300 invested in project total
 
 ## Active Decisions
 - D-01 through D-25: unchanged from previous
@@ -40,13 +44,22 @@
 - D-39: Artem (CPO ProxyMarket) = co-founder GTM/marketing. Revenue share model.
 - D-40: cdn.contexter.cc = R2 custom domain for public assets (video, knowledge hub)
 - D-41: Knowledge hub at cdn.contexter.cc/public/artem/ — shared materials for co-founder
+- D-42: LemonSqueezy APPROVED (2026-04-07). Primary payment processor. Card payments enabled.
+- D-43: $300 invested in project (infrastructure + services)
+- D-44: ChatGPT MCP compat: /mcp route + CORS (chatgpt.com, chat.openai.com) + 15 tool annotations. Deployed.
+- D-45: OpenAI App Directory: draft submitted, domain verified. Needs $5 individual verification to complete.
+- D-46: Alpha mode — text-only formats (~55+). No Docling/Whisper/ffmpeg. Frontend restriction only, backend untouched. Full format support post-alpha.
+- D-47: Pricing tiers need review — 1GB Starter too small. Deferred to next session.
+- D-48: Pro Launch Special = single payment variants ($10/$30/$60/$120) for 1/3/6/12 months of Pro at launch price. One-time offer.
 
 ## Blockers
 - Copy audit not applied — jargon kills non-tech conversion (CTX-10 W1-01)
 - No social accounts / marketing channels
-- LemonSqueezy approval pending (email sent with demo video, pricing, overview)
+- ~~LemonSqueezy approval pending~~ → RESOLVED 2026-04-07
 - Perplexity MCP URL still on old workers.dev (needs same fix as Claude.ai)
 - Reddit account u/Cute_Baseball2875: 7 months old, karma=1, 0 posts/comments. Needs warmup (50-100 karma in r/ChatGPT, r/ClaudeAI, r/artificial) before launch posts.
+- OpenAI App Directory: needs $5 for individual verification (draft saved)
+- LemonSqueezy billing integration not yet configured (store + checkout + webhook)
 - Solo founder bandwidth
 
 ## Deferred

@@ -838,3 +838,26 @@ Quality system created: standards.md (49 standards) + 10 reglaments + enforcemen
 **Notes:**
 - cdn.contexter.cc configured via wrangler r2 bucket domain add (zone-id required)
 - convert.ts uses `marked` library for MD→HTML batch conversion
+<!-- ENTRY:2026-04-07:CLOSE:232:contexter:contexter-gtm-launch [AXIS] -->
+## 2026-04-07 — сессия 232 CLOSE [Axis]
+
+**Decisions:**
+- D-42: LemonSqueezy APPROVED. Primary payment processor. Card payments enabled.
+- D-43: $300 invested in project total
+- D-44: ChatGPT MCP compat: /mcp route + CORS + 15 tool annotations
+- D-45: OpenAI App Directory: draft submitted, domain verified. Needs $5.
+- D-46: Alpha mode — text-only formats (~55+). Frontend only.
+- D-47: Pricing tiers need review — 1GB Starter too small.
+- D-48: Pro Launch Special = single payment variants ($10/30/60/120)
+
+**Completed:**
+- ChatGPT /mcp endpoint deployed + 13/13 E2E tests pass
+- OpenAI App Directory submission (draft, domain verified)
+- Alpha text formats (50+ frontend, 55 MIME backend) deployed
+- LemonSqueezy blocker resolved
+
+**Opened:**
+- LemonSqueezy billing integration
+- Pricing tier review
+- OpenAI $5 verification
+- Copy audit (W1-01)

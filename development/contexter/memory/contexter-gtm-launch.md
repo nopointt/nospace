@@ -2,7 +2,7 @@
 # contexter-gtm-launch.md — CTX-10 GTM Launch
 > Layer: L3 | Epic: CTX-10 | Status: 🔶 IN PROGRESS
 > Created: 2026-04-01 (session 225)
-> Last updated: 2026-04-05 (session 231 — co-founder briefing, knowledge hub, nav fix, Reddit guide)
+> Last updated: 2026-04-07 (session 232 — LemonSqueezy approved, ChatGPT /mcp, OpenAI App Dir, alpha formats, pricing review)
 > Deadline: 2026-04-08 (7 days)
 > Predecessor: CTX-08 GTM Strategy (CLOSED — positioning + research + landing page)
 ---
@@ -205,12 +205,20 @@ Iterate based on feedback, optimize conversion, push to 100.
 
 ## Blockers
 
-- **LemonSqueezy approval pending:** Email sent with demo video + pricing + overview. Store rename Harkly→Contexter requested. BLOCKS payment collection.
+- ~~**LemonSqueezy approval pending**~~ ✅ RESOLVED 2026-04-07
+- **LemonSqueezy billing integration:** Store products + checkout overlay + webhook not yet configured.
+- **OpenAI App Directory:** Needs $5 individual verification to submit.
+- **Pricing tier review:** 1GB Starter too small — needs adjustment before launch.
 - **Perplexity MCP URL:** Still on old workers.dev — needs same fix as Claude.ai (→ api.contexter.cc/sse?token=...).
 - **Copy audit not applied:** W1-01 is critical-path — 50+ jargon items on landing page kill non-tech conversion.
 - **Solo founder:** All execution on nopoint. Bandwidth = bottleneck.
 
-**Resolved this session (231):**
+**Resolved this session (232):**
+- ~~LemonSqueezy approval pending~~ → APPROVED 2026-04-07. Card payments enabled.
+- ~~ChatGPT MCP incompatible~~ → /mcp endpoint + CORS + tool annotations deployed, 13/13 E2E pass
+- ~~No App Directory presence~~ → OpenAI App Directory draft complete, domain verified
+
+**Resolved session (231):**
 - ~~Nav overlap on landing~~ → flex justify-between fix deployed
 - ~~No co-founder materials~~ → Full briefing + knowledge hub at cdn.contexter.cc/public/artem/
 
