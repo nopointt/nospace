@@ -196,7 +196,10 @@ webhooks.post("/lemonsqueezy", async (c) => {
       const userId = await matchSupporter(sql, { email, customDataUserId })
 
       // Audit row (0 tokens — token credit happens on payment_success).
-      await recordTransaction(sql, {
+      // Idempotent via source_id: a duplicate webhook returns null and
+      // we break BEFORE the subscription upsert, so current_period_start
+      // and current_period_end are never reset by a replay.
+      const txId = await recordTransaction(sql, {
         userId,
         email,
         type: "subscription_payment",
@@ -206,6 +209,11 @@ webhooks.post("/lemonsqueezy", async (c) => {
         sourceId: `${subscriptionId}:created`,
         metadata: { eventName, variantId, productName, customData },
       })
+
+      if (!txId) {
+        console.log(JSON.stringify({ ts, event: "ls_subscription_created_duplicate", subscriptionId }))
+        break
+      }
 
       if (!userId) {
         console.log(JSON.stringify({ ts, event: "ls_subscription_unmatched", email, subscriptionId }))
