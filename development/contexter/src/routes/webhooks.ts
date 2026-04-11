@@ -3,7 +3,12 @@ import { createHmac } from "crypto"
 import type { Env } from "../types/env"
 import type { Sql } from "postgres"
 import type Redis from "ioredis"
-import { verifyIpnSignature, activateSubscription } from "../services/billing"
+import {
+  verifyIpnSignature,
+  activateSubscription,
+  getOrCreateSubscription,
+  TIERS,
+} from "../services/billing"
 import {
   variantToKind,
   matchSupporter,
@@ -181,32 +186,104 @@ webhooks.post("/lemonsqueezy", async (c) => {
     }
 
     case "subscription_created": {
-      const email = attrs.user_email ?? ""
+      const email = (attrs.user_email ?? "") || null
       const productName = attrs.product_name ?? ""
-      const status = attrs.status ?? ""
-      console.log(JSON.stringify({
-        ts: new Date().toISOString(),
-        event: "ls_subscription_created",
+      const variantId = attrs.variant_id ?? attrs.first_order_item?.variant_id ?? null
+      const subscriptionId = String(payload.data?.id ?? "")
+      const customDataUserId = (customData.user_id as string | undefined) ?? null
+      const kind = variantToKind(variantId)
+
+      const userId = await matchSupporter(sql, { email, customDataUserId })
+
+      // Audit row (0 tokens — token credit happens on payment_success).
+      await recordTransaction(sql, {
+        userId,
         email,
-        productName,
-        status,
-        subscriptionId: payload.data?.id,
-      }))
-      // TODO: match email to user, activate subscription tier
+        type: "subscription_payment",
+        amountTokens: 0,
+        amountUsdCents: 0,
+        sourceType: "lemonsqueezy_subscription",
+        sourceId: `${subscriptionId}:created`,
+        metadata: { eventName, variantId, productName, customData },
+      })
+
+      if (!userId) {
+        console.log(JSON.stringify({ ts, event: "ls_subscription_unmatched", email, subscriptionId }))
+        break
+      }
+
+      if (kind !== "starter" && kind !== "pro") {
+        console.log(JSON.stringify({ ts, event: "ls_subscription_unknown_variant", variantId, subscriptionId }))
+        break
+      }
+
+      // Upsert subscription row, then update tier/period.
+      await getOrCreateSubscription(sql, userId)
+      const periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      const storageLimit = TIERS[kind].storageLimitBytes
+      await sql`
+        UPDATE subscriptions
+        SET tier = ${kind}, status = 'active',
+            storage_limit_bytes = ${storageLimit},
+            current_period_start = NOW(),
+            current_period_end = ${periodEnd},
+            updated_at = NOW()
+        WHERE user_id = ${userId}
+      `
+      console.log(JSON.stringify({ ts, event: "ls_subscription_activated", userId, tier: kind, subscriptionId }))
       break
     }
 
     case "subscription_payment_success": {
-      const email = attrs.user_email ?? ""
-      const total = attrs.subtotal ?? 0
-      console.log(JSON.stringify({
-        ts: new Date().toISOString(),
-        event: "ls_subscription_payment",
+      const email = (attrs.user_email ?? "") || null
+      const subtotal = Number(attrs.subtotal ?? 0)  // cents
+      const subscriptionId = String(
+        payload.data?.relationships?.subscription?.data?.id ?? payload.data?.id ?? "",
+      )
+      const invoiceId = String(payload.data?.id ?? "")
+      const customDataUserId = (customData.user_id as string | undefined) ?? null
+
+      const userId = await matchSupporter(sql, { email, customDataUserId })
+      const tokens = tokensFromCents(subtotal)
+
+      const txId = await recordTransaction(sql, {
+        userId,
         email,
-        total,
-        subscriptionId: payload.data?.id,
-      }))
-      // TODO: credit tokens for monthly payment
+        type: "subscription_payment",
+        amountTokens: tokens,
+        amountUsdCents: subtotal,
+        sourceType: "lemonsqueezy_subscription",
+        sourceId: `payment:${invoiceId}`,
+        metadata: { subscriptionId, customData },
+      })
+
+      if (!txId) {
+        console.log(JSON.stringify({ ts, event: "ls_subscription_payment_duplicate", invoiceId }))
+        break
+      }
+
+      if (!userId) {
+        console.log(JSON.stringify({ ts, event: "ls_subscription_payment_unmatched", email, invoiceId }))
+        break
+      }
+
+      // Extend period by 30 days. GREATEST handles expired subs.
+      await sql`
+        UPDATE subscriptions
+        SET current_period_end = GREATEST(current_period_end, NOW()) + INTERVAL '30 days',
+            status = 'active',
+            updated_at = NOW()
+        WHERE user_id = ${userId}
+      `
+
+      // D-58: token-paid subs do NOT generate tokens. All LS payments
+      // are USD-paid in W1, so crediting is correct here. When internal
+      // token-paid subs land, gate this on the payment source.
+      if (tokens > 0) {
+        await creditTokens(sql, userId, tokens)
+      }
+
+      console.log(JSON.stringify({ ts, event: "ls_subscription_payment_credited", userId, tokens, subscriptionId }))
       break
     }
 
