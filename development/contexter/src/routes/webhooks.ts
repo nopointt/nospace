@@ -16,6 +16,7 @@ import {
   recordTransaction,
   creditTokens,
   creditTokensWithMultiplier,
+  creditTokensWithQuarantineCheck,
 } from "../services/supporters"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis; requestId: string } }
@@ -178,8 +179,20 @@ webhooks.post("/lemonsqueezy", async (c) => {
       }
 
       if (userId) {
-        await creditTokens(sql, userId, tokens)
-        console.log(JSON.stringify({ ts, event: "ls_supporter_credited", userId, tokens, orderId }))
+        // W2-07: intake routes new supporters through the quarantine
+        // check — when there are already 100 active/warning members,
+        // the new row lands in status='quarantined' and waits for the
+        // weekly ranking sweep to (maybe) promote it.
+        const result = await creditTokensWithQuarantineCheck(sql, userId, tokens)
+        console.log(JSON.stringify({
+          ts,
+          event: "ls_supporter_credited",
+          userId,
+          tokens,
+          orderId,
+          supporterStatus: result.status,
+          created: result.created,
+        }))
       } else {
         console.log(JSON.stringify({ ts, event: "ls_supporter_unmatched", email, tokens, orderId }))
       }
