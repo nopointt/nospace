@@ -188,6 +188,33 @@ export async function matchEmailToUser(
 }
 
 /**
+ * Match a LemonSqueezy webhook to a user per D-AUTO-04.
+ *
+ * Order:
+ *  1. custom_data.user_id (logged-in checkout) — validated against users table
+ *  2. case-insensitive email lookup
+ *  3. null (unmatched — caller must queue tx with user_id NULL)
+ *
+ * Never creates a placeholder user. Safe for webhook idempotency.
+ */
+export async function matchSupporter(
+  sql: Sql,
+  opts: { email: string | null; customDataUserId: string | null },
+): Promise<string | null> {
+  if (opts.customDataUserId) {
+    const byId = await sql<{ id: string }[]>`
+      SELECT id FROM users WHERE id = ${opts.customDataUserId} LIMIT 1
+    `
+    const first = byId[0]
+    if (first) return first.id
+  }
+  if (opts.email) {
+    return matchEmailToUser(sql, opts.email)
+  }
+  return null
+}
+
+/**
  * Reclaim queued unmatched transactions for an email on user registration.
  *
  * 1. Finds all supporter_transactions rows with user_id IS NULL matching the
