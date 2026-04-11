@@ -716,6 +716,8 @@ export const en: Record<string, string> = {
   "supporters.status.freezeErrorAnnual": "Freeze already used this year.",
   "supporters.status.freezeErrorGeneric": "Failed to activate freeze. Please try again.",
 
+  "supporters.nav.badge": "Supporter",
+
   "supporters.tasks.label": "TASKS",
   "supporters.tasks.title": "Earn tokens beyond payments.",
   "supporters.tasks.sub": "Complete tasks to earn bonus tokens and climb the leaderboard faster.",

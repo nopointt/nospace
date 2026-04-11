@@ -713,6 +713,8 @@ export const ru: Record<string, string> = {
   "supporters.status.freezeErrorAnnual": "Заморозка уже использована в этом году.",
   "supporters.status.freezeErrorGeneric": "Не удалось активировать заморозку. Попробуйте ещё раз.",
 
+  "supporters.nav.badge": "Сторонник",
+
   "supporters.tasks.label": "ЗАДАНИЯ",
   "supporters.tasks.title": "Зарабатывай токены сверх платежей.",
   "supporters.tasks.sub": "Выполняй задания, чтобы получать бонусные токены и подниматься в рейтинге быстрее.",
