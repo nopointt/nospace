@@ -1,7 +1,9 @@
 import { Queue, Worker, type Job } from "bullmq"
 import type { Sql } from "postgres"
 import { runDriftCheck } from "../services/evaluation/drift"
+import { runQuarterlyRevShare } from "../services/supporters-revshare"
 import { runSupportersRanking } from "../services/supporters-ranking"
+import type { Env } from "../types/env"
 
 // F-013: maintenance queue — separate from "pipeline" to avoid concurrency interference
 
@@ -26,7 +28,7 @@ export function getMaintenanceQueue(redisUrl: string): Queue {
  * Start the maintenance worker and schedule daily 02:00 UTC retention job.
  * Idempotent — safe to call on every startup (BullMQ deduplicates repeat jobs by key).
  */
-export function startMaintenanceWorker(redisUrl: string, sql: Sql): Worker {
+export function startMaintenanceWorker(redisUrl: string, sql: Sql, env: Env): Worker {
   const queue = getMaintenanceQueue(redisUrl)
 
   // Schedule daily retention job at 02:00 UTC
@@ -57,6 +59,17 @@ export function startMaintenanceWorker(redisUrl: string, sql: Sql): Worker {
     console.error("Failed to schedule weekly-supporters-ranking job:", err instanceof Error ? err.message : String(err))
   )
 
+  // CTX-12 W4-05: Schedule quarterly rev share at 05:00 UTC on the first day
+  // of January / April / July / October. MRR gate + idempotent source_id
+  // protect against early or duplicate firings.
+  queue.add(
+    "quarterly-revshare",
+    {},
+    { repeat: { pattern: "0 5 1 1,4,7,10 *" }, jobId: "quarterly-revshare-cron" }
+  ).catch((err) =>
+    console.error("Failed to schedule quarterly-revshare job:", err instanceof Error ? err.message : String(err))
+  )
+
   const worker = new Worker<Record<string, never>>(
     MAINTENANCE_QUEUE_NAME,
     async (job: Job) => {
@@ -66,6 +79,10 @@ export function startMaintenanceWorker(redisUrl: string, sql: Sql): Worker {
       }
       if (job.name === "weekly-supporters-ranking") {
         await runSupportersRanking(sql)
+        return
+      }
+      if (job.name === "quarterly-revshare") {
+        await runQuarterlyRevShare(sql, env)
         return
       }
       await runDailyRetention(sql)

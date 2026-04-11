@@ -286,7 +286,7 @@ try {
 // F-013: start maintenance worker (retention cron)
 let maintenanceWorker: ReturnType<typeof startMaintenanceWorker> | null = null
 try {
-  maintenanceWorker = startMaintenanceWorker(process.env.REDIS_URL!, sql)
+  maintenanceWorker = startMaintenanceWorker(process.env.REDIS_URL!, sql, env)
   console.log("Maintenance worker started")
 } catch (e) {
   console.error("Maintenance worker failed to start:", e instanceof Error ? e.message : String(e))
