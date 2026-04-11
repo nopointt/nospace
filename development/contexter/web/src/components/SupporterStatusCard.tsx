@@ -88,8 +88,13 @@ const SupporterCardBody: Component<{
       setShowConfirm(false)
       props.onFreezeSuccess()
     } catch (e) {
+      // BB-07: Backend returns structured error codes on 409. The
+      // api() helper throws Error(json.error), so msg is the exact
+      // error string (e.g. "already_frozen_this_year" or
+      // "already_frozen"). Replaces the fragile .includes("year")
+      // substring match.
       const msg = e instanceof Error ? e.message : ""
-      if (msg.toLowerCase().includes("year") || msg.includes("409")) {
+      if (msg === "already_frozen_this_year" || msg === "already_frozen") {
         setFreezeError(t("supporters.status.freezeErrorAnnual"))
       } else {
         setFreezeError(t("supporters.status.freezeErrorGeneric"))
