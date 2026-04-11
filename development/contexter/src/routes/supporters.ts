@@ -36,6 +36,10 @@ import {
   genId,
   type SupporterTier,
 } from "../services/supporters"
+import {
+  sendTaskApprovedEmail,
+  sendTaskRejectedEmail,
+} from "../services/notifications"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis; requestId: string } }
 
@@ -591,10 +595,29 @@ supporters.post("/admin/tasks/:id/approve", async (c) => {
     return c.json(body, result.code)
   }
 
-  // TODO W4-06: email lookup (outside tx per ADD-5) + fire-and-forget
-  //   sendTaskApprovedEmail(env, email, result.taskType, result.creditedTokens)
-  //   wrapped in try/catch that swallows. Deferred until notifications
-  //   module lands in W4-06.
+  // W4-06: email lookup outside tx (ADD-5) + fire-and-forget notification.
+  // Any failure (lookup or send) is swallowed — core response must not block
+  // on email delivery. The lookup runs with the same `sql` client (not tx).
+  try {
+    const emailRows = await sql<{ email: string | null }[]>`
+      SELECT email FROM users WHERE id = ${result.userId} LIMIT 1
+    `
+    const email = emailRows[0]?.email ?? null
+    if (email) {
+      sendTaskApprovedEmail(env, email, result.taskType, result.creditedTokens)
+        .catch((e) => console.error(JSON.stringify({
+          event: "task_approve_email_error",
+          task_id: result.taskId,
+          error: e instanceof Error ? e.message : String(e),
+        })))
+    }
+  } catch (e) {
+    console.error(JSON.stringify({
+      event: "task_approve_email_lookup_error",
+      task_id: result.taskId,
+      error: e instanceof Error ? e.message : String(e),
+    }))
+  }
 
   console.log(JSON.stringify({
     event: "task_approved",
@@ -630,8 +653,10 @@ supporters.post("/admin/tasks/:id/reject", async (c) => {
   const reasonRaw = typeof body.reason === "string" ? body.reason.trim() : ""
   const reason = reasonRaw.slice(0, 500)
 
+  // W4-06: RejectResult carries user_id + task_type so the email lookup
+  // outside the tx has enough info without re-SELECTing the task row.
   type RejectResult =
-    | { ok: true; taskId: string }
+    | { ok: true; taskId: string; userId: string; taskType: string }
     | { ok: false; code: 404 | 409; err: string }
 
   const result: RejectResult = await sql.begin(async (txRaw) => {
@@ -639,10 +664,12 @@ supporters.post("/admin/tasks/:id/reject", async (c) => {
 
     const taskRows = await tx<Array<{
       id: string
+      user_id: string
+      task_type: string
       status: string
       description: string | null
     }>>`
-      SELECT id, status, description FROM supporter_tasks
+      SELECT id, user_id, task_type, status, description FROM supporter_tasks
       WHERE id = ${taskId} FOR UPDATE
     `
     if (taskRows.length === 0) {
@@ -664,15 +691,38 @@ supporters.post("/admin/tasks/:id/reject", async (c) => {
       WHERE id = ${taskId}
     `
 
-    return { ok: true, taskId } as RejectResult
+    return {
+      ok: true,
+      taskId,
+      userId: task.user_id,
+      taskType: task.task_type,
+    } as RejectResult
   })
 
   if (!result.ok) return c.json({ error: result.err }, result.code)
 
-  // TODO W4-06: email lookup (outside tx per ADD-5) + fire-and-forget
-  //   sendTaskRejectedEmail(env, email, taskType, reason)
-  //   wrapped in try/catch that swallows. Deferred until notifications
-  //   module lands in W4-06.
+  // W4-06: email lookup outside tx (ADD-5) + fire-and-forget. Any failure
+  // is swallowed so the 200 response is never blocked on email delivery.
+  try {
+    const emailRows = await sql<{ email: string | null }[]>`
+      SELECT email FROM users WHERE id = ${result.userId} LIMIT 1
+    `
+    const email = emailRows[0]?.email ?? null
+    if (email) {
+      sendTaskRejectedEmail(env, email, result.taskType, reason)
+        .catch((e) => console.error(JSON.stringify({
+          event: "task_reject_email_error",
+          task_id: result.taskId,
+          error: e instanceof Error ? e.message : String(e),
+        })))
+    }
+  } catch (e) {
+    console.error(JSON.stringify({
+      event: "task_reject_email_lookup_error",
+      task_id: result.taskId,
+      error: e instanceof Error ? e.message : String(e),
+    }))
+  }
 
   console.log(JSON.stringify({
     event: "task_rejected",

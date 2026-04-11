@@ -5,6 +5,7 @@ import {
   recordTransaction,
   type SupporterTier,
 } from "./supporters"
+import { sendRevShareEmail } from "./notifications"
 
 // CTX-12 W4-05: quarterly rev share distribution.
 //
@@ -56,10 +57,6 @@ function quarterLabel(d: Date): string {
 }
 
 export async function runQuarterlyRevShare(sql: Sql, env: Env): Promise<void> {
-  // env is reserved for W4-06 sendRevShareEmail wiring; referenced to satisfy
-  // the no-unused-args lint without muddying the signature.
-  void env
-
   const started = Date.now()
 
   // Step 1: MRR gate — sum of last 30 days subscription payments.
@@ -174,16 +171,17 @@ export async function runQuarterlyRevShare(sql: Sql, env: Env): Promise<void> {
     await creditTokens(sql, s.user_id, shareTokens)
     distributed++
 
-    // TODO W4-06: wire fire-and-forget email notification once
-    // src/services/notifications.ts exists:
-    //   if (s.email) {
-    //     sendRevShareEmail(env, s.email, label, shareTokens, poolCents)
-    //       .catch((e) => console.error(JSON.stringify({
-    //         event: "revshare_email_failed",
-    //         user_id: s.user_id,
-    //         error: e instanceof Error ? e.message : String(e),
-    //       })))
-    //   }
+    // W4-06: fire-and-forget email notification. Best-effort; failures
+    // logged but distribution continues. Intentionally not awaited so
+    // loop throughput stays fast even for ~100 supporters.
+    if (s.email) {
+      sendRevShareEmail(env, s.email, label, shareTokens, poolCents)
+        .catch((e) => console.error(JSON.stringify({
+          event: "revshare_email_failed",
+          user_id: s.user_id,
+          error: e instanceof Error ? e.message : String(e),
+        })))
+    }
   }
 
   console.log(

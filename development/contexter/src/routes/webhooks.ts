@@ -20,6 +20,7 @@ import {
   requireActiveSupporter,
   TASK_TOKEN_AMOUNTS,
 } from "../services/supporters"
+import { sendReferralPaidEmail } from "../services/notifications"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis; requestId: string } }
 
@@ -327,6 +328,10 @@ webhooks.post("/lemonsqueezy", async (c) => {
       //      supporters upsert commits atomically with the transaction row
       // If any step fails, the whole transaction rolls back and the next
       // webhook retry sees a clean slate.
+      // W4-06: credited variant optionally carries the referrer user id
+      // that received a first-payment referral credit inside the tx. Used
+      // by the outer handler to fire-and-forget the notification AFTER the
+      // transaction commits (ADD-5 — email send must not run inside tx).
       type CapOutcome =
         | { kind: "duplicate" }
         | { kind: "capped"; already: string; requested: number }
@@ -337,10 +342,14 @@ webhooks.post("/lemonsqueezy", async (c) => {
             baseTokens: number
             multiplier: string
             creditedTokens: number
+            referrerPaidEmailTarget: string | null
           }
 
       const outcome: CapOutcome = await sql.begin(async (txRaw) => {
         const tx = txRaw as unknown as Sql
+
+        // W4-06: captured inside tx, used by outer handler after commit.
+        let referrerPaidEmailTarget: string | null = null
 
         // 1. Serialize all cap checks for this user. Advisory locks taken
         //    with pg_advisory_xact_lock are released automatically on
@@ -371,6 +380,7 @@ webhooks.post("/lemonsqueezy", async (c) => {
             baseTokens: 0,
             multiplier: "1/1",
             creditedTokens: 0,
+            referrerPaidEmailTarget: null,
           } as CapOutcome
         }
 
@@ -439,6 +449,14 @@ webhooks.post("/lemonsqueezy", async (c) => {
                 SET payment_credited_at = NOW()
                 WHERE id = ${ref.id}
               `
+              // W4-06: lookup referrer email inside tx read (cheap) so the
+              // outer handler can fire-and-forget the notification AFTER
+              // the tx commits. We only capture the address — the actual
+              // send happens outside the tx (ADD-5).
+              const refEmailRows = await tx<{ email: string | null }[]>`
+                SELECT email FROM users WHERE id = ${ref.referrer_id} LIMIT 1
+              `
+              referrerPaidEmailTarget = refEmailRows[0]?.email ?? null
               console.log(JSON.stringify({
                 event: "referral_paid_credited",
                 referral_id: ref.id,
@@ -446,8 +464,6 @@ webhooks.post("/lemonsqueezy", async (c) => {
                 referred_user_id: userId,
                 tokens: PAID_REWARD,
               }))
-              // TODO W4-06: lookup referrer email outside tx, fire-and-forget
-              //   sendReferralPaidEmail(env, referrerEmail, PAID_REWARD)
             }
           } else {
             // Referrer no longer an active supporter — mark as processed so
@@ -473,6 +489,7 @@ webhooks.post("/lemonsqueezy", async (c) => {
           baseTokens: result.baseTokens,
           multiplier: result.multiplier,
           creditedTokens: result.creditedTokens,
+          referrerPaidEmailTarget,
         } as CapOutcome
       }) as unknown as CapOutcome
 
@@ -501,6 +518,20 @@ webhooks.post("/lemonsqueezy", async (c) => {
           creditedTokens: outcome.creditedTokens,
           subscriptionId,
         }))
+
+        // W4-06: fire-and-forget referral-paid notification. Email was
+        // looked up INSIDE the tx (cheap SELECT) so this runs only when
+        // the referral credit actually landed. Never awaited — a slow
+        // Resend endpoint must not hold up the webhook response.
+        if (outcome.referrerPaidEmailTarget) {
+          const env = c.get("env")
+          const PAID_REWARD = TASK_TOKEN_AMOUNTS.referral_paid
+          sendReferralPaidEmail(env, outcome.referrerPaidEmailTarget, PAID_REWARD)
+            .catch((e) => console.error(JSON.stringify({
+              event: "referral_paid_email_error",
+              error: e instanceof Error ? e.message : String(e),
+            })))
+        }
       }
       break
     }
