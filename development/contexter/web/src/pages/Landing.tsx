@@ -68,6 +68,12 @@ const LandingNav: Component<{ onCTA: () => void }> = (props) => (
         >
           {t("landing.nav.faq")}
         </a>
+        <a
+          href="/supporters"
+          class="text-[14px] text-accent hover:text-accent-hover transition-colors duration-[80ms] font-medium"
+        >
+          {t("landing.nav.supporters")}
+        </a>
       </div>
 
       <div class="flex items-center shrink-0" style={{ gap: "8px" }}>
@@ -348,6 +354,7 @@ const PricingSection: Component<{ onCTA: () => void }> = (props) => {
         t("landing.pricing.free.f5"),
       ],
       cta: t("landing.pricing.free.cta"),
+      href: "/register",
       highlight: false,
     },
     {
@@ -364,6 +371,7 @@ const PricingSection: Component<{ onCTA: () => void }> = (props) => {
         t("landing.pricing.starter.f6"),
       ],
       cta: t("landing.pricing.starter.cta"),
+      href: "https://pay.contexter.cc/checkout/buy/104ceab1-30fc-4b30-9b96-1053e4c7e6bc",
       highlight: false,
     },
     {
@@ -381,6 +389,7 @@ const PricingSection: Component<{ onCTA: () => void }> = (props) => {
         t("landing.pricing.pro.f7"),
       ],
       cta: t("landing.pricing.pro.cta"),
+      href: "https://pay.contexter.cc/checkout/buy/08f48e34-bcb3-45a8-a49b-fca3faa15a26",
       highlight: true,
     },
   ]
@@ -438,12 +447,12 @@ const PricingSection: Component<{ onCTA: () => void }> = (props) => {
                   </For>
                 </div>
 
-                <button
-                  onClick={() => navigate("/app")}
-                  class={`mt-auto text-[14px] font-medium px-6 py-3 transition-colors duration-[80ms]${tier.highlight ? " bg-accent text-white hover:bg-accent-hover active:bg-accent-pressed" : " border border-border-subtle text-black hover:bg-bg-surface active:bg-bg-elevated"}`}
+                <a
+                  href={tier.href}
+                  class={`lemonsqueezy-button mt-auto text-[14px] font-medium px-6 py-3 text-center transition-colors duration-[80ms]${tier.highlight ? " bg-accent text-white hover:bg-accent-hover active:bg-accent-pressed" : " border border-border-subtle text-black hover:bg-bg-surface active:bg-bg-elevated"}`}
                 >
                   {tier.cta}
-                </button>
+                </a>
               </div>
             )}
           </For>
@@ -503,80 +512,53 @@ const BetaSection: Component = () => {
   )
 }
 
-// ─── Pre-launch: Support ──────────────────────────────────────────────────
+// ─── Supporters Teaser ───────────────────────────────────────────────────
 
-const SupportSection: Component<{ onCTA: () => void }> = (props) => {
-  const goalRows = [
-    { label: "Jina AI embeddings", value: "$50" },
-    { label: "Server + API", value: "$150" },
-    { label: "Banking (Stripe)", value: "$300" },
-  ]
-
-  return (
-    <section id="prelaunch-support" class="py-16 md:py-20 bg-bg-surface border-b border-border-subtle">
-      <Container>
-        {/* 2-col: offer left, payment right — no bg panels, no grid gap trick */}
-        <div class="grid grid-cols-1 md:grid-cols-[7fr_5fr]" style={{ gap: "48px" }}>
-          {/* Left: offer + CTA */}
-          <div class="flex flex-col" style={{ gap: "20px" }}>
-            <h2 class="text-[32px] font-bold text-black leading-[1.2]" style={{ "letter-spacing": "-0.04em" }}>
-              {t("landing.prelaunch.offerTitle")}
-            </h2>
-            <p class="text-[14px] text-text-secondary leading-[1.5]">
-              {t("landing.prelaunch.offerDesc")}
-            </p>
-            <p class="text-[12px] text-text-tertiary leading-[1.5]">
-              {t("landing.prelaunch.offerNote")}
-            </p>
-            <button
-              onClick={props.onCTA}
-              class="text-[14px] font-medium bg-accent text-white px-8 py-3 hover:bg-accent-hover active:bg-accent-pressed transition-colors duration-[80ms] w-fit"
-            >
-              {t("landing.prelaunch.cta")}
-            </button>
-            <p class="text-[12px] text-text-tertiary leading-[1.5]">
-              {t("landing.prelaunch.afterPay")}
-            </p>
+const SupportersTeaser: Component = () => (
+  <section id="supporters" class="py-16 md:py-20 bg-bg-surface border-b border-border-subtle">
+    <Container>
+      <div class="grid grid-cols-1 md:grid-cols-[7fr_5fr]" style={{ gap: "48px" }}>
+        <div class="flex flex-col" style={{ gap: "20px" }}>
+          <p class="text-[12px] uppercase tracking-[0.15em] text-accent font-medium">
+            {t("landing.supporters.label")}
+          </p>
+          <h2 class="text-[32px] font-bold text-black leading-[1.2]" style={{ "letter-spacing": "-0.04em" }}>
+            {t("landing.supporters.title")}
+          </h2>
+          <p class="text-[14px] text-text-secondary leading-[1.5] max-w-[60ch]">
+            {t("landing.supporters.desc")}
+          </p>
+          <a
+            href="/supporters"
+            class="text-[14px] font-medium bg-accent text-white px-8 py-3 hover:bg-accent-hover active:bg-accent-pressed transition-colors duration-[80ms] w-fit"
+          >
+            {t("landing.supporters.cta")}
+          </a>
+        </div>
+        <div class="flex flex-col justify-center" style={{ gap: "16px" }}>
+          <div class="border border-border-default p-6 bg-bg-canvas">
+            <span class="text-[12px] uppercase tracking-[0.12em] text-text-tertiary font-medium">{t("landing.supporters.spots")}</span>
+            <p class="text-[40px] font-bold text-black font-mono leading-none mt-2" style={{ "letter-spacing": "-0.04em" }}>8 / 100</p>
           </div>
-
-          {/* Right: how to pay + $500 goal */}
-          <div class="flex flex-col" style={{ gap: "24px" }}>
-            {/* How to pay */}
-            <div class="flex flex-col" style={{ gap: "8px" }}>
-              <span class="text-[10px] font-medium uppercase tracking-[0.04em] text-accent">
-                {t("landing.prelaunch.payTitle")}
-              </span>
-              <p class="text-[12px] text-text-secondary leading-[1.5]">
-                {t("landing.prelaunch.payDesc")}
-              </p>
+          <div class="flex flex-col" style={{ gap: "8px" }}>
+            <div class="flex items-start" style={{ gap: "8px" }}>
+              <span class="text-[12px] font-bold text-accent shrink-0 leading-[1.5]">—</span>
+              <span class="text-[12px] text-text-secondary leading-[1.5]">{t("landing.supporters.perk1")}</span>
             </div>
-
-            {/* $500 breakdown */}
-            <div class="flex flex-col border-t border-border-default pt-6" style={{ gap: "8px" }}>
-              <span class="text-[10px] font-medium uppercase tracking-[0.04em] text-text-tertiary">
-                {t("landing.prelaunch.goalTitle")}
-              </span>
-              <div class="flex flex-col">
-                <For each={goalRows}>
-                  {(row) => (
-                    <div class="flex justify-between items-baseline py-1.5 border-b border-border-subtle last:border-b-0">
-                      <span class="text-[12px] text-text-secondary">{row.label}</span>
-                      <span class="text-[12px] font-bold text-text-primary font-mono">{row.value}</span>
-                    </div>
-                  )}
-                </For>
-              </div>
-              <div class="flex justify-between items-baseline mt-1 border-t border-border-default pt-2">
-                <span class="text-[10px] font-medium text-text-secondary uppercase tracking-[0.04em]">TOTAL</span>
-                <span class="text-[16px] font-bold text-text-primary font-mono">$500</span>
-              </div>
+            <div class="flex items-start" style={{ gap: "8px" }}>
+              <span class="text-[12px] font-bold text-accent shrink-0 leading-[1.5]">—</span>
+              <span class="text-[12px] text-text-secondary leading-[1.5]">{t("landing.supporters.perk2")}</span>
+            </div>
+            <div class="flex items-start" style={{ gap: "8px" }}>
+              <span class="text-[12px] font-bold text-accent shrink-0 leading-[1.5]">—</span>
+              <span class="text-[12px] text-text-secondary leading-[1.5]">{t("landing.supporters.perk3")}</span>
             </div>
           </div>
         </div>
-      </Container>
-    </section>
-  )
-}
+      </div>
+    </Container>
+  </section>
+)
 
 // ─── Before / After ───────────────────────────────────────────────────────
 
@@ -867,13 +849,13 @@ const Footer: Component = () => {
             <p class="text-xs text-text-tertiary">
               One memory. Every AI.
             </p>
-            <p class="text-[12px] text-text-secondary mt-4">
+            <p class="text-[12px] text-text-tertiary mt-4">
               © 2026 Contexter
             </p>
           </div>
 
           <div class="md:col-span-4 flex flex-col" style={{ gap: "12px" }}>
-            <span class="text-xs uppercase tracking-[0.12em] text-text-secondary font-medium">
+            <span class="text-xs uppercase tracking-[0.12em] text-white font-medium">
               {t("landing.footer.product")}
             </span>
             <For each={footerProductLinks()}>
@@ -889,7 +871,7 @@ const Footer: Component = () => {
           </div>
 
           <div class="md:col-span-4 flex flex-col" style={{ gap: "12px" }}>
-            <span class="text-xs uppercase tracking-[0.12em] text-text-secondary font-medium">
+            <span class="text-xs uppercase tracking-[0.12em] text-white font-medium">
               {t("landing.footer.company")}
             </span>
             <For each={footerCompanyLinks()}>
@@ -978,13 +960,7 @@ const Landing: Component = () => {
     }
   }
 
-  const handleSupport = () => {
-    if (isAuthenticated()) {
-      navigate("/app#preorder")
-    } else {
-      setAuthOpen(true)
-    }
-  }
+
 
   return (
     <div
@@ -1007,7 +983,7 @@ const Landing: Component = () => {
       <PricingSection onCTA={handleCTA} />
 
       <BetaSection />
-      <SupportSection onCTA={handleSupport} />
+      <SupportersTeaser />
 
       <RoadmapSection />
 

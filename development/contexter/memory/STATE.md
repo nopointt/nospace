@@ -2,9 +2,9 @@
 
 ## Position
 - **Phase:** GTM Launch (CTX-10) — 100 paying supporters by April 8
-- **Status:** LemonSqueezy APPROVED. ChatGPT MCP compat deployed (/mcp + CORS + tool annotations). OpenAI App Directory draft saved (needs $5 for identity verification). Alpha text formats in progress.
-- **Last session:** 2026-04-07 (Axis, session 232 — LemonSqueezy approved, ChatGPT /mcp endpoint, OpenAI App Directory submission, alpha format restriction)
-- **Sessions total:** 232
+- **Status:** LemonSqueezy LIVE (store verified, 3 products, webhook, custom domain pay.contexter.cc). Alpha text-only (308 formats). Pricing: storage-only (1/10/100 GB). Supporters page live. First revenue: $1.16. Contrast audit complete (WCAG AA).
+- **Last session:** 2026-04-11 (Axis, session 236 — text formats, pricing tiers, supporters program, LemonSqueezy full setup, contrast audit, product media, 10 deploys)
+- **Sessions total:** 236
 
 ## Key Completions
 - i18n: EN/RU toggle, 500+ translation keys, all 24 pages/components
@@ -25,6 +25,18 @@
 - ChatGPT MCP compat: /mcp endpoint + CORS + 15 tool annotations deployed
 - OpenAI App Directory: draft complete (app info, MCP server, testing, screenshots), domain verified. Pending: $5 individual verification.
 - $300 invested in project total
+- Alpha text-only: 308 formats (web/src/lib/formats.ts), binary deferred
+- Pricing: storage-only Free 1GB / Starter $9 10GB / Pro $29 100GB, unlimited docs & searches
+- Supporters page: /supporters live, 8 sections, 120+ i18n keys, leaderboard with 8 demo users
+- Supporters program spec: 100 spots, tokens, 1% rev share, Diamond/Gold/Silver/Bronze
+- LemonSqueezy LIVE: store verified, 3 products (Supporter/Starter/Pro), webhook handler deployed
+- Custom domain: pay.contexter.cc (A record → 3.33.255.208, SSL active)
+- First revenue: $1.16 supporter entry (2026-04-11), webhook confirmed
+- Contrast audit: text-tertiary #808080→#767676 (WCAG AA), 33 violations fixed
+- Product media: gtm_contexter.pen, 6 frames, exported PNG
+- DEEP research: supporters (airdrops, loyalty programs, 40+ sources) + LemonSqueezy (docs, API, webhooks)
+- Deploy script: curl -sf bug fixed, webhook route /webhooks→/api/webhooks
+- AI'preneurs 2026: passed stage 1, diagnostic interview ~April 20
 
 ## Active Decisions
 - D-01 through D-25: unchanged from previous
@@ -48,9 +60,29 @@
 - D-43: $300 invested in project (infrastructure + services)
 - D-44: ChatGPT MCP compat: /mcp route + CORS (chatgpt.com, chat.openai.com) + 15 tool annotations. Deployed.
 - D-45: OpenAI App Directory: draft submitted, domain verified. Needs $5 individual verification to complete.
-- D-46: Alpha mode — text-only formats (~55+). No Docling/Whisper/ffmpeg. Frontend restriction only, backend untouched. Full format support post-alpha.
-- D-47: Pricing tiers need review — 1GB Starter too small. Deferred to next session.
-- D-48: Pro Launch Special = single payment variants ($10/$30/$60/$120) for 1/3/6/12 months of Pro at launch price. One-time offer.
+- D-46: Alpha mode — 308 text-only formats. No Docling/Whisper/ffmpeg. Frontend restriction only, backend untouched.
+- D-47: ~~Pricing tiers need review~~ → RESOLVED: storage-only (1/10/100 GB), unlimited docs & searches.
+- D-48: ~~Pro Launch Special~~ → REPLACED by Supporters program (D-51).
+- D-49: 308 text formats registry in web/src/lib/formats.ts (14 categories)
+- D-50: Pricing = storage-only: Free 1GB / Starter $9 10GB / Pro $29 100GB
+- D-51: Supporters program — 100 spots, tokens ($1=1tok), 1% rev share quarterly, Diamond/Gold/Silver/Bronze
+- D-52: Accelerating earn rates — Diamond 2x, Gold 1.5x, Silver 1.25x, Bronze 1x
+- D-53: Soft demotion — 30-day warning → Bronze → 30 days → exit
+- D-54: Task cap — max 50 tokens/month from tasks, human review
+- D-55: Rev share activates at $10K/month revenue, paid quarterly as tokens
+- D-56: No rev share during freeze period
+- D-57: Tokens = loyalty points, non-transferable, no monetary value (ToS)
+- D-58: Token-paid subscriptions do NOT generate new tokens (anti-circular)
+- D-59: AI'preneurs 2026 Astana Hub — passed stage 1, diagnostic ~April 20
+- D-60: LemonSqueezy store = contexter.lemonsqueezy.com, identity verified, Active
+- D-61: Store currency USD, contact nopoint@contexter.cc
+- D-62: 3 LS products: Supporter (PWYW $10+, var 1516645), Starter ($9/mo, var 1516676), Pro ($29/mo, var 1516706)
+- D-63: LS API key + webhook secret saved to ~/.tLOS/
+- D-64: Product media v2 — large text, Bauhaus, designed in Pencil
+- D-65: text-tertiary #808080→#767676 globally (WCAG AA 4.54:1)
+- D-66: text-disabled NEVER for informational text, off-scale sizes (11/13/15px) eliminated
+- D-67: Custom domain pay.contexter.cc → A record 3.33.255.208
+- D-68: Webhook route /webhooks → /api/webhooks
 
 ## Blockers
 - Copy audit not applied — jargon kills non-tech conversion (CTX-10 W1-01)
@@ -59,8 +91,12 @@
 - Perplexity MCP URL still on old workers.dev (needs same fix as Claude.ai)
 - Reddit account u/Cute_Baseball2875: 7 months old, karma=1, 0 posts/comments. Needs warmup (50-100 karma in r/ChatGPT, r/ClaudeAI, r/artificial) before launch posts.
 - OpenAI App Directory: needs $5 for individual verification (draft saved)
-- LemonSqueezy billing integration not yet configured (store + checkout + webhook)
+- ~~LemonSqueezy billing integration not yet configured~~ → RESOLVED 2026-04-11 (store, products, webhook, custom domain, live payment tested)
 - Solo founder bandwidth
+- CTX-12: Backend supporters system (DB, tokens, ranking cron, user matching)
+- ToS: loyalty points / tokens clause needed before public launch
+- Deploy script audit (SCP works but docker doesn't always rebuild)
+- Delete unverified LS store #333207 (email sent to hello@lemonsqueezy.com)
 
 ## Deferred
 - YouTube + Instagram download (roadmap: after launch)
@@ -70,10 +106,12 @@
 - Full analytics suite (CTX-11)
 
 ## Metrics
-- Sessions: 231
+- Sessions: 236
 - Real users: 2 (nopointttt@gmail.com, danchoachona@gmail.com)
 - Documents: 26, Chunks: 519
 - MCP search p50: 110ms
+- Revenue: $1.16 (1 supporter entry, 2026-04-11)
 - GitHub: github.com/nopointt/contexter
-- Deployed: contexter.cc + api.contexter.cc
+- Deployed: contexter.cc + api.contexter.cc + pay.contexter.cc
 - Server: Hetzner CAX21 (Helsinki)
+- LemonSqueezy: contexter.lemonsqueezy.com (store #309186)

@@ -390,7 +390,7 @@ const Privacy: Component = () => {
           <div class="flex flex-col md:flex-row items-start md:items-center justify-between" style={{ gap: "16px" }}>
             <div class="flex items-center" style={{ gap: "16px" }}>
               <Logo size="md" variant="inverted" />
-              <span class="text-[12px] text-text-secondary">
+              <span class="text-[12px] text-text-tertiary">
                 © 2026 Contexter
               </span>
             </div>

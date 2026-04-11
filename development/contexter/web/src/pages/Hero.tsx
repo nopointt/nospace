@@ -9,6 +9,7 @@ import {
 } from "solid-js"
 import Nav from "../components/Nav"
 import { t } from "../lib/i18n"
+import { SUPPORTED_EXTENSIONS } from "../lib/formats"
 import Button from "../components/Button"
 import Badge from "../components/Badge"
 import PipelineIndicator, { getTimeEstimate } from "../components/PipelineIndicator"
@@ -51,28 +52,7 @@ import type { PipelineStage, StageStatus } from "../components/PipelineIndicator
 // --- Constants ---
 
 const POLL_INTERVAL = 2000
-// Alpha: text-only formats (TextParser, zero external deps)
-// Post-alpha formats (pdf, docx, audio, video, images) re-enabled after alpha.
-const SUPPORTED_EXTENSIONS = new Set([
-  // Documents
-  "txt", "md", "csv", "json", "xml", "odt", "html",
-  "yaml", "yml", "toml", "tsv", "log", "rst", "tex", "ini", "cfg",
-  // Environment / config
-  "env", "conf", "hcl", "tf",
-  // Subtitles
-  "srt", "vtt",
-  // Data
-  "sql", "ndjson", "jsonl", "geojson",
-  // Source code
-  "py", "js", "ts", "jsx", "tsx",
-  "go", "rs", "java", "c", "cpp", "h", "hpp",
-  "cs", "rb", "php", "swift", "kt", "scala",
-  "lua", "r", "pl", "sh", "bash", "zsh", "bat", "ps1",
-  // Named configs (no extension — matched by extension check)
-  "dockerfile", "makefile", "gitignore", "dockerignore", "editorconfig", "nginx",
-  // Markup
-  "adoc", "org", "wiki", "textile",
-])
+// SUPPORTED_EXTENSIONS imported from ../lib/formats.ts (308 text formats)
 const STAGE_NAMES = ["parse", "chunk", "embed", "index"] as const
 const YOUTUBE_REGEX = /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)/
 const URL_REGEX = /^https?:\/\/.+/
@@ -688,159 +668,44 @@ const Hero: Component = () => {
         </section>
       </Show>
 
-      {/* 5. PRE-ORDER */}
+      {/* 5. SUPPORTERS CTA */}
       <section id="preorder" class="bg-bg-surface border-t border-border-subtle px-4 py-16 md:px-16">
-        {/* Header */}
-        <div class="flex flex-col items-center text-center mx-auto" style={{ "max-width": "720px" }}>
-          <span class="text-[10px] font-medium text-accent uppercase tracking-[0.04em]">
+        <div class="flex flex-col items-center text-center mx-auto" style={{ "max-width": "720px", gap: "20px" }}>
+          <span class="text-[12px] uppercase tracking-[0.15em] text-accent font-medium">
             {t("preorder.betaNote")}
           </span>
           <h2
-            class="text-[32px] font-bold text-text-primary leading-[1.2] mt-2"
+            class="text-[32px] font-bold text-text-primary leading-[1.2]"
             style={{ "letter-spacing": "-0.03em" }}
           >
             {t("preorder.title")}
           </h2>
-          <p
-            class="text-[14px] text-text-secondary leading-[1.5] mt-3 mx-auto"
-            style={{ "max-width": "480px" }}
-          >
+          <p class="text-[14px] text-text-secondary leading-[1.5] max-w-[480px]">
             {t("preorder.subtitle")}
           </p>
-        </div>
-
-        {/* Benefits Bar */}
-        <div class="flex flex-wrap justify-center items-center mt-8" style={{ gap: "12px" }}>
-          <span class="bg-bg-elevated px-3 py-1 inline-flex items-center" style={{ gap: "8px" }}>
-            <span class="text-[12px] font-bold text-accent">—</span>
-            <span class="text-[12px] text-text-secondary">{t("preorder.benefit1")}</span>
-          </span>
-          <span class="bg-bg-elevated px-3 py-1 inline-flex items-center" style={{ gap: "8px" }}>
-            <span class="text-[12px] font-bold text-accent">—</span>
-            <span class="text-[12px] text-text-secondary">{t("preorder.benefit2")}</span>
-          </span>
-          <span class="bg-bg-elevated px-3 py-1 inline-flex items-center" style={{ gap: "8px" }}>
-            <span class="text-[12px] font-bold text-accent">—</span>
-            <span class="text-[12px] text-text-secondary">{t("preorder.benefit3")}</span>
-          </span>
-        </div>
-
-        {/* Payment Block — Crypto */}
-        <div
-          class="border border-border-default bg-bg-canvas p-6 flex flex-col mt-8 mx-auto w-full"
-          style={{ gap: "16px", "max-width": "720px" }}
-        >
-          <span class="text-[10px] font-medium text-accent uppercase tracking-[0.04em]">
-            {t("preorder.crypto")}
-          </span>
-          <p class="text-[12px] text-text-tertiary leading-[1.5]">
-            {t("preorder.cryptoDesc")}
-          </p>
-          <div class="flex items-center" style={{ gap: "8px" }}>
-            <div class="flex items-stretch border border-border-default" style={{ height: "40px" }}>
-              <span class="px-3 text-[14px] text-text-tertiary flex items-center border-r border-border-default">
-                $
-              </span>
-              <input
-                type="number"
-                min="10"
-                step="10"
-                value={supportAmount()}
-                onInput={(e) => setSupportAmount(Math.max(10, Number((e.target as HTMLInputElement).value)))}
-                class="w-20 px-3 font-mono text-[16px] text-text-primary bg-transparent border-none outline-hidden"
-              />
-            </div>
-            <button
-              onClick={handleSupportPay}
-              disabled={supportLoading()}
-              class="bg-accent text-white text-[14px] font-medium px-6 border border-accent cursor-pointer disabled:opacity-50"
-              style={{ height: "40px" }}
-            >
-              {supportLoading() ? "..." : t("preorder.crypto")}
-            </button>
-            <span class="text-[12px] text-text-tertiary whitespace-nowrap">
-              = {Math.floor(supportAmount() / 10)} mo Pro
+          <div class="flex flex-wrap justify-center items-center" style={{ gap: "12px" }}>
+            <span class="bg-bg-elevated px-3 py-1 inline-flex items-center" style={{ gap: "8px" }}>
+              <span class="text-[12px] font-bold text-accent">—</span>
+              <span class="text-[12px] text-text-secondary">{t("preorder.benefit1")}</span>
+            </span>
+            <span class="bg-bg-elevated px-3 py-1 inline-flex items-center" style={{ gap: "8px" }}>
+              <span class="text-[12px] font-bold text-accent">—</span>
+              <span class="text-[12px] text-text-secondary">{t("preorder.benefit2")}</span>
+            </span>
+            <span class="bg-bg-elevated px-3 py-1 inline-flex items-center" style={{ gap: "8px" }}>
+              <span class="text-[12px] font-bold text-accent">—</span>
+              <span class="text-[12px] text-text-secondary">{t("preorder.benefit3")}</span>
             </span>
           </div>
-        </div>
-
-        {/* Payment Block — Bank transfer / Card */}
-        <div
-          class="border border-border-default bg-bg-canvas p-6 flex flex-col mx-auto w-full"
-          style={{ gap: "16px", "max-width": "720px", "margin-top": "12px" }}
-        >
-          <span class="text-[10px] font-medium text-accent uppercase tracking-[0.04em]">
-            {t("preorder.card")}
-          </span>
-          {/* Card number */}
-          <div class="flex items-center" style={{ gap: "12px" }}>
-            <span
-              class="font-mono text-[16px] font-bold text-text-primary"
-              style={{ "letter-spacing": "0.08em" }}
-            >
-              {t("preorder.cardNumber")}
-            </span>
-            <span class="text-[12px] text-text-tertiary">Visa</span>
-            <button
-              onClick={() => copyText("4405639710713882")}
-              class="border border-border-default bg-transparent text-[12px] font-medium text-text-secondary px-3 py-1 cursor-pointer hover:border-accent hover:text-accent transition-colors duration-[80ms]"
-            >
-              {t("preorder.copyNumber")}
-            </button>
-          </div>
-          {/* Wire transfer details */}
-          <div class="flex flex-col" style={{ gap: "8px" }}>
-            <div class="flex items-baseline" style={{ gap: "12px" }}>
-              <span class="text-[10px] text-text-tertiary uppercase tracking-[0.04em]" style={{ width: "80px", "flex-shrink": "0" }}>Beneficiary</span>
-              <span class="font-mono text-[12px] text-text-primary">{t("preorder.beneficiary")}</span>
-            </div>
-            <div class="flex items-baseline" style={{ gap: "12px" }}>
-              <span class="text-[10px] text-text-tertiary uppercase tracking-[0.04em]" style={{ width: "80px", "flex-shrink": "0" }}>Bank</span>
-              <span class="text-[12px] text-text-primary">{t("preorder.cardBank")}</span>
-            </div>
-            <div class="flex items-baseline" style={{ gap: "12px" }}>
-              <span class="text-[10px] text-text-tertiary uppercase tracking-[0.04em]" style={{ width: "80px", "flex-shrink": "0" }}>SWIFT</span>
-              <span class="font-mono text-[12px] text-text-primary">{t("preorder.swift")}</span>
-            </div>
-            <div class="flex items-baseline" style={{ gap: "12px" }}>
-              <span class="text-[10px] text-text-tertiary uppercase tracking-[0.04em]" style={{ width: "80px", "flex-shrink": "0" }}>IBAN (USD)</span>
-              <span class="font-mono text-[12px] text-text-primary">{t("preorder.ibanUsd")}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* After-payment Note */}
-        <p
-          class="text-[12px] text-text-tertiary leading-[1.5] mt-4 mx-auto"
-          style={{ "max-width": "720px" }}
-        >
-          {t("preorder.afterPayment", { email: "nopoint@contexter.cc" })}
-        </p>
-
-        {/* Why $500 Disclosure */}
-        <div
-          class="border-t border-border-subtle pt-6 mt-8 mx-auto"
-          style={{ "max-width": "720px" }}
-        >
-          <p class="text-[10px] font-medium text-text-tertiary uppercase tracking-[0.04em] mb-3">
-            {t("preorder.whyTitle")}
-          </p>
-          <div class="flex justify-between items-baseline py-2 border-b border-border-subtle">
-            <span class="text-[12px] text-text-secondary">Jina AI embeddings</span>
-            <span class="text-[12px] font-bold text-text-primary">$50</span>
-          </div>
-          <div class="flex justify-between items-baseline py-2 border-b border-border-subtle">
-            <span class="text-[12px] text-text-secondary">Server + API credits</span>
-            <span class="text-[12px] font-bold text-text-primary">$150</span>
-          </div>
-          <div class="flex justify-between items-baseline py-2">
-            <span class="text-[12px] text-text-secondary">Banking setup (Stripe)</span>
-            <span class="text-[12px] font-bold text-text-primary">$300</span>
-          </div>
-          <div class="flex justify-between items-baseline mt-2 border-t border-border-default pt-2">
-            <span class="text-[10px] font-medium text-text-secondary uppercase tracking-[0.04em]">TOTAL</span>
-            <span class="text-[14px] font-bold text-text-primary">$500</span>
-          </div>
+          <a
+            href="https://pay.contexter.cc/checkout/buy/40f7293e-52e1-4237-9572-dd82c89588ed"
+            class="lemonsqueezy-button bg-accent text-white text-[14px] font-medium px-8 py-3 hover:bg-accent-hover active:bg-accent-pressed transition-colors duration-[80ms]"
+          >
+            {t("preorder.from")} — {t("preorder.title")}
+          </a>
+          <a href="/supporters" class="text-[12px] text-accent hover:underline">
+            {t("landing.nav.supporters")}
+          </a>
         </div>
       </section>
 

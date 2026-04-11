@@ -83,7 +83,7 @@ sleep 8
 log "Step 5: Verifying production"
 
 # Check landing page
-HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" "$PROD_URL" 2>/dev/null || echo "000")
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$PROD_URL" 2>/dev/null) || true
 if [[ "$HTTP_CODE" == "200" ]]; then
   log "  Landing page: 200 OK"
 else
@@ -91,15 +91,15 @@ else
 fi
 
 # Check privacy page
-HTTP_CODE_PRIV=$(curl -sf -o /dev/null -w "%{http_code}" "$PROD_URL/privacy" 2>/dev/null || echo "000")
+HTTP_CODE_PRIV=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$PROD_URL/privacy" 2>/dev/null) || true
 log "  Privacy page: $HTTP_CODE_PRIV"
 
 # Check terms page
-HTTP_CODE_TERMS=$(curl -sf -o /dev/null -w "%{http_code}" "$PROD_URL/terms" 2>/dev/null || echo "000")
+HTTP_CODE_TERMS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$PROD_URL/terms" 2>/dev/null) || true
 log "  Terms page: $HTTP_CODE_TERMS"
 
 # Verify JS content actually updated (check index.html hash changed)
-PROD_INDEX_HASH=$(curl -s "$PROD_URL/" 2>/dev/null | grep -o 'assets/index-[^"]*\.js' || echo "unknown")
+PROD_INDEX_HASH=$(curl -s --max-time 10 "$PROD_URL/" 2>/dev/null | grep -o 'assets/index-[^"]*\.js' || echo "unknown")
 LOCAL_INDEX_HASH=$(grep -o 'assets/index-[^"]*\.js' "$WEB_DIR/dist/index.html" 2>/dev/null || echo "local-unknown")
 if [[ "$PROD_INDEX_HASH" == "$LOCAL_INDEX_HASH" ]]; then
   log "  Content verified: $PROD_INDEX_HASH"
@@ -113,7 +113,7 @@ else
       -H "Content-Type: application/json" \
       -d '{"purge_everything":true}' > /dev/null 2>&1
     sleep 10
-    PROD_INDEX_HASH=$(curl -s "$PROD_URL/" 2>/dev/null | grep -o 'assets/index-[^"]*\.js' || echo "unknown")
+    PROD_INDEX_HASH=$(curl -s --max-time 10 "$PROD_URL/" 2>/dev/null | grep -o 'assets/index-[^"]*\.js' || echo "unknown")
     if [[ "$PROD_INDEX_HASH" == "$LOCAL_INDEX_HASH" ]]; then
       log "  Content verified after retry: $PROD_INDEX_HASH"
     else

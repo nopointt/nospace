@@ -35,7 +35,7 @@ export async function createInvoice(
       price_currency: "usd",
       order_id: orderId,
       order_description: `Contexter ${tierDef.name} — 1 month`,
-      ipn_callback_url: `${process.env.BASE_URL ?? "https://api.contexter.cc"}/webhooks/nowpayments`,
+      ipn_callback_url: `${process.env.BASE_URL ?? "https://api.contexter.cc"}/api/webhooks/nowpayments`,
       success_url: "https://contexter.cc/app?payment=success",
       cancel_url: "https://contexter.cc/app?payment=cancelled",
       is_fee_paid_by_user: false,

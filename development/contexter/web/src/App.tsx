@@ -14,6 +14,7 @@ const Register = lazy(() => import("./pages/Register"))
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"))
 const ResetPassword = lazy(() => import("./pages/ResetPassword"))
 const VerifyEmail = lazy(() => import("./pages/VerifyEmail"))
+const Supporters = lazy(() => import("./pages/Supporters"))
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/verify-email" component={VerifyEmail} />
+      <Route path="/supporters" component={Supporters} />
       <Route path="*" component={() => <Navigate href="/" />} />
     </>
   )

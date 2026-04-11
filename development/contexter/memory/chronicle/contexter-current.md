@@ -861,3 +861,81 @@ Quality system created: standards.md (49 standards) + 10 reglaments + enforcemen
 - Pricing tier review
 - OpenAI $5 verification
 - Copy audit (W1-01)
+<!-- ENTRY:2026-04-11:CLOSE:236:contexter:contexter-gtm-launch [AXIS] -->
+## 2026-04-11 — session 236 CLOSE [Axis]
+
+**Decisions:**
+- D-49: Alpha = 308 text-only formats, binary deferred. Source: web/src/lib/formats.ts
+- D-50: Pricing = storage-only: Free 1GB / Starter $9 10GB / Pro $29 100GB. Unlimited docs & searches.
+- D-51: Supporters program — 100 spots, token-based ranking, 1% rev share quarterly
+- D-52: Accelerating earn rates — Diamond 2x, Gold 1.5x, Silver 1.25x, Bronze 1x
+- D-53: Soft demotion — 30-day warning, not hard cliff
+- D-54: Task cap — max 50 tokens/month from tasks
+- D-55: Rev share activates at $10K/month revenue
+- D-56: No rev share during freeze
+- D-57: Tokens = loyalty points, non-transferable, no monetary value
+- D-58: Token-paid subs don't generate tokens (anti-circular)
+- D-59: AI'preneurs 2026 — passed stage 1, diagnostic ~April 20
+- D-60: LemonSqueezy store = contexter.lemonsqueezy.com, verified, Active
+- D-61: Store currency = USD, contact = nopoint@contexter.cc
+- D-62: 3 LS products: Supporter (PWYW $10+), Starter ($9/mo), Pro ($29/mo)
+- D-63: LS API key + webhook secret in ~/.tLOS/
+- D-64: Product media v2 — large text, Bauhaus, no prices
+- D-65: text-tertiary #808080→#767676 (WCAG AA 4.54:1)
+- D-66: text-disabled NEVER for info text, off-scale sizes eliminated
+- D-67: Custom domain pay.contexter.cc → A record 3.33.255.208
+- D-68: Webhook route /webhooks → /api/webhooks (align with LS dashboard URL)
+
+**Files changed:**
+- web/src/lib/formats.ts — NEW: 308 text extensions registry
+- web/src/pages/Upload.tsx — import from formats.ts
+- web/src/pages/Hero.tsx — import formats, preorder→supporters CTA, LS checkout
+- web/src/pages/Supporters.tsx — NEW: full page, 8 sections, tooltips, leaderboard data
+- web/src/pages/Landing.tsx — pricing tiers, supporters teaser, LS checkout URLs, contrast fixes
+- web/src/pages/Privacy.tsx — footer contrast fix
+- web/src/pages/Terms.tsx — footer contrast fix
+- web/src/lib/translations/en.ts — 120+ supporter keys, pricing, format messaging, tooltips
+- web/src/lib/translations/ru.ts — same
+- web/src/index.tsx — Supporters route added
+- web/src/index.css — text-tertiary #767676
+- web/index.html — Lemon.js script
+- web/public/_headers — /supporters cache
+- ops/deploy-web.sh — curl -sf bug fix
+- src/routes/webhooks.ts — LemonSqueezy webhook handler
+- src/index.ts — webhook route /webhooks → /api/webhooks
+- src/services/billing.ts — NOWPayments callback URL updated
+- nospace/design/contexter/gtm_contexter.pen — NEW: product media
+- nospace/docs/research/contexter-supporters-deep-research.md — NEW
+- nospace/docs/research/contexter-lemonsqueezy-deep-research.md — NEW
+
+**Completed:**
+- 308 text format restriction (frontend) + deploy
+- Pricing tiers (storage-only 1/10/100 GB) + deploy
+- Deploy script bug fix (curl double-output)
+- Supporters DEEP research (40+ sources, airdrops, loyalty programs)
+- Supporters page (8 sections, 111 translation keys) + deploy
+- UX audit (11 issues fixed)
+- Abuse vector analysis (8 vectors documented)
+- Bayer contrast audit (33 findings, all fixed)
+- text-tertiary global token fix (#767676)
+- LemonSqueezy full setup (store, products, media, webhook, custom domain)
+- Live payment test ($1.16 successful, webhook received)
+- Product media v1+v2 designed in Pencil, exported as PNG
+- LS research (docs, API, webhooks, SolidJS integration)
+- Custom domain pay.contexter.cc configured + verified
+- 10 successful deployments (frontend + backend)
+- First real revenue: $1.16 from Supporter Entry
+
+**Opened:**
+- CTX-12: Backend supporters system (DB schema, tokens, ranking, user matching)
+- ToS loyalty points clause (before public launch)
+- Deploy script full audit (user requested)
+- Delete unverified LS store #333207 (email sent to LS support)
+
+**Notes:**
+- Most productive session to date — from format restriction to live payments in one session
+- Deploy script SCP works but docker doesn't always rebuild — manual SCP + rebuild needed once
+- Entry point mismatch: index.tsx is real entry, App.tsx is dead code (both have routes)
+- LS checkout uses UUID slugs, not numeric variant IDs (documentation misleading)
+- LS test mode requires separate test products, can't use live products with test cards
+- First revenue earned: $1.16 (supporter entry) — Contexter is monetizing

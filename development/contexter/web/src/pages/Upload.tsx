@@ -18,6 +18,7 @@ import { uploadText, getDocumentStatus, presignUpload, confirmUpload, uploadToR2
 import { getToken, isAuthenticated } from "../lib/store"
 import { formatSize, humanizeError } from "../lib/helpers"
 import { t } from "../lib/i18n"
+import { SUPPORTED_EXTENSIONS } from "../lib/formats"
 
 // --- Types ---
 
@@ -40,28 +41,7 @@ type BadgeVariant = "processing" | "ready" | "error" | "pending"
 // --- Constants ---
 
 const POLL_INTERVAL = 2000
-// Alpha: text-only formats (TextParser, zero external deps)
-// Post-alpha formats (pdf, docx, audio, video, images) re-enabled after alpha.
-const SUPPORTED_EXTENSIONS = new Set([
-  // Documents
-  "txt", "md", "csv", "json", "xml", "odt", "html",
-  "yaml", "yml", "toml", "tsv", "log", "rst", "tex", "ini", "cfg",
-  // Environment / config
-  "env", "conf", "hcl", "tf",
-  // Subtitles
-  "srt", "vtt",
-  // Data
-  "sql", "ndjson", "jsonl", "geojson",
-  // Source code
-  "py", "js", "ts", "jsx", "tsx",
-  "go", "rs", "java", "c", "cpp", "h", "hpp",
-  "cs", "rb", "php", "swift", "kt", "scala",
-  "lua", "r", "pl", "sh", "bash", "zsh", "bat", "ps1",
-  // Named configs (no extension — matched by extension check)
-  "dockerfile", "makefile", "gitignore", "dockerignore", "editorconfig", "nginx",
-  // Markup
-  "adoc", "org", "wiki", "textile",
-])
+// SUPPORTED_EXTENSIONS imported from ../lib/formats.ts (308 text formats)
 const STAGE_NAMES = ["parse", "chunk", "embed", "index"] as const
 const YOUTUBE_REGEX = /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)/
 const URL_REGEX = /^https?:\/\/.+/

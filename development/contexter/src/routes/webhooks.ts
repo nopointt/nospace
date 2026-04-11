@@ -1,4 +1,5 @@
 import { Hono } from "hono"
+import { createHmac } from "crypto"
 import type { Env } from "../types/env"
 import type { Sql } from "postgres"
 import type Redis from "ioredis"
@@ -81,6 +82,119 @@ webhooks.post("/nowpayments", async (c) => {
     `
   }
   // waiting, confirming, sending — intermediate statuses, no action needed
+
+  return c.json({ ok: true })
+})
+
+// LemonSqueezy webhook
+webhooks.post("/lemonsqueezy", async (c) => {
+  const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET
+  if (!secret) {
+    console.error("LEMONSQUEEZY_WEBHOOK_SECRET not configured")
+    return c.json({ error: "webhook not configured" }, 500)
+  }
+
+  const signature = c.req.header("x-signature")
+  if (!signature) {
+    return c.json({ error: "missing signature" }, 400)
+  }
+
+  // CRITICAL: use raw text for HMAC, not parsed JSON (Hono gotcha)
+  const rawBody = await c.req.text()
+
+  const hmac = createHmac("sha256", secret).update(rawBody).digest("hex")
+  if (hmac !== signature) {
+    console.error("LemonSqueezy signature verification failed", { rid: c.get("requestId") })
+    return c.json({ error: "invalid signature" }, 403)
+  }
+
+  const payload = JSON.parse(rawBody)
+  const eventName = payload.meta?.event_name as string
+  const customData = payload.meta?.custom_data ?? {}
+  const attrs = payload.data?.attributes ?? {}
+
+  console.log(JSON.stringify({
+    ts: new Date().toISOString(),
+    event: "lemonsqueezy_webhook",
+    rid: c.get("requestId"),
+    eventName,
+    customerEmail: attrs.user_email ?? attrs.customer_email ?? null,
+    productName: attrs.product_name ?? attrs.first_order_item?.product_name ?? null,
+    variantId: attrs.variant_id ?? attrs.first_order_item?.variant_id ?? null,
+    total: attrs.total ?? attrs.subtotal ?? null,
+    status: attrs.status ?? null,
+    customData,
+  }))
+
+  // Handle key events
+  switch (eventName) {
+    case "order_created": {
+      const email = attrs.user_email ?? ""
+      const total = attrs.total ?? 0
+      const variantId = attrs.first_order_item?.variant_id ?? null
+      console.log(JSON.stringify({
+        ts: new Date().toISOString(),
+        event: "ls_order_created",
+        email,
+        total,
+        variantId,
+        orderId: payload.data?.id,
+      }))
+      // TODO: match email to user, credit tokens, activate supporter status
+      break
+    }
+
+    case "subscription_created": {
+      const email = attrs.user_email ?? ""
+      const productName = attrs.product_name ?? ""
+      const status = attrs.status ?? ""
+      console.log(JSON.stringify({
+        ts: new Date().toISOString(),
+        event: "ls_subscription_created",
+        email,
+        productName,
+        status,
+        subscriptionId: payload.data?.id,
+      }))
+      // TODO: match email to user, activate subscription tier
+      break
+    }
+
+    case "subscription_payment_success": {
+      const email = attrs.user_email ?? ""
+      const total = attrs.subtotal ?? 0
+      console.log(JSON.stringify({
+        ts: new Date().toISOString(),
+        event: "ls_subscription_payment",
+        email,
+        total,
+        subscriptionId: payload.data?.id,
+      }))
+      // TODO: credit tokens for monthly payment
+      break
+    }
+
+    case "subscription_cancelled":
+    case "subscription_expired": {
+      const email = attrs.user_email ?? ""
+      console.log(JSON.stringify({
+        ts: new Date().toISOString(),
+        event: "ls_subscription_ended",
+        eventName,
+        email,
+        subscriptionId: payload.data?.id,
+      }))
+      // TODO: start 30-day warning for supporter status
+      break
+    }
+
+    default:
+      console.log(JSON.stringify({
+        ts: new Date().toISOString(),
+        event: "ls_webhook_unhandled",
+        eventName,
+      }))
+  }
 
   return c.json({ ok: true })
 })
