@@ -4,6 +4,13 @@ import type { Env } from "../types/env"
 import type { Sql } from "postgres"
 import type Redis from "ioredis"
 import { verifyIpnSignature, activateSubscription } from "../services/billing"
+import {
+  variantToKind,
+  matchSupporter,
+  tokensFromCents,
+  recordTransaction,
+  creditTokens,
+} from "../services/supporters"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis; requestId: string } }
 
@@ -112,9 +119,11 @@ webhooks.post("/lemonsqueezy", async (c) => {
   const eventName = payload.meta?.event_name as string
   const customData = payload.meta?.custom_data ?? {}
   const attrs = payload.data?.attributes ?? {}
+  const sql = c.get("sql")
+  const ts = new Date().toISOString()
 
   console.log(JSON.stringify({
-    ts: new Date().toISOString(),
+    ts,
     event: "lemonsqueezy_webhook",
     rid: c.get("requestId"),
     eventName,
@@ -129,18 +138,45 @@ webhooks.post("/lemonsqueezy", async (c) => {
   // Handle key events
   switch (eventName) {
     case "order_created": {
-      const email = attrs.user_email ?? ""
-      const total = attrs.total ?? 0
+      const email = (attrs.user_email ?? "") || null
+      const total = Number(attrs.total ?? 0)  // cents, per LS API
       const variantId = attrs.first_order_item?.variant_id ?? null
-      console.log(JSON.stringify({
-        ts: new Date().toISOString(),
-        event: "ls_order_created",
+      const orderId = String(payload.data?.id ?? "")
+      const customDataUserId = (customData.user_id as string | undefined) ?? null
+      const kind = variantToKind(variantId)
+
+      // Skip subscription variants — they arrive via subscription_created.
+      if (kind !== "supporter") {
+        console.log(JSON.stringify({ ts, event: "ls_order_not_supporter", kind, orderId }))
+        break
+      }
+
+      const userId = await matchSupporter(sql, { email, customDataUserId })
+      const tokens = tokensFromCents(total)
+
+      const txId = await recordTransaction(sql, {
+        userId,
         email,
-        total,
-        variantId,
-        orderId: payload.data?.id,
-      }))
-      // TODO: match email to user, credit tokens, activate supporter status
+        type: "purchase",
+        amountTokens: tokens,
+        amountUsdCents: total,
+        sourceType: "lemonsqueezy_order",
+        sourceId: orderId,
+        metadata: { variantId, customData },
+      })
+
+      if (!txId) {
+        // Duplicate webhook — idempotent no-op
+        console.log(JSON.stringify({ ts, event: "ls_order_duplicate", orderId }))
+        break
+      }
+
+      if (userId) {
+        await creditTokens(sql, userId, tokens)
+        console.log(JSON.stringify({ ts, event: "ls_supporter_credited", userId, tokens, orderId }))
+      } else {
+        console.log(JSON.stringify({ ts, event: "ls_supporter_unmatched", email, tokens, orderId }))
+      }
       break
     }
 
