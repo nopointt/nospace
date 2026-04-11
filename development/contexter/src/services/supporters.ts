@@ -15,6 +15,7 @@
 
 import type { Sql } from "postgres"
 import crypto from "crypto"
+import type { Env } from "../types/env"
 
 // --- Types -------------------------------------------------------------
 
@@ -194,6 +195,53 @@ export async function submitTask(
     VALUES (${id}, ${userId}, ${typedTaskType}, ${amountTokens}, 'pending', ${desc})
   `
   return { id, taskType: typedTaskType, amountTokens, status: "pending" }
+}
+
+// --- W4-02: Admin allowlist check --------------------------------------
+//
+// Reads Env.ADMIN_USER_IDS (comma-separated) and returns whether the given
+// user id is on the allowlist. D-AUTO-W4-03: nopoint is currently the sole
+// admin; this helper is cheap enough to call on every admin request (no
+// caching needed, string ops only).
+
+export function isAdmin(userId: string, env: Env): boolean {
+  const raw = env.ADMIN_USER_IDS ?? ""
+  if (!raw) return false
+  const allowlist = raw.split(",").map((s) => s.trim()).filter(Boolean)
+  return allowlist.includes(userId)
+}
+
+// --- W4-03: Monthly task cap check -------------------------------------
+//
+// Returns the current month's approved-task token total for the user and
+// whether `requestedTokens` more would stay within MONTHLY_TASK_CAP.
+//
+// Counting rules (spec §W4-03):
+//  - Only status='approved' rows count (rejected/pending do not).
+//  - Window is the current calendar month (UTC via date_trunc).
+//  - Cap is evaluated on the credit action, not the submission: users may
+//    submit many tasks in a month, admin approves up to 50 tokens worth.
+//
+// MUST be called inside a transaction that already holds
+// pg_advisory_xact_lock(hashtext('task_cap:' || userId)) to serialize
+// concurrent approvals for the same user (see ADD-2).
+
+export async function checkTaskCapForUser(
+  sql: Sql,
+  userId: string,
+  requestedTokens: number,
+): Promise<{ allowed: boolean; already: number; remaining: number; cap: number }> {
+  const rows = await sql<{ sum: string | null }[]>`
+    SELECT COALESCE(SUM(amount_tokens), 0)::text AS sum
+    FROM supporter_tasks
+    WHERE user_id = ${userId}
+      AND status = 'approved'
+      AND reviewed_at >= date_trunc('month', NOW())
+  `
+  const already = Number(rows[0]?.sum ?? "0")
+  const remaining = Math.max(0, MONTHLY_TASK_CAP - already)
+  const allowed = requestedTokens <= remaining
+  return { allowed, already, remaining, cap: MONTHLY_TASK_CAP }
 }
 
 /**

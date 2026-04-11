@@ -40,4 +40,6 @@ export interface Env {
   RESEND_API_KEY: string
   GOOGLE_CLIENT_ID: string
   GOOGLE_CLIENT_SECRET: string
+  // CTX-12 W4-02: comma-separated user IDs allowed to access admin endpoints.
+  ADMIN_USER_IDS?: string
 }

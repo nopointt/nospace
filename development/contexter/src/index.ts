@@ -113,6 +113,8 @@ const env: Env = {
   RESEND_API_KEY: process.env.RESEND_API_KEY ?? "",
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? "",
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? "",
+  // CTX-12 W4-02: admin allowlist for task review endpoints
+  ADMIN_USER_IDS: process.env.ADMIN_USER_IDS ?? "",
 }
 
 type AppEnv = { Variables: { sql: typeof sql; env: Env; redis: typeof redis; requestId: string } }
