@@ -14,8 +14,11 @@ import {
   matchSupporter,
   tokensFromCents,
   recordTransaction,
+  creditTokens,
   creditTokensWithMultiplier,
   creditTokensWithQuarantineCheck,
+  requireActiveSupporter,
+  TASK_TOKEN_AMOUNTS,
 } from "../services/supporters"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis; requestId: string } }
@@ -400,6 +403,69 @@ webhooks.post("/lemonsqueezy", async (c) => {
         // 4. Credit inside the transaction so the supporters upsert and
         //    the supporter_transactions row commit atomically.
         const result = await creditTokensWithMultiplier(tx, userId, toCredit)
+
+        // 5. W4-04: First-payment referral trigger. If this paying user was
+        //    referred by a supporter and the referral has not yet been
+        //    credited for first-payment, credit the referrer (gated on
+        //    referrer still being an active supporter — ADD-1). If the
+        //    referrer is no longer active, mark the referral as processed
+        //    anyway to prevent re-trigger on subsequent payments. All inside
+        //    the same transaction so a rollback unwinds the referral too.
+        const refRows = await tx<Array<{ id: string; referrer_id: string }>>`
+          SELECT id, referrer_id FROM supporter_referrals
+          WHERE referred_id = ${userId} AND payment_credited_at IS NULL
+          LIMIT 1
+        `
+        if (refRows.length > 0) {
+          const ref = refRows[0]!
+          const PAID_REWARD = TASK_TOKEN_AMOUNTS.referral_paid
+
+          const refGate = await requireActiveSupporter(tx, ref.referrer_id)
+          if (refGate.ok) {
+            const refTxId = await recordTransaction(tx, {
+              userId: ref.referrer_id,
+              email: null,
+              type: "referral",
+              amountTokens: PAID_REWARD,
+              amountUsdCents: null,
+              sourceType: "referral",
+              sourceId: `paid:${ref.id}`,
+              metadata: { referred_id: userId, referral_id: ref.id },
+            })
+            if (refTxId) {
+              await creditTokens(tx, ref.referrer_id, PAID_REWARD)
+              await tx`
+                UPDATE supporter_referrals
+                SET payment_credited_at = NOW()
+                WHERE id = ${ref.id}
+              `
+              console.log(JSON.stringify({
+                event: "referral_paid_credited",
+                referral_id: ref.id,
+                referrer_user_id: ref.referrer_id,
+                referred_user_id: userId,
+                tokens: PAID_REWARD,
+              }))
+              // TODO W4-06: lookup referrer email outside tx, fire-and-forget
+              //   sendReferralPaidEmail(env, referrerEmail, PAID_REWARD)
+            }
+          } else {
+            // Referrer no longer an active supporter — mark as processed so
+            // we don't re-evaluate on every future payment from this user.
+            await tx`
+              UPDATE supporter_referrals
+              SET payment_credited_at = NOW()
+              WHERE id = ${ref.id}
+            `
+            console.log(JSON.stringify({
+              event: "referral_paid_skipped_referrer_inactive",
+              referral_id: ref.id,
+              referrer_user_id: ref.referrer_id,
+              referred_user_id: userId,
+            }))
+          }
+        }
+
         return {
           kind: "credited",
           already: alreadyBig.toString(),

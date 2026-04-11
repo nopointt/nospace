@@ -15,6 +15,13 @@
       "when": 1807660800000,
       "tag": "0015_supporters",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1807747200000,
+      "tag": "0016_supporter_referrals",
+      "breakpoints": true
     }
   ]
 }

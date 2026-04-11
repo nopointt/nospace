@@ -33,6 +33,7 @@ import {
   checkTaskCapForUser,
   recordTransaction,
   creditTokens,
+  genId,
   type SupporterTier,
 } from "../services/supporters"
 
@@ -251,6 +252,138 @@ supporters.post("/tasks", async (c) => {
     }))
     return c.json({ error: "internal_error" }, 500)
   }
+})
+
+// --- W4-04: Submit a referral code ------------------------------------
+//
+// POST /api/supporters/referral
+// Body: { code: string }  // referrer's userId (D-AUTO-W4-07)
+//
+// Flow: auth (401) → double-gated rate limit user+IP (429) → JSON parse (400)
+//     → validate code shape (400) → self-loop guard (400) → referrer exists
+//     check (404) → tx { ADD-1 referrer gate → duplicate referred check →
+//     INSERT referral row → recordTransaction → creditTokens } → 201.
+//
+// Per ADD-3: INSERT + recordTransaction + creditTokens are wrapped in
+// a single transaction so a failure in any step rolls back the row and
+// avoids the orphan-with-UNIQUE-blocked-retry race.
+//
+// PII safety: logs carry referrer_user_id + referred_user_id + referral_id
+// + token amount only.
+
+supporters.post("/referral", async (c) => {
+  const sql = c.get("sql")
+  const redis = c.get("redis")
+  const env = c.get("env")
+
+  const auth = await resolveAuth(sql, c.req.raw)
+  if (!auth || !auth.isOwner) return c.json({ error: "unauthorized" }, 401)
+
+  // Double-gated rate limit: per-user AND per-IP. Prevents both single-user
+  // hammering and IP-level enumeration of valid referrer ids.
+  const ip = getClientIp(c)
+  const userRl = await checkRateLimit(
+    redis,
+    `referral_submit:${auth.userId}`,
+    5,
+    3600,
+    ip,
+    env.RATE_LIMIT_WHITELIST_IPS,
+  )
+  if (!userRl.allowed) return c.json({ error: "rate_limited" }, 429)
+  const ipRl = await checkRateLimit(
+    redis,
+    `referral_submit_ip:${ip}`,
+    20,
+    3600,
+    ip,
+    env.RATE_LIMIT_WHITELIST_IPS,
+  )
+  if (!ipRl.allowed) return c.json({ error: "rate_limited" }, 429)
+
+  let body: { code?: unknown }
+  try {
+    body = await c.req.json()
+  } catch {
+    return c.json({ error: "invalid_json" }, 400)
+  }
+  if (typeof body.code !== "string" || body.code.length === 0 || body.code.length > 128) {
+    return c.json({ error: "invalid_code" }, 400)
+  }
+  const code = body.code
+  if (code === auth.userId) return c.json({ error: "cannot_refer_self" }, 400)
+
+  // Verify referrer exists as a user BEFORE entering tx (avoids wasted lock).
+  const userRows = await sql<{ id: string }[]>`
+    SELECT id FROM users WHERE id = ${code} LIMIT 1
+  `
+  if (userRows.length === 0) return c.json({ error: "invalid_code" }, 404)
+
+  type ReferralResult =
+    | { ok: true; referralId: string; signupReward: number }
+    | { ok: false; code: 404 | 409; err: string }
+
+  const SIGNUP_REWARD = TASK_TOKEN_AMOUNTS.referral_signup
+
+  const result: ReferralResult = await sql.begin(async (txRaw) => {
+    const tx = txRaw as unknown as Sql
+
+    // ADD-1: referrer must be an active supporter (else creditTokens would
+    // create a phantom supporters row, bypassing the 100-spot cap).
+    const gate = await requireActiveSupporter(tx, code)
+    if (!gate.ok) {
+      return { ok: false, code: 409, err: "referrer_not_active" } as ReferralResult
+    }
+
+    // Duplicate-referral check (UNIQUE on referred_id enforces this anyway,
+    // but the explicit check returns a clean 409 instead of a DB error).
+    const dup = await tx`
+      SELECT 1 FROM supporter_referrals WHERE referred_id = ${auth.userId} LIMIT 1
+    `
+    if (dup.length > 0) {
+      return { ok: false, code: 409, err: "already_referred" } as ReferralResult
+    }
+
+    const refId = genId()
+    await tx`
+      INSERT INTO supporter_referrals (id, referrer_id, referred_id, code, signup_credited_at)
+      VALUES (${refId}, ${code}, ${auth.userId}, ${code}, NOW())
+    `
+
+    const txId = await recordTransaction(tx, {
+      userId: code,
+      email: null,
+      type: "referral",
+      amountTokens: SIGNUP_REWARD,
+      amountUsdCents: null,
+      sourceType: "referral",
+      sourceId: `signup:${refId}`,
+      metadata: { referred_id: auth.userId },
+    })
+    if (!txId) {
+      return { ok: false, code: 409, err: "duplicate_tx" } as ReferralResult
+    }
+
+    await creditTokens(tx, code, SIGNUP_REWARD)
+
+    return { ok: true, referralId: refId, signupReward: SIGNUP_REWARD } as ReferralResult
+  }) as unknown as ReferralResult
+
+  if (!result.ok) return c.json({ error: result.err }, result.code)
+
+  console.log(JSON.stringify({
+    event: "referral_signup_credited",
+    referrer_user_id: code,
+    referred_user_id: auth.userId,
+    referral_id: result.referralId,
+    tokens: result.signupReward,
+  }))
+
+  return c.json({
+    ok: true,
+    referralId: result.referralId,
+    signupReward: result.signupReward,
+  }, 201)
 })
 
 // --- W4-02: Admin task review endpoints --------------------------------
