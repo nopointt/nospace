@@ -14,9 +14,11 @@ import Toast, { showToast } from "../components/Toast"
 import DocumentModal from "../components/DocumentModal"
 import ErrorState from "../components/ErrorState"
 import EmptyState from "../components/EmptyState"
+import SupporterStatusCard from "../components/SupporterStatusCard"
 import { listDocuments, getDocumentStatus, deleteDocument } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
 import { formatSize, formatDate, formatDateFull, statusToVariant, mimeShort } from "../lib/helpers"
+import { t } from "../lib/i18n"
 
 /* ── types ── */
 
@@ -47,10 +49,10 @@ const ConfirmDialog: Component<{
       <p class="text-sm text-text-primary">{props.message}</p>
       <div class="flex items-center gap-3 justify-end">
         <Button variant="ghost" onClick={props.onCancel}>
-          Отмена
+          {t("common.cancel")}
         </Button>
         <Button variant="danger" onClick={props.onConfirm}>
-          Удалить
+          {t("common.delete")}
         </Button>
       </div>
     </div>
@@ -100,7 +102,7 @@ const Dashboard: Component = () => {
       setTotalVectors(res.totalChunks)
     } catch (e) {
       setLoadError(true)
-      showToast("Не удалось загрузить документы.", "error")
+      showToast(t("toast.docLoadFailed2"), "error")
     } finally {
       setLoading(false)
     }
@@ -125,7 +127,7 @@ const Dashboard: Component = () => {
         stages: res.stages,
       })
     } catch {
-      showToast("Не удалось загрузить детали документа.", "error")
+      showToast(t("toast.docDetailFailed"), "error")
     } finally {
       setDetailLoading(false)
     }
@@ -157,10 +159,10 @@ const Dashboard: Component = () => {
       setShowDeleteConfirm(false)
       setSelectedId(null)
       setSelectedDetail(null)
-      showToast("Документ удалён.", "success")
+      showToast(t("toast.docDeleted"), "success")
       await loadDocuments()
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "Не удалось удалить документ.", "error")
+      showToast(e instanceof Error ? e.message : t("toast.docDeleteFailed"), "error")
     } finally {
       setDeleting(false)
     }
@@ -168,7 +170,7 @@ const Dashboard: Component = () => {
 
   /* ── render ── */
   return (
-    <div class="min-h-screen bg-bg-canvas font-sans">
+    <div class="min-h-screen bg-bg-canvas">
       <Nav variant="app" />
       <Toast />
 
@@ -181,7 +183,7 @@ const Dashboard: Component = () => {
       {/* confirm dialog */}
       <Show when={showDeleteConfirm()}>
         <ConfirmDialog
-          message="Удалить документ? Это действие необратимо."
+          message={t("dashboard.deleteConfirm")}
           onConfirm={handleDelete}
           onCancel={() => setShowDeleteConfirm(false)}
         />
@@ -196,10 +198,15 @@ const Dashboard: Component = () => {
       >
         {/* ── LEFT: fill container — Stats + Documents ── */}
         <div class="flex-1 flex flex-col" style={{ gap: "24px" }}>
+          {/* Supporter status card (renders only for authed supporters) */}
+          <Show when={isAuthenticated()}>
+            <SupporterStatusCard />
+          </Show>
+
           {/* Stats Row — 4 cards */}
           <div class="flex flex-wrap gap-4">
-            <StatCard value={documents().length} label="Документы" />
-            <StatCard value={totalChunks()} label="Фрагменты" />
+            <StatCard value={documents().length} label={t("dashboard.documents")} />
+            <StatCard value={totalChunks()} label={t("dashboard.chunks")} />
           </div>
 
           {/* Documents Table */}
@@ -211,11 +218,11 @@ const Dashboard: Component = () => {
                 padding: "10px 16px",
               }}
             >
-              <span class="flex-1" style={headerCellStyle}>Документ</span>
-              <span class="hidden md:inline" style={{ ...headerCellStyle, width: "80px" }}>Тип</span>
-              <span style={{ ...headerCellStyle, width: "80px" }}>Фрагменты</span>
-              <span style={{ ...headerCellStyle, width: "100px" }}>Статус</span>
-              <span class="hidden md:inline" style={{ ...headerCellStyle, width: "80px" }}>Дата</span>
+              <span class="flex-1" style={headerCellStyle}>{t("dashboard.docCol")}</span>
+              <span class="hidden md:inline" style={{ ...headerCellStyle, width: "80px" }}>{t("dashboard.typeHeader")}</span>
+              <span style={{ ...headerCellStyle, width: "80px" }}>{t("dashboard.chunksCol")}</span>
+              <span style={{ ...headerCellStyle, width: "100px" }}>{t("dashboard.statusCol")}</span>
+              <span class="hidden md:inline" style={{ ...headerCellStyle, width: "80px" }}>{t("dashboard.dateCol")}</span>
             </div>
 
             {/* Loading skeleton */}
@@ -250,15 +257,15 @@ const Dashboard: Component = () => {
 
             {/* Error state */}
             <Show when={!loading() && loadError()}>
-              <ErrorState message="Не удалось загрузить документы" onRetry={loadDocuments} />
+              <ErrorState message={t("toast.docLoadFailed")} onRetry={loadDocuments} />
             </Show>
 
             {/* Empty state */}
             <Show when={!loading() && !loadError() && documents().length === 0}>
               <EmptyState
-                message="Документов пока нет"
-                hint="Загрузите первый файл для начала работы"
-                action={<A href="/"><Button variant="primary">Загрузить файл</Button></A>}
+                message={t("dashboard.noDocs")}
+                hint={t("dashboard.noDocsHint")}
+                action={<A href="/"><Button variant="primary">{t("dashboard.uploadFile")}</Button></A>}
               />
             </Show>
 
@@ -310,7 +317,7 @@ const Dashboard: Component = () => {
         {/* Developer link */}
         <div class="mt-6">
           <A href="/api" class="text-accent" style={{ "font-size": "12px" }}>
-            Для разработчиков → /api
+            {t("dashboard.devLink")}
           </A>
         </div>
       </div>

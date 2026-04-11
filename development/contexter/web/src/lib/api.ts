@@ -269,3 +269,37 @@ export interface LeaderboardResponse {
 export function getSupportersLeaderboard() {
   return api<LeaderboardResponse>("/api/supporters")
 }
+
+export type SupporterStatus = "active" | "warning" | "frozen" | "quarantined" | "exiting"
+
+export interface SupporterMeNotSupporter {
+  isSupporter: false
+}
+
+export interface SupporterMeSupporter {
+  isSupporter: true
+  rank: number | null
+  tier: SupporterTier
+  tokens: number
+  status: SupporterStatus
+  warningSentAt: string | null
+  freezeStart: string | null
+  freezeEnd: string | null
+  joinedAt: string
+}
+
+export type SupporterMeResponse = SupporterMeNotSupporter | SupporterMeSupporter
+
+export function getSupporterMe() {
+  return api<SupporterMeResponse>("/api/supporters/me")
+}
+
+export interface FreezeResponse {
+  ok: true
+  freezeStart: string
+  freezeEnd: string
+}
+
+export function activateFreeze() {
+  return api<FreezeResponse>("/api/supporters/freeze", { method: "POST" })
+}
