@@ -1,8 +1,9 @@
-import { createSignal, For, Show, type Component } from "solid-js"
+import { createResource, createSignal, For, Show, type Component } from "solid-js"
 import { useNavigate } from "@solidjs/router"
 import Logo from "../components/Logo"
 import AuthModal from "../components/AuthModal"
 import { isAuthenticated } from "../lib/store"
+import { getSupportersLeaderboard } from "../lib/api"
 import { t, lang, toggleLang } from "../lib/i18n"
 import {
   RefreshCw,
@@ -514,7 +515,14 @@ const BetaSection: Component = () => {
 
 // ─── Supporters Teaser ───────────────────────────────────────────────────
 
-const SupportersTeaser: Component = () => (
+const SupportersTeaser: Component = () => {
+  const [data] = createResource(() => getSupportersLeaderboard())
+  const counter = () => {
+    const d = data()
+    if (!d) return "… / 100"
+    return `${d.totalCount} / 100`
+  }
+  return (
   <section id="supporters" class="py-16 md:py-20 bg-bg-surface border-b border-border-subtle">
     <Container>
       <div class="grid grid-cols-1 md:grid-cols-[7fr_5fr]" style={{ gap: "48px" }}>
@@ -538,7 +546,7 @@ const SupportersTeaser: Component = () => (
         <div class="flex flex-col justify-center" style={{ gap: "16px" }}>
           <div class="border border-border-default p-6 bg-bg-canvas">
             <span class="text-[12px] uppercase tracking-[0.12em] text-text-tertiary font-medium">{t("landing.supporters.spots")}</span>
-            <p class="text-[40px] font-bold text-black font-mono leading-none mt-2" style={{ "letter-spacing": "-0.04em" }}>8 / 100</p>
+            <p class="text-[40px] font-bold text-black font-mono leading-none mt-2" style={{ "letter-spacing": "-0.04em" }}>{counter()}</p>
           </div>
           <div class="flex flex-col" style={{ gap: "8px" }}>
             <div class="flex items-start" style={{ gap: "8px" }}>
@@ -558,7 +566,8 @@ const SupportersTeaser: Component = () => (
       </div>
     </Container>
   </section>
-)
+  )
+}
 
 // ─── Before / After ───────────────────────────────────────────────────────
 

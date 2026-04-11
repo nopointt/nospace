@@ -1,7 +1,8 @@
-import { createSignal, For, Show, type Component } from "solid-js"
+import { createResource, createSignal, For, Show, type Component } from "solid-js"
 import { t, lang, toggleLang } from "../lib/i18n"
 import Logo from "../components/Logo"
 import SupportersLeaderboard from "../components/SupportersLeaderboard"
+import { getSupportersLeaderboard } from "../lib/api"
 import { Check, ChevronDown, ChevronUp, HelpCircle } from "lucide-solid"
 
 // ─── Tooltip ────────────────────────────────────────────────────────────────
@@ -88,55 +89,63 @@ const SupportersNav: Component = () => (
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
-const HeroSection: Component = () => (
-  <section class="py-16 md:py-24 bg-bg-canvas border-b border-border-subtle">
-    <Container>
-      <div class="grid grid-cols-1 lg:grid-cols-12" style={{ gap: "0px" }}>
-        <div class="lg:col-span-8 flex flex-col" style={{ gap: "24px" }}>
-          <p class="text-[12px] uppercase tracking-[0.15em] text-accent font-medium">
-            {t("supporters.hero.label")}
-          </p>
-          <h1
-            class="text-[48px] md:text-[64px] font-bold text-black leading-[1.0]"
-            style={{ "letter-spacing": "-0.04em" }}
-          >
-            {t("supporters.hero.heading")}
-          </h1>
-          <p class="text-[16px] text-text-secondary leading-[1.5] max-w-[560px]">
-            {t("supporters.hero.sub")}
-          </p>
-          <div class="flex items-center flex-wrap" style={{ gap: "12px" }}>
-            <a
-              href="#join"
-              class="bg-accent text-white text-[14px] font-medium px-6 py-3 hover:bg-accent-hover active:bg-accent-pressed transition-colors duration-[80ms]"
-            >
-              {t("supporters.hero.cta")}
-            </a>
-            <a
-              href="#tiers"
-              class="border border-border-default text-black text-[14px] font-medium px-6 py-3 hover:bg-bg-surface transition-colors duration-[80ms]"
-            >
-              {t("supporters.hero.learnMore")}
-            </a>
-          </div>
-        </div>
-        <div class="lg:col-span-4 flex items-end justify-start lg:justify-end pt-12 lg:pt-0">
-          <div class="border border-border-default p-8 bg-bg-surface">
-            <p
-              class="text-[48px] font-bold text-black leading-none font-mono"
+const HeroSection: Component = () => {
+  const [data] = createResource(() => getSupportersLeaderboard())
+  const counter = () => {
+    const d = data()
+    if (!d) return "… / 100"
+    return `${d.totalCount} / 100`
+  }
+  return (
+    <section class="py-16 md:py-24 bg-bg-canvas border-b border-border-subtle">
+      <Container>
+        <div class="grid grid-cols-1 lg:grid-cols-12" style={{ gap: "0px" }}>
+          <div class="lg:col-span-8 flex flex-col" style={{ gap: "24px" }}>
+            <p class="text-[12px] uppercase tracking-[0.15em] text-accent font-medium">
+              {t("supporters.hero.label")}
+            </p>
+            <h1
+              class="text-[48px] md:text-[64px] font-bold text-black leading-[1.0]"
               style={{ "letter-spacing": "-0.04em" }}
             >
-              8 / 100
+              {t("supporters.hero.heading")}
+            </h1>
+            <p class="text-[16px] text-text-secondary leading-[1.5] max-w-[560px]">
+              {t("supporters.hero.sub")}
             </p>
-            <p class="text-[12px] uppercase tracking-[0.12em] text-text-tertiary mt-3 font-medium">
-              {t("supporters.hero.spotsTaken")}
-            </p>
+            <div class="flex items-center flex-wrap" style={{ gap: "12px" }}>
+              <a
+                href="#join"
+                class="bg-accent text-white text-[14px] font-medium px-6 py-3 hover:bg-accent-hover active:bg-accent-pressed transition-colors duration-[80ms]"
+              >
+                {t("supporters.hero.cta")}
+              </a>
+              <a
+                href="#tiers"
+                class="border border-border-default text-black text-[14px] font-medium px-6 py-3 hover:bg-bg-surface transition-colors duration-[80ms]"
+              >
+                {t("supporters.hero.learnMore")}
+              </a>
+            </div>
+          </div>
+          <div class="lg:col-span-4 flex items-end justify-start lg:justify-end pt-12 lg:pt-0">
+            <div class="border border-border-default p-8 bg-bg-surface">
+              <p
+                class="text-[48px] font-bold text-black leading-none font-mono"
+                style={{ "letter-spacing": "-0.04em" }}
+              >
+                {counter()}
+              </p>
+              <p class="text-[12px] uppercase tracking-[0.12em] text-text-tertiary mt-3 font-medium">
+                {t("supporters.hero.spotsTaken")}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </Container>
-  </section>
-)
+      </Container>
+    </section>
+  )
+}
 
 // ─── How It Works ─────────────────────────────────────────────────────────────
 
