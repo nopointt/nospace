@@ -20,6 +20,7 @@
 | CTX-03 | Frontend (SolidJS SPA) | ✅ DEPLOYED (CF Pages, contexter.cc) | — |
 | **CTX-04** | **Auth (OAuth: Google + Email, Telegram deferred)** | **🔶 IN PROGRESS** | `contexter-auth.md` |
 | **CTX-10** | **GTM Launch — 100 supporters × $10, all free channels, EN global** | **🔶 IN PROGRESS** | `contexter-gtm-launch.md` |
+| **CTX-12** | **Supporters Backend — tokens, ranking, LemonSqueezy webhooks, dashboard** | **🔶 IN PROGRESS** | `contexter-supporters-backend.md` |
 | CTX-05 | Benchmarks + Pricing + Billing | ⬜ PLANNED | — |
 | CTX-09 | UI/UX Polish (design system, responsive, a11y, pipeline indicator) | ✅ COMPLETE (2026-03-30) | `contexter-uiux-polish.md` |
 | CTX-06 | Production Migration (CF Workers → Hetzner) | ✅ CLOSED (2026-03-27) | `contexter-migration.md` |
