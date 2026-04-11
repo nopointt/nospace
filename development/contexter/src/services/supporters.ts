@@ -88,6 +88,22 @@ export function rankToTier(rank: number | null): SupporterTier {
   return "pending"
 }
 
+// --- Tier multipliers (D-52 accelerating earn rate) --------------------
+//
+// Applied ONLY to subscription_payment_success in W2. Order-created PWYW
+// and reclaim paths credit at the base 1:1 rate (see W2-03 spec).
+//
+// Integer-math form so we never touch floats: creditedTokens = base * num / den
+// with floor truncation on integer division.
+
+export const TIER_MULTIPLIERS: Record<SupporterTier, { num: bigint; den: bigint }> = {
+  diamond: { num: 2n, den: 1n },
+  gold: { num: 3n, den: 2n },
+  silver: { num: 5n, den: 4n },
+  bronze: { num: 1n, den: 1n },
+  pending: { num: 1n, den: 1n },
+}
+
 // --- Helpers -----------------------------------------------------------
 
 export function genId(): string {
@@ -169,6 +185,49 @@ export async function creditTokens(
       SET tokens = supporters.tokens + EXCLUDED.tokens,
           updated_at = NOW()
   `
+}
+
+/**
+ * Credit tokens to a supporter with the D-52 tier multiplier applied.
+ *
+ * Behavior:
+ *  1. Looks up the current tier of the user in the supporters table.
+ *     If the user has no supporter row, treats tier as 'pending' (1x).
+ *  2. Computes credited = floor(baseTokens * num / den) using BigInt math.
+ *  3. Delegates to creditTokens with the multiplied amount.
+ *
+ * Returns {baseTokens, multiplier, creditedTokens} so callers (tests,
+ * webhooks) can log the multiplier transparently.
+ *
+ * NOTE: This function is wired into subscription_payment_success ONLY.
+ * Order-created and reclaimUnmatchedForEmail stay at the base 1:1 rate
+ * per W2-03 scope (no silent behavior change to W1 paths).
+ */
+export async function creditTokensWithMultiplier(
+  sql: Sql,
+  userId: string,
+  baseTokens: number,
+  joinedAt?: Date,
+): Promise<{ baseTokens: number; multiplier: string; creditedTokens: number }> {
+  if (baseTokens <= 0) {
+    return { baseTokens, multiplier: "1x", creditedTokens: 0 }
+  }
+
+  const tierRows = await sql<{ tier: SupporterTier }[]>`
+    SELECT tier FROM supporters WHERE user_id = ${userId} LIMIT 1
+  `
+  const firstTier = tierRows[0]
+  const tier: SupporterTier = firstTier ? firstTier.tier : "pending"
+  const mult = TIER_MULTIPLIERS[tier]
+  const baseBig = BigInt(baseTokens)
+  const creditedBig = (baseBig * mult.num) / mult.den
+  const credited = Number(creditedBig)
+  await creditTokens(sql, userId, credited, joinedAt)
+  return {
+    baseTokens,
+    multiplier: `${mult.num}/${mult.den}`,
+    creditedTokens: credited,
+  }
 }
 
 // --- Matching ----------------------------------------------------------

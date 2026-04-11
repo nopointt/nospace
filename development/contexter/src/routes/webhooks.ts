@@ -15,6 +15,7 @@ import {
   tokensFromCents,
   recordTransaction,
   creditTokens,
+  creditTokensWithMultiplier,
 } from "../services/supporters"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis; requestId: string } }
@@ -287,11 +288,23 @@ webhooks.post("/lemonsqueezy", async (c) => {
       // D-58: token-paid subs do NOT generate tokens. All LS payments
       // are USD-paid in W1, so crediting is correct here. When internal
       // token-paid subs land, gate this on the payment source.
+      //
+      // W2-03: subscription_payment_success gets the D-52 tier multiplier.
+      // Order-created PWYW stays at the base 1:1 rate (no silent change).
       if (tokens > 0) {
-        await creditTokens(sql, userId, tokens)
+        const result = await creditTokensWithMultiplier(sql, userId, tokens)
+        console.log(JSON.stringify({
+          ts,
+          event: "ls_subscription_payment_credited",
+          userId,
+          baseTokens: result.baseTokens,
+          multiplier: result.multiplier,
+          creditedTokens: result.creditedTokens,
+          subscriptionId,
+        }))
+      } else {
+        console.log(JSON.stringify({ ts, event: "ls_subscription_payment_credited", userId, tokens, subscriptionId }))
       }
-
-      console.log(JSON.stringify({ ts, event: "ls_subscription_payment_credited", userId, tokens, subscriptionId }))
       break
     }
 
