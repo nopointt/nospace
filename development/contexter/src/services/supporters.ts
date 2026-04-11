@@ -230,6 +230,76 @@ export async function creditTokensWithMultiplier(
   }
 }
 
+/**
+ * W2-07: Credit tokens to a supporter with quarantine intake check.
+ *
+ * If the ranked set already has 100 active/warning supporters and this
+ * user has no supporter row yet, the new row is created with
+ * status='quarantined'. Otherwise delegates to plain creditTokens.
+ *
+ * Quarantined rows:
+ *  - are skipped by runSupportersRanking (filters active/warning only)
+ *  - may be promoted to active by the weekly promotion sweep when their
+ *    tokens exceed the current rank-100 threshold (W2-01 ranking sweep)
+ *
+ * Returns {status: 'active'|'quarantined', created: boolean}. The
+ * returned status reflects the row's final status after the call.
+ */
+export async function creditTokensWithQuarantineCheck(
+  sql: Sql,
+  userId: string,
+  tokens: number,
+  joinedAt?: Date,
+): Promise<{ status: "active" | "quarantined"; created: boolean }> {
+  if (tokens <= 0) {
+    return { status: "active", created: false }
+  }
+
+  const existingRows = await sql<{ status: string }[]>`
+    SELECT status FROM supporters WHERE user_id = ${userId} LIMIT 1
+  `
+  const existing = existingRows[0]
+  if (existing) {
+    // Already a supporter — just credit tokens, preserve status.
+    await creditTokens(sql, userId, tokens, joinedAt)
+    return {
+      status: existing.status === "quarantined" ? "quarantined" : "active",
+      created: false,
+    }
+  }
+
+  // New supporter — check count of ranked set.
+  const countRows = await sql<{ count: string }[]>`
+    SELECT COUNT(*)::text AS count
+    FROM supporters
+    WHERE status IN ('active', 'warning')
+  `
+  const countRow = countRows[0]
+  const currentCount = countRow ? Number(countRow.count) : 0
+  const shouldQuarantine = currentCount >= 100
+  const joinedAtValue = joinedAt ?? new Date()
+
+  if (shouldQuarantine) {
+    await sql`
+      INSERT INTO supporters (user_id, tokens, status, joined_at)
+      VALUES (${userId}, ${tokens}, 'quarantined', ${joinedAtValue})
+      ON CONFLICT (user_id) DO UPDATE
+        SET tokens = supporters.tokens + EXCLUDED.tokens,
+            updated_at = NOW()
+    `
+    console.log(JSON.stringify({
+      event: "supporter_quarantine_intake",
+      user_id: userId,
+      tokens,
+      current_count: currentCount,
+    }))
+    return { status: "quarantined", created: true }
+  }
+
+  await creditTokens(sql, userId, tokens, joinedAtValue)
+  return { status: "active", created: true }
+}
+
 // --- Matching ----------------------------------------------------------
 
 /**
