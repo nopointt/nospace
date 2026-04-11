@@ -3,7 +3,7 @@ import type { Sql } from "postgres"
 import { runDriftCheck } from "../services/evaluation/drift"
 import { runQuarterlyRevShare } from "../services/supporters-revshare"
 import { runSupportersRanking } from "../services/supporters-ranking"
-import { runSoftDemotion } from "../services/supporters-lifecycle"
+import { runSoftDemotion, runTokenExpiry } from "../services/supporters-lifecycle"
 import type { Env } from "../types/env"
 
 // F-013: maintenance queue — separate from "pipeline" to avoid concurrency interference
@@ -82,6 +82,17 @@ export function startMaintenanceWorker(redisUrl: string, sql: Sql, env: Env): Wo
     console.error("Failed to schedule daily-soft-demotion job:", err instanceof Error ? err.message : String(err))
   )
 
+  // CTX-12 W5-03: Schedule weekly token expiry at Sunday 03:45 UTC.
+  // Zeroes tokens on supporters inactive for 365+ days. Row is preserved
+  // (G1 — never delete). `tokens > 0` guard keeps this idempotent.
+  queue.add(
+    "weekly-token-expiry",
+    {},
+    { repeat: { pattern: "45 3 * * 0" }, jobId: "weekly-token-expiry-cron" }
+  ).catch((err) =>
+    console.error("Failed to schedule weekly-token-expiry job:", err instanceof Error ? err.message : String(err))
+  )
+
   const worker = new Worker<Record<string, never>>(
     MAINTENANCE_QUEUE_NAME,
     async (job: Job) => {
@@ -99,6 +110,10 @@ export function startMaintenanceWorker(redisUrl: string, sql: Sql, env: Env): Wo
       }
       if (job.name === "daily-soft-demotion") {
         await runSoftDemotion(sql, env)
+        return
+      }
+      if (job.name === "weekly-token-expiry") {
+        await runTokenExpiry(sql)
         return
       }
       await runDailyRetention(sql)

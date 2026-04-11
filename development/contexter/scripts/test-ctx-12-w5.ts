@@ -14,7 +14,7 @@
  */
 
 import postgres from "postgres"
-import { runSoftDemotion } from "../src/services/supporters-lifecycle"
+import { runSoftDemotion, runTokenExpiry } from "../src/services/supporters-lifecycle"
 import { genId, type SupporterTier } from "../src/services/supporters"
 import type { Env } from "../src/types/env"
 
@@ -284,6 +284,56 @@ async function run(): Promise<void> {
       "10. Bronze + warned 31d → no change",
       s10 !== null && s10.tier === "bronze" && s10.status === "active" && s10.warning_sent_at !== null,
       JSON.stringify(s10),
+    )
+
+    // -----------------------------------------------------------------
+    // W5-03 Token Expiry
+    // -----------------------------------------------------------------
+
+    // 7. Supporter with 100 tokens, last activity 366 days ago → tokens=0.
+    //    Row is preserved (only tokens zeroed).
+    // -----------------------------------------------------------------
+    const u7 = PREFIX + "expiry_old"
+    await seedUser(u7)
+    await seedSupporter(u7, { tokens: 100, tier: "bronze", status: "active", joinedDaysAgo: 400 })
+    await seedTransactionDaysAgo(u7, 366)
+    await runTokenExpiry(sql)
+    const s7 = await getSupporter(u7)
+    assert(
+      "7. 366d inactive → tokens zeroed",
+      s7 !== null && s7.tokens === 0 && s7.status === "active",
+      JSON.stringify(s7),
+    )
+
+    // -----------------------------------------------------------------
+    // 8. Supporter with 100 tokens, last activity 30 days ago → unchanged.
+    // -----------------------------------------------------------------
+    const u8 = PREFIX + "expiry_fresh"
+    await seedUser(u8)
+    await seedSupporter(u8, { tokens: 100, tier: "gold", status: "active", joinedDaysAgo: 60 })
+    await seedTransactionDaysAgo(u8, 30)
+    await runTokenExpiry(sql)
+    const s8 = await getSupporter(u8)
+    assert(
+      "8. 30d inactive → tokens unchanged",
+      s8 !== null && s8.tokens === 100,
+      JSON.stringify(s8),
+    )
+
+    // -----------------------------------------------------------------
+    // 9. Supporter with 0 tokens, long inactive → unchanged no-op
+    //    (the `tokens > 0` guard keeps this row out of the UPDATE set).
+    // -----------------------------------------------------------------
+    const u9 = PREFIX + "expiry_zero"
+    await seedUser(u9)
+    await seedSupporter(u9, { tokens: 0, tier: "bronze", status: "active", joinedDaysAgo: 500 })
+    await seedTransactionDaysAgo(u9, 500)
+    await runTokenExpiry(sql)
+    const s9 = await getSupporter(u9)
+    assert(
+      "9. 0 tokens → no-op",
+      s9 !== null && s9.tokens === 0,
+      JSON.stringify(s9),
     )
   } finally {
     await cleanup().catch((e) => console.error("cleanup error:", e))

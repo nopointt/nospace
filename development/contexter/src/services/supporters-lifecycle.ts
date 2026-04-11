@@ -172,3 +172,58 @@ export async function runSoftDemotion(sql: Sql, env: Env): Promise<void> {
     duration_ms: Date.now() - started,
   }))
 }
+
+/**
+ * CTX-12 W5-03: Zero out token balances for supporters inactive for 365+
+ * days. Inactivity uses the same definition as runSoftDemotion:
+ * last_activity = MAX(supporter_transactions.created_at) for user_id,
+ * falling back to supporters.joined_at when no transactions exist.
+ *
+ * The supporters row is preserved (per G1 — never delete). Only the
+ * tokens field is zeroed. Per-user "tokens_expired" events are logged
+ * with the previous token count, plus a summary token_expiry_complete
+ * line at the end.
+ *
+ * No email notification is sent for W5-03 (low-frequency event; may be
+ * added later if needed).
+ *
+ * The `tokens > 0` guard makes this idempotent — already-zeroed rows
+ * stay out of the UPDATE set.
+ */
+export async function runTokenExpiry(sql: Sql): Promise<void> {
+  const started = Date.now()
+  // WITH before_update CTE snapshots the pre-UPDATE tokens so RETURNING can
+  // log the previous balance (plain RETURNING would return the new 0 value).
+  const result = await sql<{ user_id: string; prev_tokens: string }[]>`
+    WITH before_update AS (
+      SELECT user_id, tokens::text AS prev_tokens
+      FROM supporters
+      WHERE tokens > 0
+        AND COALESCE(
+          (SELECT MAX(created_at) FROM supporter_transactions WHERE user_id = supporters.user_id),
+          joined_at
+        ) < NOW() - INTERVAL '365 days'
+    ),
+    updated AS (
+      UPDATE supporters s
+      SET tokens = 0, updated_at = NOW()
+      WHERE s.user_id IN (SELECT user_id FROM before_update)
+      RETURNING s.user_id
+    )
+    SELECT b.user_id, b.prev_tokens
+    FROM before_update b
+    JOIN updated u ON u.user_id = b.user_id
+  `
+  for (const r of result) {
+    console.log(JSON.stringify({
+      event: "tokens_expired",
+      user_id: r.user_id,
+      prev_tokens: r.prev_tokens,
+    }))
+  }
+  console.log(JSON.stringify({
+    event: "token_expiry_complete",
+    expired: result.length,
+    duration_ms: Date.now() - started,
+  }))
+}
