@@ -289,15 +289,43 @@ webhooks.post("/lemonsqueezy", async (c) => {
 
     case "subscription_cancelled":
     case "subscription_expired": {
-      const email = attrs.user_email ?? ""
-      console.log(JSON.stringify({
-        ts: new Date().toISOString(),
-        event: "ls_subscription_ended",
-        eventName,
+      const email = (attrs.user_email ?? "") || null
+      const subscriptionId = String(payload.data?.id ?? "")
+      const customDataUserId = (customData.user_id as string | undefined) ?? null
+      const userId = await matchSupporter(sql, { email, customDataUserId })
+
+      await recordTransaction(sql, {
+        userId,
         email,
-        subscriptionId: payload.data?.id,
-      }))
-      // TODO: start 30-day warning for supporter status
+        type: "subscription_payment",
+        amountTokens: 0,
+        amountUsdCents: 0,
+        sourceType: "lemonsqueezy_subscription",
+        sourceId: `${subscriptionId}:${eventName}`,
+        metadata: { eventName, attrs, customData },
+      })
+
+      if (userId) {
+        // Do NOT downgrade tier immediately — user paid for the current
+        // period. Mark status cancelled; cron (W5) handles expiration.
+        await sql`
+          UPDATE subscriptions
+          SET status = 'cancelled', updated_at = NOW()
+          WHERE user_id = ${userId}
+        `
+        // Start supporter warning window (D-53 soft demotion — W5 cron
+        // handles the actual downgrade; here we just stamp the warning).
+        await sql`
+          UPDATE supporters
+          SET warning_sent_at = COALESCE(warning_sent_at, NOW()),
+              status = CASE WHEN status = 'active' THEN 'warning' ELSE status END,
+              updated_at = NOW()
+          WHERE user_id = ${userId}
+        `
+        console.log(JSON.stringify({ ts, event: "ls_subscription_ended", userId, eventName, subscriptionId }))
+      } else {
+        console.log(JSON.stringify({ ts, event: "ls_subscription_ended_unmatched", email, subscriptionId }))
+      }
       break
     }
 

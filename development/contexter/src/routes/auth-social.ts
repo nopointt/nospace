@@ -4,6 +4,7 @@ import type { Env } from "../types/env"
 import type Redis from "ioredis"
 import crypto from "crypto"
 import { generateToken } from "../services/auth"
+import { reclaimUnmatchedForEmail } from "../services/supporters"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis; requestId: string } }
 
@@ -287,6 +288,26 @@ authSocial.get("/google/callback", async (c) => {
       INSERT INTO users (id, api_token, name, email, google_id, avatar_url)
       VALUES (${userId}, ${apiToken}, ${userInfo.name}, ${userInfo.email}, ${googleId}, ${userInfo.picture ?? null})
     `
+
+    // CTX-12: reclaim any queued Supporter transactions paid before OAuth sign-up.
+    // Non-fatal: OAuth flow must not fail if reclaim errors.
+    try {
+      const reclaimed = await reclaimUnmatchedForEmail(sql, userId, userInfo.email)
+      if (reclaimed > 0) {
+        console.log(JSON.stringify({
+          ts: new Date().toISOString(),
+          event: "supporter_tx_reclaimed",
+          userId,
+          count: reclaimed,
+          source: "google_oauth",
+        }))
+      }
+    } catch (err) {
+      console.error("supporter reclaim failed", {
+        userId,
+        err: err instanceof Error ? err.message : String(err),
+      })
+    }
   }
 
   // Redirect to frontend with token
