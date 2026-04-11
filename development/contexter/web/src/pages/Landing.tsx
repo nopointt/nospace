@@ -3,7 +3,7 @@ import { useNavigate } from "@solidjs/router"
 import Logo from "../components/Logo"
 import AuthModal from "../components/AuthModal"
 import { isAuthenticated } from "../lib/store"
-import { getSupportersLeaderboard } from "../lib/api"
+import { buildCheckoutUrl, getSupportersLeaderboard } from "../lib/api"
 import { t, lang, toggleLang } from "../lib/i18n"
 import {
   RefreshCw,
@@ -372,7 +372,7 @@ const PricingSection: Component<{ onCTA: () => void }> = (props) => {
         t("landing.pricing.starter.f6"),
       ],
       cta: t("landing.pricing.starter.cta"),
-      href: "https://pay.contexter.cc/checkout/buy/104ceab1-30fc-4b30-9b96-1053e4c7e6bc",
+      href: buildCheckoutUrl("https://pay.contexter.cc/checkout/buy/104ceab1-30fc-4b30-9b96-1053e4c7e6bc"),
       highlight: false,
     },
     {
@@ -390,7 +390,7 @@ const PricingSection: Component<{ onCTA: () => void }> = (props) => {
         t("landing.pricing.pro.f7"),
       ],
       cta: t("landing.pricing.pro.cta"),
-      href: "https://pay.contexter.cc/checkout/buy/08f48e34-bcb3-45a8-a49b-fca3faa15a26",
+      href: buildCheckoutUrl("https://pay.contexter.cc/checkout/buy/08f48e34-bcb3-45a8-a49b-fca3faa15a26"),
       highlight: true,
     },
   ]

@@ -2,7 +2,7 @@ import { createResource, createSignal, For, Show, type Component } from "solid-j
 import { t, lang, toggleLang } from "../lib/i18n"
 import Logo from "../components/Logo"
 import SupportersLeaderboard from "../components/SupportersLeaderboard"
-import { getSupportersLeaderboard } from "../lib/api"
+import { buildCheckoutUrl, getSupportersLeaderboard } from "../lib/api"
 import { Check, ChevronDown, ChevronUp, HelpCircle } from "lucide-solid"
 
 // ─── Tooltip ────────────────────────────────────────────────────────────────
@@ -522,7 +522,7 @@ const JoinSection: Component = () => {
               {t("supporters.join.card.desc2")}
             </p>
             <a
-              href="https://pay.contexter.cc/checkout/buy/40f7293e-52e1-4237-9572-dd82c89588ed?embed=1"
+              href={buildCheckoutUrl("https://pay.contexter.cc/checkout/buy/40f7293e-52e1-4237-9572-dd82c89588ed?embed=1")}
               class="lemonsqueezy-button mt-auto bg-accent text-white text-[14px] font-medium px-5 py-2.5 text-center hover:bg-accent-hover active:bg-accent-pressed transition-colors duration-[80ms]"
             >
               {t("supporters.join.card.cta")}

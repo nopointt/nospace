@@ -1,4 +1,19 @@
+import { auth } from "./store"
+
 export const API_BASE = import.meta.env.VITE_API_URL || "https://api.contexter.cc"
+
+// ─── LemonSqueezy checkout helper ────────────────────────────────────────────
+// Appends `checkout[custom][user_id]=<userId>` when the visitor is logged in,
+// so the webhook can match the payment to the account via custom_data.user_id
+// (see W1 matchSupporter — custom_data beats email).
+export function buildCheckoutUrl(baseUrl: string): string {
+  const userId = auth()?.userId
+  if (!userId) return baseUrl
+  const sep = baseUrl.includes("?") ? "&" : "?"
+  const params = new URLSearchParams()
+  params.set("checkout[custom][user_id]", userId)
+  return `${baseUrl}${sep}${params.toString()}`
+}
 
 interface ApiOptions {
   method?: string

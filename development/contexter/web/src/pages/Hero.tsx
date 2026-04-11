@@ -26,6 +26,7 @@ import {
   uploadToR2,
   API_BASE,
   createSupportInvoice,
+  buildCheckoutUrl,
 } from "../lib/api"
 import { getToken, isAuthenticated } from "../lib/store"
 import { formatSize, statusToVariant, humanizeError } from "../lib/helpers"
@@ -698,7 +699,7 @@ const Hero: Component = () => {
             </span>
           </div>
           <a
-            href="https://pay.contexter.cc/checkout/buy/40f7293e-52e1-4237-9572-dd82c89588ed"
+            href={buildCheckoutUrl("https://pay.contexter.cc/checkout/buy/40f7293e-52e1-4237-9572-dd82c89588ed")}
             class="lemonsqueezy-button bg-accent text-white text-[14px] font-medium px-8 py-3 hover:bg-accent-hover active:bg-accent-pressed transition-colors duration-[80ms]"
           >
             {t("preorder.from")} — {t("preorder.title")}
