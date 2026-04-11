@@ -402,6 +402,22 @@ webhooks.post("/lemonsqueezy", async (c) => {
         const toCreditBig = remaining < requested ? remaining : requested
         const toCredit = Number(toCreditBig)
 
+        // BB-05: the transaction row was inserted above with
+        // amount_tokens = tokens (requested). If the cap clamps, rewrite
+        // amount_tokens to toCredit (what was actually credited) so the
+        // audit row reflects the real accounting, not the intent.
+        // Capped-to-zero case still writes 0 so the audit row matches
+        // the absence of a supporters credit.
+        if (toCreditBig !== requested) {
+          await tx`
+            UPDATE supporter_transactions
+            SET amount_tokens = ${toCredit},
+                metadata = COALESCE(metadata, '{}'::jsonb) ||
+                  ${sql.json({ requested_tokens: tokens, capped: true } as never)}
+            WHERE id = ${txId}
+          `
+        }
+
         if (toCredit === 0) {
           return {
             kind: "capped",
