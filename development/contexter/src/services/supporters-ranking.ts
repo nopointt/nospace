@@ -31,14 +31,83 @@ interface QuarantineRow {
 }
 
 /**
+ * W2-07 quarantine promotion sweep. Any quarantined supporter whose tokens
+ * strictly exceed the current rank-100 threshold (or when the ranked set
+ * has <100 rows) is promoted to active, displacing the previous #100 into
+ * quarantined. Each swap runs inside sql.begin so a partial state is never
+ * observable. Returns the number of rows promoted.
+ *
+ * Extracted from runSupportersRanking (BB-03) to keep the main function
+ * under the 50-line guideline. No behavior change.
+ */
+async function promoteQuarantinedAboveThreshold(sql: Sql): Promise<number> {
+  let promoted = 0
+
+  const quarantined = await sql<QuarantineRow[]>`
+    SELECT user_id, tokens::text
+    FROM supporters
+    WHERE status = 'quarantined'
+    ORDER BY tokens DESC, joined_at ASC
+  `
+  if (quarantined.length === 0) return 0
+
+  for (const q of quarantined) {
+    // Re-read #100 on each iteration because a prior promotion in this
+    // loop may have reshuffled the bottom of the ranked set.
+    const hundredth = await sql<{ tokens: string }[]>`
+      SELECT tokens::text
+      FROM supporters
+      WHERE status IN ('active', 'warning')
+      ORDER BY tokens DESC, joined_at ASC
+      OFFSET 99 LIMIT 1
+    `
+    const hundredthRow = hundredth[0]
+    const hundredthExists = hundredthRow !== undefined
+    const threshold = hundredthRow ? BigInt(hundredthRow.tokens) : 0n
+    const qTokens = BigInt(q.tokens)
+
+    // Eligibility: either there is no row #100 yet (set has <100 ranked
+    // rows) or the quarantined row's tokens strictly exceed that row's.
+    if (!hundredthExists || qTokens > threshold) {
+      await sql.begin(async (txRaw) => {
+        const tx = txRaw as unknown as Sql
+        if (hundredthExists) {
+          // Demote current #100 into quarantined.
+          await tx`
+            UPDATE supporters
+            SET status = 'quarantined', updated_at = NOW()
+            WHERE user_id = (
+              SELECT user_id FROM supporters
+              WHERE status IN ('active', 'warning')
+              ORDER BY tokens DESC, joined_at ASC
+              OFFSET 99 LIMIT 1
+            )
+          `
+        }
+        await tx`
+          UPDATE supporters
+          SET status = 'active', updated_at = NOW()
+          WHERE user_id = ${q.user_id}
+        `
+      })
+      promoted++
+      console.log(JSON.stringify({
+        event: "supporter_quarantine_promoted",
+        user_id: q.user_id,
+      }))
+    }
+  }
+
+  return promoted
+}
+
+/**
  * Recompute rank and tier for every active/warning supporter. Writes only
  * rows whose rank or tier actually changed (minimizes WAL + updated_at
  * churn). Emits a single JSON log line with totals + duration.
  *
- * After the main rank loop, runs a quarantine promotion sweep: any
- * quarantined supporter whose tokens exceed the current rank-100 threshold
- * is promoted to active (displacing the previous #100 into quarantined).
- * The swap runs inside sql.begin so a partial state is never observable.
+ * After the main rank loop, delegates to promoteQuarantinedAboveThreshold
+ * for the W2-07 quarantine promotion sweep.
  */
 export async function runSupportersRanking(sql: Sql): Promise<void> {
   const started = Date.now()
@@ -66,63 +135,7 @@ export async function runSupportersRanking(sql: Sql): Promise<void> {
     }
   }
 
-  // --- Quarantine promotion sweep (W2-07) ---
-  let promoted = 0
-  const quarantined = await sql<QuarantineRow[]>`
-    SELECT user_id, tokens::text
-    FROM supporters
-    WHERE status = 'quarantined'
-    ORDER BY tokens DESC, joined_at ASC
-  `
-
-  if (quarantined.length > 0) {
-    for (const q of quarantined) {
-      // Re-read #100 on each iteration because a prior promotion in this
-      // loop may have reshuffled the bottom of the ranked set.
-      const hundredth = await sql<{ tokens: string }[]>`
-        SELECT tokens::text
-        FROM supporters
-        WHERE status IN ('active', 'warning')
-        ORDER BY tokens DESC, joined_at ASC
-        OFFSET 99 LIMIT 1
-      `
-      const hundredthRow = hundredth[0]
-      const hundredthExists = hundredthRow !== undefined
-      const threshold = hundredthRow ? BigInt(hundredthRow.tokens) : 0n
-      const qTokens = BigInt(q.tokens)
-
-      // Eligibility: either there is no row #100 yet (set has <100 ranked
-      // rows) or the quarantined row's tokens strictly exceed that row's.
-      if (!hundredthExists || qTokens > threshold) {
-        await sql.begin(async (txRaw) => {
-          const tx = txRaw as unknown as Sql
-          if (hundredthExists) {
-            // Demote current #100 into quarantined.
-            await tx`
-              UPDATE supporters
-              SET status = 'quarantined', updated_at = NOW()
-              WHERE user_id = (
-                SELECT user_id FROM supporters
-                WHERE status IN ('active', 'warning')
-                ORDER BY tokens DESC, joined_at ASC
-                OFFSET 99 LIMIT 1
-              )
-            `
-          }
-          await tx`
-            UPDATE supporters
-            SET status = 'active', updated_at = NOW()
-            WHERE user_id = ${q.user_id}
-          `
-        })
-        promoted++
-        console.log(JSON.stringify({
-          event: "supporter_quarantine_promoted",
-          user_id: q.user_id,
-        }))
-      }
-    }
-  }
+  const promoted = await promoteQuarantinedAboveThreshold(sql)
 
   const duration = Date.now() - started
   console.log(JSON.stringify({
