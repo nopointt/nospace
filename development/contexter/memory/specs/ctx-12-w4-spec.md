@@ -983,4 +983,178 @@ Standard 8 dims plus W4-specific:
 - NO ops/deploy.sh edits
 - Any file outside `src/{services,routes,types}`, `src/index.ts`, `drizzle-pg/`, `scripts/`
 
-## End of W4 spec
+---
+
+## Addenda (Axis 2026-04-11, session 239) — gap fixes from spec self-audit
+
+Post-audit addenda closing 5 gaps discovered before Player launch. Player MUST apply these rules on top of the primary spec body.
+
+### ADD-1 — Supporter-only gate for token-earning endpoints (CRITICAL)
+
+**Problem:** `creditTokens` is a pure upsert (supporters.ts:181-187). Calling it with a non-supporter userId creates a phantom supporters row with `tokens=N, joined_at=NOW(), rank=0`. This bypasses the 100-spot cap, promotes non-supporters into the program via task approval or referral.
+
+**Fix:** Gate earning endpoints on existing supporter row.
+
+**Rule:** Tokens exist ONLY for supporters. Only users with a row in `supporters` (status `active`, `warning`, `frozen`, or `quarantined`) can earn tokens via tasks or referrals. Non-supporters attempting to submit tasks or referrals receive 403 `not_a_supporter`.
+
+**Implementation — add to supporters.ts:**
+```ts
+export type SupporterGateResult =
+  | { ok: true; tier: SupporterTier; status: string }
+  | { ok: false; reason: "not_found" | "exiting" }
+
+export async function requireActiveSupporter(
+  sql: Sql,
+  userId: string,
+): Promise<SupporterGateResult> {
+  const rows = await sql<{ tier: SupporterTier; status: string }[]>`
+    SELECT tier, status FROM supporters WHERE user_id = ${userId} LIMIT 1
+  `
+  if (rows.length === 0) return { ok: false, reason: "not_found" }
+  if (rows[0].status === "exiting") return { ok: false, reason: "exiting" }
+  return { ok: true, tier: rows[0].tier, status: rows[0].status }
+}
+```
+
+**Apply in:**
+- W4-01 `POST /api/supporters/tasks` — call `requireActiveSupporter(sql, auth.userId)` after auth + rate-limit. If `!ok` → 403 `{error:"not_a_supporter", reason}`.
+- W4-04 `POST /api/supporters/referral` — referrer (from `code`) must exist. Also the referred user (auth.userId) can BE a non-supporter here — that's the normal case. Referrers earn tokens; referred users don't automatically become supporters. So the gate applies to the REFERRER: `requireActiveSupporter(sql, code)` BEFORE crediting signup bonus.
+- W4-04 first-payment webhook trigger — gate on `requireActiveSupporter(sql, referrer_id)` before crediting referral_paid. If referrer no longer active → skip credit, still mark `payment_credited_at=NOW()` to prevent re-trigger, log `referral_paid_skipped_referrer_inactive`.
+- W4-02 admin approve — gate on `requireActiveSupporter(sql, task.user_id)` inside transaction. If referrer got ingested somehow but is now exiting → 409 `referrer_not_active`.
+
+**Note on W4-02 approve gate vs W4-01 submit gate:**
+- W4-01 blocks submission for non-supporters (fail fast, no DB row pollution).
+- W4-02 re-checks on approval (defensive — user status may have changed between submit and approve).
+
+### ADD-2 — Advisory lock placement in W4-02 approve (EXPLICIT CODE)
+
+**Problem:** W4-02 text says "use advisory lock at start of transaction" but code snippet does not show call order. Player may place it after SELECT FOR UPDATE, losing serialization guarantees.
+
+**Fix:** Advisory lock MUST be the FIRST statement inside `sql.begin`, before any SELECT. Explicit code pattern:
+
+```ts
+const result = await sql.begin(async (tx) => {
+  // 1) Serialize all concurrent approves for this user (BEFORE any read)
+  await tx`SELECT pg_advisory_xact_lock(hashtext('task_cap:' || ${task_user_id_placeholder}))`
+  // 2) Re-fetch task row (FOR UPDATE) — row may have changed while waiting for lock
+  const taskRows = await tx<TaskRow[]>`
+    SELECT id, user_id, task_type, amount_tokens, status, description
+    FROM supporter_tasks WHERE id = ${taskId} FOR UPDATE
+  `
+  if (taskRows.length === 0) return { ok: false, code: 404 }
+  const task = taskRows[0]
+  if (task.status !== "pending") return { ok: false, code: 409, err: "not_pending" }
+  // 3) Supporter gate (ADD-1)
+  const gate = await requireActiveSupporter(tx as unknown as Sql, task.user_id)
+  if (!gate.ok) return { ok: false, code: 409, err: "not_a_supporter" }
+  // 4) Task cap check (already serialized by the advisory lock above)
+  const cap = await checkTaskCapForUser(tx as unknown as Sql, task.user_id, Number(task.amount_tokens))
+  if (!cap.allowed) return { ok: false, code: 409, err: "monthly_cap_exceeded", already: cap.already, remaining: cap.remaining, cap: cap.cap }
+  // 5) UPDATE status
+  await tx`UPDATE supporter_tasks SET status='approved', reviewer_id=${adminId}, reviewed_at=NOW() WHERE id=${taskId}`
+  // 6) Record transaction (idempotent via source_id)
+  await recordTransaction(tx as unknown as Sql, {
+    userId: task.user_id, email: null, type: 'task',
+    amountTokens: Number(task.amount_tokens), amountUsdCents: null,
+    sourceType: 'task', sourceId: task.id,
+    metadata: { task_type: task.task_type },
+  })
+  // 7) Credit
+  await creditTokens(tx as unknown as Sql, task.user_id, Number(task.amount_tokens))
+  return { ok: true, taskId, creditedTokens: Number(task.amount_tokens), userEmail: null /* fetched outside tx */ }
+})
+```
+
+Note: advisory lock key `hashtext('task_cap:' || userId)` is the SAME key used by any future cap-related serialization (same scheme as W2-08 spending cap, different prefix).
+
+Email lookup + `sendTaskApprovedEmail` fire-and-forget happen AFTER `sql.begin` returns, in a try/catch that swallows.
+
+### ADD-3 — W4-04 referral signup wrap (transactional)
+
+**Problem:** Spec sequence is: INSERT referral row → credit 3 tokens → UPDATE signup_credited_at=NOW(). If credit fails after INSERT, row is orphaned (signup_credited_at NULL forever, UNIQUE referred_id blocks retry).
+
+**Fix:** Wrap in a transaction. If any step fails → rollback → no partial state.
+
+```ts
+const referralId = await sql.begin(async (tx) => {
+  // gate: referrer must be active supporter (ADD-1)
+  const gate = await requireActiveSupporter(tx as unknown as Sql, code)
+  if (!gate.ok) return { error: "referrer_not_active" }
+  // gate: referred must not already be referred
+  const dup = await tx`SELECT 1 FROM supporter_referrals WHERE referred_id = ${auth.userId} LIMIT 1`
+  if (dup.length > 0) return { error: "already_referred" }
+  const id = genId("ref_")
+  await tx`
+    INSERT INTO supporter_referrals (id, referrer_id, referred_id, code, signup_credited_at)
+    VALUES (${id}, ${code}, ${auth.userId}, ${code}, NOW())
+  `
+  const txId = await recordTransaction(tx as unknown as Sql, {
+    userId: code, email: null, type: 'referral',
+    amountTokens: 3, amountUsdCents: null,
+    sourceType: 'referral', sourceId: `signup:${id}`,
+    metadata: { referred_id: auth.userId },
+  })
+  if (!txId) return { error: "duplicate_tx" }  // defensive
+  await creditTokens(tx as unknown as Sql, code, 3)
+  return { id }
+})
+```
+
+Endpoint maps errors to HTTP: `referrer_not_active`→409, `already_referred`→409, `duplicate_tx`→409. Note: TASK_TOKEN_AMOUNTS.referral_signup constant (3) SHOULD be used instead of hardcoded `3` — `const SIGNUP_REWARD = TASK_TOKEN_AMOUNTS.referral_signup`.
+
+Similarly W4-04 first-payment trigger MUST use `TASK_TOKEN_AMOUNTS.referral_paid` constant instead of hardcoded `5`.
+
+### ADD-4 — W4-05 revshare loop actually sends emails
+
+**Problem:** Spec comment says "Notification fire-and-forget" but the distribute loop doesn't actually call `sendRevShareEmail`. Dead comment.
+
+**Fix:** Inside the `runQuarterlyRevShare` distribute loop, after `creditTokens` succeeds and before the next iteration:
+
+```ts
+// Fire-and-forget notification (outside any future transactional scope;
+// intentionally not awaited to keep loop throughput up for 100 supporters)
+const emailRows = await sql<{ email: string }[]>`
+  SELECT email FROM users WHERE id = ${s.user_id} LIMIT 1
+`
+const email = emailRows[0]?.email
+if (email) {
+  sendRevShareEmail(env, email, quarterLabel, shareTokens, poolCents)
+    .catch((e) => console.error(JSON.stringify({
+      event: "revshare_email_failed",
+      user_id: s.user_id,
+      error: e instanceof Error ? e.message : String(e),
+    })))
+}
+```
+
+This is best-effort notification; failures logged but distribution continues.
+
+### ADD-5 — Environment propagation hygiene
+
+For W4-02 approve/reject, email lookup queries `users.email` directly inside the HTTP handler AFTER `sql.begin` returns — NOT inside the transaction. Rationale: email is only needed for fire-and-forget notification, not for correctness. Fetch after commit.
+
+For the reject path description concat: use `COALESCE(description, '') || E'\n\nRejected: ' || ${reason}` to avoid NULL propagation on tasks with empty description.
+
+### ADD-6 — SupporterStatus type gap handling
+
+`SupporterStatus` TypeScript type (supporters.ts:23) does NOT include `"quarantined"`, but the DB column accepts it (W2-07). W4 must NOT widen the type (that's W5 deferred bundle). Any W4 code reading status via the typed path will cast to `string`. Use `string` type for status in ADD-1's helper to avoid the type gap bleeding further.
+
+### ADD-7 — Rate limit on task type whitelist
+
+If a malicious user spams invalid `taskType` values, the rate limiter still counts each attempt. That's desired behavior (slow down abusers). Spec is correct as-is. No change.
+
+### ADD-8 — Integration test extension
+
+Test `scripts/test-ctx-12-w4.ts` must add 4 new assertions for the addenda:
+- **21**: `requireActiveSupporter` returns `not_found` for user with no supporters row.
+- **22**: `requireActiveSupporter` returns `exiting` when status='exiting'.
+- **23**: POST /tasks rejected (403) for non-supporter auth user (simulated via direct `submitTask` wrapper + endpoint-layer gate test — OR direct call to `requireActiveSupporter` + assert that submitTask itself doesn't gate, only the route does).
+- **24**: Referral signup rolled back cleanly when referrer is inactive (no orphan row).
+
+Total integration assertions: 24 (not 20).
+
+### Wave 4 Done-when (top-level)
+
+All Done-when blocks from primary spec + addenda rules + integration test 24/24 PASS + tsc clean + atomic commits per task.
+
+## End of W4 spec (addenda included)

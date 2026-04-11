@@ -1,11 +1,11 @@
 # STATE — Contexter
 
 ## Position
-- **Phase:** CTX-12 Supporters Backend (in progress) — W1+W2+W3 deployed, W4+W5 pending
-- **Status:** Supporters backend LIVE on prod. DB tables + 4 LS webhook handlers + ranking cron + public/private/freeze API + quarantine + spending cap + frontend integration all deployed. LemonSqueezy LIVE. Alpha text-only (308 formats). Pricing: storage-only (1/10/100 GB). First revenue: $1.16 (test only, no real users).
-- **Last session:** 2026-04-11 (Axis, session 238 — CTX-12 autonomous run, W1+W2+W3 deployed, 25 commits, 3 deploys, 0 escalations, W4 spec written, W4 Player killed mid-Phase Zero by user request)
-- **Sessions total:** 238
-- **Next:** Resume W4 (Tasks + Admin + Referrals + Rev Share + Notifications) from spec at `memory/specs/ctx-12-w4-spec.md`
+- **Phase:** CTX-12 Supporters Backend (~90% complete) — W1+W2+W3+W4+W5-5A deployed; W5-5B/5C implementation DONE locally, deploy pending
+- **Status:** Full supporters backend + tasks/admin/referrals/revshare/notifications LIVE on prod. Soft demotion + token expiry + anti-abuse + ToS clause + deploy script fix all IMPLEMENTED + tested on contexter_dev, NOT yet deployed (5 commits local only, migration 0017 on dev only). W5-5A deferred bundle (7 Coach-review fixes) backend deployed, BB-07 frontend pending. 48 new integration tests all PASS (24 W4 + 10 W5-02/03 + 14 W5-04). LemonSqueezy LIVE. Alpha text-only (308 formats). Pricing: storage-only (1/10/100 GB). Revenue baseline: $1.16 (test only, 0 real supporter rows).
+- **Last session:** 2026-04-11 (Axis, session 239 — CTX-12 autonomous W4+W5, 14 new commits on main, 2 prod deploys, 0 escalations, 0 J3/J5 trips, parallel background Players for W5 features, orchestrator self-audit added 8 spec addenda pre-W4-launch closing phantom-supporter + advisory-lock + tx-wrap + email-wire gaps)
+- **Sessions total:** 239
+- **Next:** (1) Deploy W5-5B/5C backend to prod — pg_dump + migration 0017 + SCP via new deploy.sh (live-test) + docker rebuild + smoke test POST /referral duplicate-IP rejection + verify 6 BullMQ cron hashes. (2) Frontend CF Pages deploy via ops/deploy-web.sh — ships BB-07 structured error + W5-01 ToS Section 7. (3) Rotate RESEND_API_KEY (defensive, leaked into Orchestrator context via grep this session). (4) Hetzner disk expansion or prune cron.
 
 ## Key Completions
 - i18n: EN/RU toggle, 500+ translation keys, all 24 pages/components
@@ -42,6 +42,9 @@
 - **CTX-12 W2 deployed** (2026-04-11): weekly ranking cron (Monday 04:00 UTC), GET /api/supporters public leaderboard (privacy: no PII), GET /me authed status, POST /freeze calendar-year annual, 101st quarantine intake + promotion sweep, spending cap 500 tok/month with advisory lock, integration test 15/15 PASS
 - **CTX-12 W3 deployed** (2026-04-11, CF Pages): removed hardcoded SUPPORTERS_DATA, reactive createResource leaderboard + dynamic counter, SupporterStatusCard in Dashboard with freeze button, Supporter #N pill in Nav, buildCheckoutUrl helper with LS custom_data.user_id
 - **Standards extended**: ~/.claude/rules/standards.md added section J (J1-J8 Autonomous Mode), total 49→57 standards
+- **CTX-12 W4 deployed** (2026-04-11 session 239): W4-01 POST /api/supporters/tasks + requireActiveSupporter gate, W4-02+03 admin endpoints (list/approve/reject) + isAdmin helper + ADMIN_USER_IDS env + checkTaskCapForUser with advisory lock, W4-04 migration 0016_supporter_referrals + POST /referral transactional (ADD-3) + first-payment trigger in webhooks, W4-05 quarterly revshare cron with $10K MRR gate + weighted tier distribution (8/6/5/4 units) + idempotency via revshare:{quarter}:{user_id} source_id, W4-06 notifications.ts (4 Resend templates) + 24/24 integration test. 5 atomic commits `0c37181..ee822e5`. 8 spec addenda (ADD-1..ADD-8) added by Orchestrator self-audit pre-Player launch.
+- **CTX-12 W5-5A Deferred Bundle deployed** (2026-04-11 session 239, backend only): 7 Coach-review tech debt fixes — BB-01 better-auth reclaim hook, BB-02 creditTokensWithQuarantineCheck honest return type, BB-03 runSupportersRanking helper extraction (92→37 lines), BB-04 /freeze atomicity (500→structured 409), BB-05 amount_tokens audit drift (capped rows now store credited + metadata.requested), BB-06 SupporterStatus type widen (quarantined), BB-07 frontend structured error match (NOT yet deployed to CF Pages). 7 atomic commits `e9b6db5..60ed97f`.
+- **CTX-12 W5-5B/5C IMPLEMENTED, NOT DEPLOYED** (2026-04-11 session 239): W5-01 ToS Section 7 "Supporter Program and Loyalty Tokens" (non-transferable, no monetary value, 12-month expiry, exit-forfeit, anti-circular, 50/month task cap, 14-day payment hold), W5-02 soft demotion cron (30/60/90d inactive, daily 03:30 UTC, re-activation clears warning), W5-03 token expiry cron (365d inactive → tokens=0, keep row per G1, weekly Sun 03:45 UTC), W5-04 migration 0017 (ALTER supporter_referrals ADD signup_ip/signup_device_hash + ALTER supporter_transactions ADD held_until + 3 indexes) + referral anti-abuse reject on duplicate IP or device hash per referrer + 14-day payment hold on subscription payments + revshare MRR/quarter SUMs exclude held rows, W5-05 deploy script fix (scp -r path-nesting race → tar+atomic-staging-dir + post-build sha256 image verification + disk pre-check). 5 atomic commits `141f714, 016fd20, acc5a01, ca1ef4e, 907883a`. Tests: 10/10 W5-02/03 PASS + 14/14 W5-04 PASS on contexter_dev.
 
 ## Active Decisions
 - D-01 through D-25: unchanged from previous
@@ -97,6 +100,13 @@
 - D-AUTO-W4-05: Referral tracking via new `supporter_referrals` table (additive), NOT `users.referred_by` column — SPEC, NOT IMPLEMENTED
 - D-AUTO-W4-06: Rev share cron quarterly `0 5 1 1,4,7,10 *`. MRR gate <$10K/month (1M cents last 30d) → skip — SPEC, NOT IMPLEMENTED
 - D-AUTO-W4-07: Referral code = referrer's userId (matches LS custom_data.user_id convention) — SPEC, NOT IMPLEMENTED
+- D-AUTO-W4-01..07: ALL IMPLEMENTED (session 239), see W4 commits above
+- ADD-1..ADD-8: W4 spec addenda by Orchestrator self-audit — all closed in implementation (session 239)
+- D-W5-01: ToS Section 7 added (locked in session 239) — non-transferable loyalty points, 12-month expiry, forfeit on exit, anti-circular, 50/month task cap, 14-day payment hold
+- D-W5-02: Soft demotion activity definition = MAX(supporter_transactions.created_at) fallback supporters.joined_at. 3 stages 30/60/90 days. Daily cron 03:30 UTC. Re-activation helper clears warning.
+- D-W5-03: Token expiry 365d inactive → tokens=0 (never delete row per G1). Weekly Sunday 03:45 UTC. No email (first pass). CTE used to log prev_tokens before UPDATE.
+- D-W5-04: Referral duplicate detection scoped by referrer_id, null-aware guards (null IP/device does not collide). 14-day hold applied at both recordTransaction call sites in subscription_payment_success. Revshare SUMs add `AND (held_until IS NULL OR held_until <= NOW())`. Refund/chargeback handler deferred to W6+.
+- D-W5-05: Deploy script root cause `scp -r LOCAL/src/ HOST:REMOTE/app/src/` nests on repeat deploys. Fix: tar + staging dir `.new.$$` + atomic mv. Post-build sha256 verification via `docker compose run --rm --entrypoint sha256sum`. Disk pre-check ≥5GB free.
 
 ## Blockers
 - Copy audit not applied — jargon kills non-tech conversion (CTX-10 W1-01)
@@ -109,7 +119,10 @@
 - Solo founder bandwidth
 - ~~CTX-12: Backend supporters system (DB, tokens, ranking cron, user matching)~~ → ✅ W1+W2+W3 DEPLOYED 2026-04-11. W4 (tasks+rev share) spec ready, W5 (legal+polish) pending
 - **Hetzner CAX21 disk exhaustion**: 38G disk hit 100% during W1 deploy. Axis cleaned docker cache 35GB freed. Disk now 48% used. Recommend expansion or prune cron.
-- **W5 deferred bundle** (from W1/W2/W3 Coach reviews): better-auth email/password reclaim hook, creditTokensWithQuarantineCheck type lie, runSupportersRanking >50 lines, /freeze 500 vs 409, supporter_transactions.amount_tokens audit drift on capped rows, SupporterStatus type missing 'quarantined', W3 freeze 409 substring match fragility
+- ~~**W5 deferred bundle** (from W1/W2/W3 Coach reviews): better-auth email/password reclaim hook, creditTokensWithQuarantineCheck type lie, runSupportersRanking >50 lines, /freeze 500 vs 409, supporter_transactions.amount_tokens audit drift on capped rows, SupporterStatus type missing 'quarantined', W3 freeze 409 substring match fragility~~ → ✅ ALL 7 CLOSED in W5-5A session 239 (BB-01..BB-07)
+- **W5 deploy pending** (session 239 close): 5 local commits not yet on prod — migration 0017 on dev only, W5-01/02/03/04/05 backend+frontend not deployed. Requires pg_dump + migration + SCP + rebuild + smoke. Plus CF Pages frontend deploy for BB-07 + W5-01 ToS.
+- **RESEND_API_KEY leak** (session 239): value inadvertently echoed into Orchestrator context via `grep RESEND_API_KEY` while adding ADMIN_USER_IDS to /opt/contexter/.env. Not logged to any file, not committed. Recommend defensive rotation at next session.
+- **src/routes/supporters.ts 821 lines** (session 239 post-W5-04): exceeds H2 soft threshold 800. Pre-commit hook warning only, non-blocking. Future refactor.
 - ToS: loyalty points / tokens clause needed before public launch
 - Deploy script audit (SCP works but docker doesn't always rebuild)
 - Delete unverified LS store #333207 (email sent to hello@lemonsqueezy.com)
@@ -122,16 +135,22 @@
 - Full analytics suite (CTX-11)
 
 ## Metrics
-- Sessions: 238
-- Real users: 2 (nopointttt@gmail.com, danchoachona@gmail.com)
+- Sessions: 239
+- Real users: 2 (nopointttt@gmail.com id 32b533b3, danchoachona@gmail.com id dfe9be94)
 - Documents: 26, Chunks: 519
 - MCP search p50: 110ms
 - Revenue: $1.16 (1 supporter entry, 2026-04-11, test only)
-- CTX-12 commits this session: 25 (W1:10 + W2:10 + W3:5)
-- CTX-12 deploys: 3 (W1 backend, W2 backend, W3 CF Pages)
+- CTX-12 commits total (sessions 237-239): 40 (W1:10 + W2:10 + W3:5 + session 238 close:1 + W4:5 + W5-5A:7 + W5-5B/C:5)
+- CTX-12 session 239 commits: 14 (W4:5 + W5-5A:7 + W5-5B/C:5 minus W5-5A already counted = net 14 new)
+- CTX-12 deploys total: 5 (W1 backend, W2 backend, W3 CF Pages, W4 backend + migration 0016, W5-5A backend)
+- CTX-12 session 239 deploys: 2 (W4 backend + migration 0016, W5-5A backend)
+- CTX-12 session 239 integration tests added: 48 (24 W4 + 10 W5-02/03 + 14 W5-04) all PASS on contexter_dev
+- CTX-12 migrations: 0015 (W1, prod), 0016 (W4, prod), 0017 (W5-04, dev only NOT prod)
 - Supporters table rows on prod: 0 (no real users yet)
-- Disk on prod: 48% (after 35GB docker cache cleanup during W1 deploy)
-- GitHub: github.com/nopointt/contexter
+- Disk on prod: 51% (after 2 W4 + W5-5A deploys this session, up from 48%)
+- ADMIN_USER_IDS env on prod: 32b533b3 (nopoint primary)
+- BullMQ maintenance crons on prod: 4 active (daily-retention + weekly-drift-check + weekly-supporters-ranking + quarterly-revshare); 2 pending W5 deploy (daily-soft-demotion + weekly-token-expiry)
+- GitHub: github.com/nopointt/contexter (origin/main lags local main by 14 commits — not pushed)
 - Deployed: contexter.cc + api.contexter.cc + pay.contexter.cc
 - Server: Hetzner CAX21 (Helsinki)
 - LemonSqueezy: contexter.lemonsqueezy.com (store #309186)

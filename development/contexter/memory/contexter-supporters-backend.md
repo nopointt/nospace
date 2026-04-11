@@ -1,8 +1,8 @@
 ---
 # contexter-supporters-backend.md — CTX-12 Supporters Backend
-> Layer: L3 | Epic: CTX-12 | Status: 🔶 IN PROGRESS (W1+W2+W3 deployed, W4 spec ready, W5 pending)
+> Layer: L3 | Epic: CTX-12 | Status: 🔶 IN PROGRESS (~90% — W1+W2+W3+W4+W5-5A deployed; W5-5B/5C implemented locally, deploy pending)
 > Created: 2026-04-11 (session 236)
-> Last updated: 2026-04-11 (session 238 — W1+W2+W3 autonomous execution complete, W4 spec written, 25 commits, 3 deploys)
+> Last updated: 2026-04-11 (session 239 — W4+W5 autonomous execution, 14 new commits on main, 2 prod deploys, 0 escalations, 0 J3/J5 trips)
 > Predecessor: CTX-10 GTM Launch (supporters page + LemonSqueezy frontend done)
 ---
 
@@ -89,32 +89,54 @@ Replace hardcoded data with live API data.
 - [x] W3-05: buildCheckoutUrl helper with LS custom_data.user_id (4 CTAs wrapped) `56cd3dd`
 - Coach POST-REVIEW: PASS 0 blocking, all 5 deviations accepted. One W5 hardening note: 409 freeze error detection by substring match (`.includes("year")`) is fragile.
 
-### Wave 4: Tasks + Rev Share 🔶 SPEC WRITTEN, NOT EXECUTED
-Task submission system + quarterly rev share calculation. Spec at `memory/specs/ctx-12-w4-spec.md` (1000 lines, 6 tasks, all Action+Verify+Done-when, 7 locked W4 decisions D-AUTO-W4-01..07). Player killed mid-Phase Zero by user request at session close. Next session resumes by launching fresh G3 Player with same spec.
+### Wave 4: Tasks + Admin + Referrals + Rev Share + Notifications ✅ DEPLOYED 2026-04-11 (session 239)
+Task submission system + admin review + referrals + quarterly rev share + notifications. Spec at `memory/specs/ctx-12-w4-spec.md` (expanded to 1100+ lines with 8 addenda ADD-1..ADD-8 added by Orchestrator self-audit pre-Player launch closing 5 blocking gaps). 5 atomic commits on main, migration 0016 deployed, all endpoints live.
 
-- [ ] W4-01: POST /api/supporters/tasks — submit task (bug_report 10t, referral_signup 3t, referral_paid 5t, social_share 2t, review 5t)
-- [ ] W4-02: Admin review endpoints (GET /admin/tasks + POST /admin/tasks/:id/approve|reject). Admin via `ADMIN_USER_IDS` env var.
-- [ ] W4-03: Monthly task cap 50 tokens (global, no per-category). Advisory-lock serialized.
-- [ ] W4-04: Referral tracking — NEW migration `0016_supporter_referrals.sql` (additive, NOT ALTER users). Signup 3t immediate + first-payment 5t trigger. Self-loop + duplicate prevented.
-- [ ] W4-05: Quarterly rev share cron `0 5 1 1,4,7,10 *`. MRR gate <$10K/month → skip. Weighted by D-52 multipliers, idempotent via `revshare:${quarter}:${userId}` source_id.
-- [ ] W4-06: Email notifications via NEW `src/services/notifications.ts` (own Resend POST, do NOT touch auth/index.ts). 4 templates: task approved, task rejected, referral paid, rev share. Fire-and-forget.
-- [ ] W4-07 integration test: 20 assertions covering all above.
+- [x] W4-01: POST /api/supporters/tasks + requireActiveSupporter gate (ADD-1) + TASK_TOKEN_AMOUNTS + MONTHLY_TASK_CAP + submitTask `0c37181`
+- [x] W4-02: Admin review endpoints (GET /admin/tasks + POST approve/reject) + isAdmin helper + Env.ADMIN_USER_IDS `7f97ffa`
+- [x] W4-03: Monthly task cap 50 tokens with checkTaskCapForUser + advisory lock (ADD-2) inside approve tx `7f97ffa` (bundled with W4-02)
+- [x] W4-04: Migration 0016_supporter_referrals.sql + POST /referral (transactional ADD-3, rate limit user 5/h + IP 20/h, referrer gate ADD-1) + first-payment trigger in webhooks.ts subscription_payment_success (inactive-referrer mark-processed+skip) `26fadc8`
+- [x] W4-05: Quarterly rev share cron `0 5 1 1,4,7,10 *` + MRR gate <$10K/month → skip + weighted distribution (D-52 tier units 8/6/5/4) + idempotency via `revshare:${quarter}:${userId}` source_id + startMaintenanceWorker signature extended to accept env `ae9b77a`
+- [x] W4-06: notifications.ts (4 Resend email templates + sendEmail helper, PII protection, XSS guard, graceful no-op) + wired all 4 call sites (approve/reject/first-payment/revshare) + scripts/test-ctx-12-w4.ts 24/24 PASS (ADD-8) `ee822e5`
+- [x] W4 DEPLOY: pg_dump backup + migration 0016 + 11 files tar-extracted to /opt/contexter/app + ADMIN_USER_IDS=32b533b3 added to /opt/contexter/.env + docker rebuild + smoke all green (401/200 as expected) — LIVE
 
-### Wave 5: Legal + Polish + Deferred Bundle 🔶 PENDING
-- [ ] W5-01: ToS update — loyalty points clause (tokens non-transferable, no monetary value per D-57)
-- [ ] W5-02: Soft demotion implementation — 30-day warning email, auto-demotion to Bronze (D-53)
-- [ ] W5-03: Token expiry — tokens expire after 12 months if user inactive
-- [ ] W5-04: Anti-abuse — same IP/device detection for referrals, 14-day hold for payment tokens
-- [ ] W5-05: Deploy script audit — fix SCP/docker rebuild issue
-- **W5 deferred bundle from W1/W2/W3/W4 Coach reviews:**
-  - [ ] Better-auth email/password reclaim hook (add `databaseHooks.user.create.after` to `src/auth/index.ts`)
-  - [ ] `creditTokensWithQuarantineCheck` return type says `"active" | "quarantined"` but returns "active" for frozen/warning/exiting — type lie, log-only but should be fixed
-  - [ ] `runSupportersRanking` 92 lines > 50 guideline — extract quarantine promotion sweep into helper
-  - [ ] Concurrent /freeze returns 500 instead of 409 — merge SELECT+UPDATE into atomic `UPDATE ... WHERE (freeze_start IS NULL OR EXTRACT(YEAR FROM ...)) RETURNING`
-  - [ ] `supporter_transactions.amount_tokens` stores REQUESTED not CREDITED on capped rows — audit drift. Fix: store `toCredit` or add `credited_tokens` column
-  - [ ] `SupporterStatus` TypeScript type missing `quarantined` value (DB column accepts text, type behind)
-  - [ ] W3 freeze 409 detection via `.includes("year")` substring match — fragile, use structured backend error codes
-  - [ ] **Infra**: Hetzner CAX21 38G disk needs expansion or aggressive docker prune cron (100% full during W1 deploy, cleaned 35GB manually)
+### Wave 5: Legal + Polish + Deferred Bundle 🔶 PARTIAL (5A deployed, 5B/5C implemented locally, deploy pending)
+
+**5A Deferred Bundle ✅ DEPLOYED 2026-04-11 session 239** — 7 atomic commits addressing Coach review technical debt from W1-W4:
+- [x] BB-01 Better-auth email/password reclaim hook — `databaseHooks.user.create.after` in `src/auth/index.ts` calls reclaimUnmatchedForEmail, non-blocking `e9b6db5`
+- [x] BB-02 `creditTokensWithQuarantineCheck` honest return type `{status: SupporterStatus, created: boolean}` `784f679`
+- [x] BB-03 `runSupportersRanking` extract `promoteQuarantinedAboveThreshold` helper (92→37 lines, pure refactor) `cc28922`
+- [x] BB-04 /freeze atomicity — single UPDATE ... WHERE EXTRACT YEAR + classify-SELECT on miss → structured 403/409 with `code` field `15a98b5`
+- [x] BB-05 `supporter_transactions.amount_tokens` audit drift — in-tx UPDATE on capped rows + metadata preserves `requested_tokens` + `capped: true` flag `e0b8c5e`
+- [x] BB-06 SupporterStatus type widen to include `"quarantined"` (removed ADD-6 string workaround) `e96d2f1`
+- [x] BB-07 W3 frontend structured 409 detection — exact match on `already_frozen_this_year`/`already_frozen` (replaces fragile substring) `60ed97f` ← **backend deployed, frontend NOT yet** (needs CF Pages deploy)
+
+**5B Features + 5C Legal IMPLEMENTED LOCALLY session 239, NOT DEPLOYED** — 5 atomic commits:
+- [x] W5-01 ToS Section 7 "Supporter Program and Loyalty Tokens" — non-transferable, no monetary value per D-57, 12-month expiry clause, exit-forfeit, anti-circular, 50/month task cap, 14-day hold — `web/src/pages/Terms.tsx` +80 -9, renumbered sections 7-14 → 8-15, last-updated date → April 11, 2026 `141f714`
+- [x] W5-02 Soft demotion cron (D-53) — `src/services/supporters-lifecycle.ts` new with `runSoftDemotion` + `clearReactivatedWarnings` helper + 2 new notification templates (sendDemotionWarningEmail + sendDemotionExitEmail). Stages: 30d warning+email, 60d demote tier to bronze, 90d status='exiting'+email. Daily cron 03:30 UTC jobId `daily-soft-demotion-cron`. Re-activation clears warning if new supporter_transactions row after warning_sent_at. `acc5a01`
+- [x] W5-03 Token expiry cron — 365d inactive → tokens=0 (keep row per G1). Uses CTE `WITH before_update AS (SELECT) + updated AS (UPDATE RETURNING)` pattern so logs capture prev_tokens BEFORE zeroing. Weekly cron Sunday 03:45 UTC jobId `weekly-token-expiry-cron`. No email first pass. `ca1ef4e`
+- [x] W5-04 Anti-abuse — migration `0017_antiabuse.sql` adds `signup_ip`, `signup_device_hash` to supporter_referrals (+2 indexes) and `held_until` to supporter_transactions (+partial index). POST /referral extracts IP via getClientIp + computes `sha256(user_agent + '|' + accept_language).slice(0,32)` device hash, rejects duplicate IP or device per referrer with structured 409 `duplicate_ip_or_device`. subscription_payment_success sets heldUntil=NOW()+14d at both recordTransaction call sites. Revshare MRR gate + quarter revenue SUMs both add `AND (held_until IS NULL OR held_until <= NOW())`. Refund/chargeback handler deferred to W6+. `907883a`
+- [x] W5-05 Deploy script fix — root cause `scp -r LOCAL/src/ HOST:REMOTE/app/src/` path-nesting on repeat deploys (destination exists → copies INTO it → `src/src/` accumulation → Dockerfile COPY bakes stale mix). Fix: `sync_dir()` helper = tar → scp → extract into `.new.$$` staging dir → atomic mv → rm old. Post-build sha256 image verification via `docker compose run --rm --entrypoint sha256sum app src/index.ts` compared to local. Pre-deploy disk guard ≥5GB free. Nested-dir regression check. /api/formats smoke test. `set -euo pipefail`. `016fd20`
+
+**5B/5C Tests (all PASS on contexter_dev):**
+- scripts/test-ctx-12-w5.ts — 10/10 PASS (W5-02 stages + W5-03 expiry)
+- scripts/test-ctx-12-w5-04.ts — 14/14 PASS (anti-abuse referral + hold filter)
+
+**5D Deploy pending (next session):**
+- [ ] pg_dump backup → /root/backups/ctx12-w5-pre-<timestamp>.dump
+- [ ] Apply migration 0017 to prod (contexter-postgres-1 container)
+- [ ] SCP backend files via new `ops/deploy.sh` (this will be the live-test of W5-05 fix) OR manual tar approach for safety
+- [ ] `docker compose build --no-cache app` + `docker compose up -d app`
+- [ ] Health smoke + W4/W5 endpoint smoke (POST /referral with duplicate IP → 409 `duplicate_ip_or_device`)
+- [ ] Verify 6 BullMQ maintenance cron hashes (was 4: daily-retention + weekly-drift-check + weekly-supporters-ranking + quarterly-revshare; adds daily-soft-demotion + weekly-token-expiry)
+- [ ] Frontend CF Pages deploy via `ops/deploy-web.sh` — ships BB-07 structured error + W5-01 ToS Section 7
+
+**Other open items (infra + housekeeping):**
+- [ ] Rotate RESEND_API_KEY (defensive — value leaked into Orchestrator context via grep in session 239, not logged/committed)
+- [ ] Hetzner CAX21 38G disk expansion or aggressive docker prune cron (currently 51% after 2 session-239 deploys, was 48% at session start)
+- [ ] Delete unverified LS store #333207 (email sent to hello@lemonsqueezy.com session 236, no response)
+- [ ] src/routes/supporters.ts 821 lines > 800 soft threshold → future refactor
+- [ ] AC-7 soft demotion production validation — deploy first, then wait for organic inactive-user scenarios (or seed test supporter row for ops verification)
 
 ## Blockers
 

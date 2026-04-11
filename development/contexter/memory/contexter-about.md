@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-04-05 (session 231 — cdn.contexter.cc domain, co-founder hub, deployed URLs)
+> Last updated: 2026-04-11 (session 239 — CTX-12 W4+W5 implementation; new supporters-revshare/supporters-lifecycle/notifications services; migration 0016+0017)
 ---
 
 ## Identity
@@ -50,13 +50,13 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 |---|---|
 | Project root | `nospace/development/contexter/` |
 | Source code | `src/` |
-| Services | `src/services/` (parsers/, chunker/, embedder/, vectorstore/, rag/, mcp/, evaluation/, auth, billing, content-filter, feedback-decay, llm, nli, pipeline, queue, rate-limit, reranker, resilience) |
+| Services | `src/services/` (parsers/, chunker/, embedder/, vectorstore/, rag/, mcp/, evaluation/, auth, billing, content-filter, feedback-decay, llm, nli, pipeline, queue, rate-limit, reranker, resilience, supporters, supporters-ranking, supporters-revshare, supporters-lifecycle, notifications) |
 | Routes | `src/routes/` (auth, auth-social, billing, dev, documents, feedback, health, maintenance, mcp-remote, metrics, oauth, pipeline, query, retry, status, upload, webhooks) — 17 files |
 | Eval scripts | `evaluation/` (run-eval.ts, run-eval-chunking.ts, canary.ts, generate-synthetic.ts, generate-dataset.ts, check-stale.ts, compare.ts, types.ts, metrics/) — 10 files |
 | Frontend | `web/` (SolidJS SPA, pages: Landing, Hero, Dashboard, DocumentViewer, Upload, ApiPage, Settings, Login, Register, ForgotPassword, ResetPassword, VerifyEmail, Privacy, Terms) |
 | Ops | `ops/` (deploy.sh, deploy-web.sh, rollback.sh, Dockerfile, netdata/) |
 | k6 load tests | `k6/` (setup.js, scenario-1-queries.js, scenario-2-uploads.js, scenario-3-mixed.js, smoke.js, capacity-model.ts, deepinfra-model.ts) |
-| PG migrations | `drizzle-pg/` (0000–0012, 13 files) |
+| PG migrations | `drizzle-pg/` (0000–0017, 18 files; 0015 supporters W1, 0016 supporter_referrals W4, 0017 antiabuse W5-04 — 0017 on dev only NOT yet prod) |
 | Tests | `tests/` (chunker, embedder, content-filter, parsers, rag, vectorstore — 6 files, 1682 lines) |
 | Memory | `memory/` |
 | Co-founder docs | `docs/artem/` (29 files MD+HTML, index.html, convert.ts) |
@@ -216,7 +216,7 @@ Production data: ~756 users, ~744 documents, ~1281 chunks (as of 2026-03-30).
 | **CTX-04 Auth** | [contexter-auth.md](contexter-auth.md) | 🔶 IN PROGRESS |
 | **CTX-09 UI/UX Polish** | [contexter-uiux-polish.md](contexter-uiux-polish.md) | ✅ COMPLETE (2026-03-30) |
 | **CTX-10 GTM Launch** | [contexter-gtm-launch.md](contexter-gtm-launch.md) | 🔶 IN PROGRESS (deadline: 2026-04-08) |
-| **CTX-12 Supporters Backend** | [contexter-supporters-backend.md](contexter-supporters-backend.md) | 🔶 IN PROGRESS |
+| **CTX-12 Supporters Backend** | [contexter-supporters-backend.md](contexter-supporters-backend.md) | 🔶 IN PROGRESS (~90% — W1..W5-5A deployed, W5-5B/5C implemented local, deploy pending) |
 
 ## Write Authority
 
