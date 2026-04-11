@@ -14,6 +14,7 @@ import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
 import type { Env } from "../types/env"
 import * as authSchema from "./schema"
+import { reclaimUnmatchedForEmail } from "../services/supporters"
 
 /**
  * Create auth instance. Called once at server startup.
@@ -116,6 +117,46 @@ export function createAuth(env: Env) {
         "/sign-in/email": { window: 900, max: 10 }, // 10 per 15 min
         "/sign-up/email": { window: 3600, max: 5 }, // 5 per hour
         "/forget-password": { window: 3600, max: 5 },
+      },
+    },
+
+    // --- Database Hooks ---
+    //
+    // CTX-12 BB-01: When a user is created via better-auth (email/password
+    // or OAuth), reclaim any unmatched supporter_transactions rows that
+    // were queued against their email before registration. Mirrors the
+    // legacy /api/auth/register + Google OAuth hooks added in W1-07 so the
+    // better-auth email/password path also claims orphaned tokens.
+    //
+    // Non-blocking: errors are logged but never thrown — reclaim failure
+    // must not break registration. Runs after better-auth has committed
+    // the user row, so `user.id` is guaranteed stable.
+    databaseHooks: {
+      user: {
+        create: {
+          after: async (user) => {
+            try {
+              if (!user?.id || !user?.email) return
+              const reclaimed = await reclaimUnmatchedForEmail(
+                client as unknown as Parameters<typeof reclaimUnmatchedForEmail>[0],
+                user.id,
+                user.email,
+              )
+              if (reclaimed > 0) {
+                console.log(JSON.stringify({
+                  event: "supporter_reclaim_better_auth",
+                  user_id: user.id,
+                  reclaimed_tokens: reclaimed,
+                }))
+              }
+            } catch (e) {
+              console.error(
+                "supporter_reclaim_better_auth_error",
+                e instanceof Error ? e.message : String(e),
+              )
+            }
+          },
+        },
       },
     },
   })
