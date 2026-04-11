@@ -21,7 +21,7 @@ import type { Env } from "../types/env"
 
 export type SupporterTier = "diamond" | "gold" | "silver" | "bronze" | "pending"
 
-export type SupporterStatus = "active" | "warning" | "frozen" | "exiting"
+export type SupporterStatus = "active" | "warning" | "quarantined" | "frozen" | "exiting"
 
 export type TransactionType =
   | "purchase"              // one-time Supporter donation
@@ -117,19 +117,18 @@ export function genId(): string {
 // gate on an existing supporters row. Otherwise creditTokens would create
 // a phantom supporters row for non-supporters, bypassing the 100-spot cap.
 //
-// Status type is `string` (not SupporterStatus) to accept the W2-07
-// `quarantined` value that the DB column holds but the TS type does not
-// yet include — ADD-6 defers widening SupporterStatus to W5.
+// BB-06: SupporterStatus is now properly widened to include "quarantined",
+// so the gate result carries the full typed status directly.
 
 export type SupporterGateResult =
-  | { ok: true; tier: SupporterTier; status: string }
+  | { ok: true; tier: SupporterTier; status: SupporterStatus }
   | { ok: false; reason: "not_found" | "exiting" }
 
 export async function requireActiveSupporter(
   sql: Sql,
   userId: string,
 ): Promise<SupporterGateResult> {
-  const rows = await sql<{ tier: SupporterTier; status: string }[]>`
+  const rows = await sql<{ tier: SupporterTier; status: SupporterStatus }[]>`
     SELECT tier, status FROM supporters WHERE user_id = ${userId} LIMIT 1
   `
   if (rows.length === 0) return { ok: false, reason: "not_found" }
