@@ -1,6 +1,7 @@
 import { createSignal, For, Show, type Component } from "solid-js"
 import { t, lang, toggleLang } from "../lib/i18n"
 import Logo from "../components/Logo"
+import SupportersLeaderboard from "../components/SupportersLeaderboard"
 import { Check, ChevronDown, ChevronUp, HelpCircle } from "lucide-solid"
 
 // ─── Tooltip ────────────────────────────────────────────────────────────────
@@ -373,24 +374,6 @@ const BenefitsSection: Component = () => {
 
 // ─── Leaderboard ──────────────────────────────────────────────────────────────
 
-const SUPPORTERS_DATA = [
-  { rank: 1, name: "Zhaslan K.", tier: "Diamond", tokens: 50 },
-  { rank: 2, name: "Artem S.", tier: "Diamond", tokens: 40 },
-  { rank: 3, name: "Dana M.", tier: "Diamond", tokens: 35 },
-  { rank: 4, name: "Mikhail R.", tier: "Diamond", tokens: 30 },
-  { rank: 5, name: "Aisha T.", tier: "Diamond", tokens: 25 },
-  { rank: 6, name: "Timur B.", tier: "Diamond", tokens: 20 },
-  { rank: 7, name: "Camille L.", tier: "Diamond", tokens: 15 },
-  { rank: 8, name: "Nikolai V.", tier: "Diamond", tokens: 10 },
-]
-
-function tierColor(tier: string): string {
-  if (tier === "Diamond") return "text-accent"
-  if (tier === "Gold") return "text-[#B8860B]"
-  if (tier === "Silver") return "text-text-tertiary"
-  return "text-text-secondary"
-}
-
 const LeaderboardSection: Component = () => (
   <section id="leaderboard" class="py-16 md:py-20 bg-bg-canvas border-b border-border-subtle">
     <Container>
@@ -403,53 +386,7 @@ const LeaderboardSection: Component = () => (
       >
         {t("supporters.leaderboard.title")}
       </h2>
-
-      <div class="border border-border-default">
-        {/* Table header */}
-        <div
-          class="grid border-b border-border-default bg-bg-surface"
-          style={{ "grid-template-columns": "64px 1fr 120px 100px" }}
-        >
-          <div class="px-4 py-3 text-[12px] uppercase tracking-[0.12em] text-text-tertiary font-medium">
-            {t("supporters.leaderboard.col.rank")}
-          </div>
-          <div class="px-4 py-3 text-[12px] uppercase tracking-[0.12em] text-text-tertiary font-medium">
-            {t("supporters.leaderboard.col.name")}
-          </div>
-          <div class="px-4 py-3 text-[12px] uppercase tracking-[0.12em] text-text-tertiary font-medium">
-            {t("supporters.leaderboard.col.tier")}
-          </div>
-          <div class="px-4 py-3 text-[12px] uppercase tracking-[0.12em] text-text-tertiary font-medium text-right">
-            {t("supporters.leaderboard.col.tokens")}
-          </div>
-        </div>
-        {/* Supporters rows */}
-        <For each={SUPPORTERS_DATA}>
-          {(s) => (
-            <div
-              class="grid border-b border-border-subtle last:border-b-0 hover:bg-bg-surface transition-colors duration-[80ms]"
-              style={{ "grid-template-columns": "64px 1fr 120px 100px" }}
-            >
-              <div class="px-4 py-3 text-[14px] font-bold text-black font-mono">#{s.rank}</div>
-              <div class="px-4 py-3 text-[14px] text-text-primary">{s.name}</div>
-              <div class={`px-4 py-3 text-[12px] font-medium ${tierColor(s.tier)}`}>{s.tier}</div>
-              <div class="px-4 py-3 text-[14px] font-bold text-black font-mono text-right">{s.tokens}</div>
-            </div>
-          )}
-        </For>
-        {/* Remaining spots */}
-        <div class="py-6 px-4 text-center border-t border-border-subtle">
-          <p class="text-[12px] text-text-tertiary">
-            92 {t("supporters.leaderboard.spotsLeft")}
-          </p>
-          <a
-            href="#join"
-            class="inline-block mt-3 text-[12px] text-accent hover:underline font-medium"
-          >
-            {t("supporters.leaderboard.empty.cta")}
-          </a>
-        </div>
-      </div>
+      <SupportersLeaderboard />
     </Container>
   </section>
 )

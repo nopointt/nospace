@@ -27,7 +27,7 @@ async function api<T>(path: string, opts: ApiOptions = {}): Promise<T> {
 
   if (res.status === 401) {
     localStorage.removeItem("contexter_auth")
-    throw new Error("Сессия истекла — войдите снова")
+    throw new Error("Session expired — please sign in again")
   }
 
   if (!res.ok) {
@@ -234,4 +234,38 @@ export function uploadToR2(
     xhr.onerror = () => reject(new Error("Network error during upload"))
     xhr.send(file)
   })
+}
+
+export function createSupportInvoice(amount: number) {
+  return api<{ invoiceUrl: string; months: number }>(
+    "/api/billing/support",
+    { method: "POST", body: JSON.stringify({ amount }) },
+  )
+}
+
+// ─── Supporters API ──────────────────────────────────────────────────────────
+
+export type SupporterTier = "diamond" | "gold" | "silver" | "bronze" | "pending"
+
+export interface SupporterRow {
+  rank: number
+  tier: SupporterTier
+  tokens: number
+  displayName: string
+  joinedAt: string
+  status: string
+}
+
+export interface TierThreshold {
+  maxRank: number
+}
+
+export interface LeaderboardResponse {
+  supporters: SupporterRow[]
+  totalCount: number
+  thresholds: Record<string, TierThreshold>
+}
+
+export function getSupportersLeaderboard() {
+  return api<LeaderboardResponse>("/api/supporters")
 }

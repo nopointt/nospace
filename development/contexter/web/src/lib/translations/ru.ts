@@ -686,6 +686,11 @@ export const ru: Record<string, string> = {
   "supporters.leaderboard.empty.sub": "Стань #1 — первый сторонник автоматически получает тир Алмаз.",
   "supporters.leaderboard.empty.cta": "Занять место →",
   "supporters.leaderboard.spotsLeft": "мест свободно — займи своё",
+  "supporters.leaderboard.loading": "Загружаем доску почёта...",
+  "supporters.leaderboard.error": "Не удалось загрузить доску почёта",
+  "supporters.leaderboard.retry": "Повторить",
+  "supporters.leaderboard.soldOut": "Все 100 мест заняты",
+  "supporters.tiers.pending.label": "Ожидание",
 
   "supporters.tasks.label": "ЗАДАНИЯ",
   "supporters.tasks.title": "Зарабатывай токены сверх платежей.",

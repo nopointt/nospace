@@ -689,6 +689,11 @@ export const en: Record<string, string> = {
   "supporters.leaderboard.empty.sub": "Be #1 — the first supporter earns Diamond tier automatically.",
   "supporters.leaderboard.empty.cta": "Claim your spot →",
   "supporters.leaderboard.spotsLeft": "spots remaining — claim yours",
+  "supporters.leaderboard.loading": "Loading leaderboard...",
+  "supporters.leaderboard.error": "Failed to load leaderboard",
+  "supporters.leaderboard.retry": "Retry",
+  "supporters.leaderboard.soldOut": "All 100 spots are taken",
+  "supporters.tiers.pending.label": "Pending",
 
   "supporters.tasks.label": "TASKS",
   "supporters.tasks.title": "Earn tokens beyond payments.",
