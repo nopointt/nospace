@@ -32,6 +32,7 @@ import { pipeline } from "./routes/pipeline"
 import { oauth } from "./routes/oauth"
 import { billing } from "./routes/billing"
 import { webhooks } from "./routes/webhooks"
+import { supporters as supportersRouter } from "./routes/supporters"
 import { authSocial } from "./routes/auth-social"
 import { metrics } from "./routes/metrics"
 import { startMaintenanceWorker, shutdownMaintenanceQueue } from "./routes/maintenance"
@@ -265,6 +266,7 @@ app.route("/api/retry", retry)
 app.route("/api/pipeline", pipeline)
 app.route("/api/billing", billing)
 app.route("/api/webhooks", webhooks)
+app.route("/api/supporters", supportersRouter)
 app.route("/dev", dev)
 app.route("/api/metrics", metrics)
 app.route("/api/feedback", feedbackRouter)
