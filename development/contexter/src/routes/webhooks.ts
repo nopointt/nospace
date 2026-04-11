@@ -14,7 +14,6 @@ import {
   matchSupporter,
   tokensFromCents,
   recordTransaction,
-  creditTokens,
   creditTokensWithMultiplier,
   creditTokensWithQuarantineCheck,
 } from "../services/supporters"
@@ -268,28 +267,32 @@ webhooks.post("/lemonsqueezy", async (c) => {
       const userId = await matchSupporter(sql, { email, customDataUserId })
       const tokens = tokensFromCents(subtotal)
 
-      const txId = await recordTransaction(sql, {
-        userId,
-        email,
-        type: "subscription_payment",
-        amountTokens: tokens,
-        amountUsdCents: subtotal,
-        sourceType: "lemonsqueezy_subscription",
-        sourceId: `payment:${invoiceId}`,
-        metadata: { subscriptionId, customData },
-      })
-
-      if (!txId) {
-        console.log(JSON.stringify({ ts, event: "ls_subscription_payment_duplicate", invoiceId }))
-        break
-      }
-
       if (!userId) {
+        // No supporter to match — still record the unmatched transaction
+        // for later reclaim on registration. No cap check needed (no
+        // credit happens), no lock needed (no race window).
+        const txId = await recordTransaction(sql, {
+          userId: null,
+          email,
+          type: "subscription_payment",
+          amountTokens: tokens,
+          amountUsdCents: subtotal,
+          sourceType: "lemonsqueezy_subscription",
+          sourceId: `payment:${invoiceId}`,
+          metadata: { subscriptionId, customData },
+        })
+        if (!txId) {
+          console.log(JSON.stringify({ ts, event: "ls_subscription_payment_duplicate", invoiceId }))
+          break
+        }
         console.log(JSON.stringify({ ts, event: "ls_subscription_payment_unmatched", email, invoiceId }))
         break
       }
 
       // Extend period by 30 days. GREATEST handles expired subs.
+      // Runs outside the cap transaction — subscriptions row update is
+      // independent of the token accounting and does not need to be
+      // serialized with it.
       await sql`
         UPDATE subscriptions
         SET current_period_end = GREATEST(current_period_end, NOW()) + INTERVAL '30 days',
@@ -305,12 +308,72 @@ webhooks.post("/lemonsqueezy", async (c) => {
       // W2-03: subscription_payment_success gets the D-52 tier multiplier.
       // Order-created PWYW stays at the base 1:1 rate (no silent change).
       //
-      // W2-08: spending cap of 500 BASE tokens/month from subscription
-      // payments. The cap is applied to the raw subscription spend
-      // (pre-multiplier); the tier bonus still applies on top of whatever
-      // fraction of `tokens` falls under the cap.
-      if (tokens > 0) {
-        const alreadyRows = await sql<{ sum: string | null }[]>`
+      // W2-08 (revised): spending cap of 500 BASE tokens/month from
+      // subscription payments, wrapped in sql.begin + pg_advisory_xact_lock
+      // so two concurrent webhooks for the SAME user with DIFFERENT invoice
+      // IDs cannot both observe the same prior SUM and both credit up to
+      // 500 tokens (cap would be exceeded). The lock is keyed on the user
+      // id so different users never contend. Inside the transaction:
+      //   1. acquire advisory lock keyed on `supporter_cap:${userId}`
+      //   2. recordTransaction (duplicate gate still works — idempotent
+      //      pre-SELECT on source_type+source_id inside the tx)
+      //   3. SUM prior subscription_payment rows this calendar month,
+      //      excluding the row we just inserted (filter by id != txId)
+      //   4. compute cap math
+      //   5. call creditTokensWithMultiplier with the tx handle so the
+      //      supporters upsert commits atomically with the transaction row
+      // If any step fails, the whole transaction rolls back and the next
+      // webhook retry sees a clean slate.
+      type CapOutcome =
+        | { kind: "duplicate" }
+        | { kind: "capped"; already: string; requested: number }
+        | {
+            kind: "credited"
+            already: string
+            requested: number
+            baseTokens: number
+            multiplier: string
+            creditedTokens: number
+          }
+
+      const outcome: CapOutcome = await sql.begin(async (txRaw) => {
+        const tx = txRaw as unknown as Sql
+
+        // 1. Serialize all cap checks for this user. Advisory locks taken
+        //    with pg_advisory_xact_lock are released automatically on
+        //    commit or rollback — no manual unlock needed.
+        await tx`SELECT pg_advisory_xact_lock(hashtext(${`supporter_cap:${userId}`}))`
+
+        // 2. Record transaction (idempotent). If duplicate, short-circuit.
+        const txId = await recordTransaction(tx, {
+          userId,
+          email,
+          type: "subscription_payment",
+          amountTokens: tokens,
+          amountUsdCents: subtotal,
+          sourceType: "lemonsqueezy_subscription",
+          sourceId: `payment:${invoiceId}`,
+          metadata: { subscriptionId, customData },
+        })
+        if (!txId) {
+          return { kind: "duplicate" } as CapOutcome
+        }
+
+        if (tokens <= 0) {
+          // Zero-token payment still gets a transaction row, no credit.
+          return {
+            kind: "credited",
+            already: "0",
+            requested: 0,
+            baseTokens: 0,
+            multiplier: "1/1",
+            creditedTokens: 0,
+          } as CapOutcome
+        }
+
+        // 3. SUM prior payment transactions this calendar month,
+        //    excluding the row we just inserted.
+        const alreadyRows = await tx<{ sum: string | null }[]>`
           SELECT COALESCE(SUM(amount_tokens), 0)::text AS sum
           FROM supporter_transactions
           WHERE user_id = ${userId}
@@ -327,29 +390,51 @@ webhooks.post("/lemonsqueezy", async (c) => {
         const toCredit = Number(toCreditBig)
 
         if (toCredit === 0) {
-          console.log(JSON.stringify({
-            ts,
-            event: "ls_subscription_payment_capped",
-            userId,
+          return {
+            kind: "capped",
+            already: alreadyBig.toString(),
             requested: tokens,
-            alreadyCredited: Number(alreadyBig),
-            subscriptionId,
-          }))
-        } else {
-          const result = await creditTokensWithMultiplier(sql, userId, toCredit)
-          console.log(JSON.stringify({
-            ts,
-            event: "ls_subscription_payment_credited",
-            userId,
-            requested: tokens,
-            cappedBase: result.baseTokens,
-            multiplier: result.multiplier,
-            creditedTokens: result.creditedTokens,
-            subscriptionId,
-          }))
+          } as CapOutcome
         }
+
+        // 4. Credit inside the transaction so the supporters upsert and
+        //    the supporter_transactions row commit atomically.
+        const result = await creditTokensWithMultiplier(tx, userId, toCredit)
+        return {
+          kind: "credited",
+          already: alreadyBig.toString(),
+          requested: tokens,
+          baseTokens: result.baseTokens,
+          multiplier: result.multiplier,
+          creditedTokens: result.creditedTokens,
+        } as CapOutcome
+      }) as unknown as CapOutcome
+
+      if (outcome.kind === "duplicate") {
+        console.log(JSON.stringify({ ts, event: "ls_subscription_payment_duplicate", invoiceId }))
+        break
+      }
+
+      if (outcome.kind === "capped") {
+        console.log(JSON.stringify({
+          ts,
+          event: "ls_subscription_payment_capped",
+          userId,
+          requested: outcome.requested,
+          alreadyCredited: Number(BigInt(outcome.already)),
+          subscriptionId,
+        }))
       } else {
-        console.log(JSON.stringify({ ts, event: "ls_subscription_payment_credited", userId, tokens, subscriptionId }))
+        console.log(JSON.stringify({
+          ts,
+          event: "ls_subscription_payment_credited",
+          userId,
+          requested: outcome.requested,
+          cappedBase: outcome.baseTokens,
+          multiplier: outcome.multiplier,
+          creditedTokens: outcome.creditedTokens,
+          subscriptionId,
+        }))
       }
       break
     }
