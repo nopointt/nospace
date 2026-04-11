@@ -144,6 +144,40 @@ export async function sendReferralPaidEmail(
   })
 }
 
+export async function sendDemotionWarningEmail(
+  env: Env,
+  email: string,
+  inactiveDays: number,
+): Promise<void> {
+  await sendEmail(env, {
+    to: email,
+    subject: "Your Contexter supporter status needs attention",
+    html: `<div style="font-family: system-ui, sans-serif; max-width: 480px; padding: 24px;">
+      <h2>Supporter warning</h2>
+      <p>You've been inactive for <strong>${inactiveDays} days</strong> on your Contexter supporter account.</p>
+      <p>To keep your current tier, make a payment, submit a bug report, or refer a new user within 30 days.</p>
+      <p>After 30 more days of inactivity, your tier will be demoted to Bronze. After 60 more days, your supporter status will enter "exiting" state.</p>
+      <p><a href="https://contexter.cc/dashboard">Visit your dashboard</a></p>
+    </div>`,
+  })
+}
+
+export async function sendDemotionExitEmail(
+  env: Env,
+  email: string,
+): Promise<void> {
+  await sendEmail(env, {
+    to: email,
+    subject: "Your Contexter supporter status is exiting",
+    html: `<div style="font-family: system-ui, sans-serif; max-width: 480px; padding: 24px;">
+      <h2>Supporter exiting</h2>
+      <p>Your supporter account has been inactive for 90+ days. Your status is now "exiting" and you will no longer receive rev share distributions.</p>
+      <p>If you want to restore your status, make a payment or contribute (bug report, referral) within the next 30 days.</p>
+      <p><a href="https://contexter.cc/supporters">Visit the Supporters page</a></p>
+    </div>`,
+  })
+}
+
 export async function sendRevShareEmail(
   env: Env,
   email: string,

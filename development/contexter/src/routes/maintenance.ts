@@ -3,6 +3,7 @@ import type { Sql } from "postgres"
 import { runDriftCheck } from "../services/evaluation/drift"
 import { runQuarterlyRevShare } from "../services/supporters-revshare"
 import { runSupportersRanking } from "../services/supporters-ranking"
+import { runSoftDemotion } from "../services/supporters-lifecycle"
 import type { Env } from "../types/env"
 
 // F-013: maintenance queue — separate from "pipeline" to avoid concurrency interference
@@ -70,6 +71,17 @@ export function startMaintenanceWorker(redisUrl: string, sql: Sql, env: Env): Wo
     console.error("Failed to schedule quarterly-revshare job:", err instanceof Error ? err.message : String(err))
   )
 
+  // CTX-12 W5-02: Schedule daily soft demotion sweep at 03:30 UTC.
+  // Applies the 30/60/90d ladder (warning → bronze → exiting) to all
+  // active/warning supporters. Re-activation clears warnings automatically.
+  queue.add(
+    "daily-soft-demotion",
+    {},
+    { repeat: { pattern: "30 3 * * *" }, jobId: "daily-soft-demotion-cron" }
+  ).catch((err) =>
+    console.error("Failed to schedule daily-soft-demotion job:", err instanceof Error ? err.message : String(err))
+  )
+
   const worker = new Worker<Record<string, never>>(
     MAINTENANCE_QUEUE_NAME,
     async (job: Job) => {
@@ -83,6 +95,10 @@ export function startMaintenanceWorker(redisUrl: string, sql: Sql, env: Env): Wo
       }
       if (job.name === "quarterly-revshare") {
         await runQuarterlyRevShare(sql, env)
+        return
+      }
+      if (job.name === "daily-soft-demotion") {
+        await runSoftDemotion(sql, env)
         return
       }
       await runDailyRetention(sql)
