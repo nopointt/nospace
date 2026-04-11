@@ -125,28 +125,17 @@ supporters.post("/freeze", async (c) => {
   const auth = await resolveAuth(sql, c.req.raw)
   if (!auth || !auth.isOwner) return c.json({ error: "unauthorized" }, 401)
 
-  const rows = await sql<{
-    status: string
-    freeze_start: Date | null
-  }[]>`
-    SELECT status, freeze_start
-    FROM supporters
-    WHERE user_id = ${auth.userId}
-    LIMIT 1
-  `
-  const row = rows[0]
-  if (!row) return c.json({ error: "not_a_supporter" }, 403)
-  if (row.status === "frozen") return c.json({ error: "already_frozen" }, 409)
-
-  // Annual check — one freeze per UTC calendar year (not rolling 365d)
-  if (row.freeze_start) {
-    const thisYear = new Date().getUTCFullYear()
-    const freezeYear = new Date(row.freeze_start).getUTCFullYear()
-    if (freezeYear === thisYear) {
-      return c.json({ error: "freeze_already_used_this_year" }, 409)
-    }
-  }
-
+  // BB-04: Atomic check-and-update. Two concurrent /freeze requests for
+  // the same user no longer both observe "freeze_start is null" and both
+  // try to INSERT/UPDATE (which previously surfaced as HTTP 500 from a
+  // constraint race). The UPDATE's WHERE clause enforces both invariants:
+  //  - user must be a supporter (user_id match)
+  //  - user must not be currently frozen
+  //  - either they have never frozen OR their last freeze was in a prior
+  //    UTC calendar year
+  // If the UPDATE affects 0 rows, a follow-up SELECT classifies the
+  // reason into 403 not_a_supporter | 409 already_frozen_this_year |
+  // 409 already_frozen.
   const result = await sql<{ freeze_start: Date; freeze_end: Date }[]>`
     UPDATE supporters
     SET status = 'frozen',
@@ -155,12 +144,41 @@ supporters.post("/freeze", async (c) => {
         updated_at = NOW()
     WHERE user_id = ${auth.userId}
       AND status != 'frozen'
+      AND (
+        freeze_start IS NULL
+        OR EXTRACT(YEAR FROM freeze_start AT TIME ZONE 'UTC')
+           < EXTRACT(YEAR FROM NOW() AT TIME ZONE 'UTC')
+      )
     RETURNING freeze_start, freeze_end
   `
   const updated = result[0]
+
   if (!updated) {
-    return c.json({ error: "freeze_failed" }, 500)
+    // Classify the miss.
+    const rows = await sql<{
+      status: string
+      freeze_start: Date | null
+    }[]>`
+      SELECT status, freeze_start
+      FROM supporters
+      WHERE user_id = ${auth.userId}
+      LIMIT 1
+    `
+    const row = rows[0]
+    if (!row) return c.json({ error: "not_a_supporter" }, 403)
+    if (row.status === "frozen") {
+      return c.json(
+        { error: "already_frozen", code: "already_frozen" },
+        409,
+      )
+    }
+    // Only remaining case: freeze_start within current UTC year.
+    return c.json(
+      { error: "already_frozen_this_year", code: "freeze_year_used" },
+      409,
+    )
   }
+
   console.log(JSON.stringify({ event: "supporter_freeze_activated", user_id: auth.userId }))
   return c.json({
     ok: true,
