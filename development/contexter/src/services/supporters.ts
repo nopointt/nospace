@@ -110,6 +110,92 @@ export function genId(): string {
   return crypto.randomBytes(12).toString("hex")
 }
 
+// --- W4-01: Supporter gate + task submission ---------------------------
+//
+// ADD-1 (spec addendum): Token-earning endpoints (tasks, referrals) MUST
+// gate on an existing supporters row. Otherwise creditTokens would create
+// a phantom supporters row for non-supporters, bypassing the 100-spot cap.
+//
+// Status type is `string` (not SupporterStatus) to accept the W2-07
+// `quarantined` value that the DB column holds but the TS type does not
+// yet include — ADD-6 defers widening SupporterStatus to W5.
+
+export type SupporterGateResult =
+  | { ok: true; tier: SupporterTier; status: string }
+  | { ok: false; reason: "not_found" | "exiting" }
+
+export async function requireActiveSupporter(
+  sql: Sql,
+  userId: string,
+): Promise<SupporterGateResult> {
+  const rows = await sql<{ tier: SupporterTier; status: string }[]>`
+    SELECT tier, status FROM supporters WHERE user_id = ${userId} LIMIT 1
+  `
+  if (rows.length === 0) return { ok: false, reason: "not_found" }
+  const first = rows[0]!
+  if (first.status === "exiting") return { ok: false, reason: "exiting" }
+  return { ok: true, tier: first.tier, status: first.status }
+}
+
+// --- W4-01: Task constants ---------------------------------------------
+
+export type TaskType =
+  | "bug_report"
+  | "referral_signup"
+  | "referral_paid"
+  | "social_share"
+  | "review"
+
+// Token rewards per task type (locked by spec W4-01).
+export const TASK_TOKEN_AMOUNTS: Record<TaskType, number> = {
+  bug_report: 10,
+  referral_signup: 3,
+  referral_paid: 5,
+  social_share: 2,
+  review: 5,
+}
+
+// D-54: monthly cap enforced by W4-03 on approval, not submission.
+export const MONTHLY_TASK_CAP = 50
+
+/**
+ * Insert a pending supporter_tasks row for a user.
+ *
+ * Validation-only helper: does NOT enforce the supporter gate (ADD-1) —
+ * callers (HTTP route) must call requireActiveSupporter first. Does NOT
+ * credit tokens — credit happens on admin approval (W4-02).
+ *
+ * Throws on invalid input so the caller can map to HTTP 400:
+ *  - "invalid_task_type" — taskType not in TASK_TOKEN_AMOUNTS
+ *  - "description_too_long" — trimmed description exceeds 1000 chars
+ */
+export async function submitTask(
+  sql: Sql,
+  userId: string,
+  taskType: string,
+  description?: string,
+): Promise<{ id: string; taskType: TaskType; amountTokens: number; status: "pending" }> {
+  if (!(taskType in TASK_TOKEN_AMOUNTS)) {
+    throw new Error("invalid_task_type")
+  }
+  const typedTaskType = taskType as TaskType
+  const amountTokens = TASK_TOKEN_AMOUNTS[typedTaskType]
+
+  let desc: string | null = null
+  if (description !== undefined && description !== null) {
+    const trimmed = String(description).trim()
+    if (trimmed.length > 1000) throw new Error("description_too_long")
+    desc = trimmed.length > 0 ? trimmed : null
+  }
+
+  const id = genId()
+  await sql`
+    INSERT INTO supporter_tasks (id, user_id, task_type, amount_tokens, status, description)
+    VALUES (${id}, ${userId}, ${typedTaskType}, ${amountTokens}, 'pending', ${desc})
+  `
+  return { id, taskType: typedTaskType, amountTokens, status: "pending" }
+}
+
 /**
  * Convert USD cents to tokens per D-AUTO-02 (1 USD = 1 token, unlimited).
  * Rounds down (generous to Contexter on partial dollars).

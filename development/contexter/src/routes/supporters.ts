@@ -22,7 +22,14 @@ import type { Env } from "../types/env"
 import type { Sql } from "postgres"
 import type Redis from "ioredis"
 import { resolveAuth } from "../services/auth"
-import { TIER_THRESHOLDS, type SupporterTier } from "../services/supporters"
+import { checkRateLimit, getClientIp } from "../services/rate-limit"
+import {
+  TIER_THRESHOLDS,
+  TASK_TOKEN_AMOUNTS,
+  requireActiveSupporter,
+  submitTask,
+  type SupporterTier,
+} from "../services/supporters"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis; requestId: string } }
 
@@ -150,4 +157,93 @@ supporters.post("/freeze", async (c) => {
     freezeStart: updated.freeze_start,
     freezeEnd: updated.freeze_end,
   })
+})
+
+// --- W4-01: Submit a task for review ----------------------------------
+//
+// POST /api/supporters/tasks
+// Body: { taskType: TaskType, description?: string }
+//
+// Flow: auth (401) → supporter gate ADD-1 (403) → rate limit 10/hour (429)
+//     → JSON parse (400) → validate taskType (400) → submitTask (400/500)
+//     → 201 with pending task row.
+//
+// PII safety: logs carry user_id + task_type + task_id ONLY. No description,
+// no email. No token amounts are credited here — approval is W4-02.
+
+supporters.post("/tasks", async (c) => {
+  const sql = c.get("sql")
+  const redis = c.get("redis")
+  const env = c.get("env")
+
+  const auth = await resolveAuth(sql, c.req.raw)
+  if (!auth || !auth.isOwner) {
+    return c.json({ error: "unauthorized" }, 401)
+  }
+
+  // ADD-1: supporter-only gate — prevents phantom supporters row via creditTokens.
+  const gate = await requireActiveSupporter(sql, auth.userId)
+  if (!gate.ok) {
+    return c.json({ error: "not_a_supporter", reason: gate.reason }, 403)
+  }
+
+  // Rate limit: 10 submissions per hour per user.
+  const ip = getClientIp(c)
+  const rl = await checkRateLimit(
+    redis,
+    `task_submit:${auth.userId}`,
+    10,
+    3600,
+    ip,
+    env.RATE_LIMIT_WHITELIST_IPS,
+  )
+  if (!rl.allowed) {
+    return c.json({ error: "rate_limited", retryAfter: 3600 }, 429)
+  }
+
+  // Parse + validate body.
+  let body: { taskType?: unknown; description?: unknown }
+  try {
+    body = await c.req.json()
+  } catch {
+    return c.json({ error: "invalid_json" }, 400)
+  }
+  if (typeof body.taskType !== "string") {
+    return c.json({ error: "missing_task_type" }, 400)
+  }
+  if (!(body.taskType in TASK_TOKEN_AMOUNTS)) {
+    return c.json({ error: "invalid_task_type" }, 400)
+  }
+  const description = typeof body.description === "string" ? body.description : undefined
+
+  try {
+    const result = await submitTask(sql, auth.userId, body.taskType, description)
+    console.log(JSON.stringify({
+      event: "task_submitted",
+      user_id: auth.userId,
+      task_type: result.taskType,
+      task_id: result.id,
+    }))
+    return c.json({
+      taskId: result.id,
+      taskType: result.taskType,
+      amountTokens: result.amountTokens,
+      status: "pending",
+      message: "Task submitted for review",
+    }, 201)
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    if (msg === "description_too_long") {
+      return c.json({ error: "description_too_long", max: 1000 }, 400)
+    }
+    if (msg === "invalid_task_type") {
+      return c.json({ error: "invalid_task_type" }, 400)
+    }
+    console.error(JSON.stringify({
+      event: "task_submit_error",
+      user_id: auth.userId,
+      error: msg,
+    }))
+    return c.json({ error: "internal_error" }, 500)
+  }
 })
