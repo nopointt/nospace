@@ -47,6 +47,10 @@ export interface RecordTransactionInput {
   sourceType: SourceType
   sourceId: string | null
   metadata?: Record<string, unknown>
+  // W5-04: Optional 14-day hold for payment tokens. When set, the row is
+  // excluded from rev-share SUMs until NOW() >= held_until. Null means
+  // the credit is effective immediately.
+  heldUntil?: Date | null
 }
 
 // --- LemonSqueezy variant mapping (D-62) -------------------------------
@@ -278,16 +282,17 @@ export async function recordTransaction(
   const id = genId()
   const metadata = input.metadata ?? {}
   const matchedAt = input.userId ? new Date() : null
+  const heldUntil = input.heldUntil ?? null
 
   await sql`
     INSERT INTO supporter_transactions
       (id, user_id, email, type, amount_tokens, amount_usd_cents,
-       source_type, source_id, metadata, matched_at)
+       source_type, source_id, metadata, matched_at, held_until)
     VALUES
       (${id}, ${input.userId}, ${input.email}, ${input.type},
        ${input.amountTokens}, ${input.amountUsdCents},
        ${input.sourceType}, ${input.sourceId},
-       ${sql.json(metadata as never)}, ${matchedAt})
+       ${sql.json(metadata as never)}, ${matchedAt}, ${heldUntil})
   `
   return id
 }

@@ -271,6 +271,10 @@ webhooks.post("/lemonsqueezy", async (c) => {
       const userId = await matchSupporter(sql, { email, customDataUserId })
       const tokens = tokensFromCents(subtotal)
 
+      // W5-04: 14-day hold on payment credit. Rev-share SUMs exclude rows
+      // whose held_until is in the future — chargeback window protection.
+      const paymentHeldUntil = new Date(Date.now() + 14 * 86400000)
+
       if (!userId) {
         // No supporter to match — still record the unmatched transaction
         // for later reclaim on registration. No cap check needed (no
@@ -284,6 +288,7 @@ webhooks.post("/lemonsqueezy", async (c) => {
           sourceType: "lemonsqueezy_subscription",
           sourceId: `payment:${invoiceId}`,
           metadata: { subscriptionId, customData },
+          heldUntil: paymentHeldUntil,
         })
         if (!txId) {
           console.log(JSON.stringify({ ts, event: "ls_subscription_payment_duplicate", invoiceId }))
@@ -357,6 +362,9 @@ webhooks.post("/lemonsqueezy", async (c) => {
         await tx`SELECT pg_advisory_xact_lock(hashtext(${`supporter_cap:${userId}`}))`
 
         // 2. Record transaction (idempotent). If duplicate, short-circuit.
+        //    W5-04: 14-day hold — excluded from rev-share SUMs until NOW()
+        //    has passed held_until. Credited tokens still land immediately
+        //    on the supporter row; the hold only gates distribution math.
         const txId = await recordTransaction(tx, {
           userId,
           email,
@@ -366,6 +374,7 @@ webhooks.post("/lemonsqueezy", async (c) => {
           sourceType: "lemonsqueezy_subscription",
           sourceId: `payment:${invoiceId}`,
           metadata: { subscriptionId, customData },
+          heldUntil: paymentHeldUntil,
         })
         if (!txId) {
           return { kind: "duplicate" } as CapOutcome

@@ -22,6 +22,7 @@ import type { Context } from "hono"
 import type { Env } from "../types/env"
 import type { Sql } from "postgres"
 import type Redis from "ioredis"
+import { createHash } from "node:crypto"
 import { resolveAuth } from "../services/auth"
 import { checkRateLimit, getClientIp } from "../services/rate-limit"
 import {
@@ -42,6 +43,26 @@ import {
 } from "../services/notifications"
 
 type AppEnv = { Variables: { sql: Sql; env: Env; redis: Redis; requestId: string } }
+
+// W5-04: device hash for referral anti-abuse. Weak fingerprint
+// (sha256(user-agent | accept-language), first 32 hex chars). This is NOT
+// a security boundary against determined attackers — it's a cheap honest-
+// duplicate filter paired with the IP check in POST /referral. Returns
+// null if both inputs are empty so we store NULL instead of a hash of
+// empty strings (prevents every anonymous client from sharing a bucket).
+export function computeDeviceHash(
+  userAgent: string | null | undefined,
+  acceptLanguage: string | null | undefined,
+): string | null {
+  const ua = (userAgent ?? "").trim()
+  const al = (acceptLanguage ?? "").trim()
+  if (!ua && !al) return null
+  const h = createHash("sha256")
+  h.update(ua)
+  h.update("|")
+  h.update(al)
+  return h.digest("hex").slice(0, 32)
+}
 
 export const supporters = new Hono<AppEnv>()
 
@@ -304,6 +325,12 @@ supporters.post("/referral", async (c) => {
   // Double-gated rate limit: per-user AND per-IP. Prevents both single-user
   // hammering and IP-level enumeration of valid referrer ids.
   const ip = getClientIp(c)
+  // W5-04: IP + device fingerprint for per-referrer anti-abuse. Null-safe:
+  // "unknown" IP is stored as NULL; empty headers yield NULL device hash.
+  const userAgent = c.req.header("user-agent") ?? null
+  const acceptLanguage = c.req.header("accept-language") ?? null
+  const signupIp = ip && ip !== "unknown" && ip.length > 0 ? ip : null
+  const deviceHash = computeDeviceHash(userAgent, acceptLanguage)
   const userRl = await checkRateLimit(
     redis,
     `referral_submit:${auth.userId}`,
@@ -366,10 +393,41 @@ supporters.post("/referral", async (c) => {
       return { ok: false, code: 409, err: "already_referred" } as ReferralResult
     }
 
+    // W5-04: Per-referrer IP + device abuse check. Scoped to a single
+    // referrer so one IP referring different users is fine — we only
+    // block when THE SAME referrer has multiple signups from THE SAME
+    // IP or device (honest-duplicate signal, not cross-user detection).
+    // Nulls do not match via equality so an empty IP or device won't
+    // block — intentional: rather under-block than over-block honest users
+    // with missing headers.
+    if (signupIp !== null || deviceHash !== null) {
+      const abuse = await tx`
+        SELECT 1 FROM supporter_referrals
+        WHERE referrer_id = ${code}
+          AND (
+            (${signupIp}::text IS NOT NULL AND signup_ip = ${signupIp})
+            OR
+            (${deviceHash}::text IS NOT NULL AND signup_device_hash = ${deviceHash})
+          )
+        LIMIT 1
+      `
+      if (abuse.length > 0) {
+        return {
+          ok: false,
+          code: 409,
+          err: "duplicate_ip_or_device",
+        } as ReferralResult
+      }
+    }
+
     const refId = genId()
     await tx`
-      INSERT INTO supporter_referrals (id, referrer_id, referred_id, code, signup_credited_at)
-      VALUES (${refId}, ${code}, ${auth.userId}, ${code}, NOW())
+      INSERT INTO supporter_referrals
+        (id, referrer_id, referred_id, code, signup_credited_at,
+         signup_ip, signup_device_hash)
+      VALUES
+        (${refId}, ${code}, ${auth.userId}, ${code}, NOW(),
+         ${signupIp}, ${deviceHash})
     `
 
     const txId = await recordTransaction(tx, {
@@ -391,7 +449,17 @@ supporters.post("/referral", async (c) => {
     return { ok: true, referralId: refId, signupReward: SIGNUP_REWARD } as ReferralResult
   }) as unknown as ReferralResult
 
-  if (!result.ok) return c.json({ error: result.err }, result.code)
+  if (!result.ok) {
+    // W5-04: expose the same string as `code` for duplicate_ip_or_device so
+    // clients can match exactly without substring sniffing.
+    if (result.err === "duplicate_ip_or_device") {
+      return c.json(
+        { error: result.err, code: "duplicate_ip_or_device" },
+        result.code,
+      )
+    }
+    return c.json({ error: result.err }, result.code)
+  }
 
   console.log(JSON.stringify({
     event: "referral_signup_credited",

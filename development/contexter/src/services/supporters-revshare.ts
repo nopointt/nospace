@@ -60,12 +60,15 @@ export async function runQuarterlyRevShare(sql: Sql, env: Env): Promise<void> {
   const started = Date.now()
 
   // Step 1: MRR gate — sum of last 30 days subscription payments.
+  // W5-04: Exclude rows inside their 14-day hold window. The gate reflects
+  // settled (non-refundable-window) revenue only.
   const mrrRows = await sql<{ sum: string | null }[]>`
     SELECT COALESCE(SUM(amount_usd_cents), 0)::text AS sum
     FROM supporter_transactions
     WHERE source_type = 'lemonsqueezy_subscription'
       AND source_id LIKE 'payment:%'
       AND created_at >= NOW() - INTERVAL '30 days'
+      AND (held_until IS NULL OR held_until <= NOW())
   `
   const mrrCents = BigInt(mrrRows[0]?.sum ?? "0")
   if (mrrCents < MRR_GATE_CENTS) {
@@ -85,6 +88,8 @@ export async function runQuarterlyRevShare(sql: Sql, env: Env): Promise<void> {
   const qEnd = previousQuarterEnd()
   const label = quarterLabel(qStart)
 
+  // W5-04: Hold-window exclusion mirrors the MRR gate — rev-share pool
+  // never includes payments that are still in their 14-day chargeback window.
   const qRows = await sql<{ sum: string | null }[]>`
     SELECT COALESCE(SUM(amount_usd_cents), 0)::text AS sum
     FROM supporter_transactions
@@ -92,6 +97,7 @@ export async function runQuarterlyRevShare(sql: Sql, env: Env): Promise<void> {
       AND source_id LIKE 'payment:%'
       AND created_at >= ${qStart}
       AND created_at < ${qEnd}
+      AND (held_until IS NULL OR held_until <= NOW())
   `
   const quarterRevenueCents = BigInt(qRows[0]?.sum ?? "0")
   const poolCents = (quarterRevenueCents * REV_SHARE_PERCENT) / 100n
