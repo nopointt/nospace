@@ -86,15 +86,17 @@ export async function runSupportersRanking(sql: Sql): Promise<void> {
         ORDER BY tokens DESC, joined_at ASC
         OFFSET 99 LIMIT 1
       `
-      const threshold = hundredth[0] ? BigInt(hundredth[0].tokens) : 0n
+      const hundredthRow = hundredth[0]
+      const hundredthExists = hundredthRow !== undefined
+      const threshold = hundredthRow ? BigInt(hundredthRow.tokens) : 0n
       const qTokens = BigInt(q.tokens)
 
-      // When ranked set has fewer than 100 rows, any quarantined row is
-      // eligible immediately (threshold defaults to 0).
-      if (hundredth.length < 100 || qTokens > threshold) {
+      // Eligibility: either there is no row #100 yet (set has <100 ranked
+      // rows) or the quarantined row's tokens strictly exceed that row's.
+      if (!hundredthExists || qTokens > threshold) {
         await sql.begin(async (txRaw) => {
           const tx = txRaw as unknown as Sql
-          if (hundredth.length === 100) {
+          if (hundredthExists) {
             // Demote current #100 into quarantined.
             await tx`
               UPDATE supporters

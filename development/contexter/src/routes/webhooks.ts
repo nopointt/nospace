@@ -304,17 +304,50 @@ webhooks.post("/lemonsqueezy", async (c) => {
       //
       // W2-03: subscription_payment_success gets the D-52 tier multiplier.
       // Order-created PWYW stays at the base 1:1 rate (no silent change).
+      //
+      // W2-08: spending cap of 500 BASE tokens/month from subscription
+      // payments. The cap is applied to the raw subscription spend
+      // (pre-multiplier); the tier bonus still applies on top of whatever
+      // fraction of `tokens` falls under the cap.
       if (tokens > 0) {
-        const result = await creditTokensWithMultiplier(sql, userId, tokens)
-        console.log(JSON.stringify({
-          ts,
-          event: "ls_subscription_payment_credited",
-          userId,
-          baseTokens: result.baseTokens,
-          multiplier: result.multiplier,
-          creditedTokens: result.creditedTokens,
-          subscriptionId,
-        }))
+        const alreadyRows = await sql<{ sum: string | null }[]>`
+          SELECT COALESCE(SUM(amount_tokens), 0)::text AS sum
+          FROM supporter_transactions
+          WHERE user_id = ${userId}
+            AND source_type = 'lemonsqueezy_subscription'
+            AND source_id LIKE 'payment:%'
+            AND created_at >= date_trunc('month', NOW())
+            AND id != ${txId}
+        `
+        const alreadyBig = BigInt(alreadyRows[0]?.sum ?? "0")
+        const CAP = 500n
+        const remaining = CAP > alreadyBig ? CAP - alreadyBig : 0n
+        const requested = BigInt(tokens)
+        const toCreditBig = remaining < requested ? remaining : requested
+        const toCredit = Number(toCreditBig)
+
+        if (toCredit === 0) {
+          console.log(JSON.stringify({
+            ts,
+            event: "ls_subscription_payment_capped",
+            userId,
+            requested: tokens,
+            alreadyCredited: Number(alreadyBig),
+            subscriptionId,
+          }))
+        } else {
+          const result = await creditTokensWithMultiplier(sql, userId, toCredit)
+          console.log(JSON.stringify({
+            ts,
+            event: "ls_subscription_payment_credited",
+            userId,
+            requested: tokens,
+            cappedBase: result.baseTokens,
+            multiplier: result.multiplier,
+            creditedTokens: result.creditedTokens,
+            subscriptionId,
+          }))
+        }
       } else {
         console.log(JSON.stringify({ ts, event: "ls_subscription_payment_credited", userId, tokens, subscriptionId }))
       }
