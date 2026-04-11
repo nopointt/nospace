@@ -77,13 +77,13 @@ auth.post("/register", async (c) => {
   // Non-fatal: registration must not fail if reclaim errors.
   if (email) {
     try {
-      const reclaimed = await reclaimUnmatchedForEmail(sql, userId, email)
-      if (reclaimed > 0) {
+      const reclaimedTokens = await reclaimUnmatchedForEmail(sql, userId, email)
+      if (reclaimedTokens > 0) {
         console.log(JSON.stringify({
           ts: new Date().toISOString(),
           event: "supporter_tx_reclaimed",
           userId,
-          count: reclaimed,
+          tokens: reclaimedTokens,
         }))
       }
     } catch (err) {

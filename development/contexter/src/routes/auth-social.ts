@@ -292,13 +292,13 @@ authSocial.get("/google/callback", async (c) => {
     // CTX-12: reclaim any queued Supporter transactions paid before OAuth sign-up.
     // Non-fatal: OAuth flow must not fail if reclaim errors.
     try {
-      const reclaimed = await reclaimUnmatchedForEmail(sql, userId, userInfo.email)
-      if (reclaimed > 0) {
+      const reclaimedTokens = await reclaimUnmatchedForEmail(sql, userId, userInfo.email)
+      if (reclaimedTokens > 0) {
         console.log(JSON.stringify({
           ts: new Date().toISOString(),
           event: "supporter_tx_reclaimed",
           userId,
-          count: reclaimed,
+          tokens: reclaimedTokens,
           source: "google_oauth",
         }))
       }

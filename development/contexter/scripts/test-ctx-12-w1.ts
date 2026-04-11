@@ -155,7 +155,8 @@ async function main(): Promise<void> {
       VALUES (${testUserId2}, ${testEmail2}, 'reclaim user')
     `
     const reclaimed = await reclaimUnmatchedForEmail(sql, testUserId2, testEmail2)
-    assert(reclaimed === 1, `reclaimed should be 1, got ${reclaimed}`)
+    // Fix(ctx12-w1-02): reclaim now returns total tokens credited, not row count
+    assert(reclaimed === 25, `reclaimed tokens should be 25, got ${reclaimed}`)
     const [sup2] = await sql<{ tokens: string | number }[]>`
       SELECT tokens FROM supporters WHERE user_id = ${testUserId2}
     `

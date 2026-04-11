@@ -218,13 +218,16 @@ export async function matchSupporter(
  * Reclaim queued unmatched transactions for an email on user registration.
  *
  * 1. Finds all supporter_transactions rows with user_id IS NULL matching the
- *    email (case-insensitive).
+ *    email (case-insensitive). Ordered by created_at ASC so the earliest
+ *    payment defines the supporter's joined_at.
  * 2. Updates them to point at the new user_id and stamps matched_at.
  * 3. For each row whose type earns tokens (purchase/subscription_payment/
- *    referral/task/revshare), credits the amount via creditTokens.
+ *    referral/task/revshare), calls creditTokens with the row's
+ *    amount_tokens. Per-row calls keep future creditTokens side effects
+ *    (tier auto-assign, audit logging) in sync with the reclaim path.
  *
- * Returns the count of updated rows. Transaction-wrapped so partial reclaims
- * never happen.
+ * Returns total tokens credited (sum of amount_tokens across earning rows).
+ * Transaction-wrapped so partial reclaims never happen.
  */
 export async function reclaimUnmatchedForEmail(
   sql: Sql,
@@ -237,13 +240,20 @@ export async function reclaimUnmatchedForEmail(
     const tx = txRaw as unknown as Sql
 
     const updated = await tx<
-      { id: string; type: string; amount_tokens: string | number }[]
+      {
+        id: string
+        type: string
+        amount_tokens: string | number
+        created_at: Date | string
+      }[]
     >`
       UPDATE supporter_transactions
       SET user_id = ${userId}, matched_at = NOW()
       WHERE user_id IS NULL AND LOWER(email) = LOWER(${email})
-      RETURNING id, type, amount_tokens
+      RETURNING id, type, amount_tokens, created_at
     `
+
+    if (updated.length === 0) return 0
 
     const creditingTypes: ReadonlyArray<TransactionType> = [
       "purchase",
@@ -253,26 +263,30 @@ export async function reclaimUnmatchedForEmail(
       "revshare",
     ]
 
+    // Earliest created_at across matched rows defines supporter.joined_at
+    // on first-insert (later increments leave joined_at untouched).
+    let earliest: Date | null = null
+    for (const row of updated) {
+      const ts = row.created_at instanceof Date
+        ? row.created_at
+        : new Date(row.created_at)
+      if (earliest === null || ts.getTime() < earliest.getTime()) {
+        earliest = ts
+      }
+    }
+    const joinedAt = earliest ?? new Date()
+
     let totalTokens = 0
     for (const row of updated) {
       const type = row.type as TransactionType
       if (!creditingTypes.includes(type)) continue
       const amount = Number(row.amount_tokens)
       if (!Number.isFinite(amount) || amount <= 0) continue
+      await creditTokens(tx, userId, amount, joinedAt)
       totalTokens += amount
     }
 
-    if (totalTokens > 0) {
-      await tx`
-        INSERT INTO supporters (user_id, tokens)
-        VALUES (${userId}, ${totalTokens})
-        ON CONFLICT (user_id) DO UPDATE
-          SET tokens = supporters.tokens + EXCLUDED.tokens,
-              updated_at = NOW()
-      `
-    }
-
-    return updated.length
+    return totalTokens
   })
   return result as unknown as number
 }
