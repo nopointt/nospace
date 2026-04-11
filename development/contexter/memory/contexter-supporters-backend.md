@@ -1,8 +1,8 @@
 ---
 # contexter-supporters-backend.md — CTX-12 Supporters Backend
-> Layer: L3 | Epic: CTX-12 | Status: 🔶 IN PROGRESS
+> Layer: L3 | Epic: CTX-12 | Status: 🔶 IN PROGRESS (W1+W2+W3 deployed, W4 spec ready, W5 pending)
 > Created: 2026-04-11 (session 236)
-> Last updated: 2026-04-11 (session 236 — epic created with full spec)
+> Last updated: 2026-04-11 (session 238 — W1+W2+W3 autonomous execution complete, W4 spec written, 25 commits, 3 deploys)
 > Predecessor: CTX-10 GTM Launch (supporters page + LemonSqueezy frontend done)
 ---
 
@@ -54,55 +54,67 @@ Backend system for the Supporters program: token accounting, ranking engine, web
 
 ## Waves
 
-### Wave 1: Database Schema + Webhook Processing
+### Wave 1: Database Schema + Webhook Processing ✅ DEPLOYED 2026-04-11
 Make webhooks actually DO something — match payments to users, store in DB.
 
-- [ ] W1-01: DB migration — supporters table (user_id, tokens, rank, tier, status, freeze_start, freeze_end, joined_at)
-- [ ] W1-02: DB migration — supporter_transactions table (user_id, type, amount, source, created_at)
-- [ ] W1-03: DB migration — supporter_tasks table (user_id, task_type, tokens, status, reviewed_by, created_at)
-- [ ] W1-04: Webhook handler — order_created → match email to user → credit tokens → create supporter entry
-- [ ] W1-05: Webhook handler — subscription_created → link LS subscription to user
-- [ ] W1-06: Webhook handler — subscription_payment_success → credit monthly tokens
-- [ ] W1-07: Webhook handler — subscription_cancelled/expired → start 30-day warning
-- [ ] W1-08: Email fallback — if webhook can't match user by email, log for manual review
+- [x] W1-01: Migration 0015_supporters.sql — 3 tables + 9 indexes (tokens DESC, joined_at ASC composite for D-AUTO-03) `9f29f24`
+- [x] W1-02: supporters.ts service skeleton (types + 6 exports: recordTransaction idempotent, creditTokens upsert, tokensFromCents, matchEmailToUser, reclaimUnmatchedForEmail, genId) `a7e753f`
+- [x] W1-03: LS variant mapping + tier thresholds (D-51 + D-62) `13626b4`
+- [x] W1-04: matchSupporter with safe fallback (custom_data.user_id → email → null, NO placeholder users) `361190e`
+- [x] W1-05: order_created webhook handler `f370ad7`
+- [x] W1-06: subscription_created + subscription_payment_success `31a44f2` + fix `e0f2924`
+- [x] W1-07: subscription_cancelled/expired + reclaim hook (legacy /register + Google OAuth; better-auth deferred to W5) `9325f0d`
+- [x] W1-08: Integration test 10/10 PASS `336f0d5` + fix `13d6011`
 
-### Wave 2: Ranking Engine + API
+### Wave 2: Ranking Engine + API ✅ DEPLOYED 2026-04-11
 Weekly rank recalculation + API endpoints for dashboard.
 
-- [ ] W2-01: Ranking service — recalculate all ranks weekly (cron or BullMQ scheduled job)
-- [ ] W2-02: Tier assignment — Diamond #1-10, Gold #11-30, Silver #31-60, Bronze #61-100
-- [ ] W2-03: Accelerating earn rate — apply tier multiplier when crediting tokens
-- [ ] W2-04: API: GET /api/supporters — public leaderboard (rank, name, tier, tokens)
-- [ ] W2-05: API: GET /api/supporters/me — authenticated user's supporter status
-- [ ] W2-06: API: POST /api/supporters/freeze — activate freeze (1x/year check)
-- [ ] W2-07: 101st person quarantine logic — 1 month to outbid #100
-- [ ] W2-08: Spending cap — max 500 tokens/month from subscriptions
+- [x] W2-01: Weekly ranking cron (BullMQ maintenance, Monday 04:00 UTC) `91f00d6`
+- [x] W2-02: Tier assignment verify — 15-row seed test PASS `f7ec6a2`
+- [x] W2-03: Tier multiplier for subscription token credit (wired in subscription_payment_success) `4e70777`
+- [x] W2-04: Public GET /api/supporters (privacy: no user_id/email, displayName fallback "Anonymous Supporter") `bd7c179`
+- [x] W2-05: GET /api/supporters/me authed status `7e8aace`
+- [x] W2-06: POST /api/supporters/freeze annual calendar-year check `e770278`
+- [x] W2-07: 101st supporter quarantine intake + promotion sweep `f6c1918` + `de67a5c`
+- [x] W2-08: Spending cap 500 tok/month with advisory-lock serialization `eccb831` + fix `57de6a8`
+- Integration test: 15/15 PASS
 
-### Wave 3: Frontend Integration
+### Wave 3: Frontend Integration ✅ DEPLOYED 2026-04-11 (CF Pages)
 Replace hardcoded data with live API data.
 
-- [ ] W3-01: Leaderboard — fetch from /api/supporters, replace demo data
-- [ ] W3-02: Counter — 8/100 → dynamic from API
-- [ ] W3-03: Dashboard supporter section — rank, tokens, rev share, freeze button
-- [ ] W3-04: Badge "Supporter #N" in profile/nav
-- [ ] W3-05: Pass user_id as custom_data in checkout URLs for logged-in users
+- [x] W3-01: Live leaderboard fetch (createResource + loading/error/empty/sold-out states, extracted to SupportersLeaderboard.tsx 164 lines) `f813c1b`
+- [x] W3-02: Dynamic spots counter (hero + landing teaser from totalCount) `e820851`
+- [x] W3-03: Dashboard SupporterStatusCard with freeze button (all 5 status variants handled) `54b195f`
+- [x] W3-04: Supporter #N rank pill in Nav (auth-gated createResource, inline styled) `555e42a`
+- [x] W3-05: buildCheckoutUrl helper with LS custom_data.user_id (4 CTAs wrapped) `56cd3dd`
+- Coach POST-REVIEW: PASS 0 blocking, all 5 deviations accepted. One W5 hardening note: 409 freeze error detection by substring match (`.includes("year")`) is fragile.
 
-### Wave 4: Tasks + Rev Share
-Task submission system + quarterly rev share calculation.
+### Wave 4: Tasks + Rev Share 🔶 SPEC WRITTEN, NOT EXECUTED
+Task submission system + quarterly rev share calculation. Spec at `memory/specs/ctx-12-w4-spec.md` (1000 lines, 6 tasks, all Action+Verify+Done-when, 7 locked W4 decisions D-AUTO-W4-01..07). Player killed mid-Phase Zero by user request at session close. Next session resumes by launching fresh G3 Player with same spec.
 
-- [ ] W4-01: API: POST /api/supporters/tasks — submit task (bug report, referral, etc.)
-- [ ] W4-02: Task review queue — admin endpoint for approving/rejecting tasks
-- [ ] W4-03: Task cap enforcement — max 50 tokens/month, per-category limits
-- [ ] W4-04: Referral tracking — link referred user to referrer
-- [ ] W4-05: Rev share calculation — quarterly, by tier, distribute as tokens
-- [ ] W4-06: Rev share notification — email/Telegram when rev share distributed
+- [ ] W4-01: POST /api/supporters/tasks — submit task (bug_report 10t, referral_signup 3t, referral_paid 5t, social_share 2t, review 5t)
+- [ ] W4-02: Admin review endpoints (GET /admin/tasks + POST /admin/tasks/:id/approve|reject). Admin via `ADMIN_USER_IDS` env var.
+- [ ] W4-03: Monthly task cap 50 tokens (global, no per-category). Advisory-lock serialized.
+- [ ] W4-04: Referral tracking — NEW migration `0016_supporter_referrals.sql` (additive, NOT ALTER users). Signup 3t immediate + first-payment 5t trigger. Self-loop + duplicate prevented.
+- [ ] W4-05: Quarterly rev share cron `0 5 1 1,4,7,10 *`. MRR gate <$10K/month → skip. Weighted by D-52 multipliers, idempotent via `revshare:${quarter}:${userId}` source_id.
+- [ ] W4-06: Email notifications via NEW `src/services/notifications.ts` (own Resend POST, do NOT touch auth/index.ts). 4 templates: task approved, task rejected, referral paid, rev share. Fire-and-forget.
+- [ ] W4-07 integration test: 20 assertions covering all above.
 
-### Wave 5: Legal + Polish
-- [ ] W5-01: ToS update — loyalty points clause (tokens non-transferable, no monetary value)
-- [ ] W5-02: Soft demotion implementation — 30-day warning email, auto-demotion to Bronze
+### Wave 5: Legal + Polish + Deferred Bundle 🔶 PENDING
+- [ ] W5-01: ToS update — loyalty points clause (tokens non-transferable, no monetary value per D-57)
+- [ ] W5-02: Soft demotion implementation — 30-day warning email, auto-demotion to Bronze (D-53)
 - [ ] W5-03: Token expiry — tokens expire after 12 months if user inactive
 - [ ] W5-04: Anti-abuse — same IP/device detection for referrals, 14-day hold for payment tokens
 - [ ] W5-05: Deploy script audit — fix SCP/docker rebuild issue
+- **W5 deferred bundle from W1/W2/W3/W4 Coach reviews:**
+  - [ ] Better-auth email/password reclaim hook (add `databaseHooks.user.create.after` to `src/auth/index.ts`)
+  - [ ] `creditTokensWithQuarantineCheck` return type says `"active" | "quarantined"` but returns "active" for frozen/warning/exiting — type lie, log-only but should be fixed
+  - [ ] `runSupportersRanking` 92 lines > 50 guideline — extract quarantine promotion sweep into helper
+  - [ ] Concurrent /freeze returns 500 instead of 409 — merge SELECT+UPDATE into atomic `UPDATE ... WHERE (freeze_start IS NULL OR EXTRACT(YEAR FROM ...)) RETURNING`
+  - [ ] `supporter_transactions.amount_tokens` stores REQUESTED not CREDITED on capped rows — audit drift. Fix: store `toCredit` or add `credited_tokens` column
+  - [ ] `SupporterStatus` TypeScript type missing `quarantined` value (DB column accepts text, type behind)
+  - [ ] W3 freeze 409 detection via `.includes("year")` substring match — fragile, use structured backend error codes
+  - [ ] **Infra**: Hetzner CAX21 38G disk needs expansion or aggressive docker prune cron (100% full during W1 deploy, cleaned 35GB manually)
 
 ## Blockers
 

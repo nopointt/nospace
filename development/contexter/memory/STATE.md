@@ -1,10 +1,11 @@
 # STATE — Contexter
 
 ## Position
-- **Phase:** GTM Launch (CTX-10) — 100 paying supporters by April 8
-- **Status:** LemonSqueezy LIVE (store verified, 3 products, webhook, custom domain pay.contexter.cc). Alpha text-only (308 formats). Pricing: storage-only (1/10/100 GB). Supporters page live. First revenue: $1.16. Contrast audit complete (WCAG AA).
-- **Last session:** 2026-04-11 (Axis, session 236 — text formats, pricing tiers, supporters program, LemonSqueezy full setup, contrast audit, product media, 10 deploys)
-- **Sessions total:** 236
+- **Phase:** CTX-12 Supporters Backend (in progress) — W1+W2+W3 deployed, W4+W5 pending
+- **Status:** Supporters backend LIVE on prod. DB tables + 4 LS webhook handlers + ranking cron + public/private/freeze API + quarantine + spending cap + frontend integration all deployed. LemonSqueezy LIVE. Alpha text-only (308 formats). Pricing: storage-only (1/10/100 GB). First revenue: $1.16 (test only, no real users).
+- **Last session:** 2026-04-11 (Axis, session 238 — CTX-12 autonomous run, W1+W2+W3 deployed, 25 commits, 3 deploys, 0 escalations, W4 spec written, W4 Player killed mid-Phase Zero by user request)
+- **Sessions total:** 238
+- **Next:** Resume W4 (Tasks + Admin + Referrals + Rev Share + Notifications) from spec at `memory/specs/ctx-12-w4-spec.md`
 
 ## Key Completions
 - i18n: EN/RU toggle, 500+ translation keys, all 24 pages/components
@@ -37,6 +38,10 @@
 - DEEP research: supporters (airdrops, loyalty programs, 40+ sources) + LemonSqueezy (docs, API, webhooks)
 - Deploy script: curl -sf bug fixed, webhook route /webhooks→/api/webhooks
 - AI'preneurs 2026: passed stage 1, diagnostic interview ~April 20
+- **CTX-12 W1 deployed** (2026-04-11): migration 0015_supporters.sql (3 tables + 9 indexes), 4 LS webhook handlers, HMAC intact, reclaim-on-registration hooks (legacy + Google OAuth), integration test 10/10 PASS
+- **CTX-12 W2 deployed** (2026-04-11): weekly ranking cron (Monday 04:00 UTC), GET /api/supporters public leaderboard (privacy: no PII), GET /me authed status, POST /freeze calendar-year annual, 101st quarantine intake + promotion sweep, spending cap 500 tok/month with advisory lock, integration test 15/15 PASS
+- **CTX-12 W3 deployed** (2026-04-11, CF Pages): removed hardcoded SUPPORTERS_DATA, reactive createResource leaderboard + dynamic counter, SupporterStatusCard in Dashboard with freeze button, Supporter #N pill in Nav, buildCheckoutUrl helper with LS custom_data.user_id
+- **Standards extended**: ~/.claude/rules/standards.md added section J (J1-J8 Autonomous Mode), total 49→57 standards
 
 ## Active Decisions
 - D-01 through D-25: unchanged from previous
@@ -83,6 +88,15 @@
 - D-66: text-disabled NEVER for informational text, off-scale sizes (11/13/15px) eliminated
 - D-67: Custom domain pay.contexter.cc → A record 3.33.255.208
 - D-68: Webhook route /webhooks → /api/webhooks
+- D-AUTO-01..12: Full autonomous mode on CTX-12 — Phase Zero per wave, Sonnet G3, Coach 3-iter → self-fix → defer, append-only report after each TASK, manual deploy, 0 real users confirmed, no destructive ops, J3 safeguards absolute (2026-04-11)
+- D-AUTO-13: Display name privacy — public /api/supporters returns `displayName` only (fallback "Anonymous Supporter"), no user_id/email in response
+- D-AUTO-W4-01: Rev share distribution weighted by D-52 tier multipliers (diamond 8u, gold 6u, silver 5u, bronze 4u), equal within tier, pending/frozen/quarantined/exiting excluded — SPEC WRITTEN, NOT IMPLEMENTED
+- D-AUTO-W4-02: Task types — bug_report(10t), referral_signup(3t), referral_paid(5t), social_share(2t), review(5t). Global 50 tok/month cap, NO per-category limits — SPEC, NOT IMPLEMENTED
+- D-AUTO-W4-03: Admin check via `ADMIN_USER_IDS` env var (comma-separated), nopoint single admin — SPEC, NOT IMPLEMENTED
+- D-AUTO-W4-04: Notifications = email only via new `src/services/notifications.ts` with own Resend POST. Do NOT touch auth/index.ts (J3) — SPEC, NOT IMPLEMENTED
+- D-AUTO-W4-05: Referral tracking via new `supporter_referrals` table (additive), NOT `users.referred_by` column — SPEC, NOT IMPLEMENTED
+- D-AUTO-W4-06: Rev share cron quarterly `0 5 1 1,4,7,10 *`. MRR gate <$10K/month (1M cents last 30d) → skip — SPEC, NOT IMPLEMENTED
+- D-AUTO-W4-07: Referral code = referrer's userId (matches LS custom_data.user_id convention) — SPEC, NOT IMPLEMENTED
 
 ## Blockers
 - Copy audit not applied — jargon kills non-tech conversion (CTX-10 W1-01)
@@ -93,7 +107,9 @@
 - OpenAI App Directory: needs $5 for individual verification (draft saved)
 - ~~LemonSqueezy billing integration not yet configured~~ → RESOLVED 2026-04-11 (store, products, webhook, custom domain, live payment tested)
 - Solo founder bandwidth
-- CTX-12: Backend supporters system (DB, tokens, ranking cron, user matching)
+- ~~CTX-12: Backend supporters system (DB, tokens, ranking cron, user matching)~~ → ✅ W1+W2+W3 DEPLOYED 2026-04-11. W4 (tasks+rev share) spec ready, W5 (legal+polish) pending
+- **Hetzner CAX21 disk exhaustion**: 38G disk hit 100% during W1 deploy. Axis cleaned docker cache 35GB freed. Disk now 48% used. Recommend expansion or prune cron.
+- **W5 deferred bundle** (from W1/W2/W3 Coach reviews): better-auth email/password reclaim hook, creditTokensWithQuarantineCheck type lie, runSupportersRanking >50 lines, /freeze 500 vs 409, supporter_transactions.amount_tokens audit drift on capped rows, SupporterStatus type missing 'quarantined', W3 freeze 409 substring match fragility
 - ToS: loyalty points / tokens clause needed before public launch
 - Deploy script audit (SCP works but docker doesn't always rebuild)
 - Delete unverified LS store #333207 (email sent to hello@lemonsqueezy.com)
@@ -106,11 +122,15 @@
 - Full analytics suite (CTX-11)
 
 ## Metrics
-- Sessions: 236
+- Sessions: 238
 - Real users: 2 (nopointttt@gmail.com, danchoachona@gmail.com)
 - Documents: 26, Chunks: 519
 - MCP search p50: 110ms
-- Revenue: $1.16 (1 supporter entry, 2026-04-11)
+- Revenue: $1.16 (1 supporter entry, 2026-04-11, test only)
+- CTX-12 commits this session: 25 (W1:10 + W2:10 + W3:5)
+- CTX-12 deploys: 3 (W1 backend, W2 backend, W3 CF Pages)
+- Supporters table rows on prod: 0 (no real users yet)
+- Disk on prod: 48% (after 35GB docker cache cleanup during W1 deploy)
 - GitHub: github.com/nopointt/contexter
 - Deployed: contexter.cc + api.contexter.cc + pay.contexter.cc
 - Server: Hetzner CAX21 (Helsinki)
