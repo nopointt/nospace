@@ -45,7 +45,7 @@ const Terms: Component = () => {
             Terms of Service
           </h1>
           <p class="text-[14px] text-text-tertiary mb-12">
-            Last updated: March 30, 2026
+            Last updated: April 11, 2026
           </p>
 
           <div class="flex flex-col" style={{ gap: "48px" }}>
@@ -197,10 +197,81 @@ const Terms: Component = () => {
               </ul>
             </div>
 
+            {/* ── Supporter Program and Loyalty Tokens ── */}
+            <div class="flex flex-col" style={{ gap: "16px" }}>
+              <h2 class="text-[20px] md:text-[24px] font-bold text-black">
+                7. Supporter Program and Loyalty Tokens
+              </h2>
+              <p class="text-[16px] text-text-secondary leading-[1.5]">
+                Contexter operates a Supporter Program limited to 100 lifetime
+                spots. Participants receive loyalty tokens based on their
+                contributions, tier-based multipliers on subscription payments,
+                and may receive quarterly revenue share distributions once our
+                monthly recurring revenue exceeds a threshold documented on the
+                Supporters page.
+              </p>
+              <p class="text-[16px] text-text-secondary leading-[1.5]">
+                <strong>
+                  Loyalty tokens earned through the Supporter Program are not a
+                  security, equity, investment, currency, or financial instrument
+                  of any kind.
+                </strong>{" "}
+                They are non-transferable loyalty points with no monetary value.
+              </p>
+              <ul class="list-disc pl-6 flex flex-col" style={{ gap: "8px" }}>
+                <li class="text-[16px] text-text-secondary leading-[1.5]">
+                  Tokens cannot be exchanged for cash, cryptocurrency, bank
+                  transfer, or any other asset outside the Service.
+                </li>
+                <li class="text-[16px] text-text-secondary leading-[1.5]">
+                  Tokens carry no redemption guarantee and may be modified,
+                  capped, expired, or forfeited at our discretion in accordance
+                  with the rules published on our Supporters page.
+                </li>
+                <li class="text-[16px] text-text-secondary leading-[1.5]">
+                  Tokens expire after 12 months of account inactivity.
+                </li>
+                <li class="text-[16px] text-text-secondary leading-[1.5]">
+                  Tokens are subject to forfeiture upon entry into <em>exiting</em>{" "}
+                  status (triggered by sustained inactivity) or upon voluntary
+                  account deletion.
+                </li>
+                <li class="text-[16px] text-text-secondary leading-[1.5]">
+                  Tokens used to pay for subscriptions or features do not
+                  generate further tokens (anti-circular rule).
+                </li>
+                <li class="text-[16px] text-text-secondary leading-[1.5]">
+                  Tokens earned through admin-reviewed tasks are capped at 50
+                  tokens per calendar month per user.
+                </li>
+                <li class="text-[16px] text-text-secondary leading-[1.5]">
+                  Tokens earned through subscription payments may be placed on
+                  a 14-day hold before becoming eligible for revenue share
+                  distribution, to accommodate potential refunds or chargebacks.
+                </li>
+              </ul>
+              <p class="text-[16px] text-text-secondary leading-[1.5]">
+                Payment to join the Supporter Program is governed by Section 6
+                (Billing and Payments) and is final and non-refundable once
+                processed. Revenue share distributions, when activated, are paid
+                out as additional loyalty tokens and remain subject to all
+                restrictions in this Section 7.
+              </p>
+              <p class="text-[16px] text-text-secondary leading-[1.5]">
+                The full Supporter Program rules — tier thresholds, multipliers,
+                distribution mechanics, soft-demotion schedule, and anti-abuse
+                constraints — are documented at{" "}
+                <a href="/supporters" class="text-accent hover:underline">
+                  contexter.cc/supporters
+                </a>{" "}
+                and may change with reasonable notice.
+              </p>
+            </div>
+
             {/* ── Availability ── */}
             <div class="flex flex-col" style={{ gap: "16px" }}>
               <h2 class="text-[20px] md:text-[24px] font-bold text-black">
-                7. Availability and SLA
+                8. Availability and SLA
               </h2>
               <p class="text-[16px] text-text-secondary leading-[1.5]">
                 We strive to keep the Service available, but provide it on a{" "}
@@ -218,7 +289,7 @@ const Terms: Component = () => {
             {/* ── Limitation of Liability ── */}
             <div class="flex flex-col" style={{ gap: "16px" }}>
               <h2 class="text-[20px] md:text-[24px] font-bold text-black">
-                8. Limitation of Liability
+                9. Limitation of Liability
               </h2>
               <p class="text-[16px] text-text-secondary leading-[1.5]">
                 To the maximum extent permitted by applicable law:
@@ -252,7 +323,7 @@ const Terms: Component = () => {
             {/* ── Termination ── */}
             <div class="flex flex-col" style={{ gap: "16px" }}>
               <h2 class="text-[20px] md:text-[24px] font-bold text-black">
-                9. Termination
+                10. Termination
               </h2>
               <p class="text-[16px] text-text-secondary leading-[1.5]">
                 <strong>By you:</strong> You may delete your account and all
@@ -279,7 +350,7 @@ const Terms: Component = () => {
             {/* ── Indemnification ── */}
             <div class="flex flex-col" style={{ gap: "16px" }}>
               <h2 class="text-[20px] md:text-[24px] font-bold text-black">
-                10. Indemnification
+                11. Indemnification
               </h2>
               <p class="text-[16px] text-text-secondary leading-[1.5]">
                 You agree to indemnify and hold Contexter harmless from any claims,
@@ -292,7 +363,7 @@ const Terms: Component = () => {
             {/* ── Governing Law ── */}
             <div class="flex flex-col" style={{ gap: "16px" }}>
               <h2 class="text-[20px] md:text-[24px] font-bold text-black">
-                11. Governing Law and Dispute Resolution
+                12. Governing Law and Dispute Resolution
               </h2>
               <p class="text-[16px] text-text-secondary leading-[1.5]">
                 These Terms are governed by the laws of England and Wales, without
@@ -316,7 +387,7 @@ const Terms: Component = () => {
             {/* ── Changes ── */}
             <div class="flex flex-col" style={{ gap: "16px" }}>
               <h2 class="text-[20px] md:text-[24px] font-bold text-black">
-                12. Changes to These Terms
+                13. Changes to These Terms
               </h2>
               <p class="text-[16px] text-text-secondary leading-[1.5]">
                 We may modify these Terms at any time. We will notify you of
@@ -330,7 +401,7 @@ const Terms: Component = () => {
             {/* ── Severability ── */}
             <div class="flex flex-col" style={{ gap: "16px" }}>
               <h2 class="text-[20px] md:text-[24px] font-bold text-black">
-                13. Severability
+                14. Severability
               </h2>
               <p class="text-[16px] text-text-secondary leading-[1.5]">
                 If any provision of these Terms is found to be unenforceable, the
@@ -341,7 +412,7 @@ const Terms: Component = () => {
             {/* ── Contact ── */}
             <div class="flex flex-col" style={{ gap: "16px" }}>
               <h2 class="text-[20px] md:text-[24px] font-bold text-black">
-                14. Contact
+                15. Contact
               </h2>
               <p class="text-[16px] text-text-secondary leading-[1.5]">
                 For questions about these Terms, contact us at:{" "}
