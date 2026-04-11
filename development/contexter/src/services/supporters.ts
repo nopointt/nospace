@@ -375,20 +375,22 @@ export async function creditTokensWithMultiplier(
  *  - may be promoted to active by the weekly promotion sweep when their
  *    tokens exceed the current rank-100 threshold (W2-01 ranking sweep)
  *
- * Returns {status: 'active'|'quarantined', created: boolean}. The
- * returned status reflects the row's final status after the call.
+ * BB-02: Returns the full SupporterStatus for existing rows (no longer
+ * collapses warning/frozen/exiting into "active"). Callers that only
+ * care about the quarantine-gate outcome should treat any non-
+ * "quarantined" value as "admitted to ranked set".
  */
 export async function creditTokensWithQuarantineCheck(
   sql: Sql,
   userId: string,
   tokens: number,
   joinedAt?: Date,
-): Promise<{ status: "active" | "quarantined"; created: boolean }> {
+): Promise<{ status: SupporterStatus; created: boolean }> {
   if (tokens <= 0) {
     return { status: "active", created: false }
   }
 
-  const existingRows = await sql<{ status: string }[]>`
+  const existingRows = await sql<{ status: SupporterStatus }[]>`
     SELECT status FROM supporters WHERE user_id = ${userId} LIMIT 1
   `
   const existing = existingRows[0]
@@ -396,7 +398,7 @@ export async function creditTokensWithQuarantineCheck(
     // Already a supporter — just credit tokens, preserve status.
     await creditTokens(sql, userId, tokens, joinedAt)
     return {
-      status: existing.status === "quarantined" ? "quarantined" : "active",
+      status: existing.status,
       created: false,
     }
   }
