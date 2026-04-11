@@ -48,6 +48,46 @@ export interface RecordTransactionInput {
   metadata?: Record<string, unknown>
 }
 
+// --- LemonSqueezy variant mapping (D-62) -------------------------------
+
+export const LS_VARIANTS = {
+  supporter: "1516645",
+  starter: "1516676",
+  pro: "1516706",
+} as const
+
+export type LsVariantKind = "supporter" | "starter" | "pro" | "unknown"
+
+export function variantToKind(variantId: string | number | null | undefined): LsVariantKind {
+  const v = String(variantId ?? "")
+  if (v === LS_VARIANTS.supporter) return "supporter"
+  if (v === LS_VARIANTS.starter) return "starter"
+  if (v === LS_VARIANTS.pro) return "pro"
+  return "unknown"
+}
+
+// --- Tier thresholds (D-51) --------------------------------------------
+//
+// Ranks are 1-indexed leaderboard positions (NOT token counts). The
+// actual rank is computed by the W2 ranking job; this module only maps
+// rank → tier name.
+
+export const TIER_THRESHOLDS = {
+  diamond: { maxRank: 10 },
+  gold: { maxRank: 30 },
+  silver: { maxRank: 60 },
+  bronze: { maxRank: 100 },
+} as const
+
+export function rankToTier(rank: number | null): SupporterTier {
+  if (rank === null || !Number.isFinite(rank) || rank < 1) return "pending"
+  if (rank <= TIER_THRESHOLDS.diamond.maxRank) return "diamond"
+  if (rank <= TIER_THRESHOLDS.gold.maxRank) return "gold"
+  if (rank <= TIER_THRESHOLDS.silver.maxRank) return "silver"
+  if (rank <= TIER_THRESHOLDS.bronze.maxRank) return "bronze"
+  return "pending"
+}
+
 // --- Helpers -----------------------------------------------------------
 
 export function genId(): string {
