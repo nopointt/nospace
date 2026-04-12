@@ -1070,3 +1070,72 @@ J1 activation, J2 permitted without approval, J3 hard safeguards (CRITICAL — n
 - **Context management this session:** 3 memory pressure warnings (94K → 229K → 278K → 348K). Used parallel background Players for W5 features to avoid main context bloat. Ended at ~348K / 1M.
 - **Recovery:** session started with crash recovery notice (PID 329 crashed 15:56 BST) but axis-active was intact, proceeded clean
 
+<!-- ENTRY:2026-04-12:SESSION:240:contexter:ctx-12-supporters-backend [AXIS] -->
+## 2026-04-12 — сессия 240 [Axis]
+
+**CTX-12 Supporters Backend → ✅ COMPLETE**
+
+Deploy session — shipped W5-5B/5C to production and closed the epic.
+
+**Deployed:**
+- pg_dump backup: `/root/backups/ctx12-w5-pre-20260412-062947.dump` (1.9M)
+- Migration 0017 applied to prod: 3 ALTER + 3 CREATE INDEX (anti-abuse columns + held_until)
+- Backend: manual tar SCP of 10 files, sha256 verified, `docker compose build --no-cache` + restart, health green
+- 6 BullMQ cron hashes confirmed (was 4, added daily-soft-demotion + weekly-token-expiry)
+- Frontend: CF Pages deploy, bundle `index-Zintsvz-.js`, cache purged, BB-07 + ToS Section 7 live
+- Git push: 18 commits `bfe933a..f898e1b` to origin/main
+
+**Epic totals (CTX-12, sessions 237-240):**
+- 40 commits, 7 deploys (5 backend + 2 frontend), 3 migrations (0015/0016/0017)
+- 48 integration tests, 0 escalations, 0 real user impact
+- Chargeback/refund handler deferred (future scope, no real supporters yet)
+
+<!-- ENTRY:2026-04-12:CLOSE:240:contexter:ctx-13-reddit-gtm [AXIS] -->
+## 2026-04-12 — сессия 240 CLOSE [Axis]
+
+**Decisions:**
+- CTX-12 COMPLETE (deployed W5-5B/5C + 4 audit fixes)
+- CTX-13 Reddit GTM created (5-phase Reddit presence strategy)
+- D-CTX13-01..05: Reddit primary channel, warmup own account, EN only, manual posting, 5-phase plan
+
+**Files changed:**
+- `memory/contexter-reddit-gtm.md` — NEW: L3 epic CTX-13
+- `memory/specs/reddit-subreddit-playbook.md` — NEW: 30 subs, 4 tiers
+- `memory/specs/reddit-warmup-calendar.md` — NEW: 3-week day-by-day + templates
+- `memory/specs/reddit-directory-checklist.md` — NEW: 76 directories, 5 waves
+- `memory/specs/reddit-launch-drafts.md` — NEW: 6 post drafts
+- `memory/contexter-supporters-backend.md` — CTX-12 marked COMPLETE
+- `memory/contexter-gtm-launch.md` — full audit reconciliation
+- `memory/contexter-about.md` — CTX-12 ✅, CTX-13 added
+- `memory/contexter-roadmap.md` — CTX-13 added
+- `memory/STATE.md` — updated position, metrics, next
+- `src/routes/supporters.ts` — F-02 split (821→256)
+- `src/routes/supporters-admin.ts` — NEW: extracted admin routes (339)
+- `src/routes/supporters-referral.ts` — NEW: extracted referral route (168)
+- `src/routes/webhooks.ts` — F-01 timingSafeEqual + F-03 refund handler
+- `src/services/supporters.ts` — F-04 revshare SourceType
+- `src/services/supporters-revshare.ts` — F-04 sourceType "manual"→"revshare"
+- `ops/deploy.sh` — deployed (W5-05 fix)
+- `drizzle-pg/0017_antiabuse.sql` — deployed to prod
+- `docs/research/contexter-gtm-deep-subreddit-rules.md` — NEW: R1
+- `docs/research/contexter-gtm-deep-launch-post-examples.md` — NEW: R2
+- `docs/research/contexter-gtm-deep-competitor-reddit.md` — NEW: R3
+- `docs/research/contexter-gtm-deep-mcp-directories.md` — NEW: R4
+- `docs/research/contexter-gtm-deep-warmup-topics.md` — NEW: R5
+- `~/.claude/reglaments/research.md` — Reddit scraper registered
+
+**Completed:**
+- CTX-12 W5-5B/5C deploy (backend + frontend + migration 0017)
+- CTX-12 full audit (73/73 tests + 30 E2E + code review)
+- 4 audit fixes (timingSafeEqual, route split, refund handler, revshare enum) — deployed
+- Git push 18+1 commits to origin/main
+- CTX-10 GTM full audit + L3 reconciliation
+- 5 DEEP research agents (subreddit rules, launch posts, competitor presence, directories, warmup topics)
+- CTX-13 Reddit GTM epic created (5 strategy files)
+
+**Opened:**
+- CTX-13 Phase 1: warmup (karma 200+, 3 weeks)
+- MCP directory submissions Wave 1 (14 P0 directories)
+- Track A: copy audit, OG tags, analytics (parallel with Reddit warmup)
+- RESEND_API_KEY rotation (defensive)
+- r/MCP, r/RAG, r/ClaudeAI rules manual verification needed

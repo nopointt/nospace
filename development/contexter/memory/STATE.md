@@ -1,11 +1,11 @@
 # STATE — Contexter
 
 ## Position
-- **Phase:** CTX-12 Supporters Backend (~90% complete) — W1+W2+W3+W4+W5-5A deployed; W5-5B/5C implementation DONE locally, deploy pending
-- **Status:** Full supporters backend + tasks/admin/referrals/revshare/notifications LIVE on prod. Soft demotion + token expiry + anti-abuse + ToS clause + deploy script fix all IMPLEMENTED + tested on contexter_dev, NOT yet deployed (5 commits local only, migration 0017 on dev only). W5-5A deferred bundle (7 Coach-review fixes) backend deployed, BB-07 frontend pending. 48 new integration tests all PASS (24 W4 + 10 W5-02/03 + 14 W5-04). LemonSqueezy LIVE. Alpha text-only (308 formats). Pricing: storage-only (1/10/100 GB). Revenue baseline: $1.16 (test only, 0 real supporter rows).
-- **Last session:** 2026-04-11 (Axis, session 239 — CTX-12 autonomous W4+W5, 14 new commits on main, 2 prod deploys, 0 escalations, 0 J3/J5 trips, parallel background Players for W5 features, orchestrator self-audit added 8 spec addenda pre-W4-launch closing phantom-supporter + advisory-lock + tx-wrap + email-wire gaps)
-- **Sessions total:** 239
-- **Next:** (1) Deploy W5-5B/5C backend to prod — pg_dump + migration 0017 + SCP via new deploy.sh (live-test) + docker rebuild + smoke test POST /referral duplicate-IP rejection + verify 6 BullMQ cron hashes. (2) Frontend CF Pages deploy via ops/deploy-web.sh — ships BB-07 structured error + W5-01 ToS Section 7. (3) Rotate RESEND_API_KEY (defensive, leaked into Orchestrator context via grep this session). (4) Hetzner disk expansion or prune cron.
+- **Phase:** CTX-12 Supporters Backend ✅ COMPLETE (2026-04-12, session 240)
+- **Status:** Full supporters backend deployed: tokens, ranking, tasks, admin, referrals, rev share, notifications, soft demotion, token expiry, anti-abuse, ToS Section 7. 48 integration tests PASS. LemonSqueezy LIVE. Alpha text-only (308 formats). Pricing: storage-only (1/10/100 GB). Revenue baseline: $1.16 (test only, 0 real supporter rows). All 18 commits pushed to origin/main.
+- **Last session:** 2026-04-12 (Axis, session 240 — CTX-12 W5-5B/5C deploy to prod: pg_dump + migration 0017 + manual tar SCP + docker rebuild + 6 BullMQ crons confirmed + CF Pages frontend deploy + git push 18 commits)
+- **Sessions total:** 240
+- **Next:** (1) CTX-13 Reddit GTM Phase 1 — warmup (karma 200+, expert comments, 3 weeks). (2) Parallel: MCP directory submissions (Wave 1 P0, 14 directories). (3) Rotate RESEND_API_KEY. (4) Hetzner disk (51%). (5) Track A code work (copy audit, OG tags, analytics) — parallel with Reddit warmup.
 
 ## Key Completions
 - i18n: EN/RU toggle, 500+ translation keys, all 24 pages/components
@@ -120,11 +120,11 @@
 - ~~CTX-12: Backend supporters system (DB, tokens, ranking cron, user matching)~~ → ✅ W1+W2+W3 DEPLOYED 2026-04-11. W4 (tasks+rev share) spec ready, W5 (legal+polish) pending
 - **Hetzner CAX21 disk exhaustion**: 38G disk hit 100% during W1 deploy. Axis cleaned docker cache 35GB freed. Disk now 48% used. Recommend expansion or prune cron.
 - ~~**W5 deferred bundle** (from W1/W2/W3 Coach reviews): better-auth email/password reclaim hook, creditTokensWithQuarantineCheck type lie, runSupportersRanking >50 lines, /freeze 500 vs 409, supporter_transactions.amount_tokens audit drift on capped rows, SupporterStatus type missing 'quarantined', W3 freeze 409 substring match fragility~~ → ✅ ALL 7 CLOSED in W5-5A session 239 (BB-01..BB-07)
-- **W5 deploy pending** (session 239 close): 5 local commits not yet on prod — migration 0017 on dev only, W5-01/02/03/04/05 backend+frontend not deployed. Requires pg_dump + migration + SCP + rebuild + smoke. Plus CF Pages frontend deploy for BB-07 + W5-01 ToS.
-- **RESEND_API_KEY leak** (session 239): value inadvertently echoed into Orchestrator context via `grep RESEND_API_KEY` while adding ADMIN_USER_IDS to /opt/contexter/.env. Not logged to any file, not committed. Recommend defensive rotation at next session.
-- **src/routes/supporters.ts 821 lines** (session 239 post-W5-04): exceeds H2 soft threshold 800. Pre-commit hook warning only, non-blocking. Future refactor.
-- ToS: loyalty points / tokens clause needed before public launch
-- Deploy script audit (SCP works but docker doesn't always rebuild)
+- ~~W5 deploy pending~~ → ✅ DEPLOYED 2026-04-12 (session 240)
+- **RESEND_API_KEY leak** (session 239): value leaked into Orchestrator context. Not logged/committed. Recommend defensive rotation.
+- **src/routes/supporters.ts 821 lines** (post-W5-04): exceeds H2 soft threshold 800. Future refactor.
+- ~~ToS: loyalty points clause~~ → ✅ Section 7 deployed 2026-04-12
+- ~~Deploy script audit~~ → ✅ W5-05 fix deployed 2026-04-12
 - Delete unverified LS store #333207 (email sent to hello@lemonsqueezy.com)
 
 ## Deferred
@@ -142,15 +142,15 @@
 - Revenue: $1.16 (1 supporter entry, 2026-04-11, test only)
 - CTX-12 commits total (sessions 237-239): 40 (W1:10 + W2:10 + W3:5 + session 238 close:1 + W4:5 + W5-5A:7 + W5-5B/C:5)
 - CTX-12 session 239 commits: 14 (W4:5 + W5-5A:7 + W5-5B/C:5 minus W5-5A already counted = net 14 new)
-- CTX-12 deploys total: 5 (W1 backend, W2 backend, W3 CF Pages, W4 backend + migration 0016, W5-5A backend)
-- CTX-12 session 239 deploys: 2 (W4 backend + migration 0016, W5-5A backend)
-- CTX-12 session 239 integration tests added: 48 (24 W4 + 10 W5-02/03 + 14 W5-04) all PASS on contexter_dev
-- CTX-12 migrations: 0015 (W1, prod), 0016 (W4, prod), 0017 (W5-04, dev only NOT prod)
+- CTX-12 deploys total: 7 (W1 backend, W2 backend, W3 CF Pages, W4 backend + migration 0016, W5-5A backend, W5-5B/C backend + migration 0017, W5 CF Pages frontend)
+- CTX-12 session 240 deploys: 2 (W5-5B/C backend + migration 0017, W5 CF Pages frontend)
+- CTX-12 integration tests: 48 (24 W4 + 10 W5-02/03 + 14 W5-04) all PASS on contexter_dev
+- CTX-12 migrations: 0015 (W1, prod), 0016 (W4, prod), 0017 (W5-04, prod)
 - Supporters table rows on prod: 0 (no real users yet)
-- Disk on prod: 51% (after 2 W4 + W5-5A deploys this session, up from 48%)
+- Disk on prod: 51%
 - ADMIN_USER_IDS env on prod: 32b533b3 (nopoint primary)
-- BullMQ maintenance crons on prod: 4 active (daily-retention + weekly-drift-check + weekly-supporters-ranking + quarterly-revshare); 2 pending W5 deploy (daily-soft-demotion + weekly-token-expiry)
-- GitHub: github.com/nopointt/contexter (origin/main lags local main by 14 commits — not pushed)
+- BullMQ maintenance crons on prod: 6 active (daily-retention + daily-soft-demotion + weekly-drift-check + weekly-supporters-ranking + weekly-token-expiry + quarterly-revshare)
+- GitHub: github.com/nopointt/nospace (origin/main synced — pushed bfe933a..f898e1b)
 - Deployed: contexter.cc + api.contexter.cc + pay.contexter.cc
 - Server: Hetzner CAX21 (Helsinki)
 - LemonSqueezy: contexter.lemonsqueezy.com (store #309186)

@@ -216,7 +216,8 @@ Production data: ~756 users, ~744 documents, ~1281 chunks (as of 2026-03-30).
 | **CTX-04 Auth** | [contexter-auth.md](contexter-auth.md) | 🔶 IN PROGRESS |
 | **CTX-09 UI/UX Polish** | [contexter-uiux-polish.md](contexter-uiux-polish.md) | ✅ COMPLETE (2026-03-30) |
 | **CTX-10 GTM Launch** | [contexter-gtm-launch.md](contexter-gtm-launch.md) | 🔶 IN PROGRESS (deadline: 2026-04-08) |
-| **CTX-12 Supporters Backend** | [contexter-supporters-backend.md](contexter-supporters-backend.md) | 🔶 IN PROGRESS (~90% — W1..W5-5A deployed, W5-5B/5C implemented local, deploy pending) |
+| **CTX-12 Supporters Backend** | [contexter-supporters-backend.md](contexter-supporters-backend.md) | ✅ COMPLETE (2026-04-12, session 240 — all W1-W5 deployed) |
+| **CTX-13 Reddit GTM** | [contexter-reddit-gtm.md](contexter-reddit-gtm.md) | 🔶 IN PROGRESS (5-phase Reddit presence strategy) |
 
 ## Write Authority
 

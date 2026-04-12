@@ -1,264 +1,232 @@
 ---
 # contexter-gtm-launch.md — CTX-10 GTM Launch
-> Layer: L3 | Epic: CTX-10 | Status: 🔶 IN PROGRESS
+> Layer: L3 | Epic: CTX-10 | Status: 🔶 IN PROGRESS (~30% — research + payments + infra done; all launch execution pending)
 > Created: 2026-04-01 (session 225)
-> Last updated: 2026-04-07 (session 232 — LemonSqueezy approved, ChatGPT /mcp, OpenAI App Dir, alpha formats, pricing review)
-> Deadline: 2026-04-08 (7 days)
+> Last updated: 2026-04-12 (session 240 — full audit, CTX-12 complete, L3 reconciled)
+> Original deadline: 2026-04-08 (missed — replanning needed)
 > Predecessor: CTX-08 GTM Strategy (CLOSED — positioning + research + landing page)
 ---
 
 ## Goal
 
-100 платящих supporters по $10 за 7 дней (до 08.04.2026). $0 маркетинг бюджет. EN глобальный рынок. Все бесплатные каналы.
+100 paying supporters × $10 via all free channels. $0 marketing budget. EN global market.
 
 ## Context
 
-CTX-08 (closed 2026-03-30) дал:
-- Positioning: "One memory. Every AI." — white space верифицирован (universal + non-tech = пустой квадрант)
-- 14 research files: market landscape, 6 competitor deep dives, user pain research (17 quotes), copy variants (5 EN + 5 RU)
-- Product brief: 12-section landing page structure, video script, objection busters, CTA strategy
-- Copy audit: 50+ jargon issues найдены, NOT applied
+**CTX-08 (closed 2026-03-30)** delivered:
+- Positioning: "One memory. Every AI." — white space verified (universal + non-tech = empty quadrant)
+- 16 research files from CTX-08 era (market landscape, 6 competitor deep dives, v2 updates, pain research, competitive map, positioning synthesis, landing page structure)
+- Copy audit: 50+ jargon issues found, replacements specified (NOT yet applied)
 - Financial model: break-even ~100 paying users, ARPU $4.24 (Month 1)
+- Product brief: 12-section landing page structure, CTA strategy, copy rules
 
-Текущее состояние (после DB cleanup 2026-04-01):
-- 2 реальных юзера, 26 документов, 519 чанков
-- API: healthy (PG + S3 + Redis + Groq OK)
+**CTX-12 (completed 2026-04-12, session 240)** delivered:
+- Full supporters backend: tokens, ranking, tasks, admin, referrals, rev share, notifications, soft demotion, token expiry, anti-abuse
+- LemonSqueezy full integration: store, 3 products, webhook HMAC, custom domain pay.contexter.cc
+- ToS Section 7 "Supporter Program and Loyalty Tokens"
+- Chargeback/refund webhook handler
+- 40 commits, 7 deploys, 3 migrations, 48 integration tests
+
+**Current product state (2026-04-12):**
+- 2 real users (seed), 0 supporters, 0 real revenue ($1.16 test)
+- API: healthy (PG + S3 + Redis + Groq + all circuits OK)
 - Auth: email+password + Google OAuth + Resend DNS verified
-- Payments: NOWPayments (crypto) + Halyk bank transfer (мамин счёт)
-- Landing: 12+ секций (EN/RU), pricing ($0/$9/$29), pre-order $10
-- MCP: 12 tools, Streamable HTTP, tested in Perplexity + Claude.ai
-- 0 social accounts, 0 marketing channels, 0 presence
+- Payments: LemonSqueezy LIVE (card, Supporter $10+ PWYW / Starter $9/mo / Pro $29/mo)
+- Landing: 12+ sections (EN/RU), bilingual, pricing storage-only (1/10/100 GB)
+- MCP: 12 tools, Streamable HTTP, ChatGPT /mcp endpoint deployed
+- /supporters page: live, dynamic leaderboard, checkout integration
+- 0 social accounts, 0 marketing channels, 0 public presence
 
 ## Key Decisions
 
-- D-01: **$10 = support donation**, not subscription. NOWPayments crypto + Halyk bank transfer. Supporters получат Pro access manually после launch.
-- D-02: **EN global market** primary. RU secondary (landing bilingual, but launch content EN).
-- D-03: **CTX-08 renamed** to "GTM Strategy" (was "GTM Strategy & Positioning") — no conflict with CTX-10 "GTM Launch".
-- D-04: **All free channels**: ProductHunt, HackerNews, Reddit, Twitter/X, MCP directories, IndieHackers, Dev.to, AI Discord/Telegram communities.
-- D-05: **Co-founder FOUND** — Artem (CPO ProxyMarket), GTM/marketing. Revenue share model (% от LTV привлечённых юзеров). Knowledge hub: cdn.contexter.cc/public/artem/
+- D-01: **$10 = support donation**, not subscription (D-26). Supporters get Pro manually after launch.
+- D-02: **EN global market** primary. RU secondary (landing bilingual, launch content EN).
+- D-04: **All free channels**: PH, HN, Reddit, Twitter/X, MCP directories, IndieHackers, Dev.to, AI communities.
+- D-05: **Co-founder** — Artem (CPO ProxyMarket), GTM/marketing. Revenue share (% of LTV). Knowledge hub: cdn.contexter.cc/public/artem/
 - D-06: **Copy audit MUST be applied** before any public launch — jargon kills non-tech conversion.
-- D-07: **Analytics** — separate epic (CTX-11), but basic tracking (Plausible/Umami) deployed as part of CTX-10.
-- D-08: **Research methodology** — two-phase (SEED 20% → DEEP 80%), save to `nospace/docs/research/` as you go, ≥2 sources per claim, self-check protocol.
-- D-32: **Research restructured** — 11 R-topics → 4 SEED domains + 2 targeted DEEPs (Reddit + HN).
-- D-33: **LemonSqueezy = primary payment** — MoR, KZ+AR payouts, no entity. Crypto-only kills ~93% conversion.
-- D-34: **"Founding Supporter"** framing for $10 (20-30% lift). Counter "X/100 spots" = authentic scarcity.
-- D-35: **HN > PH** as primary launch channel (10-30K vs 800-1K visitors, 3-5x conversion). Stagger launches.
-- D-36: **First 100 = 70-80 devs** + 20-30 knowledge workers. Dev channels dominate.
+- D-07: **Analytics** — basic tracking (Plausible/Umami) needed before launch (NOT yet deployed).
+- D-08: **Research** — two-phase SEED→DEEP. Save to `nospace/docs/research/`.
+- D-32: **Research restructured** — 11 R-topics → 4 SEED domains + 2 targeted DEEPs.
+- D-33: **LemonSqueezy = primary payment** — MoR, KZ+AR payouts, no entity. Crypto-only kills ~93%.
+- D-34: **"Founding Supporter"** framing for $10 (20-30% lift). Counter "X/100 spots".
+- D-35: **HN > PH** as primary launch channel (10-30K vs 800-1K visitors). Stagger: HN Day 1 → Reddit Day 2 → PH Day 3.
+- D-36: **First 100 = 70-80 devs** + 20-30 knowledge workers.
 - D-37: **MCP directories + GitHub awesome-mcp** PRs = zero-cost, submit before launch.
-- D-38: **MCP connection fixed** — Claude.ai was on old workers.dev. Must fix Perplexity too.
+- D-38: **MCP connection** — Claude.ai fixed (api.contexter.cc). Perplexity still on workers.dev (NOT fixed).
+- D-42: **LemonSqueezy APPROVED** (2026-04-07). Card payments enabled.
+- D-44: **ChatGPT MCP compat** — /mcp route + CORS + tool annotations deployed.
+- D-45: **OpenAI App Directory** — draft submitted, domain verified. Needs $5 individual verification.
+- D-46: **Alpha mode** — 308 text-only formats. Binary deferred.
+- D-50: **Pricing** = storage-only: Free 1GB / Starter $9 10GB / Pro $29 100GB.
+- D-59: **AI'preneurs 2026** — passed stage 1, diagnostic interview ~April 20.
 
-## Research Plan
+## Research Foundation (verified on disk 2026-04-12)
 
-11 research topics. Each = separate file in `nospace/docs/research/`. Follow research-methodology-best-practices.md strictly.
+### CTX-08 Era (16 files, ~490K)
 
-### R1: Zero-Budget SaaS Launch to First 100 Paying Users
-- **File:** `contexter-gtm-zero-budget-launch-research.md`
-- **Scope:** Real cases of B2C/prosumer SaaS products that got first 100 paying users with $0 budget in 2024-2026. Channels used, timeline, tactics, conversion rates. Special focus on developer tools, productivity tools, AI tools.
-- **Anti-scope:** Enterprise sales, paid ads, influencer marketing (paid), outbound cold email.
-- **Key questions:** What channels produced the first 100? What was the time from launch to 100? What content/message worked? What failed?
-- **Agent:** Sonnet, general-purpose, WebSearch-heavy
+| File | Size | Content |
+|---|---|---|
+| `contexter-gtm-market-landscape.md` | 26K | TAM $2.76-3.33B, MCP standard, 12-18mo window |
+| `contexter-gtm-direct-competitors.md` | 17K | Direct competitors overview |
+| `contexter-gtm-indirect-competitors.md` | 28K | Indirect competitors |
+| `contexter-gtm-v2-direct-competitors.md` | 21K | Updated direct (v2) |
+| `contexter-gtm-v2-indirect-competitors.md` | 33K | Updated indirect (v2) |
+| `contexter-gtm-v2-second-brain.md` | 32K | Second brain category analysis |
+| `contexter-gtm-v2-nontechnical-pain.md` | 28K | 17 user quotes, grief language, workaround patterns |
+| `contexter-gtm-synthesis-competitive-map.md` | 26K | White space: universal + non-tech = empty quadrant |
+| `contexter-gtm-synthesis-positioning.md` | 39K | "One memory. Every AI." + 5 EN + 5 RU copy variants |
+| `contexter-gtm-landing-page-structure.md` | 39K | 12-section landing spec, CTA strategy |
+| `contexter-gtm-competitor-supermemory.md` | 32K | Deep dive |
+| `contexter-gtm-competitor-ragie.md` | 34K | Deep dive |
+| `contexter-gtm-competitor-morphik.md` | 35K | Deep dive |
+| `contexter-gtm-competitor-graphlit.md` | 29K | Deep dive |
+| `contexter-gtm-competitor-langbase.md` | 33K | Deep dive |
+| `contexter-gtm-competitor-vectorize.md` | 34K | Deep dive |
 
-### R2: ProductHunt Launch Playbook 2026
-- **File:** `contexter-gtm-producthunt-launch-research.md`
-- **Scope:** Optimal PH launch strategy in 2026. Preparation timeline, assets required, hunter selection, first comment strategy, upvote dynamics, timing (day, hour). Analyze PH launches of: Supermemory, Mem.ai, Ragie, NotebookLM alternatives, similar MCP/AI tools. What separated top 5 from flops.
-- **Anti-scope:** PH for physical products, enterprise SaaS, mobile apps.
-- **Key questions:** What day/time is optimal? What makes a PH first comment convert? Should we use a hunter or self-launch? What assets are required (logo, screenshots, video, tagline)?
+### CTX-10 SEED Research (4 files, ~107K)
 
-### R3: HackerNews Show HN Strategy
-- **File:** `contexter-gtm-hackernews-launch-research.md`
-- **Scope:** Successful "Show HN" posts for AI/developer tools 2024-2026. Format, title patterns, timing, how to engage comments. Posts that got to front page. What killed engagement.
-- **Anti-scope:** Regular HN submissions, Ask HN, hiring posts.
-- **Key questions:** What title format gets upvotes? When to post (day/hour)? How to handle "why not just use X" comments? Should we show technical details or keep it simple?
+| File | Size | Content |
+|---|---|---|
+| `contexter-gtm-seed-1-distribution.md` | 27K | Channels for first 100, audience mapping |
+| `contexter-gtm-seed-2-launch-mechanics.md` | 27K | Solo founder coordinated launch, timing, assets |
+| `contexter-gtm-seed-3-payment-conversion.md` | 18K | $10 ask framing, LS vs crypto, friction |
+| `contexter-gtm-seed-4-viral-patterns.md` | 34K | 15 case studies, 10 common patterns |
 
-### R4: Reddit Community Marketing for AI/SaaS
-- **File:** `contexter-gtm-reddit-strategy-research.md`
-- **Scope:** Subreddits where Contexter's target audience lives (r/ChatGPT, r/ClaudeAI, r/artificial, r/SideProject, r/startups, r/Entrepreneur, r/MachineLearning, r/productivity). Rules for self-promotion. Successful "I built X" posts. Format that works.
-- **Anti-scope:** Reddit ads, bot/astroturfing, karma farming.
-- **Key questions:** Which subreddits allow self-promotion? What format (text, link, image)? What gets upvoted vs deleted? How to avoid shadowban?
+### Additional GTM-Relevant Research (6 files, ~153K)
 
-### R5: MCP Directory & Marketplace Ecosystem
-- **File:** `contexter-gtm-mcp-directories-research.md`
-- **Scope:** All MCP directories (PulseMCP, mcp.so, glama.ai, smithery, MCPHub, etc.). How to submit, listing requirements, traffic estimates, pricing (free vs paid listing). Which ones drive actual installs.
-- **Anti-scope:** Non-MCP directories (Chrome extensions, app stores).
-- **Key questions:** Which directories have the most traffic? Submission process? How long from submit to live? Do they drive real installs?
+| File | Size | Content |
+|---|---|---|
+| `contexter-copy-audit.md` | 21K | 50+ jargon replacements — **INPUT FOR W1-01** |
+| `contexter-financial-model.md` | 17K | Break-even ~100 users, ARPU model |
+| `contexter-competitor-sentiment-analysis.md` | 26K | User sentiment on competitors |
+| `reddit-marketing-guide-smetnyov.md` | 18K | Smetnyov/Skyeng method, 13 chapters |
+| `contexter-supporters-deep-research.md` | 38K | 40+ sources, loyalty programs, airdrops |
+| `contexter-lemonsqueezy-deep-research.md` | 31K | LS docs, API, webhooks, integration patterns |
 
-### R6: AI Community Mapping
-- **File:** `contexter-gtm-ai-communities-research.md`
-- **Scope:** Where non-technical AI users congregate: Discord servers, Telegram channels, Twitter/X communities, Facebook groups, Slack communities, newsletters. Focus on English-speaking communities with >1000 members.
-- **Anti-scope:** Developer-only communities (unless they also serve non-tech), <500 member groups.
-- **Key questions:** Size, engagement level, self-promotion rules, best way to introduce a product. Which communities are most active in 2026?
+### Other Documents
 
-### R7: Co-Founder Matching & Revenue Share Models
-- **File:** `contexter-gtm-cofounder-matching-research.md`
-- **Scope:** Platforms for finding marketing/growth co-founders or partners in 2026. YC Co-Founder Matching, IndieHackers, Twitter/X, AngelList Talent, CoFoundersLab, etc. Revenue share models (% of LTV, affiliate commission, equity). What attracts a marketing person to an early-stage product.
-- **Anti-scope:** Full-time hiring, freelancers on Upwork, agencies.
-- **Key questions:** Which platform has the highest quality marketing co-founder pool? What's a competitive revenue share offer? How to pitch an unpaid role?
+| File | Location | Content |
+|---|---|---|
+| `contexter-product-brief.md` | `memory/` | 12-section landing structure, video script, objection busters |
+| `cofounder-briefing-artem.md` | `docs/` | 11-section co-founder briefing |
+| Knowledge hub (29 files) | `cdn.contexter.cc/public/artem/` | HTML copies of all research for Artem |
 
-### R8: Content Marketing $0 Budget for AI/Dev Tools
-- **File:** `contexter-gtm-content-marketing-research.md`
-- **Scope:** SEO strategy for AI/RAG tools. Comparison pages ("Contexter vs NotebookLM"), how-to tutorials, blog posts that drive organic traffic. Dev.to, Medium, Hashnode publishing strategies. Keywords to target.
-- **Anti-scope:** Paid content promotion, influencer partnerships, video content (separate topic).
-- **Key questions:** Which keywords have traffic + low competition for RAG/AI memory tools? What content format converts free readers to users? Which publishing platforms drive the most referral traffic?
-
-### R9: Free-to-Paid Conversion Optimization
-- **File:** `contexter-gtm-conversion-optimization-research.md`
-- **Scope:** How prosumer SaaS tools convert free users to paid. Activation metrics, onboarding flow optimization, in-app nudges, email sequences, upgrade CTAs. Special focus on AI tools and knowledge management products.
-- **Anti-scope:** Enterprise upsell, sales-led conversion.
-- **Key questions:** What's the "aha moment" for products like ours (first successful MCP query)? What's typical free→paid conversion for prosumer SaaS? What nudges work without being annoying?
-
-### R10: $10 Supporter/Pre-Order Model — Payment Friction & Messaging
-- **File:** `contexter-gtm-supporter-model-research.md`
-- **Scope:** Products that successfully used supporter/pre-order/early bird pricing. Crypto payment friction for mainstream users. How to frame "pay $10 to support" vs "pre-order" vs "early bird". Bank transfer as alternative. Messaging that converts.
-- **Anti-scope:** Crowdfunding (Kickstarter/IndieGoGo), ICO/token sales.
-- **Key questions:** What's the typical conversion rate for $10 supporter tiers? Does crypto-only hurt or help? How to frame the bank transfer ("мой мамин счёт" angle — endearing or unprofessional)?
-
-### R11: Maximum Seeding — All Platforms & Directories to Register On
-- **File:** `contexter-gtm-platform-seeding-research.md`
-- **Scope:** Exhaustive list of ALL platforms and directories where an AI/SaaS/developer tool should have a presence in 2026. Goal: maximum surface area. Include obvious AND non-obvious. Categories to cover:
-  - **Startup directories:** BetaList, BetaPage, StartupBase, Launching Next, SaaSHub, AlternativeTo, StackShare, G2, Capterra, GetApp, There's An AI For That, FutureTools, TopAI.tools, AI Tool Directory, etc.
-  - **Developer directories:** GitHub (README/topics), npm/bun packages, Awesome lists (awesome-mcp, awesome-rag, awesome-ai-tools), Libraries.io, DevHunt
-  - **MCP-specific:** PulseMCP, mcp.so, glama.ai, smithery, MCPHub, Composio, official MCP registry
-  - **AI tool aggregators:** There's An AI For That, FutureTools, AI Tool Hunt, TopAI.tools, ToolPilot, AI Scout, Futurepedia, AIcyclopedia
-  - **Product directories:** ProductHunt (ship page before launch), Crunchbase, AngelList, F6S, Indie Hackers product page
-  - **SEO/backlink directories:** free business directories, tech tool comparison sites, "best X" lists that accept submissions
-  - **Community profiles:** Reddit, HN, IndieHackers, Dev.to, Hashnode, Medium, Twitter/X, LinkedIn (personal + company page), Mastodon, Bluesky, Threads
-  - **Video platforms:** YouTube channel (for future demos), Loom library
-  - **Newsletter directories:** Newsletter platforms that feature new tools (Ben's Bites, TLDR, The Rundown AI, etc.) — how to get featured
-  - **Unconventional/non-obvious:** Quora answers, Stack Overflow profiles, Wikipedia (if notable), Hacker News "Who is hiring?" threads, Slack communities directory, Discord server directories, Telegram bot directories, Chrome Web Store (if applicable), VS Code marketplace (MCP extension?), Raycast extensions, Alfred workflows
-- **Anti-scope:** Paid listings >$50/month. Platforms that require legal entity. Platforms in non-Latin scripts (Chinese, Japanese, Korean — for now).
-- **Key questions:** Which platforms are free to register? Which have the most organic traffic for AI tools? Which provide dofollow backlinks (SEO value)? Which have editorial review (slower but higher quality)? What's the optimal order — register on all in one day or stagger? Which platforms auto-cross-post (register once, appear in multiple places)?
-- **Output format:** Master checklist table with columns: Platform | Category | URL | Free? | Traffic estimate | Submission process | Backlink? | Priority (P0/P1/P2)
+**Total research corpus: 26 files, ~750K, covering market, competitors, positioning, distribution, payment, conversion, supporters, Reddit, legal.**
 
 ## Waves
 
-### Wave 0: Research (April 1-2)
-Restructured from 11 R-topics → 4 SEED domains + 2 targeted DEEPs.
+### Wave 0: Research ✅ PARTIAL (SEED done, DEEP not done)
 
 **SEED (completed 2026-04-01):**
-- [x] S1: Distribution — where are first 100 paying supporters (channels, communities, audience mapping)
-- [x] S2: Launch Mechanics — solo founder coordinated multi-channel launch (timing, assets, sequencing)
-- [x] S3: Payment & Conversion — $10 ask framing, payment platform, friction reduction
-- [x] S4: Viral Patterns & Cases — 15 case studies, 10 common patterns, non-obvious platforms
-- [x] SEED Synthesis — cross-domain findings, priority stack, DEEP plan
+- [x] S1: Distribution — channels for first 100 (27K)
+- [x] S2: Launch Mechanics — solo launch sequencing (27K)
+- [x] S3: Payment & Conversion — $10 framing, LS (18K)
+- [x] S4: Viral Patterns — 15 case studies (34K)
 
-**DEEP (planned for 2026-04-01 night):**
-- [ ] D-DEEP-1: Reddit post anatomy — r/ChatGPT, r/ClaudeAI successful product posts, format, rules
-- [ ] D-DEEP-2: HN Show HN optimization — top 20 MCP/RAG Show HN posts, title patterns, timing
-- [ ] Reddit warmup: u/Cute_Baseball2875 (7mo, karma=1). Target 50-100 karma via helpful comments in r/ChatGPT, r/ClaudeAI, r/artificial before launch posts
+**DEEP (NOT DONE):**
+- [ ] D-DEEP-1: Reddit post anatomy — r/ChatGPT, r/ClaudeAI successful product posts, format, rules, what gets deleted
+- [ ] D-DEEP-2: HN Show HN optimization — top 20 MCP/RAG Show HN posts, title patterns, timing, comment strategy
+- [ ] Reddit warmup: u/Cute_Baseball2875 (7mo, karma=1, 0 posts). Needs 50-100 karma via helpful comments before ANY launch post
 
-### Wave 1: Product Readiness (April 1-2)
-Fix everything that blocks conversion before going public.
+### Wave 1: Product Readiness ❌ NOT DONE
 
-- [ ] W1-01: Apply copy audit — replace ALL jargon (50+ items from contexter-copy-audit.md)
+- [ ] W1-01: **Apply copy audit** — replace ALL 50+ jargon items (from `contexter-copy-audit.md`). CRITICAL — blocks all public-facing work.
 - [ ] W1-02: Playwright full site audit — screenshot every page, identify visual bugs
 - [ ] W1-03: Full user flow test — register → upload → MCP connect → query in Claude/Perplexity
 - [ ] W1-04: Fix any issues found in W1-02 and W1-03
 - [ ] W1-05: Deploy basic analytics (Plausible Cloud free or Umami self-hosted)
-- [ ] W1-06: Add "Support Us — $10" page/section with NOWPayments + Halyk bank transfer
-- [ ] W1-07: Create Open Graph / social preview meta tags (og:image, og:title, og:description)
-- [ ] W1-08: Verify pricing page shows current tiers correctly ($0/$9/$29 + $10 supporter)
-- [ ] W1-09: Ensure landing page hero variant is the strongest (test with screenshots)
+- [x] ~~W1-06: Add "Support Us — $10" page/section~~ → ✅ DONE via CTX-12 (full /supporters page + LemonSqueezy checkout + backend)
+- [ ] W1-07: **Add OG/social meta tags** (og:image, og:title, og:description, twitter:card) — currently MISSING on contexter.cc
+- [x] ~~W1-08: Verify pricing page~~ → ✅ Pricing resolved (D-50: storage-only 1/10/100 GB)
+- [ ] W1-09: Ensure landing page hero variant is the strongest
 
-### Wave 2: Channel Setup (April 2-3)
-Create all accounts and prepare launch assets.
+### Wave 2: Channel Setup ❌ NOT DONE (except co-founder)
 
 - [ ] W2-01: Twitter/X account — profile, bio, header, pin tweet draft
-- [ ] W2-02: ProductHunt maker page — logo, tagline, description, screenshots (4-6), first comment draft
-- [ ] W2-03: Reddit — warm up account if needed, draft "I built X" posts for 4-5 subreddits
+- [ ] W2-02: ProductHunt maker page — logo, tagline, screenshots (4-6), first comment draft
+- [ ] W2-03: Reddit — warm up account (50-100 karma), draft "I built X" posts for 4-5 subreddits
 - [ ] W2-04: HackerNews — draft "Show HN" post title + comment
-- [ ] W2-05: MCP directories — submit to all (from R5 research)
-- [ ] W2-05b: Register on ALL platforms from R11 master checklist (P0 first, then P1, P2)
+- [ ] W2-05: MCP directories — submit to all (PulseMCP, mcp.so, glama.ai, smithery, MCPHub, etc.)
+- [ ] W2-05b: Register on ALL platforms from R11 checklist (BetaList, AlternativeTo, SaaSHub, There's An AI For That, etc.)
 - [ ] W2-06: IndieHackers profile + launch story draft
 - [ ] W2-07: Dev.to — article "I built an AI memory that works with every LLM"
-- [ ] W2-08: GitHub README optimization — add badges, demo GIF, clear value prop
-- [x] W2-09: Co-founder found — Artem (CPO ProxyMarket), GTM/marketing, revenue share model
-- [x] W2-10: Artem co-founder engagement — briefing doc + knowledge hub (cdn.contexter.cc/public/artem/) created
+- [ ] W2-08: GitHub README optimization — badges, demo GIF, clear value prop
+- [x] W2-09: Co-founder found — Artem (CPO ProxyMarket)
+- [x] W2-10: Artem briefing + knowledge hub deployed
 
-### Wave 3: Launch Execution (April 3-5)
-Simultaneous launch across all channels.
+### Wave 3: Launch Execution ❌ NOT DONE
 
-Day 1 (April 3, Thursday):
-- [ ] W3-01: ProductHunt launch (schedule for 00:01 PT)
-- [ ] W3-02: Twitter/X launch thread (timed with PH)
-- [ ] W3-03: HackerNews "Show HN" post (9-11 AM ET)
-- [ ] W3-04: Reddit posts (stagger across subreddits, 2-3 hour gaps)
-- [ ] W3-05: IndieHackers launch post
-- [ ] W3-06: Dev.to article publish
+- [ ] W3-01: HackerNews "Show HN" (D-35: HN first, not PH)
+- [ ] W3-02: Reddit posts (stagger across subreddits, 2-3 hour gaps)
+- [ ] W3-03: ProductHunt launch
+- [ ] W3-04: Twitter/X launch thread
+- [ ] W3-05: IndieHackers + Dev.to publish
+- [ ] W3-06: Cross-post to AI Discord/Telegram communities
 - [ ] W3-07: Engage with every comment, reply within 30 min
 
-Day 2-3 (April 4-5):
-- [ ] W3-08: Follow-up tweets (learnings, stats, behind-the-scenes)
-- [ ] W3-09: Cross-post to AI Discord/Telegram communities (from R6 research)
-- [ ] W3-10: Direct outreach to people from pain research quotes (if contactable)
-
-### Wave 4: Post-Launch (April 5-8)
-Iterate based on feedback, optimize conversion, push to 100.
+### Wave 4: Post-Launch ❌ NOT DONE
 
 - [ ] W4-01: Analyze traffic + conversion data
-- [ ] W4-02: Collect testimonials from first users
-- [ ] W4-03: Write follow-up content based on launch feedback
-- [ ] W4-04: A/B hero variant if traffic allows
-- [ ] W4-05: Second wave of community posts (different angle/subreddits)
-- [ ] W4-06: Comparison articles: "Contexter vs NotebookLM", "Contexter vs Claude Projects"
-- [ ] W4-07: Co-founder outreach follow-ups
-- [ ] W4-08: Daily progress thread on Twitter/X
+- [ ] W4-02: Collect testimonials
+- [ ] W4-03: Follow-up content based on feedback
+- [ ] W4-04: Comparison articles: "Contexter vs NotebookLM", "Contexter vs Claude Projects"
+- [ ] W4-05: Second wave of community posts (different angle)
+- [ ] W4-06: Daily progress thread on Twitter/X
 
-## Blockers
+## Blockers (verified 2026-04-12)
 
-- ~~**LemonSqueezy approval pending**~~ ✅ RESOLVED 2026-04-07
-- **LemonSqueezy billing integration:** Store products + checkout overlay + webhook not yet configured.
-- **OpenAI App Directory:** Needs $5 individual verification to submit.
-- **Pricing tier review:** 1GB Starter too small — needs adjustment before launch.
-- **Perplexity MCP URL:** Still on old workers.dev — needs same fix as Claude.ai (→ api.contexter.cc/sse?token=...).
-- **Copy audit not applied:** W1-01 is critical-path — 50+ jargon items on landing page kill non-tech conversion.
-- **Solo founder:** All execution on nopoint. Bandwidth = bottleneck.
+**Active:**
+- **Copy audit not applied** (W1-01) — 50+ jargon items on landing kill non-tech conversion. BLOCKS all launch.
+- **No OG/social meta tags** (W1-07) — shares without preview = 0 clicks. BLOCKS all social channel launch.
+- **No analytics** (W1-05) — launching blind without tracking. Should deploy before launch.
+- **0 social accounts** — no Twitter/X, no PH maker page, no IndieHackers profile. BLOCKS W2+W3.
+- **Reddit account karma=1** — u/Cute_Baseball2875, 7 months old, 0 posts/comments. Instant shadowban if posting launch content. Needs 50-100 karma warmup.
+- **Perplexity MCP URL** — still on old workers.dev, needs fix to api.contexter.cc/sse
+- **OpenAI App Directory** — needs $5 individual verification to submit
+- **Solo founder bandwidth** — all execution on nopoint
 
-**Resolved this session (232):**
-- ~~LemonSqueezy approval pending~~ → APPROVED 2026-04-07. Card payments enabled.
-- ~~ChatGPT MCP incompatible~~ → /mcp endpoint + CORS + tool annotations deployed, 13/13 E2E pass
-- ~~No App Directory presence~~ → OpenAI App Directory draft complete, domain verified
+**Resolved:**
+- ~~LemonSqueezy approval~~ → ✅ APPROVED 2026-04-07
+- ~~LemonSqueezy billing integration~~ → ✅ FULL (CTX-12): store, products, webhooks, custom domain, chargeback handler
+- ~~No supporters page~~ → ✅ /supporters live with dynamic leaderboard + checkout
+- ~~ChatGPT MCP incompatible~~ → ✅ /mcp endpoint + CORS + tool annotations
+- ~~No co-founder materials~~ → ✅ Briefing + knowledge hub live
+- ~~Pricing needs review~~ → ✅ D-50 storage-only (1/10/100 GB)
+- ~~Nav overlap on landing~~ → ✅ flex fix deployed
+- ~~MCP connection broken (Claude.ai)~~ → ✅ Fixed to api.contexter.cc
+- ~~ToS missing loyalty tokens clause~~ → ✅ Section 7 deployed (CTX-12)
 
-**Resolved session (231):**
-- ~~Nav overlap on landing~~ → flex justify-between fix deployed
-- ~~No co-founder materials~~ → Full briefing + knowledge hub at cdn.contexter.cc/public/artem/
+## DEEP Research Plan (deferred from W0)
 
-**Resolved earlier:**
-- ~~Payment friction: Crypto-only~~ → LemonSqueezy (D-33)
-- ~~No video demo~~ → Demo video recorded and sent to LemonSqueezy
-- ~~MCP connection broken (Claude.ai on workers.dev)~~ → Fixed to api.contexter.cc
+### D-DEEP-1: Reddit Post Anatomy
+- **Scope:** Analyze 20+ successful "I built X" / product posts in r/ChatGPT, r/ClaudeAI, r/artificial, r/SideProject. What format works (text vs link vs image). Self-promotion rules per subreddit. What gets deleted. Account age/karma requirements.
+- **Input:** `reddit-marketing-guide-smetnyov.md` (already have), `contexter-gtm-seed-1-distribution.md`
+- **Output:** `contexter-gtm-deep-reddit-anatomy.md`
+
+### D-DEEP-2: HN Show HN Optimization
+- **Scope:** Top 20 MCP/RAG/AI-tool Show HN posts 2024-2026. Title patterns, timing (day/hour), first comment strategy, how to handle "why not just use X" objections.
+- **Input:** `contexter-gtm-seed-2-launch-mechanics.md`
+- **Output:** `contexter-gtm-deep-hn-showhn.md`
 
 ## AC
 
-| ID | Criteria | Verify |
+| ID | Criteria | Status |
 |---|---|---|
-| AC-1 | 11 research files completed in `nospace/docs/research/` | `ls nospace/docs/research/contexter-gtm-*-research.md \| wc -l` → 11+ |
-| AC-2 | Copy audit applied (0 instances of "чанки", "mcp url", "api токен" in frontend) | `grep -r "чанки\|mcp url\|api токен" web/src/ \| wc -l` → 0 |
-| AC-3 | All MCP directories submitted | Manual checklist |
-| AC-4 | ProductHunt page live | URL accessible |
-| AC-5 | Twitter/X account created with >10 tweets | Manual check |
-| AC-6 | HackerNews "Show HN" posted | URL accessible |
-| AC-7 | Reddit posts in ≥3 subreddits | URLs accessible |
-| AC-8 | Analytics deployed (Plausible/Umami) | Dashboard accessible |
-| AC-9 | ≥100 registered users | `SELECT count(*) FROM users` → ≥100 |
-| AC-10 | ≥100 supporters ($10 each) | NOWPayments + bank transfer count ≥100 |
+| AC-1 | Research files complete | ✅ 26 files (DEEP pending) |
+| AC-2 | Copy audit applied (0 jargon in frontend) | ❌ NOT DONE |
+| AC-3 | All MCP directories submitted | ❌ NOT DONE |
+| AC-4 | ProductHunt page live | ❌ NOT DONE |
+| AC-5 | Twitter/X account with >10 tweets | ❌ NOT DONE |
+| AC-6 | HN "Show HN" posted | ❌ NOT DONE |
+| AC-7 | Reddit posts in ≥3 subreddits | ❌ NOT DONE |
+| AC-8 | Analytics deployed | ❌ NOT DONE |
+| AC-9 | ≥100 registered users | ❌ (current: 2) |
+| AC-10 | ≥100 supporters ($10 each) | ❌ (current: 0) |
 
 ## Dependencies
 
-- **CTX-04 (Auth):** Wave 5 deployed and working ✅
-- **CTX-08 (GTM Strategy):** All research available ✅ (14 files)
-- **CTX-09 (UI/UX Polish):** Landing + app pages polished ✅
-- **CTX-11 (Analytics):** Basic deployment part of W1-05, full epic separate
-
-## Research Foundation (inherited from CTX-08)
-
-| File | Content | Relevance |
-|---|---|---|
-| `contexter-gtm-market-landscape.md` | TAM $2.76-3.33B, MCP de facto standard, 12-18mo window | Market validation |
-| `contexter-gtm-synthesis-competitive-map.md` | White space confirmed: universal + non-tech = empty quadrant | Positioning anchor |
-| `contexter-gtm-synthesis-positioning.md` | 5 EN + 5 RU hero variants, objection busters, video script | Copy ready for launch |
-| `contexter-gtm-v2-nontechnical-pain.md` | 17 user quotes, grief language, workaround patterns | Pain framing for launch content |
-| `contexter-product-brief.md` | 12-section landing structure, CTA strategy, copy rules | Implementation blueprint |
-| `contexter-copy-audit.md` | 50+ jargon issues found, replacements specified | W1-01 input |
-| `contexter-financial-model.md` | Break-even ~100 users, ARPU $4.24 (Month 1) | Target validation |
-| `contexter-competitor-sentiment-analysis.md` | User sentiment on competitors | Content angles |
-| `content-autopublishing-channels-research.md` | Habr, LinkedIn, Telegram, blog channels | Publishing channel options |
+- **CTX-04 (Auth):** ✅ Deployed
+- **CTX-08 (GTM Strategy):** ✅ All research available (16 files)
+- **CTX-09 (UI/UX Polish):** ✅ Complete
+- **CTX-12 (Supporters Backend):** ✅ Complete (2026-04-12) — full supporters system deployed
+- **CTX-11 (Analytics):** ❌ Not started — basic tracking needed for W1-05

@@ -1,6 +1,6 @@
 ---
 # contexter-supporters-backend.md — CTX-12 Supporters Backend
-> Layer: L3 | Epic: CTX-12 | Status: 🔶 IN PROGRESS (~90% — W1+W2+W3+W4+W5-5A deployed; W5-5B/5C implemented locally, deploy pending)
+> Layer: L3 | Epic: CTX-12 | Status: ✅ COMPLETE (W1-W5 all deployed 2026-04-12, session 240)
 > Created: 2026-04-11 (session 236)
 > Last updated: 2026-04-11 (session 239 — W4+W5 autonomous execution, 14 new commits on main, 2 prod deploys, 0 escalations, 0 J3/J5 trips)
 > Predecessor: CTX-10 GTM Launch (supporters page + LemonSqueezy frontend done)
@@ -122,14 +122,14 @@ Task submission system + admin review + referrals + quarterly rev share + notifi
 - scripts/test-ctx-12-w5.ts — 10/10 PASS (W5-02 stages + W5-03 expiry)
 - scripts/test-ctx-12-w5-04.ts — 14/14 PASS (anti-abuse referral + hold filter)
 
-**5D Deploy pending (next session):**
-- [ ] pg_dump backup → /root/backups/ctx12-w5-pre-<timestamp>.dump
-- [ ] Apply migration 0017 to prod (contexter-postgres-1 container)
-- [ ] SCP backend files via new `ops/deploy.sh` (this will be the live-test of W5-05 fix) OR manual tar approach for safety
-- [ ] `docker compose build --no-cache app` + `docker compose up -d app`
-- [ ] Health smoke + W4/W5 endpoint smoke (POST /referral with duplicate IP → 409 `duplicate_ip_or_device`)
-- [ ] Verify 6 BullMQ maintenance cron hashes (was 4: daily-retention + weekly-drift-check + weekly-supporters-ranking + quarterly-revshare; adds daily-soft-demotion + weekly-token-expiry)
-- [ ] Frontend CF Pages deploy via `ops/deploy-web.sh` — ships BB-07 structured error + W5-01 ToS Section 7
+**5D Deploy ✅ DEPLOYED 2026-04-12 session 240:**
+- [x] pg_dump backup → /root/backups/ctx12-w5-pre-20260412-062947.dump
+- [x] Apply migration 0017 to prod (3 ALTER + 3 CREATE INDEX — all OK)
+- [x] Manual tar SCP of 10 backend files + sha256 verification match
+- [x] `docker compose build --no-cache app` + `docker compose up -d app` — health green
+- [x] 6 BullMQ cron hashes confirmed (daily-retention + daily-soft-demotion + weekly-drift-check + weekly-supporters-ranking + weekly-token-expiry + quarterly-revshare)
+- [x] Frontend CF Pages deploy via `ops/deploy-web.sh` — bundle `index-Zintsvz-.js` live, cache purged
+- [x] Git push 18 commits to origin/main (`bfe933a..f898e1b`)
 
 **Other open items (infra + housekeeping):**
 - [ ] Rotate RESEND_API_KEY (defensive — value leaked into Orchestrator context via grep in session 239, not logged/committed)
