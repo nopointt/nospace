@@ -1,5 +1,5 @@
 import { Hono } from "hono"
-import { createHmac } from "crypto"
+import { createHmac, timingSafeEqual } from "crypto"
 import type { Env } from "../types/env"
 import type { Sql } from "postgres"
 import type Redis from "ioredis"
@@ -120,7 +120,10 @@ webhooks.post("/lemonsqueezy", async (c) => {
   const rawBody = await c.req.text()
 
   const hmac = createHmac("sha256", secret).update(rawBody).digest("hex")
-  if (hmac !== signature) {
+  if (
+    hmac.length !== signature.length ||
+    !timingSafeEqual(Buffer.from(hmac), Buffer.from(signature))
+  ) {
     console.error("LemonSqueezy signature verification failed", { rid: c.get("requestId") })
     return c.json({ error: "invalid signature" }, 403)
   }
@@ -599,6 +602,63 @@ webhooks.post("/lemonsqueezy", async (c) => {
         console.log(JSON.stringify({ ts, event: "ls_subscription_ended", userId, eventName, subscriptionId }))
       } else {
         console.log(JSON.stringify({ ts, event: "ls_subscription_ended_unmatched", email, subscriptionId }))
+      }
+      break
+    }
+
+    case "order_refunded":
+    case "subscription_payment_refunded": {
+      // F-03: Reverse token credit on refund/chargeback.
+      // Strategy: record a negative adjustment transaction and deduct tokens
+      // from the supporter row. Per G1 — never delete the original transaction
+      // or the supporter row.
+      const email = (attrs.user_email ?? "") || null
+      const refundedOrderId = String(payload.data?.id ?? "")
+      const total = Number(attrs.total ?? attrs.subtotal ?? 0)
+      const customDataUserId = (customData.user_id as string | undefined) ?? null
+      const userId = await matchSupporter(sql, { email, customDataUserId })
+      const tokensToDeduct = tokensFromCents(total)
+
+      const txId = await recordTransaction(sql, {
+        userId,
+        email,
+        type: "adjustment",
+        amountTokens: -tokensToDeduct,
+        amountUsdCents: -total,
+        sourceType: eventName === "order_refunded" ? "lemonsqueezy_order" : "lemonsqueezy_subscription",
+        sourceId: `refund:${refundedOrderId}`,
+        metadata: { eventName, originalTotal: total, attrs, customData },
+      })
+
+      if (!txId) {
+        console.log(JSON.stringify({ ts, event: "ls_refund_duplicate", refundedOrderId }))
+        break
+      }
+
+      if (userId && tokensToDeduct > 0) {
+        // Deduct tokens, floor at 0 (never go negative).
+        await sql`
+          UPDATE supporters
+          SET tokens = GREATEST(tokens - ${tokensToDeduct}, 0),
+              updated_at = NOW()
+          WHERE user_id = ${userId}
+        `
+        console.log(JSON.stringify({
+          ts,
+          event: "ls_refund_processed",
+          userId,
+          tokensDeducted: tokensToDeduct,
+          refundedOrderId,
+          eventName,
+        }))
+      } else {
+        console.log(JSON.stringify({
+          ts,
+          event: "ls_refund_unmatched",
+          email,
+          tokensToDeduct,
+          refundedOrderId,
+        }))
       }
       break
     }

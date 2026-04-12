@@ -159,9 +159,7 @@ export async function runQuarterlyRevShare(sql: Sql, env: Env): Promise<void> {
       type: "revshare",
       amountTokens: shareTokens,
       amountUsdCents: Number(shareCents),
-      // No dedicated source_type for revshare in the W1 enum set — reuse
-      // "manual" and disambiguate via the source_id prefix.
-      sourceType: "manual",
+      sourceType: "revshare",
       sourceId: `revshare:${label}:${s.user_id}`,
       metadata: {
         quarter: label,

@@ -36,6 +36,7 @@ export type SourceType =
   | "lemonsqueezy_subscription"
   | "task"
   | "referral"
+  | "revshare"
   | "manual"
 
 export interface RecordTransactionInput {
