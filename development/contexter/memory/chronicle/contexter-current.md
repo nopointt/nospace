@@ -1139,3 +1139,33 @@ Deploy session — shipped W5-5B/5C to production and closed the epic.
 - Track A: copy audit, OG tags, analytics (parallel with Reddit warmup)
 - RESEND_API_KEY rotation (defensive)
 - r/MCP, r/RAG, r/ClaudeAI rules manual verification needed
+<!-- ENTRY:2026-04-13:CLOSE:241:contexter:contexter-reddit-gtm [AXIS] -->
+## 2026-04-13 — сессия 241 CLOSE [Axis]
+
+**Decisions:**
+- Reddit Voice Guide created (Bauhaus-aligned: economy, truth to materials, form follows function)
+- AI blacklist defined (30+ words, 10+ patterns) for Reddit comments
+- Banner design: dark gradient + blue brackets + JetBrains Mono, 1920x384
+- Humanizer skill installed (/humanizer from blader/humanizer)
+
+**Files changed:**
+- `memory/specs/reddit-voice-guide.md` — NEW: Reddit TOV, AI blacklist, de-AI checklist
+- `design/contexter/contexter-ui.pen` — Reddit banner frame (node demhG)
+- `Desktop/contexter-product-media/reddit-banner.png` — exported banner PNG
+- `~/.claude/commands/humanizer/` — installed skill (git clone)
+
+**Completed:**
+- Reddit profile setup guidance (display name, avatar, bio, banner, social links, 18+ toggle)
+- Reddit banner designed in Pencil + exported PNG
+- Reddit Voice Guide spec written
+- 5 warmup comments drafted, humanized, fact-checked (EN+RU)
+- Humanizer skill installed and tested
+
+**Opened:**
+- nopoint to post 5 comments manually (order: 2→3→1→4→5)
+- MCP directory submissions (Phase 1 parallel)
+- Track A code work (copy audit, OG tags, analytics)
+
+**Notes:**
+- Qdrant Bauhaus RAG was offline
+- All 5 comments fact-checked via WebSearch, 2 minor corrections identified (Docling RAM, cache_read claim)

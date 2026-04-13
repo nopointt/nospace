@@ -1,10 +1,10 @@
 # STATE — Contexter
 
 ## Position
-- **Phase:** CTX-12 Supporters Backend ✅ COMPLETE (2026-04-12, session 240)
-- **Status:** Full supporters backend deployed: tokens, ranking, tasks, admin, referrals, rev share, notifications, soft demotion, token expiry, anti-abuse, ToS Section 7. 48 integration tests PASS. LemonSqueezy LIVE. Alpha text-only (308 formats). Pricing: storage-only (1/10/100 GB). Revenue baseline: $1.16 (test only, 0 real supporter rows). All 18 commits pushed to origin/main.
-- **Last session:** 2026-04-12 (Axis, session 240 — CTX-12 W5-5B/5C deploy to prod: pg_dump + migration 0017 + manual tar SCP + docker rebuild + 6 BullMQ crons confirmed + CF Pages frontend deploy + git push 18 commits)
-- **Sessions total:** 240
+- **Phase:** CTX-13 Reddit GTM 🔶 IN PROGRESS (started session 240, continued 241)
+- **Status:** Full supporters backend deployed (CTX-12 complete). Reddit GTM Phase 1 (warmup) in progress: profile configured (display name, avatar, banner), Reddit Voice Guide written, 5 warmup comments drafted+humanized+fact-checked, humanizer skill installed. Awaiting nopoint to post first comments.
+- **Last session:** 2026-04-13 (Axis, session 241 — Reddit profile setup, banner design in Pencil, Voice Guide spec, 5 warmup comments prepared, humanizer skill installed)
+- **Sessions total:** 241
 - **Next:** (1) CTX-13 Reddit GTM Phase 1 — warmup (karma 200+, expert comments, 3 weeks). (2) Parallel: MCP directory submissions (Wave 1 P0, 14 directories). (3) Rotate RESEND_API_KEY. (4) Hetzner disk (51%). (5) Track A code work (copy audit, OG tags, analytics) — parallel with Reddit warmup.
 
 ## Key Completions
@@ -38,6 +38,10 @@
 - DEEP research: supporters (airdrops, loyalty programs, 40+ sources) + LemonSqueezy (docs, API, webhooks)
 - Deploy script: curl -sf bug fixed, webhook route /webhooks→/api/webhooks
 - AI'preneurs 2026: passed stage 1, diagnostic interview ~April 20
+- **Reddit profile configured** (2026-04-13): u/Cute_Baseball2875, display name "nopoint", avatar set, banner designed (Pencil, dark Bauhaus, 1920x384), social links recommended
+- **Reddit Voice Guide** (2026-04-13): `memory/specs/reddit-voice-guide.md` — Bauhaus-aligned TOV, AI blacklist (30+ words), de-AI checklist
+- **5 warmup comments** (2026-04-13): drafted for r/Rag (2), r/ClaudeAI (2), r/selfhosted (1), humanized, fact-checked
+- **Humanizer skill** installed: `/humanizer` (blader/humanizer, Claude Code skill)
 - **CTX-12 W1 deployed** (2026-04-11): migration 0015_supporters.sql (3 tables + 9 indexes), 4 LS webhook handlers, HMAC intact, reclaim-on-registration hooks (legacy + Google OAuth), integration test 10/10 PASS
 - **CTX-12 W2 deployed** (2026-04-11): weekly ranking cron (Monday 04:00 UTC), GET /api/supporters public leaderboard (privacy: no PII), GET /me authed status, POST /freeze calendar-year annual, 101st quarantine intake + promotion sweep, spending cap 500 tok/month with advisory lock, integration test 15/15 PASS
 - **CTX-12 W3 deployed** (2026-04-11, CF Pages): removed hardcoded SUPPORTERS_DATA, reactive createResource leaderboard + dynamic counter, SupporterStatusCard in Dashboard with freeze button, Supporter #N pill in Nav, buildCheckoutUrl helper with LS custom_data.user_id
@@ -135,7 +139,7 @@
 - Full analytics suite (CTX-11)
 
 ## Metrics
-- Sessions: 239
+- Sessions: 241
 - Real users: 2 (nopointttt@gmail.com id 32b533b3, danchoachona@gmail.com id dfe9be94)
 - Documents: 26, Chunks: 519
 - MCP search p50: 110ms

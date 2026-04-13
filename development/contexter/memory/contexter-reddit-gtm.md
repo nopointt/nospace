@@ -1,7 +1,7 @@
 ---
 # contexter-reddit-gtm.md — CTX-13 Reddit GTM
 > Layer: L3 | Epic: CTX-13 | Status: 🔶 IN PROGRESS
-> Created: 2026-04-12 (session 240)
+> Created: 2026-04-12 (session 240) | Last updated: 2026-04-13 (session 241 — profile setup, banner, voice guide, 5 comments)
 > Predecessor: CTX-10 GTM Launch (research + infrastructure done), CTX-12 Supporters Backend (complete)
 > Research base: 5 DEEP files in `docs/research/contexter-gtm-deep-*.md` (~750K total)
 ---
@@ -35,7 +35,9 @@ Build organic Reddit presence for Contexter. No direct sales. Founder build-in-p
 - **Age:** 7 months (good — above 6mo AutoMod threshold)
 - **Karma:** 1 (bad — needs 200+ for most subs)
 - **History:** 0 posts, 0 comments (blank slate)
-- **Profile bio:** TODO — add founder description + contexter.cc link
+- **Profile bio:** ✅ CONFIGURED (2026-04-13) — display name "nopoint", avatar set, banner designed+uploaded, bio+social links recommended
+- **Voice Guide:** `specs/reddit-voice-guide.md` — Bauhaus TOV, AI blacklist, de-AI checklist
+- **Humanizer:** `/humanizer` skill installed (blader/humanizer)
 
 ## Phases
 
