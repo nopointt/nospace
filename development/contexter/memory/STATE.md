@@ -1,11 +1,11 @@
 # STATE — Contexter
 
 ## Position
-- **Phase:** CTX-13 Reddit GTM 🔶 IN PROGRESS (started session 240, continued 241)
-- **Status:** Full supporters backend deployed (CTX-12 complete). Reddit GTM Phase 1 (warmup) in progress: profile configured (display name, avatar, banner), Reddit Voice Guide written, 5 warmup comments drafted+humanized+fact-checked, humanizer skill installed. Awaiting nopoint to post first comments.
-- **Last session:** 2026-04-13 (Axis, session 241 — Reddit profile setup, banner design in Pencil, Voice Guide spec, 5 warmup comments prepared, humanizer skill installed)
-- **Sessions total:** 241
-- **Next:** (1) CTX-13 Reddit GTM Phase 1 — warmup (karma 200+, expert comments, 3 weeks). (2) Parallel: MCP directory submissions (Wave 1 P0, 14 directories). (3) Rotate RESEND_API_KEY. (4) Hetzner disk (51%). (5) Track A code work (copy audit, OG tags, analytics) — parallel with Reddit warmup.
+- **Phase:** CTX-13 Reddit GTM 🔶 IN PROGRESS (started 240, continued 241, 243) + Track A (CTX-10) copy audit refresh + Analytics SEED completed 243
+- **Status:** Full supporters backend deployed (CTX-12 complete). Reddit GTM Phase 1 (warmup) — 5 comments prepared, awaiting nopoint post. **Track A (CTX-10 W1-01):** copy audit refreshed — i18n миграция закрыла 38/60 старых пунктов, apply scope сократился до ~30 правок в ru.ts + 2 tsx-подвязки (spec: `docs/research/contexter-copy-audit-2026-04-16.md`). **Analytics:** SEED завершён — PostHog EU Cloud primary candidate, UTM via LS custom_data, 3 DEEP-а предложены (spec: `docs/research/contexter-analytics-seed-research.md`). **Credits programs:** 8 программ разобраны, incorporation identified as gating blocker для NVIDIA Inception / AWS Activate / Cloudflare for Startups / Anthropic Startup direct.
+- **Last session:** 2026-04-16 (Axis, session 243 — copy audit refresh agent, analytics SEED agent, E4 rule update 4 файла, credits programs analysis + web research)
+- **Sessions total:** 243
+- **Next:** (1) Apply copy audit (6 atomic commits, в новом диалоге через /continueaxis). (2) Nopoint ревью DEEP-1/2/3 проводить? Если yes — DEEP-1 PostHog integration spec первым. (3) Incorporation решение (AR LLC / Delaware / KZ ТОО) до AI'preneurs диагностики ~20 апреля. (4) Submit Anthology Fund Airtable (без incorporation gate). (5) AI'preneurs 2026 диагностика 20 апреля — спросить Astana Hub Perks partner list. (6) Reddit Phase 1 warmup — пост 5 комментариев, daily cadence 2-3/day.
 
 ## Key Completions
 - i18n: EN/RU toggle, 500+ translation keys, all 24 pages/components
@@ -49,6 +49,10 @@
 - **CTX-12 W4 deployed** (2026-04-11 session 239): W4-01 POST /api/supporters/tasks + requireActiveSupporter gate, W4-02+03 admin endpoints (list/approve/reject) + isAdmin helper + ADMIN_USER_IDS env + checkTaskCapForUser with advisory lock, W4-04 migration 0016_supporter_referrals + POST /referral transactional (ADD-3) + first-payment trigger in webhooks, W4-05 quarterly revshare cron with $10K MRR gate + weighted tier distribution (8/6/5/4 units) + idempotency via revshare:{quarter}:{user_id} source_id, W4-06 notifications.ts (4 Resend templates) + 24/24 integration test. 5 atomic commits `0c37181..ee822e5`. 8 spec addenda (ADD-1..ADD-8) added by Orchestrator self-audit pre-Player launch.
 - **CTX-12 W5-5A Deferred Bundle deployed** (2026-04-11 session 239, backend only): 7 Coach-review tech debt fixes — BB-01 better-auth reclaim hook, BB-02 creditTokensWithQuarantineCheck honest return type, BB-03 runSupportersRanking helper extraction (92→37 lines), BB-04 /freeze atomicity (500→structured 409), BB-05 amount_tokens audit drift (capped rows now store credited + metadata.requested), BB-06 SupporterStatus type widen (quarantined), BB-07 frontend structured error match (NOT yet deployed to CF Pages). 7 atomic commits `e9b6db5..60ed97f`.
 - **CTX-12 W5-5B/5C IMPLEMENTED, NOT DEPLOYED** (2026-04-11 session 239): W5-01 ToS Section 7 "Supporter Program and Loyalty Tokens" (non-transferable, no monetary value, 12-month expiry, exit-forfeit, anti-circular, 50/month task cap, 14-day payment hold), W5-02 soft demotion cron (30/60/90d inactive, daily 03:30 UTC, re-activation clears warning), W5-03 token expiry cron (365d inactive → tokens=0, keep row per G1, weekly Sun 03:45 UTC), W5-04 migration 0017 (ALTER supporter_referrals ADD signup_ip/signup_device_hash + ALTER supporter_transactions ADD held_until + 3 indexes) + referral anti-abuse reject on duplicate IP or device hash per referrer + 14-day payment hold on subscription payments + revshare MRR/quarter SUMs exclude held rows, W5-05 deploy script fix (scp -r path-nesting race → tar+atomic-staging-dir + post-build sha256 image verification + disk pre-check). 5 atomic commits `141f714, 016fd20, acc5a01, ca1ef4e, 907883a`. Tests: 10/10 W5-02/03 PASS + 14/14 W5-04 PASS on contexter_dev.
+- **Copy audit refresh** (2026-04-16 session 243): Sonnet agent просканировал 24 UI файла. Frontend мигрирован на i18n (ru.ts). 38/60 старых пунктов RESOLVED, 11 still present в ru.ts в изменённой форме, 24 NEW items (включая 8 Prio-0 на публичном Landing через `landing.*` namespace: `Мультимодальный поиск` → `Поиск по всем файлам сразу`, `MCP-подключение` → `Подключение к нейросети`, `self-hosting` → `собственный сервер`, `RAG` в roadmap, `векторизация` pipeline label). Apply scope сократился до ~30 правок в ru.ts + 2 tsx-подвязки (Hero.tsx Connect section + Upload.tsx stage error labels). Spec: `docs/research/contexter-copy-audit-2026-04-16.md`. 6 атомарных коммитов рекомендованы, apply в новом диалоге через /continueaxis.
+- **Analytics SEED** (2026-04-16 session 243): 25 сигналов, 15 измерений. Top candidates: PostHog EU Cloud (1M events free, native Hono SDK, EU residency, all-in-one funnels+replay+errors+MCP telemetry), LemonSqueezy `custom_data` UTM pipeline (zero-cost, ~30 lines JS, native LS mechanism), Umami self-hosted (200MB RAM, fits CAX21, cookieless CNIL-exempt, backup). Unexpected finding: HN/dev audience undercount 30-50% из-за ad-blockers → нужно server-side (GoAccess на Caddy logs) параллельно для floor+ceiling. Flag: LemonSqueezy объявили Stripe migration в январе 2026 — отслеживать до построения attribution pipeline. 3 DEEP-а предложены: DEEP-1 PostHog full integration spec, DEEP-2 UTM attribution pipeline (time-sensitive — UTM с первой волны теряется навсегда), DEEP-3 MCP telemetry decision. Spec: `docs/research/contexter-analytics-seed-research.md`.
+- **E4 rule update** (2026-04-16 session 243): стандарт E4 в standards.md + context-economy.md + bug-diagnosis.md + system-guide.md переписан для model-aware порогов. Старые 0-20%/20%+/~100K калибровки были для 200K-окна Sonnet 3.5/3.7. Для Opus 4.7 1M — reliable reasoning 500-700K (MRCR v2 78.3% at 1M), эмпирические сигналы > процентов. Source: feedback memory `feedback_opus_4_7_context_threshold.md`.
+- **Credits programs analysis** (2026-04-16 session 243): 8 программ разобраны (4 из файла + 4 из web search). Подходящие Contexter: NVIDIA Inception (free, до $100K AWS + $150K Nebius), Cloudflare for Startups self-funded tier ($5K, не нужен VC), AWS Activate Foundation ($5K, direct apply), Anthology Fund Airtable (без incorporation gate, rolling). Блокеры: (a) incorporation required для 4 программ, (b) Contexter GitHub = 0 stars → Claude for OSS полностью не применим. Action: обсудить structure с Артёмом до AI'preneurs диагностики 20 апреля, параллельно подать Anthology Airtable.
 
 ## Active Decisions
 - D-01 through D-25: unchanged from previous
@@ -111,6 +115,13 @@
 - D-W5-03: Token expiry 365d inactive → tokens=0 (never delete row per G1). Weekly Sunday 03:45 UTC. No email (first pass). CTE used to log prev_tokens before UPDATE.
 - D-W5-04: Referral duplicate detection scoped by referrer_id, null-aware guards (null IP/device does not collide). 14-day hold applied at both recordTransaction call sites in subscription_payment_success. Revshare SUMs add `AND (held_until IS NULL OR held_until <= NOW())`. Refund/chargeback handler deferred to W6+.
 - D-W5-05: Deploy script root cause `scp -r LOCAL/src/ HOST:REMOTE/app/src/` nests on repeat deploys. Fix: tar + staging dir `.new.$$` + atomic mv. Post-build sha256 verification via `docker compose run --rm --entrypoint sha256sum`. Disk pre-check ≥5GB free.
+- D-AXIS-01 (243): Copy audit scope primarily ru.ts (не tsx) — frontend на i18n. Apply = 6 атомарных коммитов. Prio 0 = 8 публичных Landing пунктов.
+- D-AXIS-02 (243): Analytics primary candidate = PostHog EU Cloud (free 1M events, native Hono SDK, EU residency, all-in-one). Final после DEEP-1.
+- D-AXIS-03 (243): UTM attribution via LemonSqueezy `custom_data` + sessionStorage. Time-sensitive — капа с первой волны лидов теряется навсегда.
+- D-AXIS-04 (243): E4 standard обновлён — empirical signals > fill percentages для 1M-context Claude 4.x. Working range Opus 4.7 = 500-700K.
+- D-AXIS-05 (243): Credits programs priority sequence — NVIDIA Inception + Cloudflare Startups + AWS Activate Foundation + Anthology Fund Airtable (последний без incorporation gate).
+- D-AXIS-06 (243): Incorporation = gating блокер для 4 credits программ. Structure решать с Артёмом (AR LLC / Delaware C-Corp / KZ ТОО) до AI'preneurs диагностики ~20 апреля.
+- D-AXIS-07 (243): Contexter GitHub = 0 stars, 0 forks (created 2026-03-21) → Claude for OSS ($1,200) полностью не применим. Deferred indefinitely.
 
 ## Blockers
 - Copy audit not applied — jargon kills non-tech conversion (CTX-10 W1-01)
@@ -130,6 +141,9 @@
 - ~~ToS: loyalty points clause~~ → ✅ Section 7 deployed 2026-04-12
 - ~~Deploy script audit~~ → ✅ W5-05 fix deployed 2026-04-12
 - Delete unverified LS store #333207 (email sent to hello@lemonsqueezy.com)
+- **Incorporation decision pending** (243) — блокирует NVIDIA Inception / AWS Activate / Cloudflare for Startups $5K / Anthropic Startup direct. Обсудить с Артёмом до 20 апреля.
+- **LemonSqueezy Stripe migration** (January 2026 announcement) — отслеживать до построения UTM attribution pipeline, может сломать `custom_data` структуру (потенциальный риск DEEP-2).
+- **Claude Code v2.1.100 bug** (external, документированный GitHub issue): тихо добавляет ~20K tokens на каждый запрос, rate limits горят на 40% быстрее. Можно временно downgrade на v2.1.89.
 
 ## Deferred
 - YouTube + Instagram download (roadmap: after launch)
@@ -139,7 +153,7 @@
 - Full analytics suite (CTX-11)
 
 ## Metrics
-- Sessions: 241
+- Sessions: 243
 - Real users: 2 (nopointttt@gmail.com id 32b533b3, danchoachona@gmail.com id dfe9be94)
 - Documents: 26, Chunks: 519
 - MCP search p50: 110ms

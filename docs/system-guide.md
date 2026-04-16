@@ -348,11 +348,12 @@ Before ANY code change:
 
 ### Context Degradation
 
-- 0-20% context: reliable reasoning
-- 20%+: progressive degradation
-- ~100K tokens: practical ceiling for debugging
+Thresholds depend on model window:
+- **1M context (Opus 4.7 / Sonnet 4.6):** reliable through 500-700K in practice (MRCR v2 78.3% at 1M)
+- **200K context (older models):** ~40K reliable, ~100K practical ceiling (Anthropic 2025 data)
+- **Empirical signals > percentages:** mistakes, lost threads, re-asking same clarification = degradation now
 - After 10+ tool calls: re-state hypothesis explicitly
-- Preferred transition: checkpoint → new dialog → /continueaxis
+- Preferred transition on signals: checkpoint → new dialog → /continueaxis (not on fill % alone)
 
 ### Token Economics
 
