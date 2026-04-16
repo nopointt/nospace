@@ -314,7 +314,7 @@ export const ru: Record<string, string> = {
   "conn.cursor.s2.action": "Тип подключения: через ссылку",
   "conn.cursor.s2.detail": "Или создайте файл ~/.cursor/mcp.json — вставьте JSON ниже",
   "conn.cursor.s3.action": "Откройте чат (Ctrl+L)",
-  "conn.cursor.s3.detail": "Индикатор MCP-серверов появится в чате. Спросите по документам",
+  "conn.cursor.s3.detail": "Индикатор Contexter появится в чате. Спросите по документам",
   "conn.cursor.gotcha": "Cursor подключится автоматически",
   // Connection steps — Antigravity
   "conn.antigravity.s1.action": "Manage MCP Servers",
