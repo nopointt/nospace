@@ -590,7 +590,7 @@ const Upload: Component = () => {
                               <Show when={entry.stages?.find((s) => s.status === "error")}>
                                 {(failedStage) => (
                                   <span class="text-[10px] text-text-tertiary">stage: {
-                                    {parse: "parsing", chunk: "chunking", embed: "vectorizing", index: "saving"}[failedStage().name] ?? failedStage().name
+                                    ({parse: t("upload.stageError.parse"), chunk: t("upload.stageError.chunk"), embed: t("upload.stageError.embed"), index: t("upload.stageError.index")} as Record<string, string>)[failedStage().name] ?? failedStage().name
                                   }</span>
                                 )}
                               </Show>
@@ -600,7 +600,7 @@ const Upload: Component = () => {
                                 variant="ghost"
                                 onClick={() => handleRetry(entry.id)}
                               >
-                                Retry
+                                {t("common.retry")}
                               </Button>
                             </Show>
                           </div>
@@ -697,12 +697,12 @@ const Upload: Component = () => {
                           <div class="border border-border-default bg-bg-surface p-4 min-h-[200px] flex items-center justify-center">
                             <span class="text-[10px] text-text-disabled">
                               {entry().status === "processing" || entry().status === "uploading"
-                                ? "Waiting for parsing..."
+                                ? t("upload.waitingParse")
                                 : entry().status === "error"
-                                  ? "Extraction error"
+                                  ? t("upload.extractError")
                                   : entry().status === "pending"
-                                    ? "Upload not started"
-                                    : "Preview unavailable"}
+                                    ? t("upload.notStarted")
+                                    : t("upload.previewUnavailable")}
                             </span>
                           </div>
                         }

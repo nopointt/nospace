@@ -571,7 +571,7 @@ const Hero: Component = () => {
                         <Show when={entry.stages?.find((s) => s.status === "error")}>
                           {(failedStage) => (
                             <span class="text-[10px] text-text-tertiary">stage: {
-                              {parse: "parsing", chunk: "chunking", embed: "vectorizing", index: "saving"}[failedStage().name] ?? failedStage().name
+                              ({parse: t("upload.stageError.parse"), chunk: t("upload.stageError.chunk"), embed: t("upload.stageError.embed"), index: t("upload.stageError.index")} as Record<string, string>)[failedStage().name] ?? failedStage().name
                             }</span>
                           )}
                         </Show>
