@@ -1,7 +1,7 @@
 ---
 # contexter-roadmap.md — Contexter Roadmap
 > Layer: L2 | Frequency: medium | Loaded: at session start
-> Last updated: 2026-03-30 (session 212 — Pre-launch QA Phases 1-4 complete, legal pages, deploy automation)
+> Last updated: 2026-04-17 (session 244 — CTX-11 Analytics opened as separate epic per D-31)
 ---
 
 ## Current Focus: MLP COMPLETE
@@ -22,6 +22,7 @@
 | **CTX-10** | **GTM Launch — 100 supporters × $10, all free channels, EN global** | **🔶 IN PROGRESS** | `contexter-gtm-launch.md` |
 | **CTX-12** | **Supporters Backend — tokens, ranking, LemonSqueezy webhooks, dashboard** | **✅ COMPLETE (2026-04-12)** | `contexter-supporters-backend.md` |
 | **CTX-13** | **Reddit GTM — organic presence, warmup, directory submissions, launch posts** | **🔶 IN PROGRESS** | `contexter-reddit-gtm.md` |
+| **CTX-11** | **Analytics — PostHog EU + attribution + MCP telemetry + GoAccess + dashboards** | **🔶 IN PROGRESS (2026-04-17)** | `contexter-analytics.md` |
 | CTX-05 | Benchmarks + Pricing + Billing | ⬜ PLANNED | — |
 | CTX-09 | UI/UX Polish (design system, responsive, a11y, pipeline indicator) | ✅ COMPLETE (2026-03-30) | `contexter-uiux-polish.md` |
 | CTX-06 | Production Migration (CF Workers → Hetzner) | ✅ CLOSED (2026-03-27) | `contexter-migration.md` |

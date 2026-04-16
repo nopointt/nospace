@@ -1,19 +1,19 @@
 # STATE — Contexter
 
 ## Position
-- **Phase:** CTX-13 Reddit GTM 🔶 IN PROGRESS (started 240, continued 241, 243) + Track A (CTX-10) copy audit refresh + Analytics SEED completed 243
-- **Status:** Full supporters backend deployed (CTX-12 complete). Reddit GTM Phase 1 (warmup) — 5 comments prepared, awaiting nopoint post. **Track A (CTX-10 W1-01):** copy audit refreshed — i18n миграция закрыла 38/60 старых пунктов, apply scope сократился до ~30 правок в ru.ts + 2 tsx-подвязки (spec: `docs/research/contexter-copy-audit-2026-04-16.md`). **Analytics:** SEED завершён — PostHog EU Cloud primary candidate, UTM via LS custom_data, 3 DEEP-а предложены (spec: `docs/research/contexter-analytics-seed-research.md`). **Credits programs:** 8 программ разобраны, incorporation identified as gating blocker для NVIDIA Inception / AWS Activate / Cloudflare for Startups / Anthropic Startup direct.
-- **Last session:** 2026-04-16 (Axis, session 243 — copy audit refresh agent, analytics SEED agent, E4 rule update 4 файла, credits programs analysis + web research)
-- **Sessions total:** 243
-- **Next:** (1) Apply copy audit (6 atomic commits, в новом диалоге через /continueaxis). (2) Nopoint ревью DEEP-1/2/3 проводить? Если yes — DEEP-1 PostHog integration spec первым. (3) Incorporation решение (AR LLC / Delaware / KZ ТОО) до AI'preneurs диагностики ~20 апреля. (4) Submit Anthology Fund Airtable (без incorporation gate). (5) AI'preneurs 2026 диагностика 20 апреля — спросить Astana Hub Perks partner list. (6) Reddit Phase 1 warmup — пост 5 комментариев, daily cadence 2-3/day.
+- **Phase:** CTX-11 Analytics 🔶 IN PROGRESS (just opened, L3 created session 244) + CTX-13 Reddit GTM 🔶 Phase 1 warmup pending + Track A (CTX-10) copy audit ✅ APPLIED (session 244)
+- **Status:** **Copy audit DEPLOYED** — 8 atomic commits `6404a56..e137481` на origin/main (Pro tier dynamic limits via `/api/billing`, persona field pending Pre-CTX-11, всё i18n подвязано + jargon убран + weak error toasts усилены). **CTX-11 Analytics opened** — L3 `contexter-analytics.md` создан на фундаменте из 4 research docs (DEEP-1 platform decision + DEEP-3 MCP telemetry + DEEP-4 measurement system + 2 SEEDs + code inventory). NSM = **WAU-A** (Weekly Activated Users на 4 value-core MCP tools). Framework = AARRR+HEART hybrid. 24 events taxonomy. 7 Grove guardrails. 12 decision triggers. 12 hypotheses. 19 MUST-HAVE + 5 SHOULD-HAVE + 6 NICE-TO-HAVE MVI items. 6 waves. Pre-CTX-11 micro-task готов (persona field + user_registered event + Pro backend 50→100GB fix). Supporters backend complete (CTX-12). Reddit Phase 1 warmup — 5 comments prepared, awaiting nopoint post.
+- **Last session:** 2026-04-17 (Axis, session 244 — copy audit apply G3 Gropius+Breuer 2 iterations, DEEP-1/3/4 sequential, methodology SEED, CTX-11 L3 created, STATE+L1+L2 updated)
+- **Sessions total:** 244 (will increment on close)
+- **Next:** (1) Pre-CTX-11 G3 pair (Mies+Schlemmer) — persona field + user_registered event + Pro backend tier fix. (2) CTX-11 W1 Foundation — PostHog EU Cloud + CF Worker proxy + attribution table + GSC. (3) W2 Frontend posthog-js + UTM module. (4) W3 Backend Hono middleware + LS webhook extension + identify(). (5) W4-W6 MCP telemetry + GoAccess + dashboards. **CRITICAL PATH:** W1+W2+W3 deployed ДО Reddit Phase 3 soft launch (UTM первой волны иначе теряется навсегда). (6) Incorporation decision до AI'preneurs ~April 20. (7) Anthology Fund Airtable submit. (8) Reddit Phase 1 — nopoint manual posting.
 
 ## Key Completions
 - i18n: EN/RU toggle, 500+ translation keys, all 24 pages/components
-- Pricing: Free ($0) / Starter ($9) / Pro ($29) based on verified unit economics
+- Pricing: Free 1GB ($0) / Starter 10GB ($9) / Pro 100GB ($29) / **Business 200GB ($79, hidden from UI per D-AXIS-11)** based on verified unit economics
 - Pre-order: dynamic NOWPayments invoices + bank transfer (Halyk SWIFT)
 - DB cleanup: 871→2 users, 1260→26 docs, 3305→519 chunks (2026-04-01)
 - Auth: email+password (better-auth) + Google OAuth + Resend DNS verified
-- Pipeline: 23 formats, MCP 12 tools, Streamable HTTP
+- Pipeline: 308 text formats (alpha, per D-49), 12 MCP tools, Streamable HTTP SSE (binary formats deferred)
 - Landing: 12+ sections (EN/RU), fully bilingual
 - 14 GTM research files (market, competitors, positioning, copy, pain)
 - Copy audit: 50+ jargon issues found (NOT YET APPLIED)
@@ -122,9 +122,16 @@
 - D-AXIS-05 (243): Credits programs priority sequence — NVIDIA Inception + Cloudflare Startups + AWS Activate Foundation + Anthology Fund Airtable (последний без incorporation gate).
 - D-AXIS-06 (243): Incorporation = gating блокер для 4 credits программ. Structure решать с Артёмом (AR LLC / Delaware C-Corp / KZ ТОО) до AI'preneurs диагностики ~20 апреля.
 - D-AXIS-07 (243): Contexter GitHub = 0 stars, 0 forks (created 2026-03-21) → Claude for OSS ($1,200) полностью не применим. Deferred indefinitely.
+- D-AXIS-08 (244): Analytics primary = **PostHog EU Cloud** (locked, DEEP-1 90% confidence). LS `custom_data` UTM pipeline. GoAccess on Caddy server-side non-optional (70.6% AI referrals без referrer). GSC additive.
+- D-AXIS-09 (244): Copy audit applied — 8 коммитов `6404a56..e137481` на origin/main, includes dynamic tier limits (TIER_LIMITS[tier] via /api/billing), settings.namePlaceholder, cursor.s3.detail fix.
+- D-AXIS-10 (244): **Pro tier quota = 100 GB** (sync backend `src/services/billing.ts` TIERS to match UI claim). Pre-launch urgent fix — UI уже показывает 100GB, backend enforces 50GB → backend upgrade to 100GB.
+- D-AXIS-11 (244): **Business tier $79/mo 200GB — hidden from UI intentionally** (sales-only, enterprise). Backend enforces, not advertised on /pricing.
+- D-AXIS-12 (244): **NOWPayments = secondary/fallback payment**, LemonSqueezy = primary. Crypto integration active (not deferred as prior STATE indicated). Analytics must capture both sources.
+- D-AXIS-13 (244): **TIER_LIMITS docs/chunks/queries = UI-only** invented values (free 50/500/100 verified pre-c1d08ab, starter 500/5000/1000, pro 2500/25000/∞, business ∞/∞/∞). Backend enforces only `storageLimitBytes`. To bind to backend later — post-launch CTX-14+.
+- D-CTX11-01..20 (244, 2026-04-17): CTX-11 Analytics locked decisions in L3 file `memory/contexter-analytics.md`. Key ones: NSM = WAU-A (Weekly Activated Users on 4 value-core MCP tools); AARRR+HEART hybrid framework; PostHog EU Cloud primary + CF Worker proxy + GoAccess on Caddy mandatory; 24-event taxonomy; 7 Grove guardrails; 12 decision triggers; `person_profiles: 'identified_only'` GDPR posture; `posthog-node` Bun defaults `flushAt:20/flushInterval:10000`; `SAMPLE_RATE` env var for sampling (activate at 60% free tier ~500 DAU); offline batch RAG eval only (50 samples/week); `users.persona_self_reported` pre-CTX-11 micro-task; 19 MUST-HAVE MVI items block launch.
 
 ## Blockers
-- Copy audit not applied — jargon kills non-tech conversion (CTX-10 W1-01)
+- ~~Copy audit not applied — jargon kills non-tech conversion~~ → ✅ APPLIED 2026-04-17 session 244 (8 commits `6404a56..e137481` на origin/main, G3 Gropius+Breuer iter 1, dynamic TIER_LIMITS via /api/billing, все Prio-0 public copy + jargon убран + weak error toasts strengthened + Settings restructure)
 - No social accounts / marketing channels
 - ~~LemonSqueezy approval pending~~ → RESOLVED 2026-04-07
 - Perplexity MCP URL still on old workers.dev (needs same fix as Claude.ai)
@@ -142,6 +149,7 @@
 - ~~Deploy script audit~~ → ✅ W5-05 fix deployed 2026-04-12
 - Delete unverified LS store #333207 (email sent to hello@lemonsqueezy.com)
 - **Incorporation decision pending** (243) — блокирует NVIDIA Inception / AWS Activate / Cloudflare for Startups $5K / Anthropic Startup direct. Обсудить с Артёмом до 20 апреля.
+- **Pro tier backend drift fix pending** (244) — `src/services/billing.ts` TIERS.pro.storageLimitBytes: 50GB → 100GB. Pre-launch urgent. Separate commit (not CTX-11).
 - **LemonSqueezy Stripe migration** (January 2026 announcement) — отслеживать до построения UTM attribution pipeline, может сломать `custom_data` структуру (потенциальный риск DEEP-2).
 - **Claude Code v2.1.100 bug** (external, документированный GitHub issue): тихо добавляет ~20K tokens на каждый запрос, rate limits горят на 40% быстрее. Можно временно downgrade на v2.1.89.
 

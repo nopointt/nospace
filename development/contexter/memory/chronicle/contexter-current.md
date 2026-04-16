@@ -1210,3 +1210,52 @@ Deploy session — shipped W5-5B/5C to production and closed the epic.
 - Copy audit Prio 0: публичный Landing в ru.ts содержит `Мультимодальный поиск`, `MCP-подключение`, `RAG`, `self-hosting`, `векторизация` — критично для Reddit/HN трафика
 - Analytics gap: dev-аудитория undercounts 30-50% (ad-blockers) → client-side + server-side parallel
 - LemonSqueezy Stripe migration announced January 2026 — следить до attribution pipeline
+<!-- ENTRY:2026-04-17:CLOSE:244:contexter:contexter-analytics [AXIS] -->
+## 2026-04-17 — сессия 244 CLOSE [Axis]
+
+**Decisions:**
+- D-AXIS-08..13 (session): PostHog EU primary (locked); Copy audit applied; Pro 100GB (UI sync); Business $79/200GB hidden; NOWPayments secondary; TIER_LIMITS UI-only.
+- D-CTX11-01..20 (epic, in L3): NSM=WAU-A; AARRR+HEART hybrid; CF Worker proxy + GoAccess mandatory; 24 events; 7 Grove guardrails; 12 triggers; identified_only GDPR; posthog-node Bun defaults; SAMPLE_RATE env; offline RAG eval; persona_self_reported pre-launch; 19 MUST-HAVE block launch.
+- Variant C iter 1 for copy audit rework.
+- DEEP-2 cancelled, DEEP-5 cancelled (covered by DEEP-1/4).
+- Research reglament: Pre-Research Clarification + Query Logging + Progress Signals sections added.
+
+**Files changed:**
+- `web/src/lib/translations/ru.ts`, `web/src/components/Hero.tsx`, `web/src/pages/Upload.tsx`, `web/src/pages/Settings.tsx` — copy audit apply.
+- `development/contexter/memory/STATE.md` — D-AXIS-08..13 + D-CTX11-01..20, session 244 state, pricing expanded, formats corrected, blockers updated.
+- `development/contexter/memory/contexter-about.md` (L1) — +CTX-11 Active L3, formats 308 alpha, write authority expanded, last updated 2026-04-17.
+- `development/contexter/memory/contexter-roadmap.md` (L2) — +CTX-11 row, last updated.
+- `development/contexter/memory/contexter-analytics.md` (L3) — **NEW** CTX-11 epic ~30KB.
+- `development/contexter/memory/specs/copy-audit-apply-2026-04-16.md` + `copy-audit-apply-iteration-1-2026-04-16.md` — **NEW**.
+- `~/.claude/reglaments/research.md` — 3 new sections.
+- `docs/research/contexter-analytics-primary-deep-research.md` — **NEW** 1055 lines DEEP-1.
+- `docs/research/contexter-mcp-telemetry-deep-research.md` — **NEW** DEEP-3.
+- `docs/research/contexter-analytics-methodology-seed-research.md` — **NEW** SEED 627 lines.
+- `docs/research/contexter-measurement-system-deep-research.md` — **NEW** DEEP-4 893 lines.
+- `docs/research/contexter-analytics-codebase-inventory-2026-04-16.md` — **NEW** inventory 131 lines.
+
+**Completed:**
+- Copy audit 8 atomic commits `6404a56..e137481` on origin/main (G3 iter 1 PARTIAL_PASS accepted).
+- DEEP-1 PostHog decision (HIGH 90%).
+- DEEP-3 narrow MCP telemetry (4 gaps).
+- DEEP-4 measurement system (WAU-A NSM + 24 events + full spec).
+- Methodology SEED 38 signals.
+- Codebase inventory via Explore agent.
+- STATE + L1 + L2 synced.
+- L3 CTX-11 Analytics created.
+- Research reglament enhanced.
+- 8 memory discrepancies fixed.
+
+**Opened:**
+- Pre-CTX-11 (persona field + user_registered event + Pro backend fix) — next session.
+- CTX-11 W1-W6 (33 tasks).
+- Reddit Phase 1 manual posting by nopoint.
+- Incorporation decision pre-AI'preneurs April 20.
+- Anthology Fund submit.
+
+**Notes:**
+- Context 495K at close, Opus 4.7 working range preserved.
+- Methodology gap (DEEP-1/3 = HOW, не WHAT) закрыт SEED + DEEP-4.
+- Persona field — researcher freedom insight, zero-cost now, impossible retroactively.
+- Iter 1 copy audit scope creep caught by Coach — B3 lesson.
+- Critical path: Pre-CTX11 → W1→W2→W3 ДО Reddit Phase 3 (UTM first wave teряется иначе).

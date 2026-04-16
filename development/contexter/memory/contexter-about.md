@@ -1,7 +1,7 @@
 ---
 # contexter-about.md — Contexter Project Reference
 > Layer: L1 | Frequency: slow | Loaded: at session start
-> Last updated: 2026-04-11 (session 239 — CTX-12 W4+W5 implementation; new supporters-revshare/supporters-lifecycle/notifications services; migration 0016+0017)
+> Last updated: 2026-04-17 (session 244 — CTX-11 Analytics opened, copy audit applied 8 commits, pricing tier section clarified, supported formats section corrected for 308 alpha)
 ---
 
 ## Identity
@@ -181,14 +181,17 @@ eval: proxy metrics (per-query) + LLM eval (RAGAS: claim→verdict→relevancy) 
 
 Job queue: BullMQ (Redis) → 3 retries, exponential backoff (1/2/4 min), removeOnComplete 24h, removeOnFail 7 days.
 
-## Supported Formats (23)
+## Supported Formats
 
-**Documents (6):** PDF, DOCX, XLSX, PPTX, ODS, ODT
-**Text (6):** TXT, MD, CSV, JSON, HTML, XML
-**Images (4):** PNG, JPG/JPEG, WebP, SVG
-**Audio (4):** MP3, WAV, M4A, OGG
-**Video (3):** MP4, MOV, WebM
-YouTube URL (subtitles extraction)
+**Alpha (launch):** 308 text-only formats registered in `web/src/lib/formats.ts` (14 categories) per D-49. Binary/media (images/audio/video) deferred.
+
+**Full pipeline support (backend-ready, UI-gated):**
+- **Documents:** PDF, DOCX, XLSX, PPTX, ODS, ODT
+- **Text:** TXT, MD, CSV, JSON, HTML, XML
+- **Images:** PNG, JPG/JPEG, WebP, SVG
+- **Audio:** MP3, WAV, M4A, OGG
+- **Video:** MP4, MOV, WebM
+- **URLs:** YouTube (subtitles extraction)
 
 Parsers: DoclingParser (PDF/DOCX/XLSX/PPTX/ODS/HTML/images), TextParser (TXT/MD/CSV/JSON/XML/ODT), AudioParser (audio + segmentation), VideoParser (video → ffmpeg → Whisper), YouTubeParser (subtitles).
 
@@ -218,6 +221,7 @@ Production data: ~756 users, ~744 documents, ~1281 chunks (as of 2026-03-30).
 | **CTX-10 GTM Launch** | [contexter-gtm-launch.md](contexter-gtm-launch.md) | 🔶 IN PROGRESS (deadline: 2026-04-08) |
 | **CTX-12 Supporters Backend** | [contexter-supporters-backend.md](contexter-supporters-backend.md) | ✅ COMPLETE (2026-04-12, session 240 — all W1-W5 deployed) |
 | **CTX-13 Reddit GTM** | [contexter-reddit-gtm.md](contexter-reddit-gtm.md) | 🔶 IN PROGRESS (5-phase Reddit presence strategy) |
+| **CTX-11 Analytics** | [contexter-analytics.md](contexter-analytics.md) | 🔶 IN PROGRESS (2026-04-17 session 244, 6 waves, 19 MUST-HAVE MVI, NSM=WAU-A, W1-W3 BEFORE Reddit Phase 3) |
 
 ## Write Authority
 
@@ -227,6 +231,9 @@ Production data: ~756 users, ~744 documents, ~1281 chunks (as of 2026-03-30).
 | `memory/contexter-roadmap.md` (L2) | Axis — epic/stage status |
 | `memory/contexter-auth.md` (L3, active) | Axis — CTX-04 Auth epic |
 | `memory/contexter-gtm.md` (L3, closed) | Axis — CTX-08 GTM archive |
+| `memory/contexter-analytics.md` (L3, active) | Axis — CTX-11 Analytics epic |
+| `memory/contexter-reddit-gtm.md` (L3, active) | Axis — CTX-13 Reddit GTM epic |
+| `memory/contexter-supporters-backend.md` (L3, closed) | Axis — CTX-12 archive |
 | `memory/contexter-backlog.md` (L2.5) | Axis — product backlog (bugs, deferred, open-ended) |
 | `memory/chronicle/contexter-current.md` | Axis — append only |
 | `memory/chronicle/index.md` | Axis — append only |
