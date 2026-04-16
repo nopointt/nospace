@@ -233,6 +233,7 @@ export const ru: Record<string, string> = {
   "settings.supportDesc": "Нужна помощь? Напишите нам на",
   "settings.name": "Имя",
   "settings.memberSince": "Участник с",
+  "settings.namePlaceholder": "Введите имя...",
 
   // ── Auth Modal ──
   "authModal.title": "Войти",
@@ -502,7 +503,7 @@ export const ru: Record<string, string> = {
   "landing.pricing.starter.f4": "Поиск по всем форматам",
   "landing.pricing.starter.f5": "Подключение к нейросети",
   "landing.pricing.starter.f6": "Поддержка по email",
-  "landing.pricing.starter.cta": "Начать",
+  "landing.pricing.starter.cta": "Подключить Starter",
   "landing.pricing.pro.label": "Pro",
   "landing.pricing.pro.price": "$29",
   "landing.pricing.pro.pricePer": "/ мес",
@@ -513,7 +514,7 @@ export const ru: Record<string, string> = {
   "landing.pricing.pro.f5": "Приоритетная обработка (5x)",
   "landing.pricing.pro.f6": "Приоритетная поддержка",
   "landing.pricing.pro.f7": "Прямой доступ для разработчиков",
-  "landing.pricing.pro.cta": "Начать",
+  "landing.pricing.pro.cta": "Подключить Pro",
   "landing.pricing.business": "Нужен корпоративный тариф или собственный сервер?",
 
   // ── Pre-launch ──
