@@ -37,6 +37,9 @@ export const ru: Record<string, string> = {
   "hero.copyLink": "Скопировать ссылку",
   "hero.copyToken": "Скопировать ключ",
   "hero.instructionsFor": "Инструкция для",
+  "hero.connectTitle": "Подключите нейросеть",
+  "hero.connectDesc": "Откройте ChatGPT, Claude, Gemini, Perplexity или Cursor — и спросите по вашим файлам. Займёт 2 минуты.",
+  "hero.connectCta": "Подключить",
 
   // ── Hero: Footer ──
   "hero.footerEurope": "Ваши файлы хранятся на серверах в Европе",

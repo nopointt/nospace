@@ -654,16 +654,16 @@ const Hero: Component = () => {
         <section class="border-t border-border-subtle px-4 py-16 md:px-16">
           <div class="flex flex-col items-center text-center" style={{ gap: "16px" }}>
             <h2 class="text-[24px] font-bold text-text-primary leading-[1.2]" style={{ "letter-spacing": "-0.03em" }}>
-              Connect your AI
+              {t("hero.connectTitle")}
             </h2>
             <p class="text-[14px] text-text-secondary leading-[1.5]" style={{ "max-width": "480px" }}>
-              Link ChatGPT, Claude, Gemini, Perplexity, or Cursor to your knowledge base. Takes 2 minutes.
+              {t("hero.connectDesc")}
             </p>
             <a
               href="/api"
               class="text-[14px] font-medium bg-accent text-white px-8 py-3 hover:bg-accent-hover transition-colors duration-[80ms] mt-2"
             >
-              Connect
+              {t("hero.connectCta")}
             </a>
           </div>
         </section>
