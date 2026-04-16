@@ -82,7 +82,7 @@ export const ru: Record<string, string> = {
   "toast.filesAdded": "{count} файлов добавлено",
   "toast.readyForSearch": "«{name}» готов к поиску",
   "toast.processingTooLong": "Обработка заняла слишком долго",
-  "toast.uploadError": "Ошибка загрузки",
+  "toast.uploadError": "Не удалось загрузить файл — попробуйте ещё раз",
   "toast.emptyFile": "{name}: Пустой файл",
   "toast.unsupportedFormat": "{name}: .{ext} не поддерживается",
   "toast.duplicateConfirm": "«{name}» уже загружен. Загрузить повторно?",
@@ -157,7 +157,7 @@ export const ru: Record<string, string> = {
   "register.passwordRequired": "Укажите пароль",
   "register.passwordMinLength": "Пароль должен быть не менее 8 символов",
   "register.passwordMismatch": "Пароли не совпадают",
-  "register.failed": "Не удалось создать аккаунт",
+  "register.failed": "Не удалось создать аккаунт — попробуйте ещё раз",
   "register.failedRetry": "Не удалось создать аккаунт — попробуйте ещё раз",
   "register.agreePrefix": "Нажимая «Создать аккаунт», вы соглашаетесь с ",
   "register.terms": "Условиями использования",
@@ -175,7 +175,7 @@ export const ru: Record<string, string> = {
   "forgot.sentDesc": "Мы отправили ссылку для сброса пароля на ",
   "forgot.sentSuffix": ". Проверьте почту и перейдите по ссылке.",
   "forgot.emailRequired": "Укажите email",
-  "forgot.sendFailed": "Не удалось отправить письмо",
+  "forgot.sendFailed": "Не удалось отправить письмо — попробуйте ещё раз",
   "forgot.sendFailedRetry": "Не удалось отправить письмо — попробуйте ещё раз",
 
   // ── Reset Password ──
@@ -194,7 +194,7 @@ export const ru: Record<string, string> = {
   "reset.passwordRequired": "Укажите новый пароль",
   "reset.passwordMinLength": "Пароль должен быть не менее 8 символов",
   "reset.passwordMismatch": "Пароли не совпадают",
-  "reset.failed": "Не удалось сбросить пароль",
+  "reset.failed": "Не удалось изменить пароль — попробуйте ещё раз",
   "reset.failedRetry": "Не удалось сбросить пароль — попробуйте ещё раз",
 
   // ── Verify Email ──
