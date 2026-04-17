@@ -5,7 +5,7 @@ import crypto from "crypto"
 export const TIERS = {
   free: { name: "Free", priceUsd: 0, storageLimitBytes: 1 * 1024 * 1024 * 1024, intervalDays: 0 },
   starter: { name: "Starter", priceUsd: 9, storageLimitBytes: 10 * 1024 * 1024 * 1024, intervalDays: 30 },
-  pro: { name: "Pro", priceUsd: 29, storageLimitBytes: 50 * 1024 * 1024 * 1024, intervalDays: 30 },
+  pro: { name: "Pro", priceUsd: 29, storageLimitBytes: 100 * 1024 * 1024 * 1024, intervalDays: 30 },
   business: { name: "Business", priceUsd: 79, storageLimitBytes: 200 * 1024 * 1024 * 1024, intervalDays: 30 },
 } as const
 
