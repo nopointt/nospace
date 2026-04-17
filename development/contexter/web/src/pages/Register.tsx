@@ -5,23 +5,25 @@ import Button from "../components/Button"
 import Input from "../components/Input"
 import { API_BASE } from "../lib/api"
 import { setAuth } from "../lib/store"
+import { t } from "../lib/i18n"
 
 const Register: Component = () => {
   const navigate = useNavigate()
 
   const [name, setName] = createSignal("")
   const [email, setEmail] = createSignal("")
+  const [persona, setPersona] = createSignal("")
   const [password, setPassword] = createSignal("")
   const [confirmPassword, setConfirmPassword] = createSignal("")
   const [loading, setLoading] = createSignal(false)
   const [error, setError] = createSignal("")
 
   const validate = (): string | null => {
-    if (!name().trim()) return "Укажите имя"
-    if (!email().trim()) return "Укажите email"
-    if (!password()) return "Укажите пароль"
-    if (password().length < 8) return "Пароль должен быть не менее 8 символов"
-    if (password() !== confirmPassword()) return "Пароли не совпадают"
+    if (!name().trim()) return t("register.nameRequired")
+    if (!email().trim()) return t("register.emailRequired")
+    if (!password()) return t("register.passwordRequired")
+    if (password().length < 8) return t("register.passwordMinLength")
+    if (password() !== confirmPassword()) return t("register.passwordMismatch")
     return null
   }
 
@@ -44,13 +46,14 @@ const Register: Component = () => {
           name: name().trim(),
           email: email().trim(),
           password: password(),
+          ...(persona() ? { persona_self_reported: persona() } : {}),
         }),
       })
 
       if (!res.ok) {
         const data = await res.json().catch(() => null)
         throw new Error(
-          data?.message || data?.error || "Не удалось создать аккаунт"
+          data?.message || data?.error || t("register.failed")
         )
       }
 
@@ -67,7 +70,7 @@ const Register: Component = () => {
       setError(
         err instanceof Error
           ? err.message
-          : "Не удалось создать аккаунт — попробуйте ещё раз"
+          : t("register.failedRetry")
       )
     } finally {
       setLoading(false)
@@ -94,20 +97,20 @@ const Register: Component = () => {
         <div class="w-full max-w-[400px] flex flex-col gap-8">
           <div class="flex flex-col gap-2">
             <h1 class="text-[24px] font-bold text-text-primary leading-[1.2]">
-              Регистрация
+              {t("register.title")}
             </h1>
             <p class="text-sm text-text-secondary">
-              Создайте аккаунт Contexter
+              {t("register.subtitle")}
             </p>
           </div>
 
           {/* Fields */}
           <Show when={error()}>
-            <p class="text-signal-error text-xs font-mono">{error()}</p>
+            <p class="text-signal-error text-xs">{error()}</p>
           </Show>
           <div class="flex flex-col gap-4">
             <Input
-              placeholder="Имя"
+              placeholder={t("register.name")}
               value={name()}
               onInput={setName}
               onKeyDown={handleKeyDown}
@@ -121,8 +124,23 @@ const Register: Component = () => {
               onKeyDown={handleKeyDown}
               autocomplete="email"
             />
+            <div class="flex flex-col gap-2">
+              <label class="text-sm text-text-secondary">{t("register.personaLabel")}</label>
+              <select
+                class="w-full h-10 px-4 text-sm bg-bg-canvas border border-border-default transition-colors duration-[80ms] outline-hidden"
+                value={persona()}
+                onChange={(e) => setPersona(e.currentTarget.value)}
+              >
+                <option value="">{t("register.personaPlaceholder")}</option>
+                <option value="Разработчик / инженер">{t("register.personaOptions.developer")}</option>
+                <option value="Исследователь / аналитик">{t("register.personaOptions.researcher")}</option>
+                <option value="Писатель / контент-мейкер">{t("register.personaOptions.writer")}</option>
+                <option value="Консультант / операции">{t("register.personaOptions.consultant")}</option>
+                <option value="Другое">{t("register.personaOptions.other")}</option>
+              </select>
+            </div>
             <Input
-              placeholder="Пароль"
+              placeholder={t("register.password")}
               type="password"
               value={password()}
               onInput={setPassword}
@@ -130,7 +148,7 @@ const Register: Component = () => {
               autocomplete="new-password"
             />
             <Input
-              placeholder="Подтвердите пароль"
+              placeholder={t("register.confirmPassword")}
               type="password"
               value={confirmPassword()}
               onInput={setConfirmPassword}
@@ -147,28 +165,28 @@ const Register: Component = () => {
               loading={loading()}
               class="w-full"
             >
-              Создать аккаунт
+              {t("register.submit")}
             </Button>
 
-            <p class="text-[10px] text-text-tertiary font-mono leading-[1.5]">
-              Нажимая «Создать аккаунт», вы соглашаетесь с{" "}
+            <p class="text-[10px] text-text-tertiary leading-[1.5]">
+              {t("register.agreePrefix")}
               <A href="/terms" class="text-accent hover:text-accent-hover transition-colors duration-[80ms]">
-                Условиями использования
-              </A>{" "}
-              и{" "}
+                {t("register.terms")}
+              </A>
+              {t("register.and")}
               <A href="/privacy" class="text-accent hover:text-accent-hover transition-colors duration-[80ms]">
-                Политикой конфиденциальности
+                {t("register.privacy")}
               </A>
             </p>
 
             <div class="flex items-center justify-center">
-              <span class="text-xs text-text-tertiary font-mono">
-                Уже есть аккаунт?{" "}
+              <span class="text-xs text-text-tertiary">
+                {t("register.hasAccount")}
                 <A
                   href="/login"
                   class="text-accent hover:text-accent-hover transition-colors duration-[80ms]"
                 >
-                  Войти
+                  {t("register.login")}
                 </A>
               </span>
             </div>

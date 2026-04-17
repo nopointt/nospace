@@ -25,7 +25,7 @@ auth.post("/register", async (c) => {
   const redis = c.get("redis")
 
   // Return 400 on malformed JSON instead of silently swallowing the error
-  let body: { name?: string; email?: string } = {}
+  let body: { name?: string; email?: string; persona_self_reported?: string } = {}
   const contentType = c.req.header("Content-Type") ?? ""
   if (contentType.includes("application/json")) {
     try {
@@ -38,6 +38,7 @@ auth.post("/register", async (c) => {
   // Require at least email OR name — no anonymous registrations
   const name = typeof body.name === "string" ? body.name.trim() : ""
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : ""
+  const personaSelfReported = typeof body.persona_self_reported === "string" ? body.persona_self_reported : null
   if (!name && !email) {
     return c.json({ error: "необходимо указать email или name" }, 400)
   }
@@ -69,8 +70,8 @@ auth.post("/register", async (c) => {
   const apiToken = generateToken()
 
   await sql`
-    INSERT INTO users (id, api_token, name, email)
-    VALUES (${userId}, ${apiToken}, ${name || null}, ${email || null})
+    INSERT INTO users (id, api_token, name, email, persona_self_reported)
+    VALUES (${userId}, ${apiToken}, ${name || null}, ${email || null}, ${personaSelfReported})
   `
 
   // CTX-12: reclaim any queued Supporter transactions paid before sign-up.

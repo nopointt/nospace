@@ -162,6 +162,13 @@ export const en: Record<string, string> = {
   "register.privacy": "Privacy Policy",
   "register.hasAccount": "Already have an account? ",
   "register.login": "Sign in",
+  "register.personaLabel": "What is your main role? (optional)",
+  "register.personaPlaceholder": "Not specified",
+  "register.personaOptions.developer": "Developer / engineer",
+  "register.personaOptions.researcher": "Researcher / analyst",
+  "register.personaOptions.writer": "Writer / content creator",
+  "register.personaOptions.consultant": "Consultant / operations",
+  "register.personaOptions.other": "Other",
 
   // ── Forgot Password ──
   "forgot.title": "Reset password",

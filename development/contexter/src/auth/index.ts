@@ -37,6 +37,13 @@ export function createAuth(env: Env) {
     // Field mapping handled in Drizzle schema (auth/schema.ts) — column names map to snake_case DB columns
     user: {
       modelName: "users",
+      additionalFields: {
+        persona_self_reported: {
+          type: "string",
+          required: false,
+          input: true, // accept from signup request body
+        },
+      },
     },
 
     // --- Email + Password ---

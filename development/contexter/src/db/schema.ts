@@ -22,12 +22,24 @@ export const users = pgTable("users", {
   apiToken: text("api_token").notNull().unique(),
   name: text("name"),
   email: text("email"),
+  personaSelfReported: text("persona_self_reported"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 })
+
+export const rooms = pgTable("rooms", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+  index("rooms_user_id_idx").on(table.userId),
+])
 
 export const documents = pgTable("documents", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull().references(() => users.id),
+  roomId: text("room_id").references(() => rooms.id, { onDelete: "set null" }),
   name: text("name").notNull(),
   mimeType: text("mime_type").notNull(),
   size: integer("size").notNull(),

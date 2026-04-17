@@ -165,6 +165,13 @@ export const ru: Record<string, string> = {
   "register.privacy": "Политикой конфиденциальности",
   "register.hasAccount": "Уже есть аккаунт? ",
   "register.login": "Войти",
+  "register.personaLabel": "Какая у вас основная роль? (необязательно)",
+  "register.personaPlaceholder": "Не указано",
+  "register.personaOptions.developer": "Разработчик / инженер",
+  "register.personaOptions.researcher": "Исследователь / аналитик",
+  "register.personaOptions.writer": "Писатель / контент-мейкер",
+  "register.personaOptions.consultant": "Консультант / операции",
+  "register.personaOptions.other": "Другое",
 
   // ── Forgot Password ──
   "forgot.title": "Сброс пароля",
