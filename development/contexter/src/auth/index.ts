@@ -8,6 +8,7 @@
  * Existing apiToken system preserved for API/MCP clients (parallel auth).
  */
 
+import { createHash } from "node:crypto"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { drizzle } from "drizzle-orm/postgres-js"
@@ -159,6 +160,34 @@ export function createAuth(env: Env) {
             } catch (e) {
               console.error(
                 "supporter_reclaim_better_auth_error",
+                e instanceof Error ? e.message : String(e),
+              )
+            }
+
+            // CTX-11 Pre-W1: user_registered analytics event (console.log only — PostHog wired in W3)
+            // auth_method detection via emailVerified flag:
+            // - Google OAuth: accountLinking.trustedProviders:["google"] → emailVerified=true at creation
+            // - Email/password: requireEmailVerification:true → emailVerified=false at creation
+            // `user.accounts` is NOT available in user.create.after hook per @better-auth/core types.
+            try {
+              const auth_method = user?.emailVerified === true ? "google_oauth" : "email_password"
+              const email_hash = user?.email
+                ? createHash("sha256").update(user.email.toLowerCase()).digest("hex")
+                : null
+              console.log(JSON.stringify({
+                ts: new Date().toISOString(),
+                event: "user_registered",
+                user_id: user?.id ?? null,
+                email_hash,
+                auth_method,
+                persona_self_reported: (user as Record<string, unknown>)?.persona_self_reported ?? null,
+                utm_source_first: null,  // wired in W2 Task W2-04
+                utm_source_last: null,
+                ph_id: null,
+              }))
+            } catch (e) {
+              console.error(
+                "user_registered_event_error",
                 e instanceof Error ? e.message : String(e),
               )
             }

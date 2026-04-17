@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto"
 import { Hono } from "hono"
 import type { Sql } from "postgres"
 import type { Env } from "../types/env"
@@ -93,6 +94,30 @@ auth.post("/register", async (c) => {
         err: err instanceof Error ? err.message : String(err),
       })
     }
+  }
+
+  // CTX-11 Pre-W1: user_registered event for legacy /register path
+  // Tag auth_method: "email_password_legacy" to distinguish from better-auth traffic.
+  try {
+    const email_hash = email
+      ? createHash("sha256").update(email).digest("hex")
+      : null
+    console.log(JSON.stringify({
+      ts: new Date().toISOString(),
+      event: "user_registered",
+      user_id: userId,
+      email_hash,
+      auth_method: "email_password_legacy",
+      persona_self_reported: (typeof body.persona_self_reported === "string" ? body.persona_self_reported : null),
+      utm_source_first: null,
+      utm_source_last: null,
+      ph_id: null,
+    }))
+  } catch (e) {
+    console.error(
+      "user_registered_event_error",
+      e instanceof Error ? e.message : String(e),
+    )
   }
 
   return c.json({
