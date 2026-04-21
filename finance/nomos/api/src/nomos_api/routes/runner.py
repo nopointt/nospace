@@ -10,7 +10,7 @@ from ..models import RunnerStatus
 from ..runner_control import RunnerControl
 from ..alerts import TelegramAlerter
 
-router = APIRouter(prefix="/api/runner", tags=["runner"], dependencies=[Depends(require_bearer)])
+router = APIRouter(prefix="/api/runner", tags=["runner"])
 
 
 @router.get("/status", response_model=RunnerStatus)

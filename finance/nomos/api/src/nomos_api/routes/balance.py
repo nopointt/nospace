@@ -6,7 +6,7 @@ from ..live_prices import LivePriceCache
 from ..models import Balance, PortfolioSnapshot
 from ..portfolio import PortfolioAggregator
 
-router = APIRouter(prefix="/api", tags=["balance"], dependencies=[Depends(require_bearer)])
+router = APIRouter(prefix="/api", tags=["balance"])
 
 
 @router.get("/balance", response_model=Balance)

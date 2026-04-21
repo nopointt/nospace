@@ -9,7 +9,7 @@ from ..journal import JournalReader
 from ..models import StrategyStats, StrategyToggleRequest
 from ..strategies import StrategyStatsBuilder
 
-router = APIRouter(prefix="/api", tags=["strategies"], dependencies=[Depends(require_bearer)])
+router = APIRouter(prefix="/api", tags=["strategies"])
 
 
 @router.get("/strategies", response_model=list[StrategyStats])

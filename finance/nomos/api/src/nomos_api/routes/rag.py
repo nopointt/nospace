@@ -4,7 +4,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException
 from ..auth import require_bearer
 from ..config import Settings, get_settings
 
-router = APIRouter(prefix="/api/rag", tags=["rag"], dependencies=[Depends(require_bearer)])
+router = APIRouter(prefix="/api/rag", tags=["rag"])
 
 
 @router.post("/query")

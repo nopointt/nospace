@@ -9,7 +9,7 @@ from ..deps import get_journal
 from ..journal import JournalReader
 from ..models import Trade
 
-router = APIRouter(prefix="/api", tags=["trades"], dependencies=[Depends(require_bearer)])
+router = APIRouter(prefix="/api", tags=["trades"])
 
 
 @router.get("/trades", response_model=list[Trade])

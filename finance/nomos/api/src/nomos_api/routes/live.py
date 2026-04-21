@@ -9,7 +9,7 @@ from ..sse import SSEBroker
 router = APIRouter(prefix="/api/live", tags=["live"])
 
 
-@router.get("/prices", dependencies=[Depends(require_bearer)])
+@router.get("/prices")
 async def prices(
     pairs: str | None = Query(None, description="Comma-separated, e.g. BTC/USDT,ETH/USDT"),
     cache: LivePriceCache = Depends(get_live_prices),
@@ -19,7 +19,7 @@ async def prices(
     return cache.latest([p.strip() for p in pairs.split(",") if p.strip()])
 
 
-@router.get("/stream", dependencies=[Depends(require_bearer_or_query)])
+@router.get("/stream", )
 async def stream(
     replay: int = Query(0, ge=0, le=500),
     sse: SSEBroker = Depends(get_sse),

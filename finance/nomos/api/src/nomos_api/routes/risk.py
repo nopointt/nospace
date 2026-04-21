@@ -6,7 +6,7 @@ from ..models import HaltRequest, RiskSnapshot
 from ..risk import RiskMonitor
 from ..alerts import TelegramAlerter
 
-router = APIRouter(prefix="/api", tags=["risk"], dependencies=[Depends(require_bearer)])
+router = APIRouter(prefix="/api", tags=["risk"])
 
 
 @router.get("/risk", response_model=RiskSnapshot)

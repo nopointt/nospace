@@ -5,7 +5,7 @@ from ..deps import get_journal
 from ..journal import JournalReader
 from ..models import Trade
 
-router = APIRouter(prefix="/api/charts", tags=["charts"], dependencies=[Depends(require_bearer)])
+router = APIRouter(prefix="/api/charts", tags=["charts"])
 
 
 @router.get("/ohlcv")
