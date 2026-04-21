@@ -1,17 +1,53 @@
 {
-  "updated": "2026-03-23T10:02:54.824584+00:00",
-  "mode": "dry_run",
-  "initial_capital": 260.0,
-  "current_balance": 260.0,
-  "currency": "USDT",
-  "open_positions": [],
-  "total_trades": 0,
-  "winning_trades": 0,
-  "losing_trades": 0,
-  "total_pnl": 0,
-  "max_drawdown": 0.0,
-  "daily_pnl": 0,
-  "weekly_pnl": 0,
-  "halted": false,
-  "halt_reason": null
+  "updated_at": 1776813460,
+  "start_capital": 10000,
+  "current_balance_usdt": 3752.389406,
+  "current_balance_btc": 1.01663,
+  "current_balance_eth": 3.1457,
+  "by_strategy": {
+    "remizov_v2": {
+      "trades": 17,
+      "buys": 10,
+      "sells": 7,
+      "volume_usd": 21245.5251581,
+      "virtual": false
+    },
+    "remizov_v2_cramer": {
+      "trades": 17,
+      "buys": 7,
+      "sells": 10,
+      "volume_usd": 21245.524670099996,
+      "virtual": true
+    },
+    "basic_ema_rsi": {
+      "trades": 6,
+      "buys": 4,
+      "sells": 2,
+      "volume_usd": 7500.361877099999,
+      "virtual": false
+    },
+    "basic_ema_rsi_cramer": {
+      "trades": 4,
+      "buys": 2,
+      "sells": 2,
+      "volume_usd": 5000.001368,
+      "virtual": true
+    },
+    "macd_trend": {
+      "trades": 1,
+      "buys": 1,
+      "sells": 0,
+      "volume_usd": 1249.816322,
+      "virtual": false
+    }
+  },
+  "totals": {
+    "trades": 40,
+    "volume_usd": 49991.22196830001,
+    "virtual_trades": 5,
+    "virtual_volume": 6250.007427,
+    "dedup": 192,
+    "cooldown": 0
+  },
+  "halt_active": false
 }

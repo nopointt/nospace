@@ -100,6 +100,75 @@
 
 ---
 
+## Wave 4 — Frontend + auth removal — completed 2026-04-22
+
+**Pivot:** nopoint instructed "Vault теперь часть Contexter — берём дизайн-систему Contexter без изменений" and "auth в волт нет - опенсорс". Archived Bauhaus-triad attempt to `finance/nomos/_archive/wave4-bauhaus-attempt/web/`.
+
+**Files created (nomos-web, 15 files):**
+- package.json + vite.config.ts (alias `@contexter` → `../../../development/contexter/web/src`) + tsconfig.json + index.html + public/favicon.svg
+- src/main.tsx + AppShell.tsx + index.css (Contexter `@theme` verbatim)
+- src/lib/api.ts + format.ts + sse.ts
+- src/components/Stat.tsx
+- src/pages/Overview.tsx + Trades.tsx + Strategies.tsx + Portfolio.tsx + Charts.tsx + Risk.tsx
+- ops/deploy-nomos-web.sh (bun + wrangler pages deploy)
+
+**Auth removed from backend (D-15):**
+- `require_bearer` dependency stripped from all routes in `src/nomos_api/routes/*.py`
+- Imports cleaned where safely removable
+- Redeployed — all 8 endpoints return 200 without token
+
+**CF global key email:** `nopointttt@gmail.com` (4 Ts) — saved to `~/.tlos/cf-email`. Global key now works for Pages API + DNS operations.
+
+**Deploy steps (Wave 4):**
+1. `bun install` + `bun run build` → 61KB JS (20KB gzip) + 56KB CSS (26KB gzip), 1s build
+2. CF API `POST /accounts/{id}/pages/projects` → subdomain `nomos-web-b9j.pages.dev`
+3. `wrangler pages deploy dist` → deployment OK in 2.4s
+4. CF API `POST /accounts/{id}/pages/projects/nomos-web/domains` → `nomos.contexter.cc` initializing
+5. CF API `POST /zones/{id}/dns_records` → CNAME `nomos` → `nomos-web-b9j.pages.dev`, proxied
+
+**Verify:**
+- `curl https://nomos.contexter.cc` → 200 · 2.046s TTFB ✅
+- CORS `Access-Control-Allow-Origin: https://nomos.contexter.cc` ✅
+- All 8 API endpoints return 200 without bearer ✅
+- 6 frontend pages render with live journal.jsonl data ✅
+
+**AC scorecard:** AC-1 ✅ · AC-2 ✅ · AC-3 ⚠️ (6/8 pages) · AC-4 ⚠️ (backend only) · AC-5 ✅ · AC-6 ❌ N/A (D-15) · AC-7 ⚠️ (not tested 375px) · AC-8 ✅.
+
+**Commit:** `0476584 feat(nomos/phase2): Vault frontend on CF Pages + backend auth removed`
+
+**Status:** completed
+
+---
+
+## Deferred to next session (Waves 5, 6)
+
+- [ ] Control UI buttons (Start/Stop/Halt/Resume) in Overview header
+- [ ] Settings page (runner config editor)
+- [ ] RemizovODE page (p/q/R²/slope line charts)
+- [ ] Telegram alerts wiring (TelegramAlerter exists but currently not called from halt/resume/order_error code paths)
+- [ ] Mobile viewport test at 375px + responsive tweaks
+- [ ] Playwright E2E suite (login-less: page renders, CSV export, SSE receives event)
+- [ ] Rate limiting on control endpoints (Caddy IP-based) — see D-15 risk
+- [ ] IP allowlist or bearer re-enable if abuse detected
+
+---
+
+## Final status — session 5
+
+**Total scope delivered:** 4 of 7 waves (Waves 0-4). Core stack live in production end-to-end. Frontend + Backend + Runner all healthy on Hetzner/CF.
+
+**Commits:**
+- `0c7aa69` — Wave 2+3: backend API + runner migration
+- `0476584` — Wave 4: frontend + auth removed
+
+**New decisions locked:** D-11 (runner as docker service), D-12 (Caddy LE, CF grey), D-13 (additive Caddyfile block), D-14 (Contexter design via Vite alias), D-15 (no auth, opensource).
+
+**J3 safeguards respected:** no Contexter compose modified, no destructive ops, testnet keys only, secrets never in git, Contexter security controls unchanged.
+
+**No J5 escalations triggered after the DNS one — which nopoint resolved manually via CF dashboard + later via global key (email `nopointttt@gmail.com`).**
+
+---
+
 ## Escalation #1 — DNS manual step required (non-blocking for Wave 2 code, blocking for Wave 2 deploy)
 
 **Need from nopoint (one of):**
