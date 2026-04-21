@@ -21,12 +21,19 @@ def _load_env_file(path_str: str) -> None:
 
 
 def build_client(cfg: dict):
-    _load_env_file(cfg["keys_env_file"])
     exchange_id = cfg["exchange"]
     key_name = f"{exchange_id.upper()}_TESTNET_API_KEY" if cfg["sandbox"] else f"{exchange_id.upper()}_API_KEY"
     sec_name = f"{exchange_id.upper()}_TESTNET_SECRET" if cfg["sandbox"] else f"{exchange_id.upper()}_SECRET"
-    api_key = os.environ.get(key_name)
-    secret = os.environ.get(sec_name)
+    # Prefer env vars supplied by docker / .env; fall back to keys_env_file (local dev only).
+    api_key = os.environ.get(key_name) or os.environ.get(f"NOMOS_{key_name}")
+    secret = os.environ.get(sec_name) or os.environ.get(f"NOMOS_{sec_name}")
+    if (not api_key or not secret) and cfg.get("keys_env_file"):
+        try:
+            _load_env_file(cfg["keys_env_file"])
+            api_key = api_key or os.environ.get(key_name)
+            secret = secret or os.environ.get(sec_name)
+        except FileNotFoundError:
+            pass
     if not api_key or not secret:
         raise RuntimeError(f"missing {key_name} / {sec_name} in env")
     klass = getattr(ccxt, exchange_id)
@@ -34,6 +41,7 @@ def build_client(cfg: dict):
         "apiKey": api_key,
         "secret": secret,
         "enableRateLimit": True,
+        "timeout": 30000,
         "options": {"defaultType": "spot"},
     })
     if cfg["sandbox"]:

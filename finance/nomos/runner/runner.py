@@ -24,7 +24,12 @@ from ccxt_client import build_client
 import position_tracker
 
 
-REPO_ROOT = Path("C:/Users/noadmin/nospace")
+import os as _os
+
+_DEFAULT_REPO_ROOT = (
+    "/opt/nomos" if _os.path.exists("/opt/nomos") else "C:/Users/noadmin/nospace"
+)
+REPO_ROOT = Path(_os.environ.get("NOMOS_REPO_ROOT", _DEFAULT_REPO_ROOT))
 
 
 def load_config() -> dict:

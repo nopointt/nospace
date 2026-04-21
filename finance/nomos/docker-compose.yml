@@ -1,0 +1,48 @@
+# Nomos stack — deployed to /opt/nomos/docker-compose.yml on Hetzner.
+# Peer to /opt/contexter/ stack, isolated docker network, shared Caddy via contexter_internal.
+services:
+  nomos-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: nomos-api:latest
+    container_name: nomos-api
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - "127.0.0.1:8100:8100"
+    volumes:
+      - ./memory:/opt/nomos/memory
+      - ./runner:/opt/nomos/runner:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - nomos
+      - contexter_internal
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8100/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  nomos-runner:
+    build:
+      context: ./runner
+      dockerfile: Dockerfile
+    image: nomos-runner:latest
+    container_name: nomos-runner
+    restart: "no"
+    env_file: ./.env
+    volumes:
+      - ./memory:/opt/nomos/memory
+      - ./runner:/app:ro
+    networks:
+      - nomos
+    depends_on:
+      - nomos-api
+
+networks:
+  nomos:
+    name: nomos_internal
+  contexter_internal:
+    external: true
