@@ -38,7 +38,6 @@ export const AppShell: ParentComponent = (props) => {
               <circle cx="32" cy="32" r="8" fill="var(--color-accent)" />
             </svg>
             <span class="text-[15px] font-medium tracking-wide">Nomos</span>
-            <span class="text-[11px] text-[var(--color-text-tertiary)] uppercase tracking-wider">Vault</span>
           </A>
           <nav class="hidden md:flex items-center gap-5">
             {navItems.map((item) => (
@@ -77,7 +76,7 @@ export const AppShell: ParentComponent = (props) => {
       <main class="flex-1 p-6 max-w-[1440px] w-full mx-auto">{props.children}</main>
 
       <footer class="px-6 py-4 text-[11px] text-[var(--color-text-tertiary)] border-t border-[var(--color-border-subtle)]">
-        Nomos Vault · opensource paper trading — <a href="https://contexter.cc" class="hover:text-[var(--color-text-primary)]">part of Contexter</a>
+        Nomos · paper trading on Binance testnet
       </footer>
     </div>
   );

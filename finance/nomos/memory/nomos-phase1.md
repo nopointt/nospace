@@ -1,7 +1,7 @@
 ---
 # nomos-phase1.md — Phase 1: Foundation
 > Layer: L3 | Status: IN PROGRESS | Started: 2026-03-19
-> Last updated: 2026-04-21 (session 4 CLOSE — runner bugfix + Phase 2 opened)
+> Last updated: 2026-04-22 (session 5 CLOSE — runner migrated to Hetzner docker service, Phase 2 Waves 0-4 done)
 ---
 
 ## Goal
@@ -32,7 +32,7 @@ Goal: запустить paper trading pipeline на демо-счёте, гон
 | 1.9 | Basic strategy: EMA crossover + RSI | DONE | NomosBasicStrategy.py, 5m timeframe, BTC/ETH |
 | 1.10 | Claude Code agent definitions | DONE | scanner + analyst + risk-gate in nomos/agents/ |
 | 1.11 | Trading memory + sync | DONE | journal.jsonl + portfolio-state.json + scoreboard.md + sync-trades.py |
-| 1.12 | Paper trading: 7-day run | IN PROGRESS | **Python+CCXT runner started 2026-04-21**. Runs until 2026-04-28. PID logged in session 3 scratch. |
+| 1.12 | Paper trading: 7-day run | IN PROGRESS | **Migrated to Hetzner docker service `nomos-runner` in session 5 (2026-04-22)**. Writes to `/opt/nomos/memory/trading/journal.jsonl` (shared volume with nomos-api). `restart: unless-stopped`. Runs until 2026-04-28. |
 | 1.13 | Evaluate results | PENDING | After 1.12 finishes: compare vs buy-and-hold, decide Phase 1C go/no-go |
 
 ### Phase 1C — First Real Money (LATER)

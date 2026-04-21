@@ -1,8 +1,8 @@
 # STATE — Nomos
 
 ## Position
-- **Phase:** Phase 1B (runner live, paper run 7 days on Hetzner) + Phase 2 Waves 0-4 DONE (Vault dashboard live)
-- **Status:** Full production stack on Hetzner. `https://nomos.contexter.cc` (frontend, CF Pages) + `https://api.nomos.contexter.cc` (backend, Caddy + LE) + `nomos-runner` docker service.
+- **Phase:** Phase 1B (runner live on Hetzner) + Phase 2 Waves 0-4 DONE (dashboard live, Waves 5-6 deferred)
+- **Status:** Full production stack on Hetzner. `https://nomos.contexter.cc` (frontend, CF Pages) + `https://api.nomos.contexter.cc` (backend, Caddy + LE) + `nomos-runner` docker service. UI without "Vault/part of Contexter" branding — Nomos is independent internal project (on Contexter VPS for cost only).
 - **Last session:** 2026-04-22 (Satoshi, session 5, autonomous run)
 - **Orchestrator:** Satoshi
 
@@ -23,13 +23,16 @@
 
 ## Blockers
 - Blocked bank accounts (operational constraint)
-- No implementation started (research only so far)
+- No real money yet — paper trading until proven profitable
 
 ## Deferred
-- Full trading agent implementation
 - Legal compliance (KZ jurisdiction)
-- Portfolio tracking system
+- Phase 1C real money on-ramp
+- Phase 2 Waves 5-6: control UI buttons, Settings/RemizovODE pages, Telegram alerts wiring, Playwright E2E, mobile 375px test
+- Claude Code Routines layer for fundamentals bias / weekly review (from YouTube research `research-24-7-ai-trader-video.md`)
 
 ## Metrics
-- Sessions: 2
+- Sessions: 5
 - Strategies researched: 10
+- Strategies running live paper: 3 (MACD, EMA+RSI, Remizov v2) + Cramer mirror
+- Phase 2 AC: 5/8 green, 3/8 partial (see `phase2-dashboard/CONTEXT.md`)

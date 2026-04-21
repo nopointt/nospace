@@ -7,7 +7,7 @@
 @import "@fontsource/jetbrains-mono/700.css";
 
 /*
- * Nomos Vault — inherits Contexter Design System verbatim (no modifications).
+ * Nomos design tokens — Contexter design system reused via Vite alias.
  * Source of truth: development/contexter/web/src/index.css
  * If Contexter tokens change, sync by copy — tokens are CSS vars, diff is trivial.
  */
