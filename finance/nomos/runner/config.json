@@ -1,0 +1,45 @@
+{
+  "_comment": "Nomos paper trading runner config. All values tunable without code changes.",
+  "mode": "paper",
+  "exchange": "binance",
+  "sandbox": true,
+  "keys_env_file": "~/.tlos/binance-testnet",
+  "pairs": ["BTC/USDT", "ETH/USDT"],
+  "timeframe": "5m",
+  "check_interval_seconds": 300,
+  "ohlcv_lookback": 250,
+
+  "strategies": [
+    {"name": "macd_trend", "module": "strategies.macd_trend", "allocation_usd": 2500, "pairs": ["BTC/USDT", "ETH/USDT"]},
+    {"name": "basic_ema_rsi", "module": "strategies.basic_ema_rsi", "allocation_usd": 2500, "pairs": ["BTC/USDT", "ETH/USDT"]},
+    {"name": "remizov_v2", "module": "strategies.remizov_v2", "allocation_usd": 2500, "pairs": ["BTC/USDT", "ETH/USDT"]}
+  ],
+
+  "cramer_mode": {
+    "enabled": true,
+    "allocation_usd": 2500,
+    "tag_suffix": "_cramer"
+  },
+
+  "risk_rules": {
+    "daily_drawdown_pct": 3.0,
+    "weekly_drawdown_pct": 8.0,
+    "total_drawdown_pct": 20.0,
+    "max_position_size_pct": 20.0,
+    "min_trade_usd": 10.0
+  },
+
+  "order_type": "market",
+  "slippage_tolerance_pct": 0.5,
+
+  "paths": {
+    "journal": "finance/nomos/memory/trading/journal.jsonl",
+    "portfolio_state": "finance/nomos/memory/trading/portfolio-state.json",
+    "scoreboard": "finance/nomos/memory/trading/scoreboard.md",
+    "halt_flag": "finance/nomos/memory/trading/halt.flag",
+    "log": "finance/nomos/memory/trading/runner.log"
+  },
+
+  "run_horizon_days": 7,
+  "start_capital_usd": 10000
+}

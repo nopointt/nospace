@@ -26,7 +26,20 @@
 - [ ] Emergency reserve strategy
 - [ ] Contexter income → Nomos pipeline (50% MRR reinvested)
 
-### Phase 2 — DCA Machine
+### Phase 2 — Observability Dashboard (current parallel track)
+> Web dashboard for runner + portfolio + trading intelligence. Deploys to nomos.contexter.cc.
+
+- [ ] Backend: FastAPI on Hetzner (reuse Contexter VPS)
+- [ ] Frontend: Vite + SolidJS + Tailwind, light Bauhaus theme
+- [ ] Design tokens: adapt Contexter system, Bauhaus primary triad (red/blue/yellow)
+- [ ] 8 pages: Overview, Strategies, Trades, Portfolio, Charts, Risk, Remizov ODE, Settings
+- [ ] Runner control: start/stop/config via web (not just read-only)
+- [ ] Live prices via CCXT, SSE/WebSocket push
+- [ ] Deploy: CF Pages frontend + docker-compose service on Hetzner
+
+See `phase2-dashboard/` for full specs.
+
+### Phase 3 — DCA Machine
 > Monthly routine, portfolio growth, learn markets
 
 - [ ] Establish monthly DCA routine (75K KZT → crypto)
@@ -36,7 +49,7 @@
 - [ ] Learn: candlesticks, support/resistance, market cycles
 - [ ] First staking position
 
-### Phase 3 — Active Management
+### Phase 4 — Active Management
 > Beyond DCA: signals, rebalancing, opportunities
 
 - [ ] Entry/exit signal system (Satoshi-powered)
@@ -45,7 +58,7 @@
 - [ ] Risk management rules (stop-loss, position sizing)
 - [ ] DeFi yield exploration (AAVE, Compound)
 
-### Phase 4 — Automation (Satoshi Bot)
+### Phase 5 — Automation (Satoshi Bot)
 > Automate what works
 
 - [ ] Auto-DCA setup (if platform supports)
@@ -54,7 +67,7 @@
 - [ ] Automated reporting
 - [ ] API integrations (Binance API, price feeds)
 
-### Phase 5 — Scale
+### Phase 6 — Scale
 > Post-debt freedom, expanded instruments
 
 - [ ] Debt repaid → accounts unblocked

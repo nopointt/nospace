@@ -1,7 +1,7 @@
 ---
 # nomos-phase1.md — Phase 1: Foundation
 > Layer: L3 | Status: IN PROGRESS | Started: 2026-03-19
-> Last updated: 2026-03-23 (session 2 CLOSE)
+> Last updated: 2026-04-21 (session 4 CLOSE — runner bugfix + Phase 2 opened)
 ---
 
 ## Goal
@@ -32,8 +32,8 @@ Goal: запустить paper trading pipeline на демо-счёте, гон
 | 1.9 | Basic strategy: EMA crossover + RSI | DONE | NomosBasicStrategy.py, 5m timeframe, BTC/ETH |
 | 1.10 | Claude Code agent definitions | DONE | scanner + analyst + risk-gate in nomos/agents/ |
 | 1.11 | Trading memory + sync | DONE | journal.jsonl + portfolio-state.json + scoreboard.md + sync-trades.py |
-| 1.12 | Paper trading: 2-3 day run | PAUSED | Bot stopped. 0 trades. Restart with `docker compose start` |
-| 1.13 | Evaluate results | PAUSED | Pending paper trading data + Remizov v3 |
+| 1.12 | Paper trading: 7-day run | IN PROGRESS | **Python+CCXT runner started 2026-04-21**. Runs until 2026-04-28. PID logged in session 3 scratch. |
+| 1.13 | Evaluate results | PENDING | After 1.12 finishes: compare vs buy-and-hold, decide Phase 1C go/no-go |
 
 ### Phase 1C — First Real Money (LATER)
 
@@ -72,6 +72,13 @@ Goal: запустить paper trading pipeline на демо-счёте, гон
 | 2026-03-23 | Target: $128K trading capital in 36mo | Via Contexter MRR ramp ($0→$15K) + 20% trading returns + $200/mo cash |
 | 2026-03-23 | Remizov ODE = experimental edge | Returns-based ODE (v2), needs 2-3 more iterations. Unique approach |
 | 2026-03-23 | 10 strategies backtested | MACD Trend best (+1.97%), Remizov v2 generates trades but needs tuning |
+| 2026-04-21 | Abandoned Freqtrade/Docker, switched to pure Python+CCXT runner | Docker ate 2-3GB RAM. New stack: ~50MB. Port of 3 strategies (Basic/MACD/Remizov v2) with pandas+numpy indicators (no ta-lib) |
+| 2026-04-21 | Cramer Mode enabled for paper run | Contrarian mirror executor — every signal flipped with separate tag. Validates whether strategies beat inversion |
+| 2026-04-21 | Per-strategy TIMEFRAME (5m/1h) instead of uniform 4h | Compromise for faster signal density in paper mode. 4h strategies on 1h may need threshold tuning |
+| 2026-04-21 | Runner: position-aware state machine (FLAT↔LONG per strategy+pair) | Fixed stateless flip-flop bug — signals were emitted every tick without position awareness |
+| 2026-04-21 | Runner: 15-min cooldown между ордерами одной strategy+pair | Defense in depth beyond state machine — avoid rapid re-entries |
+| 2026-04-21 | Cramer Mode → virtual-only (no real orders) | Fixed zero-out bug — Cramer на том же testnet аккаунте обнулял primary strategy |
+| 2026-04-21 | Phase 2 Observability Dashboard opened | New epic `nomos-phase2.md` — parallel track to Phase 1B runner. Specs in `phase2-dashboard/` |
 
 ## Research Artifacts
 
