@@ -1,0 +1,61 @@
+---
+import BaseLayout from "@contexter/shared/layouts/BaseLayout.astro";
+import { getCollection, getEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const author = await getEntry(post.data.author);
+
+const canonicalURL = post.data.canonical ?? `https://blog.contexter.cc/${post.slug}/`;
+const pubDateFormatted = post.data.pubDate.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<BaseLayout
+  title={`${post.data.title} — contexter blog`}
+  description={post.data.description}
+  canonicalURL={canonicalURL}
+>
+  <article class="max-w-[800px] mx-auto px-6 py-24">
+    <header class="mb-12 pb-8 border-b border-[var(--color-border-subtle)]">
+      <div class="flex items-center gap-4 mb-4">
+        <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-[var(--color-text-tertiary)]">
+          {pubDateFormatted}
+        </time>
+        <span class="font-mono text-xs text-[var(--color-text-tertiary)]">·</span>
+        <span class="font-mono text-xs text-[var(--color-text-tertiary)] lowercase">{author?.data.name ?? "unknown"}</span>
+      </div>
+      <h1 class="font-mono text-3xl md:text-4xl text-[var(--color-text-primary)] lowercase mb-4 leading-tight">
+        {post.data.title}
+      </h1>
+      <p class="font-sans text-lg text-[var(--color-text-secondary)] leading-relaxed">
+        {post.data.description}
+      </p>
+    </header>
+
+    <div class="prose-custom font-sans text-base text-[var(--color-text-primary)] leading-relaxed">
+      <Content />
+    </div>
+
+    {post.data.tags.length > 0 && (
+      <footer class="mt-16 pt-8 border-t border-[var(--color-border-subtle)] flex gap-2 flex-wrap">
+        {post.data.tags.map((tag: string) => (
+          <a href={`/tag/${tag}/`} class="font-mono text-xs text-[var(--color-accent)] border border-[var(--color-accent)] px-2 py-1 lowercase hover:bg-[var(--color-accent)] hover:text-[var(--color-bg-canvas)] transition-colors">
+            {tag}
+          </a>
+        ))}
+      </footer>
+    )}
+  </article>
+</BaseLayout>

@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@contexter/shared/layouts/BaseLayout.astro";
+import { getCollection, getEntry } from "astro:content";
+import PostCard from "../components/PostCard.astro";
+
+const allPosts = await getCollection("posts", ({ data }) => !data.draft);
+const posts = allPosts.sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+
+// Resolve author names for display
+const postsWithAuthor = await Promise.all(
+  posts.map(async (post) => {
+    const author = await getEntry(post.data.author);
+    return { post, authorName: author?.data.name ?? "unknown" };
+  }),
+);
+
+const title = "blog — contexter";
+const description = "Technical writing on Contexter (RAG-as-a-service), contexter-vault, and AI infrastructure. Signed articles from nopoint.";
+const canonicalURL = "https://blog.contexter.cc/";
+---
+
+<BaseLayout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="max-w-[1280px] mx-auto px-6 py-24">
+    <header class="mb-16">
+      <h1 class="font-mono text-4xl text-[var(--color-text-primary)] lowercase mb-4">blog</h1>
+      <p class="font-sans text-base text-[var(--color-text-secondary)] max-w-2xl">
+        writing on contexter (rag-as-a-service), contexter-vault, and self-hosted ai infrastructure.
+      </p>
+    </header>
+
+    {postsWithAuthor.length === 0 ? (
+      <div class="border border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)] p-12 text-center">
+        <p class="font-mono text-sm text-[var(--color-text-tertiary)] lowercase">
+          no posts yet — first article lands soon
+        </p>
+      </div>
+    ) : (
+      <div class="grid gap-6">
+        {postsWithAuthor.map(({ post, authorName }) => (
+          <PostCard post={post} authorName={authorName} />
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>

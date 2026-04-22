@@ -1,0 +1,7 @@
+{
+  "name": "nopoint",
+  "slug": "nopoint",
+  "bio": "Solo developer building Contexter (RAG-as-a-service) and contexter-vault (local proxy that redacts secrets from Claude Code). Shipping AI infrastructure with a focus on self-hosted, auditable, MIT-licensed tooling.",
+  "github": "https://github.com/nopointt",
+  "website": "https://contexter.cc"
+}
