@@ -14,57 +14,71 @@ category: vault
 draft: false
 ---
 
-Claude Code is the best coding assistant I've used. It's also the one I trust least with my secrets.
+Claude Code is the best coding assistant I've used, and the one I rely on every day. This post is about why I still wrote a proxy to sit in front of it.
 
-Every message you type into Claude Code — every file you paste, every command it writes for you — gets sent to Anthropic as conversation context. That includes API keys you dropped in to debug a billing issue, database passwords you paste during a migration, seed phrases you share when asking for help with a wallet integration. Transcripts shared via `/feedback` are retained for up to five years. There is no built-in redaction.
+On April 17, 2026 I opened the contexter-vault repository and wrote the first commit. That same day, Claude Code asked whether my conversations could be used for training future models. I said yes. I still mean it: I want Anthropic's models to keep getting better, and I'm fine contributing my data to that goal, on my terms.
 
-I spent three months pretending this didn't matter, and then GitGuardian published the numbers.
+The "on my terms" part is what this post is about.
+
+My own API keys aren't the thing I lose sleep over. The thing I lose sleep over is client code.
+
+I do freelance work. The contracts I sign explicitly prohibit sharing the client codebase with third-party AI services. When a client asks me to debug a production bug, the transcript I paste into Claude Code is their codebase plus their tokens plus their logs plus whatever schema lives in the env file. If the `/feedback` button sends that transcript to Anthropic with a five-year retention window, I've just breached an NDA I signed three months ago. The client didn't consent. The client can't consent, because the client doesn't know Claude Code is in my workflow.
+
+So the question the training-data prompt really put to me was: do I trust the tool to know what's confidential?
+
+The honest answer is no. Not because Anthropic is adversarial. Because the tool has no mechanism to know. Confidentiality is a property of the data, not of the channel, and today nothing in the channel reads that property.
 
 ## the numbers
 
-The 2026 State of Secrets Sprawl report, published March 17 by Anna Nabiullina and Carole Winqwist at GitGuardian, found that Claude Code-assisted commits leak secrets to public GitHub at **3.2% of commits, versus a baseline of 1.5%**. That's roughly twice the rate.
+Two weeks after that prompt, GitGuardian published its 2026 State of Secrets Sprawl report (Anna Nabiullina and Carole Winqwist, March 17). Two numbers stopped me scrolling.
 
-The same report counted 28.65 million new hardcoded secrets on public GitHub in 2025 — a 34% jump year over year, the largest ever. AI-service credentials alone grew 81%. And in a detail that stopped me scrolling: 24,008 unique secrets were found in MCP configuration files specifically.
+Claude Code-assisted commits leak secrets to public GitHub at **3.2% of commits**, against a baseline of **1.5%** across all commits. Roughly twice the rate. The same report counted 28.65 million new hardcoded secrets on public GitHub in 2025, a 34% year-over-year jump, the largest ever recorded. AI-service credentials alone grew 81%. And in one detail I keep thinking about, 24,008 unique secrets were embedded in MCP configuration files.
 
-This is not about negligence. It's about the flow of information. When you paste an error log that happens to contain a token, or ask Claude to "fix this function" from a file that has inline credentials, the secret leaves your machine the same way any other prompt content does. The tool has no visibility into what's sensitive and what isn't. You have to strip it yourself. Most people don't.
+This isn't about negligence. It's about the flow of information. When you paste an error log that happens to contain a token, or ask Claude to "fix this function" from a file with inline credentials, the secret leaves your machine the same way any other prompt content does. The tool has no visibility into what's sensitive. You strip it yourself. Most people don't.
 
-Two weeks before that report, Check Point Research published CVE-2026-21852. Attackers had started dropping malicious `.claude/settings.json` files into repos, setting `ANTHROPIC_BASE_URL` to a server they controlled. When a developer trusted the folder and opened it in Claude Code, the API keys — along with the first few prompts — went to the attacker instead of Anthropic. Anthropic patched the trust flow quickly. But the bigger attack surface, the secrets embedded in prompt content itself, remained.
+Two weeks before that report, Check Point Research published CVE-2026-21852. Attackers had started dropping malicious `.claude/settings.json` files into public repos, setting `ANTHROPIC_BASE_URL` to a server they controlled. When a developer trusted the folder and opened it in Claude Code, the API keys (along with the first few prompts) went to the attacker instead of Anthropic. Anthropic patched the trust flow quickly. The larger surface, the secrets embedded in prompt content itself, remained.
 
-Both of these problems share a root cause: prompts are trusted as opaque text when they should be treated as untrusted structured data.
+Both problems share a root cause: prompts are trusted as opaque text when they should be treated as untrusted structured data.
 
 ## what contexter-vault does
 
-`contexter-vault` is a local HTTP proxy, written in TypeScript on Bun, that sits between Claude Code and `api.anthropic.com`. Claude Code already supports an `ANTHROPIC_BASE_URL` environment variable — it's the documented integration point for enterprise LLM gateways like Portkey, LiteLLM, and Nexus. The proxy uses that same env var, but points it at `127.0.0.1:9277` instead.
+`contexter-vault` is a local HTTP proxy, written in TypeScript on Bun, that sits between Claude Code and `api.anthropic.com`. Claude Code already supports an `ANTHROPIC_BASE_URL` environment variable: it's the documented integration point for enterprise LLM gateways like Portkey, LiteLLM, and Nexus. The proxy uses that same env var, pointed at `127.0.0.1:9277`.
 
-Once installed, the flow looks like this:
+The flow:
 
-1. Claude Code sends a request to `127.0.0.1:9277` (which it thinks is the Anthropic API).
-2. The proxy scans the outbound body for secret values — API keys, tokens, seed phrases — by comparing against a local AES-256-GCM encrypted vault and applying format-aware regex patterns.
+1. Claude Code sends a request to `127.0.0.1:9277`, thinking it's the Anthropic API.
+2. The proxy scans the outbound body for secret values (API keys, tokens, seed phrases, client credentials) by comparing against a local AES-256-GCM encrypted vault and applying format-aware regex patterns.
 3. Matches are replaced with `<<VAULT:name>>` placeholders. The redacted body is forwarded to `api.anthropic.com`.
-4. Anthropic responds with a streaming SSE response. The proxy scans chunks on the way back, applying the same redaction to any values that might have leaked through.
-5. When Claude later calls a tool that uses a placeholder — for example, generating a `curl` command with `<<VAULT:stripe-key>>` — a `PreToolUse` hook substitutes the real value at execution time. The command runs locally with the correct credential, but the transcript stored at Anthropic only ever contains the placeholder.
+4. Anthropic returns a streaming SSE response. The proxy scans chunks on the way back, applying the same redaction to any values that might have leaked through.
+5. When Claude later calls a tool that uses a placeholder (for example, generating a `curl` command with `<<VAULT:stripe-key>>`), a `PreToolUse` hook substitutes the real value at execution time. The command runs locally with the correct credential, but the transcript stored at Anthropic only ever contains the placeholder.
 
 Nothing about this is clever. It's a proxy with two scan passes and a substitution hook. The value is that it's boring, small, auditable, and runs entirely on your machine.
 
 ## why a separate tool
 
-The obvious question on HN was "why not just use mitmproxy?" A fair challenge. mitmproxy is more flexible and more mature. But:
+The obvious question: why not use mitmproxy?
+
+A fair challenge. mitmproxy is more flexible and more mature. The tradeoffs:
 
 - mitmproxy requires installing a root CA in the system trust store. That's a long-term machine change for a narrow use case.
 - You write your own scripts for each application. Setup is hours.
-- The vault schema, the `<<VAULT:name>>` round-trip, the hook integration — all would need to be built on top.
+- The vault schema, the `<<VAULT:name>>` round-trip, and the hook integration all need to be built on top.
 
-`contexter-vault` is 500 lines of TypeScript. The vault is a single AES-256-GCM encrypted file. There is no certificate mess because Claude Code speaks plain HTTP to localhost once you set the base URL. Install takes thirty seconds.
+`contexter-vault` is 500 lines of TypeScript. The vault is a single AES-256-GCM encrypted file. There's no certificate mess, because Claude Code speaks plain HTTP to localhost once you set the base URL. Install takes thirty seconds.
 
-## the self-sovereign framing
+## what it covers and what it doesn't
 
-Vitalik Buterin published a post on April 2, 2026 about his "self-sovereign / local / private / secure LLM setup." He runs Qwen3.5:35B fully locally on a 5090 and uses bubblewrap for sandboxing. I loved the post and can't replicate it — I need the reasoning depth of Claude 3.x+ for my actual work, and local models (at least the ones that fit in my hardware budget) aren't there yet.
+I'm going to be explicit about scope, because it matters especially for the NDA case.
 
-contexter-vault is the compromise: for those of us who use cloud APIs because we have to, it gives a local-first guarantee on the network boundary. Your secrets stay on your machine. The key stays on your machine. The vault file stays on your machine. Anthropic sees redacted prompts, and Anthropic's terms of service are untouched — `ANTHROPIC_BASE_URL` is their own documented integration path.
+**What the vault covers.** Every value you register in the vault never leaves your machine. Client API keys, database credentials, production tokens, private endpoint URLs, internal hostnames, seed phrases, webhook secrets, anything you run `contexter-vault add` on. For the credential half of most client contracts, this is the hard boundary you need. If your contract says "do not share production credentials with third parties," the vault turns that sentence into a runtime guarantee.
+
+**What the vault does not cover.** Arbitrary prose or business logic you paste into a Claude conversation. If your NDA forbids showing any source file at all to a third-party AI service, the vault doesn't change that, and you should run a local model instead. Vitalik Buterin's April 2, 2026 post on a self-sovereign LLM setup (Qwen3.5:35B on a 5090 with bubblewrap) is the right reference for that threat model. I can't replicate it yet, because I need the reasoning depth of Claude 3.x+ for my actual work, and local models at my hardware budget aren't there yet.
+
+`contexter-vault` is the compromise for everyone who uses cloud models out of necessity. One specific network boundary, one strict guarantee: the values you marked as secret never leave your machine. Your key stays on your machine. The vault file stays on your machine. Anthropic sees redacted prompts, and Anthropic's terms of service are untouched, since `ANTHROPIC_BASE_URL` is their own documented integration path.
 
 ## what's next
 
-v0.3 will add Claude Desktop support via HTTPS MITM (documented pattern, using the same system-level trust that enterprise proxies already rely on). v0.4 targets cross-machine vault sync through encrypted blobs on user-controlled storage. v0.5 adds multi-profile vaults for people juggling work and personal secrets.
+v0.3 will add Claude Desktop support via HTTPS MITM, using the same system-level trust model that enterprise proxies already rely on. v0.4 targets cross-machine vault sync through encrypted blobs on user-controlled storage. v0.5 adds multi-profile vaults for people juggling work secrets, personal secrets, and per-project scopes.
 
 **Source:** https://github.com/nopointt/contexter-vault  
 **npm:** `contexter-vault`  
