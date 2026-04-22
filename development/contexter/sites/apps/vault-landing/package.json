@@ -19,7 +19,9 @@
     "@astrojs/mdx": "^4",
     "@astrojs/sitemap": "^3",
     "@astrojs/solid-js": "^5",
+    "@resvg/resvg-js": "^2",
     "@tailwindcss/vite": "^4",
+    "satori": "^0.10",
     "tailwindcss": "^4",
     "typescript": "^5.9"
   }

@@ -22,6 +22,25 @@ const canonicalURL = "https://blog.contexter.cc/";
 ---
 
 <BaseLayout title={title} description={description} canonicalURL={canonicalURL}>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "contexter blog",
+    url: "https://blog.contexter.cc/",
+    description: "Technical writing on Contexter (RAG-as-a-service), contexter-vault, and self-hosted AI infrastructure.",
+    publisher: {
+      "@type": "Organization",
+      name: "contexter",
+      url: "https://contexter.cc",
+    },
+    blogPost: postsWithAuthor.map(({ post, authorName }) => ({
+      "@type": "BlogPosting",
+      headline: post.data.title,
+      url: `https://blog.contexter.cc/${post.slug}/`,
+      datePublished: post.data.pubDate.toISOString(),
+      author: { "@type": "Person", name: authorName },
+    })),
+  }, null, 2)} />
   <div class="max-w-[1280px] mx-auto px-6 py-24">
     <header class="mb-16">
       <h1 class="font-mono text-4xl text-[var(--color-text-primary)] lowercase mb-4">blog</h1>

@@ -13,6 +13,28 @@ const canonicalURL = "https://vault.contexter.cc/";
 ---
 
 <BaseLayout title={title} description={description} canonicalURL={canonicalURL}>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "contexter-vault",
+    description: "Local proxy that redacts secrets from Claude Code before they leave your machine.",
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "macOS, Linux, Windows",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    softwareVersion: "0.2.0",
+    license: "https://opensource.org/licenses/MIT",
+    url: "https://vault.contexter.cc/",
+    sameAs: ["https://github.com/nopointt/contexter-vault", "https://www.npmjs.com/package/contexter-vault"],
+    author: {
+      "@type": "Person",
+      name: "nopoint",
+      url: "https://github.com/nopointt",
+    },
+  }, null, 2)} />
   <Hero />
   <HowItWorks />
   <Features />

@@ -26,8 +26,31 @@ const pubDateFormatted = post.data.pubDate.toLocaleDateString("en-US", {
   title={`${post.data.title} — contexter blog`}
   description={post.data.description}
   canonicalURL={canonicalURL}
+  ogImage={`https://blog.contexter.cc/og/${post.slug}.png`}
 >
   <article class="max-w-[800px] mx-auto px-6 py-24">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: post.data.title,
+      description: post.data.description,
+      datePublished: post.data.pubDate.toISOString(),
+      dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
+      author: {
+        "@type": "Person",
+        name: author?.data.name ?? "contexter",
+        url: author?.data.website ?? author?.data.github,
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "contexter",
+        url: "https://contexter.cc",
+      },
+      image: `https://blog.contexter.cc/og/${post.slug}.png`,
+      url: canonicalURL,
+      mainEntityOfPage: canonicalURL,
+      keywords: post.data.tags.join(", "),
+    }, null, 2)} />
     <header class="mb-12 pb-8 border-b border-[var(--color-border-subtle)]">
       <div class="flex items-center gap-4 mb-4">
         <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-[var(--color-text-tertiary)]">
