@@ -1,0 +1,14 @@
+{
+  "name": "contexter-sites",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "build:vault": "bun run -C apps/vault-landing build",
+    "build:blog": "bun run -C apps/blog build",
+    "dev:vault": "bun run -C apps/vault-landing dev",
+    "dev:blog": "bun run -C apps/blog dev",
+    "check": "bun run -C packages/shared check"
+  }
+}

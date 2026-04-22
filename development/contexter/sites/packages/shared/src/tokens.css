@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+/*
+ * Contexter Shared Tokens
+ * Light palette mirrors contexter/landing/src/index.css @theme exactly.
+ * Dark palette per D-CTX14-07.
+ * Self-hosted WOFF2 via @font-face below (no CDN).
+ */
+
+/* === Inter 400/500/700 Latin + Cyrillic === */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/inter-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/inter-cyrillic-400-normal.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/inter-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/inter-cyrillic-500-normal.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/inter-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/inter-cyrillic-700-normal.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* === JetBrains Mono 400/500/700 Latin + Cyrillic === */
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/jetbrains-mono-cyrillic-400-normal.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/jetbrains-mono-cyrillic-500-normal.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/jetbrains-mono-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/jetbrains-mono-cyrillic-700-normal.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* === LIGHT PALETTE (default, mirrored from contexter/landing/src/index.css) === */
+@theme {
+  --color-black: #0A0A0A;
+  --color-white: #FAFAFA;
+  --color-accent: #1E3EA0;
+  --color-text-primary: #0A0A0A;
+  --color-text-secondary: #333333;
+  --color-text-tertiary: #666666;
+  --color-text-disabled: #999999;
+  --color-bg-canvas: #FAFAFA;
+  --color-bg-surface: #F2F2F2;
+  --color-bg-elevated: #E5E5E5;
+  --color-bg-pressed: #D9D9D9;
+  --color-border-subtle: #E5E5E5;
+  --color-border-default: #CCCCCC;
+  --color-border-strong: #808080;
+  --color-interactive-hover: #F2F2F2;
+  --color-interactive-pressed: #D9D9D9;
+  --color-signal-error: #D32F2F;
+  --color-signal-success: #2E7D32;
+  --color-signal-warning: #F2C200;
+  --color-signal-info: #1E3EA0;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 32px;
+  --spacing-8: 40px;
+  --spacing-9: 48px;
+  --spacing-10: 64px;
+  --spacing-11: 80px;
+  --spacing-12: 96px;
+  --duration-instant: 80ms;
+  --duration-fast: 150ms;
+  --duration-standard: 250ms;
+  --duration-deliberate: 400ms;
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-change: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === Tailwind 4 class-based dark variant === */
+@variant dark (.dark &);
+
+/* === DARK PALETTE (override when .dark class present on <html>) === */
+.dark {
+  --color-accent: #F5F501;
+  --color-text-primary: #FAFAFA;
+  --color-text-secondary: #CCCCCC;
+  --color-text-tertiary: #999999;
+  --color-text-disabled: #666666;
+  --color-bg-canvas: #333333;
+  --color-bg-surface: #404040;
+  --color-bg-elevated: #4D4D4D;
+  --color-bg-pressed: #595959;
+  --color-border-subtle: #4D4D4D;
+  --color-border-default: #595959;
+  --color-border-strong: #808080;
+  --color-interactive-hover: #404040;
+  --color-interactive-pressed: #595959;
+  --color-signal-error: #FF6B6B;
+  --color-signal-success: #66BB6A;
+  --color-signal-warning: #FFB300;
+  --color-signal-info: #F5F501;
+}
+
+/* === Base reset — 0px corners everywhere (design system rule) === */
+@layer base {
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 0;
+  }
+  html {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-text-primary);
+    background: var(--color-bg-canvas);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    min-height: 100vh;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-bg-canvas);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@contexter/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles": "./src/tokens.css",
+    "./layouts/*": "./src/layouts/*",
+    "./components/*": "./src/components/*",
+    "./fonts/*": "./src/fonts/*"
+  },
+  "devDependencies": {
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "astro": "^5",
+    "solid-js": "^1.9",
+    "tailwindcss": "^4"
+  },
+  "scripts": {
+    "check": "tsc --noEmit"
+  }
+}

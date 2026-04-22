@@ -1,0 +1,17 @@
+---
+import ThemeToggle from "./ThemeToggle";
+---
+
+<header class="border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-canvas)]">
+  <div class="max-w-[1280px] mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-mono text-base font-medium text-[var(--color-accent)] lowercase">
+      contexter
+    </a>
+    <nav class="flex items-center gap-6">
+      <a href="https://vault.contexter.cc" class="font-mono text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] lowercase">vault</a>
+      <a href="https://blog.contexter.cc" class="font-mono text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] lowercase">blog</a>
+      <a href="https://github.com/nopointt/contexter-vault" class="font-mono text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] lowercase">github</a>
+      <ThemeToggle client:load />
+    </nav>
+  </div>
+</header>
