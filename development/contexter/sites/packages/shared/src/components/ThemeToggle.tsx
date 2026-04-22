@@ -1,4 +1,4 @@
-import { createSignal, onMount } from "solid-js";
+import { createSignal, onMount, onCleanup } from "solid-js";
 import { type ThemeMode, readStoredTheme, writeStoredTheme, applyTheme, cycleTheme } from "../lib/theme";
 
 export default function ThemeToggle() {
@@ -15,6 +15,7 @@ export default function ThemeToggle() {
       if (mode() === "system") applyTheme("system");
     };
     mq.addEventListener("change", listener);
+    onCleanup(() => mq.removeEventListener("change", listener));
   });
 
   const handleClick = () => {
