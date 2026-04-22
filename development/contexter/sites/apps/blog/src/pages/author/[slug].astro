@@ -1,0 +1,77 @@
+---
+import BaseLayout from "@contexter/shared/layouts/BaseLayout.astro";
+import { getCollection, getEntry } from "astro:content";
+import PostCard from "../../components/PostCard.astro";
+
+export async function getStaticPaths() {
+  const authors = await getCollection("authors");
+  return authors.map((author) => ({
+    params: { slug: author.data.slug },
+    props: { author },
+  }));
+}
+
+const { author } = Astro.props;
+
+const allPosts = await getCollection("posts", ({ data }) => !data.draft);
+const authorPosts = allPosts.filter((post) => {
+  const ref = post.data.author;
+  return ref.id === author.id;
+});
+
+const sorted = [...authorPosts].sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+
+const postsWithAuthor = sorted.map((post) => ({
+  post,
+  authorName: author.data.name,
+}));
+
+const title = `${author.data.name} — contexter blog`;
+const description = `Posts by ${author.data.name} on the contexter blog. ${author.data.bio}`;
+const canonicalURL = `https://blog.contexter.cc/author/${author.data.slug}/`;
+---
+
+<BaseLayout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="max-w-[1280px] mx-auto px-6 py-24">
+    <header class="mb-12 pb-8 border-b border-[var(--color-border-subtle)]">
+      <a href="/" class="font-mono text-xs text-[var(--color-text-tertiary)] lowercase hover:text-[var(--color-text-secondary)] mb-4 inline-block">
+        ← all posts
+      </a>
+      <h1 class="font-mono text-3xl text-[var(--color-text-primary)] lowercase mb-4">
+        {author.data.name}
+      </h1>
+      <p class="font-sans text-base text-[var(--color-text-secondary)] leading-relaxed max-w-2xl mb-4">
+        {author.data.bio}
+      </p>
+      <div class="flex gap-4 flex-wrap">
+        {author.data.github && (
+          <a href={author.data.github} target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-[var(--color-accent)] lowercase hover:opacity-80">
+            github ↗
+          </a>
+        )}
+        {author.data.twitter && (
+          <a href={`https://twitter.com/${author.data.twitter.replace(/^@/, "")}`} target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-[var(--color-accent)] lowercase hover:opacity-80">
+            twitter ↗
+          </a>
+        )}
+        {author.data.website && (
+          <a href={author.data.website} target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-[var(--color-accent)] lowercase hover:opacity-80">
+            website ↗
+          </a>
+        )}
+      </div>
+    </header>
+
+    {postsWithAuthor.length === 0 ? (
+      <p class="font-mono text-sm text-[var(--color-text-tertiary)] lowercase">no posts yet</p>
+    ) : (
+      <div class="grid gap-6">
+        {postsWithAuthor.map(({ post, authorName }) => (
+          <PostCard post={post} authorName={authorName} />
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>

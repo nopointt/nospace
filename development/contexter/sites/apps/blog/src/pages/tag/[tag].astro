@@ -1,0 +1,58 @@
+---
+import BaseLayout from "@contexter/shared/layouts/BaseLayout.astro";
+import { getCollection, getEntry } from "astro:content";
+import PostCard from "../../components/PostCard.astro";
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts", ({ data }) => !data.draft);
+  const tags = new Set<string>();
+  allPosts.forEach((post) => post.data.tags.forEach((t) => tags.add(t)));
+
+  return Array.from(tags).map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: allPosts.filter((p) => p.data.tags.includes(tag)),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+
+const sorted = [...posts].sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+
+const postsWithAuthor = await Promise.all(
+  sorted.map(async (post) => {
+    const author = await getEntry(post.data.author);
+    return { post, authorName: author?.data.name ?? "unknown" };
+  }),
+);
+
+const title = `tag: ${tag} — contexter blog`;
+const description = `All posts tagged "${tag}" on the contexter blog.`;
+const canonicalURL = `https://blog.contexter.cc/tag/${tag}/`;
+---
+
+<BaseLayout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="max-w-[1280px] mx-auto px-6 py-24">
+    <header class="mb-12">
+      <a href="/" class="font-mono text-xs text-[var(--color-text-tertiary)] lowercase hover:text-[var(--color-text-secondary)] mb-4 inline-block">
+        ← all posts
+      </a>
+      <h1 class="font-mono text-3xl text-[var(--color-text-primary)] lowercase">
+        tag: <span class="text-[var(--color-accent)]">{tag}</span>
+      </h1>
+      <p class="font-sans text-sm text-[var(--color-text-secondary)] mt-2">
+        {posts.length} {posts.length === 1 ? "post" : "posts"}
+      </p>
+    </header>
+
+    <div class="grid gap-6">
+      {postsWithAuthor.map(({ post, authorName }) => (
+        <PostCard post={post} authorName={authorName} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

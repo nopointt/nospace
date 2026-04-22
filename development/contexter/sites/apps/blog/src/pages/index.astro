@@ -4,7 +4,7 @@ import { getCollection, getEntry } from "astro:content";
 import PostCard from "../components/PostCard.astro";
 
 const allPosts = await getCollection("posts", ({ data }) => !data.draft);
-const posts = allPosts.sort(
+const posts = [...allPosts].sort(
   (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
 );
 
