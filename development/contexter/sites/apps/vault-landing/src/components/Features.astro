@@ -1,0 +1,34 @@
+---
+const features = [
+  {
+    title: "NDA-first design",
+    body: "Every value you register in the vault is covered by a hard network boundary. If your freelance contracts prohibit sharing client production credentials with third-party AI services, the vault turns that clause into a runtime guarantee.",
+  },
+  {
+    title: "Zero runtime dependencies",
+    body: "500 lines of TypeScript on Bun. node:crypto for AES-256-GCM. No npm install magic, no supply-chain surface. Auditable in one evening.",
+  },
+  {
+    title: "AES-256-GCM local vault",
+    body: "Your master key never leaves your machine. No cloud account, no sync service, no telemetry. The vault file is a single encrypted blob at ~/.contexter-vault/vault.enc.",
+  },
+  {
+    title: "Works transparently",
+    body: "Uses the documented ANTHROPIC_BASE_URL env var. Same integration pattern as enterprise LLM gateways (Portkey, LiteLLM, Nexus). Claude Code sees only placeholders; tool execution gets real values locally.",
+  },
+];
+---
+
+<section class="border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]">
+  <div class="max-w-[1280px] mx-auto px-6 py-20">
+    <h2 class="font-mono text-2xl text-[var(--color-text-primary)] lowercase mb-12">features</h2>
+    <div class="grid md:grid-cols-2 gap-8">
+      {features.map((f) => (
+        <div class="border border-[var(--color-border-subtle)] bg-[var(--color-bg-canvas)] p-6">
+          <h3 class="font-mono text-base text-[var(--color-accent)] lowercase mb-3">{f.title}</h3>
+          <p class="font-sans text-sm text-[var(--color-text-secondary)] leading-relaxed">{f.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

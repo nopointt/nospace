@@ -1,0 +1,29 @@
+---
+import CopyButton from "./islands/CopyButton";
+---
+
+<section class="border-b border-[var(--color-border-subtle)]">
+  <div class="max-w-[1280px] mx-auto px-6 py-24">
+    <span class="font-mono text-xs text-[var(--color-text-tertiary)] lowercase">open source · mit</span>
+    <h1 class="font-mono text-5xl md:text-6xl text-[var(--color-accent)] lowercase mt-4 mb-6 leading-tight">
+      contexter-vault
+    </h1>
+    <p class="font-sans text-xl text-[var(--color-text-secondary)] mb-4 max-w-3xl">
+      redact secrets from Claude Code before they leave your machine
+    </p>
+    <p class="font-sans text-base text-[var(--color-text-tertiary)] mb-8 max-w-3xl leading-relaxed">
+      Local proxy that intercepts every Claude Code request, swaps your API keys and client credentials for <code class="font-mono text-[var(--color-text-secondary)]">&lt;&lt;VAULT:name&gt;&gt;</code> placeholders, and substitutes real values back only at tool execution time. AES-256-GCM local vault. Zero runtime dependencies. Open source MIT.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 items-start">
+      <CopyButton client:load text="npm install -g contexter-vault" variant="primary" />
+      <a
+        href="https://github.com/nopointt/contexter-vault"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-mono text-sm border border-[var(--color-accent)] text-[var(--color-accent)] px-5 py-3 hover:bg-[var(--color-accent)] hover:text-[var(--color-bg-canvas)] transition-colors lowercase"
+      >
+        view on github &rarr;
+      </a>
+    </div>
+  </div>
+</section>

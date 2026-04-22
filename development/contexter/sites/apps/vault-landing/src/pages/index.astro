@@ -1,22 +1,22 @@
 ---
 import BaseLayout from "@contexter/shared/layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import HowItWorks from "../components/HowItWorks.astro";
+import Features from "../components/Features.astro";
+import Comparison from "../components/Comparison.astro";
+import FAQ from "../components/FAQ.astro";
+import InstallCTA from "../components/InstallCTA.astro";
 
 const title = "contexter-vault — redact secrets from Claude Code";
 const description = "Local proxy that redacts API keys, tokens, and client credentials from Claude Code conversations before they leave your machine. Open source, zero dependencies, MIT.";
 const canonicalURL = "https://vault.contexter.cc/";
 ---
 
-<BaseLayout
-  title={title}
-  description={description}
-  canonicalURL={canonicalURL}
->
-  <div class="max-w-[1280px] mx-auto px-6 py-24 text-center">
-    <h1 class="font-mono text-3xl text-[var(--color-text-primary)] lowercase mb-4">
-      contexter-vault
-    </h1>
-    <p class="font-sans text-base text-[var(--color-text-secondary)]">
-      landing page coming in p3
-    </p>
-  </div>
+<BaseLayout title={title} description={description} canonicalURL={canonicalURL}>
+  <Hero />
+  <HowItWorks />
+  <Features />
+  <Comparison />
+  <FAQ />
+  <InstallCTA />
 </BaseLayout>

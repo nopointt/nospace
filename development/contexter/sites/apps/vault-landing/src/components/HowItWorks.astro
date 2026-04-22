@@ -1,0 +1,31 @@
+---
+const steps = [
+  {
+    cmd: "contexter-vault init",
+    desc: "Creates AES-256-GCM vault at ~/.contexter-vault/, registers Claude Code hooks, sets ANTHROPIC_BASE_URL=http://127.0.0.1:9277",
+  },
+  {
+    cmd: "contexter-vault add stripe-key",
+    desc: "Encrypts your secret into the vault, returns <<VAULT:stripe-key>> placeholder. The value never touches your shell history, git, or prompt context.",
+  },
+  {
+    cmd: "claude chat",
+    desc: "Proxy redacts placeholder values in every outbound request. Tools substitute real values only at execution time. Anthropic never sees the raw secret.",
+  },
+];
+---
+
+<section class="border-b border-[var(--color-border-subtle)]">
+  <div class="max-w-[1280px] mx-auto px-6 py-20">
+    <h2 class="font-mono text-2xl text-[var(--color-text-primary)] lowercase mb-12">how it works</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      {steps.map((step, idx) => (
+        <div class="flex flex-col">
+          <span class="font-mono text-sm text-[var(--color-accent)] bg-[var(--color-bg-surface)] w-8 h-8 flex items-center justify-center mb-4">{idx + 1}</span>
+          <code class="font-mono text-sm text-[var(--color-text-primary)] bg-[var(--color-bg-surface)] px-3 py-2 mb-4 break-all">{step.cmd}</code>
+          <p class="font-sans text-sm text-[var(--color-text-secondary)] leading-relaxed">{step.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+---
+import faq from "../content/faq.json";
+---
+
+<section class="border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-surface)]">
+  <div class="max-w-[1280px] mx-auto px-6 py-20">
+    <h2 class="font-mono text-2xl text-[var(--color-text-primary)] lowercase mb-12">faq</h2>
+    <div class="space-y-6">
+      {faq.map((item) => (
+        <details class="border border-[var(--color-border-subtle)] bg-[var(--color-bg-canvas)] p-6 group">
+          <summary class="font-mono text-base text-[var(--color-text-primary)] cursor-pointer list-none flex justify-between items-center">
+            <span class="lowercase">{item.question}</span>
+            <span class="font-mono text-sm text-[var(--color-accent)] group-open:rotate-45 transition-transform">+</span>
+          </summary>
+          <p class="font-sans text-sm text-[var(--color-text-secondary)] leading-relaxed mt-4">{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

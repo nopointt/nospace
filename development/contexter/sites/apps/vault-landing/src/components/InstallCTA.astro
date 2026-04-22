@@ -1,0 +1,19 @@
+---
+import CopyButton from "./islands/CopyButton";
+---
+
+<section class="bg-[#F5F501]">
+  <div class="max-w-[1280px] mx-auto px-6 py-20 text-center">
+    <h2 class="font-mono text-4xl text-[#333333] lowercase mb-4">ship it</h2>
+    <p class="font-sans text-lg text-[#333333] mb-10 opacity-80">30 seconds from install to redaction</p>
+    <div class="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
+      <div class="flex-1">
+        <CopyButton client:visible text="npm install -g contexter-vault" variant="inline" />
+      </div>
+      <div class="flex-1">
+        <CopyButton client:visible text="contexter-vault init && contexter-vault start" variant="inline" />
+      </div>
+    </div>
+    <p class="font-mono text-xs text-[#333333] opacity-60 mt-8 lowercase">requires bun ≥1.0 · tested on macos, linux, windows</p>
+  </div>
+</section>

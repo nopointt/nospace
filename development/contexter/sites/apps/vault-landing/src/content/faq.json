@@ -1,0 +1,26 @@
+[
+  {
+    "question": "Will Anthropic ban me for using this?",
+    "answer": "No. ANTHROPIC_BASE_URL is an officially documented env var for LLM gateway setups. All auth headers forwarded unchanged. Usage attributable to your Anthropic account."
+  },
+  {
+    "question": "What's the performance overhead?",
+    "answer": "Negligible. Proxy adds under 5ms per request. Streaming throughput unchanged."
+  },
+  {
+    "question": "How is this different from dotenv?",
+    "answer": "dotenv loads secrets into your shell environment where any process can read them. The vault keeps secrets encrypted at rest, redacts them from network traffic, and substitutes them only at tool-execution time."
+  },
+  {
+    "question": "Does it work with Claude Desktop app?",
+    "answer": "Not in v0.2. v0.3 planned with HTTPS MITM + self-signed CA."
+  },
+  {
+    "question": "What if I leak the vault file?",
+    "answer": "The file is AES-256-GCM encrypted. The key lives separately at ~/.contexter-vault/vault.key. Both are needed to decrypt. Use disk encryption as your outer layer."
+  },
+  {
+    "question": "Is this replacing Claude Code itself?",
+    "answer": "No. The proxy sits between Claude Code and the Anthropic API. Transparent. Claude Code behaves exactly as before."
+  }
+]

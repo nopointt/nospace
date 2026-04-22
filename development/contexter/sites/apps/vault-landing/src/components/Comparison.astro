@@ -1,0 +1,39 @@
+---
+const rows = [
+  ["Secrets redacted from prompts", "✓", "✗", "needs custom script"],
+  ["Zero-config install", "✓", "✓", "✗ (root CA + per-app scripts)"],
+  ["Anthropic ToS clean", "✓", "✓", "ambiguous"],
+  ["Works with Claude Code CLI", "✓", "partial (strip manually)", "✓"],
+  ["Works with Claude Desktop", "planned v0.3", "✗", "✓"],
+  ["Local AES-256-GCM vault", "✓", "✗", "✗"],
+  ["Open source MIT", "✓", "n/a", "✓ (BSD-3)"],
+];
+---
+
+<section class="border-b border-[var(--color-border-subtle)]">
+  <div class="max-w-[1280px] mx-auto px-6 py-20">
+    <h2 class="font-mono text-2xl text-[var(--color-text-primary)] lowercase mb-12">how it compares</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full font-mono text-sm border-collapse">
+        <thead>
+          <tr class="border-b border-[var(--color-border-default)]">
+            <th class="text-left font-medium text-[var(--color-text-primary)] py-3 pr-6 lowercase">feature</th>
+            <th class="text-left font-medium text-[var(--color-accent)] py-3 pr-6 lowercase">contexter-vault</th>
+            <th class="text-left font-medium text-[var(--color-text-secondary)] py-3 pr-6 lowercase">raw env var</th>
+            <th class="text-left font-medium text-[var(--color-text-secondary)] py-3 lowercase">mitmproxy</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr class="border-b border-[var(--color-border-subtle)]">
+              <td class="py-3 pr-6 text-[var(--color-text-primary)]">{row[0]}</td>
+              <td class="py-3 pr-6 text-[var(--color-accent)]">{row[1]}</td>
+              <td class="py-3 pr-6 text-[var(--color-text-tertiary)]">{row[2]}</td>
+              <td class="py-3 text-[var(--color-text-tertiary)]">{row[3]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
