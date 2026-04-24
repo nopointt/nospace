@@ -41,3 +41,5 @@
 | 2026-04-13 | contexter | CLOSE | 241 | ctx-13-reddit-gtm | contexter-current.md |
 | 2026-04-16 | contexter | CLOSE | 243 | contexter-reddit-gtm | contexter-current.md |
 | 2026-04-17 | contexter | CLOSE | 244 | contexter-analytics | contexter-current.md |
+| 2026-04-23 | contexter | CHECKPOINT | 246 | gtm-01-omnipresence-epic | contexter-current.md |
+| 2026-04-24 | contexter | CLOSE | 248 | gtm-01-omnipresence-epic | contexter-current.md |
