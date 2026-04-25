@@ -181,3 +181,46 @@ Autonomous mode active for GTM-01 (declared session 5, J3 hard safeguards in for
 - Skill files (`~/.claude/skills/morningDigest/SKILL.md` + `eveningDigest`) автоматически появляются в available skills list — system reminder подтвердил после Write.
 - Russian word inflation в bullet format ~10-15% (не 30%) — token budget для Russian не нужно massively expand vs English.
 - Проблема разрозненности 25.04 поста diagnosed: (1) нет meta-thesis в opener, (2) нет depth hierarchy, (3) нет closing valve. Все три solvable Layer 4 problems.
+<!-- ENTRY:2026-04-26:CLOSE:252:contexter:contexter-content-factory [AXIS] -->
+## 2026-04-26 — сессия 252 CLOSE [Axis]
+
+**Decisions (D-CTX15-01..11):**
+- D-CTX15-01 — Content production: ИИ-агент пишет → nopoint проверяет → публикует (гибрид).
+- D-CTX15-02 — Все 6 форматов статей: уроки / сравнения / понятийные / размышления / с данными / новостные рефлексии.
+- D-CTX15-03 — Источники тем: микс (дайджесты + ресерчи + интерес людей + поисковые сигналы).
+- D-CTX15-04 — Качество через готовую инфраструктуру: тон голоса (D-CONTENT-09/10/11), триангуляция, фактчекер, гуманизатор.
+- D-CTX15-05 — Не дублируем контент между платформами; на каждой — своя адаптация под аудиторию.
+- D-CTX15-06 — Без дедлайна. Свой темп.
+- D-CTX15-07 — Метрики уже есть (CTX-11), доработаем после старта.
+- D-CTX15-08 — Путь C для главной: Astro контентные страницы + перенос приложения на app.contexter.cc.
+- D-CTX15-09 — Боты ИИ — пускаем всех (training + retrieval).
+- D-CTX15-10 — Позиционирование сейчас не меняем (пока узко, потом на эмпирике).
+- D-CTX15-11 — Реддит трек как был, не сокращаем; станем мостом если у Антропик будут проблемы.
+
+**Files changed:**
+- 9 research файлов в `nospace/docs/research/` (SEED-1/2/3 + DEEP-A/B/C/D/E/G)
+- `nospace/development/contexter/memory/contexter-content-factory.md` — NEW L3 file для CTX-15
+- `nospace/development/contexter/content-factory/ideas/content-ideas-hub.md` — NEW хаб идей
+- `nospace/development/contexter/memory/contexter-about.md` — CTX-15 в Active L3 + Write Authority
+- `nospace/development/contexter/memory/contexter-roadmap.md` — CTX-15 в Epics table
+- `nospace/development/contexter/memory/STATE.md` — Phase + D-CTX15-01..11
+- `~/.tlos/axis-active` — переключён на CTX-15
+
+**Completed:**
+- 3 SEED исследования (SEO + AEO + Reddit/HN surfaces)
+- 4 DEEP исследования (technical foundation + llms.txt + keyword universe + editorial calendar + backlinks + lawsuit scenarios)
+- Регистрация эпика CTX-15 Content Factory полностью (L1 + L2 + L3 + STATE + хаб идей)
+- Все 7 research файлов прочитаны полностью per E6
+
+**Opened:**
+- Фаза 0 эпика CTX-15: расширение CTX-14 для главной + технический слой + базовый замер цитат ИИ
+- Фазы 1-4 ждут Фазы 0
+- DEEP-F снят — это execution через G3 pair, не research
+
+**Notes:**
+- Иск Реддит-Антропик: remand в state court (March 30, 2026), fact discovery до января 2027. Settlement A (55%) базовый сценарий.
+- DEEP-A нашёл: SSR блокер только для contexter.cc (SolidJS SPA). Vault и blog уже Astro и видны ИИ-ботам.
+- Big Tech threat для Контекстера: OpenAI/Google/Cloudflare File Search APIs — прямой удар. Differentiator: Claude/MCP-native + 308 forms + OAuth + цена.
+- Vault niche пуст; Infisical Agent Vault — research preview 22 апреля. Окно открыто.
+- 2 агента (DEEP-B, DEEP-G) нарушили правило сохранения файла. Сохранил из своего контекста.
+

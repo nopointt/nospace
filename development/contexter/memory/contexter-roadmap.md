@@ -24,6 +24,7 @@
 | **CTX-13** | **Reddit GTM — organic presence, warmup, directory submissions, launch posts** | **🔶 IN PROGRESS** | `contexter-reddit-gtm.md` |
 | **CTX-11** | **Analytics — PostHog EU + attribution + MCP telemetry + GoAccess + dashboards** | **🔶 IN PROGRESS (2026-04-17)** | `contexter-analytics.md` |
 | **CTX-14** | **Astro Blog + Vault Landing (vault.contexter.cc + blog.contexter.cc, dark theme, MDX, RSS)** | **🔶 IN PROGRESS** | `contexter-astro-blog.md` |
+| **CTX-15** | **Content Factory (массовый контент-конвейер: 2 дайджеста + 2-3 статьи/день, AI-черновик + nopoint review, без дедлайна)** | **🔶 IN PROGRESS (2026-04-26)** | `contexter-content-factory.md` |
 | CTX-05 | Benchmarks + Pricing + Billing | ⬜ PLANNED | — |
 | CTX-09 | UI/UX Polish (design system, responsive, a11y, pipeline indicator) | ✅ COMPLETE (2026-03-30) | `contexter-uiux-polish.md` |
 | CTX-06 | Production Migration (CF Workers → Hetzner) | ✅ CLOSED (2026-03-27) | `contexter-migration.md` |

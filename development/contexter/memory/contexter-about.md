@@ -225,6 +225,7 @@ Production data: ~756 users, ~744 documents, ~1281 chunks (as of 2026-03-30).
 | **CTX-12 Supporters Backend** | [contexter-supporters-backend.md](contexter-supporters-backend.md) | ✅ COMPLETE (2026-04-12, session 240 — all W1-W5 deployed) |
 | **CTX-13 Reddit GTM** | [contexter-reddit-gtm.md](contexter-reddit-gtm.md) | 🔶 IN PROGRESS (5-phase Reddit presence strategy) |
 | **CTX-11 Analytics** | [contexter-analytics.md](contexter-analytics.md) | 🔶 IN PROGRESS (2026-04-17 session 244, 6 waves, 19 MUST-HAVE MVI, NSM=WAU-A, W1-W3 BEFORE Reddit Phase 3) |
+| **CTX-15 Content Factory** | [contexter-content-factory.md](contexter-content-factory.md) | 🔶 IN PROGRESS (2026-04-26 session 252, planning phase, 5 фаз, daily 2 digests + 2-3 articles, AI-drafts + nopoint review) |
 
 ## Write Authority
 
@@ -237,6 +238,8 @@ Production data: ~756 users, ~744 documents, ~1281 chunks (as of 2026-03-30).
 | `memory/contexter-analytics.md` (L3, active) | Axis — CTX-11 Analytics epic |
 | `memory/contexter-reddit-gtm.md` (L3, active) | Axis — CTX-13 Reddit GTM epic |
 | `memory/contexter-supporters-backend.md` (L3, closed) | Axis — CTX-12 archive |
+| `memory/contexter-content-factory.md` (L3, active) | Axis — CTX-15 Content Factory epic |
+| `content-factory/ideas/content-ideas-hub.md` | Axis + nopoint — single hub for content ideas |
 | `memory/contexter-backlog.md` (L2.5) | Axis — product backlog (bugs, deferred, open-ended) |
 | `memory/chronicle/contexter-current.md` | Axis — append only |
 | `memory/chronicle/index.md` | Axis — append only |
