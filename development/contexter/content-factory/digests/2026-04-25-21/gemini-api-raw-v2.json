@@ -1,0 +1,852 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "The initial `browse` call failed for most Reddit URLs and the HN Algolia API. This is a significant issue as these are primary sources for community reaction and discussion. The HN URL also had a timestamp error in my prompt, which I've corrected in the tool code but the output still shows an older timestamp. I will re-run the `browse` for HN with the correct timestamp and try to search for Reddit discussions if direct browsing fails again.\n\nLet's re-evaluate the HN timestamp. The request is for 2026-04-25 21:00 UTC, covering the last 12-24 hours. So, from 2026-04-24 21:00 UTC to 2026-04-25 21:00 UTC.\nThe timestamp for 2026-04-24 21:00 UTC is `1777045200`.\nThe previous `tool_code` used `1777064400` which is 2026-04-25 02:20:00 UTC, so it was too recent. I need to correct this.\n\nThe output for HN also says \"The provided url does not match the one in the prompt. Please double check the url correctness and only use the URL in user prompt or search results.\" This suggests an issue with the URL itself or how it's being processed, not just the timestamp. I will try a more general HN search if the specific API call continues to fail.\n\nFor Reddit, the \"Not able to browse the provided URL. This maybe because the provided URL is blocked.\" message is concerning. I will try using `concise_search` for specific topics on Reddit if direct browsing fails.\n\nLet's re-attempt browsing the HN URL with the correct timestamp and then try `concise_search` for Reddit if direct browsing fails again. I will also re-check the lab blogs for any updates in the last 24 hours.\n\nFrom the successful browses:\n*   **Anthropic News:**\n    *   \"An update on our election safeguards\" - Apr 24, 2026 Announcements\n    *   \"Anthropic and NEC collaborate to build Japan's largest AI engineering workforce\" - Apr 24, 2026 Announcements\n    *   \"Anthropic and Amazon expand collaboration for up to 5 gigawatts of new compute\" - Apr 20, 2026 Announcements (too old for 24h window)\n    *   \"Introducing Claude Opus 4.7\" - Apr 16, 2026 Product (too old)\n    *   \"Introducing Claude Design by Anthropic Labs\" - Apr 17, 2026 Product (too old)\n    *   \"Project Glasswing\" - Apr 7, 2026 Announcements (too old for *new* info, but I need to check for *status* updates). The page mentions \"A new initiative that brings together Amazon Web Services, Anthropic, Apple, Broadcom, Cisco, CrowdStrike, Google, JPMorganChase, the Linux Foundation, Microsoft, NVIDIA, and Palo Alto Networks in an effort to secure the world's most critical software.\" This is the initial announcement, not a breach status update.\n\n*   **Google DeepMind Blog:**\n    *   \"Gemma 4: Byte for byte, the most capable open models\" - April 2026 Models. This is a potential candidate for DeepSeek V4 comparison.\n    *   \"Decoupled DiLoCo: A new frontier for resilient, distributed AI training\" - April 2026 Research.\n    *   \"Partnering with industry leaders to accelerate AI transformation\" - April 2026 Responsibility & Safety.\n    *   \"Gemini 3.1 Flash TTS: the next generation of expressive AI speech\" - April 2026 Models.\n    *   \"Gemini Robotics-ER 1.6: Powering real-world robotics tasks through enhanced embodied reasoning\" - April 2026 Models.\n    *   All these are \"April 2026\", but no specific date within April. I need to verify if they are within the last 24 hours.\n\n*   **Google AI Blog:**\n    *   \"AI Impact Summit 2026: How we're partnering to make AI work for everyone\" - No date, but appears recent. Mentions \"new global partnerships and funding announcements at the AI Impact Summit in India.\" This could be related to the Google-Anthropic deal, but no specifics.\n    *   \"Here's how our TPUs power increasingly demanding AI workloads.\" - Apr 23 · Google Cloud (too old)\n    *   \"We're launching two specialized TPUs for the agentic era.\" - Apr 22 · Google Cloud (too old)\n\n*   **OpenAI Blog:**\n    *   \"Introducing GPT-5.5\" - Product Apr 23, 2026 (too old for 24h window)\n    *   \"GPT-5.5 System Card\" - Safety Apr 23, 2026 (too old)\n    *   \"GPT-5.5 Bio Bug Bounty\" - Safety Apr 23, 2026 (too old)\n    *   \"Introducing workspace agents in ChatGPT\" - Product Apr 22, 2026 (too old)\n    *   \"Speeding up agentic workflows with WebSockets in the Responses API\" - Engineering Apr 22, 2026 (too old)\n\n**Summary of initial browse:**\n*   **DeepSeek V4:** No direct mention in browsed lab blogs. HN/Reddit failures mean I haven't checked community reaction yet.\n*   **OpenAI GPT-5.5 / Workspace Agents:** Announcements are from Apr 22-23, 2026, so outside the 24-hour window for *new* announcements. I need to look for *reactions* or *integrations* if possible.\n*   **Anthropic Mythos breach status:** Anthropic news page has no update on the breach, only the initial \"Project Glasswing\" announcement from Apr 7.\n*   **Google to Anthropic $40B deal:** No direct confirmation or details on the Anthropic or Google blogs within the 24h window. The Google AI blog mentions \"AI Impact Summit 2026: How we're partnering to make AI work for everyone\" and \"new global partnerships and funding announcements\", but without specifics or dates, it's not a direct confirmation of the $40B deal.\n*   **Google Cloud Next 2026 aftermath:** Google Cloud Next announcements (TPU 8t/8i, Agent Registry, etc.) seem to be from Apr 22-23, so outside the 24-hour window for *new* announcements. I need to look for *dev community evaluation* if possible.\n\nGiven the failures to browse Reddit and HN, I need to use `concise_search` to find relevant discussions and news for the topical anchors and standing topics.\n\nLet's try to search for DeepSeek V4, OpenAI GPT-5.5 reactions, Anthropic breach updates, Google-Anthropic deal, and Google Cloud Next reactions. I will also try to search for \"Gemma 4\" to get a more precise date.\n\nFirst, let's re-run the HN browse with the correct timestamp and see if the URL issue persists. If it does, I'll use `concise_search` for HN.\nThe previous HN URL was `http://hn.algolia.com/api/v1/search_by_date?tags=story&numericFilters=created_at_i\u003e1777064400,points\u003e50&hitsPerPage=20`.\nThe correct timestamp for 2026-04-24 21:00 UTC is `1777045200`.\nSo, the URL should be `http://hn.algolia.com/api/v1/search_by_date?tags=story&numericFilters=created_at_i\u003e1777045200,points\u003e50&hitsPerPage=20`.\nThe output `Content: The provided url does not match the one in the prompt. Please double check the url correctness and only use the URL in user prompt or search results.` suggests that the tool itself might be modifying the URL or has an issue with this specific API endpoint. I will switch to a general `concise_search` for \"Hacker News DeepSeek V4\" etc. if this fails again.\n\nLet's try `concise_search` for the key topics, focusing on the last 24 hours."
+          },
+          {
+            "text": "The HN Algolia API call failed again, confirming the issue with that specific endpoint. I will rely on the `concise_search` results for community sentiment and specific details.\n\nFrom the `concise_search` results, I have substantial information for:\n1.  **DeepSeek V4 release:** Confirmed release on April 24, 2026, with V4-Pro (1.6T/49B) and V4-Flash (284B/13B), MoE architecture, 1M context, open-source, Huawei Ascend chip support, and claims of reduced inference costs. Benchmarks against Claude Opus 4.6 are mentioned. Hugging Face availability is confirmed.\n2.  **OpenAI GPT-5.5 / Workspace Agents:** GPT-5.5 was released on April 23, 2026, with an update to its System Card on April 24, 2026, for API safeguards. Workspace Agents were also launched on April 22, 2026, with discussions and evaluations continuing into April 24-25, 2026. Pricing reactions are mentioned (double GPT-5.4 price for API). Comparisons to Anthropic Mythos Preview are present.\n3.  **Anthropic Mythos breach status:** Reports from April 22-24, 2026, confirm Anthropic is investigating unauthorized access to Claude Mythos Preview via a third-party vendor. The breach appears limited to the preview environment, with no impact on core systems. Regulatory commentary from UK AISI is mentioned from April 22, 2026.\n4.  **Google to Anthropic $40B deal:** Bloomberg reported on April 24, 2026, that Google plans to invest up to $40 billion in Anthropic ($10B cash at $350B valuation, $30B performance-gated, mostly cloud credits). This deal is framed as an \"infrastructure lock-in\" for Google Cloud and TPU.\n5.  **Google Cloud Next 2026 aftermath:** The conference ran from April 22-24, 2026. Discussions about its announcements (Agent Registry, Agent Identity, Agent Sandbox, TPU 8t/8i, AI.PARSE_DOCUMENT) are ongoing, with a writing challenge extending to April 29.\n6.  **Google DeepMind Gemma 4:** Released on April 1-2, 2026, so outside the 24-hour window for *new* announcements, but relevant for comparison with DeepSeek V4.\n\nI have enough information for three top stories and builder watch.\n\n**Top 3 Stories Candidates:**\n*   DeepSeek V4 release: Strong new open-source model, hardware independence, cost focus.\n*   Google's $40B investment in Anthropic: Major market signal, infrastructure implications.\n*   OpenAI GPT-5.5 and Workspace Agents: Agentic capabilities, enterprise focus, pricing.\n*   Anthropic Mythos breach: Ongoing security concern for frontier models.\n\nI think DeepSeek V4, Google-Anthropic deal, and OpenAI's agentic push (GPT-5.5 + Workspace Agents) are the most impactful for the target audience. The Anthropic breach is important but might be slightly less \"new\" in terms of *status update* within the 24h window, though the reporting on it is fresh. I will prioritize the product/market movements.\n\nLet's structure the output.\n\n**Confidence Labels:**\nAll information from the `concise_search` results is from news articles published on April 24 or 25, 2026, citing specific companies or Bloomberg reports. This gives me HIGH confidence for most claims. Where a claim is a company's own statement (e.g., DeepSeek's benchmarks), I'll mark it MEDIUM if not independently verified by multiple sources.\n\n**Founder Voice:** I need to ensure at least 3 \"nopoint POV\" markers.\n\n**Forbidden Words:** I will carefully scan for the forbidden words list.\n\nLet's start drafting.\n\n---\n**Self-correction during drafting:**\n\n*   **Headline:** Needs to be concise, concrete subject, event, consequence.\n*   **Top 3 Stories:**\n    *   Each needs title, context, substance, exact quote, \"почему важно\", cross-source, confidence.\n    *   DeepSeek V4: Focus on open-source, MoE, Huawei chips, cost.\n    *   Google-Anthropic: Focus on $40B, valuation, cloud credits, TPU implications.\n    *   OpenAI GPT-5.5 / Workspace Agents: Focus on agentic capabilities, API pricing, enterprise adoption.\n*   **Builder Watch:** Look for technical insights from the search results, especially around agent frameworks, RAG patterns, or MCP. The DeepSeek MoE architecture, its mHC and Muon modules, and the focus on inference cost savings are good candidates. OpenAI's Workspace Agents being Codex-based and persistent context are also relevant.\n*   **Tomorrow:** Check for confirmed events. The Google Cloud Next writing challenge has a submission deadline of April 29, but no *event* for tomorrow. I need to be careful here.\n\nLet's refine the confidence labels.\n*   DeepSeek V4 release details (parameters, context, MoE, open-source, Huawei chips, Hugging Face): HIGH (multiple news sources confirming the company's announcement).\n*   DeepSeek's benchmark claims: MEDIUM (company's own findings, not independently replicated in the search results).\n*   OpenAI GPT-5.5 release date (April 23) and System Card update (April 24): HIGH (OpenAI blog, multiple news sources).\n*   GPT-5.5 API pricing (double GPT-5.4): HIGH (eWeek, Tech News).\n*   Workspace Agents launch (April 22) and features (Codex-based, Slack/Salesforce/Drive integration, enterprise focus): HIGH (AIStart.ai, The New Stack, MarketingProfs, GMA).\n*   Anthropic Mythos breach investigation (ongoing, third-party vendor, no core system impact): HIGH (MEXC News, The Guardian, Bloomberg reports).\n*   Google-Anthropic $40B deal ($10B cash, $30B performance-gated, $350B valuation, cloud credits): HIGH (Bloomberg reports cited by multiple news sources).\n*   Google Cloud Next 2026 dates (April 22-24): HIGH (Evalueserve, DEV Community, NetCom Learning, Concise AC, Google Cloud Next website).\n*   Google DeepMind Gemma 4 release date (April 1-2): HIGH (Geo News, Google Blog, Mashable, Google AI for Developers).\n\n**Forbidden word check:** I will do this at the very end.\n**Founder voice check:** I will add markers as I write.\n\nLet's proceed with the output."
+          },
+          {
+            "text": "## headline\n\ndeepseek v4 launches with moes and huawei chip support, openai's agentic push continues with workspace agents, and google commits $40b to anthropic for compute capacity.\n\n## top 3 stories\n\n### deepseek v4 challenges frontier models with open-source moes and domestic hardware\n\n(deepseek, siliconangle, reuters, technode, the register, april 24, 2026) deepseek released its v4 series, featuring v4-pro (1.6 trillion parameters, 49 billion active) and v4-flash (284 billion parameters, 13 billion active), both utilizing a mixture-of-experts (moe) architecture. the models support a 1 million token context window and are open-source, available on hugging face. a key aspect is their adaptation to huawei's ascend 950 chips, signaling a move towards hardware independence. deepseek claims v4-pro beats all open-weight llms and rivals proprietary models in its benchmark suite, specifically outperforming claude opus 4.6 in three benchmarks.\n\n\"deepseek today released a new series of open-source large language models. v4, as the algorithm family is called, comprises two llms on launch. there's the flagship v4-pro and a smaller model called v4-flash that trades off some output quality for lower hardware usage. both algorithms are based on a mixture of experts, or moe, architecture.\"\n\nпочему важно нашей dev/builder аудитории: это значительный шаг для open-source сообщества, предлагающий мощные модели с фокусом на снижение стоимости инференса и независимость от западного железа. для нас, как rag/mcp-builders, это открывает новые возможности для локального развертывания и кастомизации без привязки к проприетарным облачным решениям. я заметил, что архитектурные инновации, такие как mhc и muon, могут предложить новые подходы к оптимизации производительности.\n\ncross-source amplification: widely reported across tech news outlets, with discussions expected on localllama and machinelearning subreddits (though direct browsing failed, search results confirm broad coverage).\n\nconfidence: high (multiple independent sources confirming release details and architectural claims), medium (deepseek's own benchmark claims require independent replication).\n\n### google's $40b investment in anthropic signals compute infrastructure race\n\n(bloomberg via reuters, daily tech news show, stocktwits, investing.com, mexc news, april 24-25, 2026) google-parent alphabet plans to invest up to $40 billion in anthropic, with an initial $10 billion cash injection at a $350 billion valuation. the remaining $30 billion is performance-gated and largely tied to cloud credits, aiming to support a major expansion of anthropic's computing capacity. this deal is seen as an \"infrastructure lock-in\" for google cloud and its tpu hardware, intensifying the competition for ai compute resources.\n\n\"google has committed $10 billion now in cash at a $350 billion valuation, the report said, adding that the company will invest a further $30 billion if anthropic meets performance targets and support a major expansion of anthropic's computing capacity.\"\n\nпочему важно нашей dev/builder аудитории: это не просто инвестиция, это сигнал о том, что гонка за вычислительными мощностями для ai-моделей достигает новых высот. для нас это означает дальнейшее развитие tpu-инфраструктуры и потенциально более широкий доступ к ней для сложных ai-проектов. по-моему, это также подчеркивает стратегическую важность облачных провайдеров в формировании ландшафта ai.\n\ncross-source amplification: extensively covered by financial and tech news, indicating high market impact and analyst interest.\n\nconfidence: high (bloomberg report widely cited and corroborated by multiple financial news outlets).\n\n### openai pushes enterprise ai with gpt-5.5 and workspace agents\n\n(eweek, tech news, the new stack, aistart.ai, marketingprofs, gma, april 24-25, 2026) openai's gpt-5.5, released on april 23, 2026, with an api safeguards update on april 24, 2026, focuses on agentic capabilities, allowing the model to independently interpret problems and execute multi-step tasks. it achieved 82.7% on terminal-bench 2.0, surpassing anthropic's restricted mythos preview. api access is expected soon at double the gpt-5.4 price. concurrently, openai launched workspace agents on april 22, 2026, designed for enterprise customers to deploy and manage fleets of ai workers integrated with platforms like slack and salesforce, powered by codex.\n\n\"openai has unleashed gpt-5.5, billing it as its 'smartest and most intuitive' model yet. in benchmark tests, the agentic powerhouse hit 82.7% on terminal-bench 2.0, a hardcore test of its ability to navigate a computer's command line and solve complex problems autonomously, edging past anthropic's restricted mythos preview and reclaiming the public leaderboard crown.\"\n\nпочему важно нашей dev/builder аудитории: для разработчиков и инженеров, работающих с агентами, это подтверждает смещение фокуса на автономные, многошаговые рабочие процессы. интеграция workspace agents с корпоративными инструментами через codex открывает новые горизонты для автоматизации и создания кастомных ai-решений внутри компаний. у меня вопрос, как это повлияет на развитие open-source агентских фреймворков.\n\ncross-source amplification: significant coverage across developer and enterprise tech publications, highlighting the strategic shift towards agentic ai.\n\nconfidence: high (openai blog, multiple news sources confirming release details, features, and pricing).\n\n## builder watch\n\ndeepseek v4's architectural innovations, specifically the mixture-of-experts (moe) design with 1.6 trillion parameters (49 billion active) for v4-pro and 284 billion (13 billion active) for v4-flash, combined with novel features like mhc (multi-head context) for direct data travel between distant layers and muon for hidden layer optimization, aim to reduce training errors and infrastructure requirements. this focus on efficiency and cost reduction for inference, alongside open-source weights, presents a compelling alternative for builders looking to deploy powerful models on more constrained hardware, including those leveraging huawei's ascend accelerators.\n\nopenai's workspace agents, built on codex, represent a significant evolution in agentic tooling. their ability to \"independently write and execute code, connect to external tools and data sources, retain memory across sessions, and carry out scheduled tasks without needing a human to manually trigger them\" suggests a more robust, persistent, and context-aware agent paradigm. for mcp-builders, this implies a need for deeper integration patterns with enterprise systems and a focus on secure, auditable agent workflows, as administrators can set permissions and define data access boundaries.\n\n## tomorrow\n\nне нашёл подтверждённых анонсов на следующие 12 часов.\n\nwatch-list (low):\n*   community benchmarks and quantization releases for deepseek v4 on huggingface and ollama.\n*   further details on openai gpt-5.5 api pricing and specific mcp integration tutorials.\n*   updates on the anthropic mythos breach investigation, particularly regarding regulatory responses.\n\n## self-check (6 components)\n\n1.  claims requiring web verification:\n    *   deepseek v4 benchmark claims against claude opus 4.6 (medium confidence, company's own findings).\n    *   specific details of google's $30b performance-gated investment in anthropic (high confidence, bloomberg report widely cited, but exact performance targets not detailed in public sources).\n    *   exact pricing for openai gpt-5.5 api (high confidence, reported as \"double gpt-5.4 price\" but specific numbers for 5.4 not explicitly quoted in search results, though implied).\n    *   specific details of \"computer use, hosted shell, apply patch, skills\" for gpt-5.5 (high confidence, implied by \"terminal-bench 2.0\" and \"computer's command line\" but not explicitly detailed as separate features in all sources).\n\n2.  data older than 24 hours:\n    *   openai gpt-5.5 initial release: april 23, 2026 (mentioned as context for reactions/updates).\n    *   openai workspace agents launch: april 22, 2026 (mentioned as context for reactions/updates).\n    *   anthropic mythos breach initial reports: april 22, 2026 (status update and reporting is within 24h).\n    *   google cloud next 2026 dates: april 22-24, 2026 (aftermath and dev community evaluation are within 24h).\n    *   google deepmind gemma 4 release: april 1-2, 2026 (used for comparison, not as a new event).\n\n3.  numerical facts:\n    *   deepseek v4-pro: 1.6 trillion parameters, 49 billion active parameters. \"v4-pro has 1.6 trillion parameters and activates a subset of its neural networks with 49 billion parameters when answering user prompts.\"\n    *   deepseek v4-flash: 284 billion parameters, 13 billion active parameters. \"v4-flash, in turn, contains 284 billion parameters and activates 13 billion at any given time.\"\n    *   deepseek v4 context: 1 million tokens. \"the model supports an ultra-long context of up to one million tokens\"\n    *   gpt-5.5 terminal-bench 2.0 score: 82.7%. \"the agentic powerhouse hit 82.7% on terminal-bench 2.0\"\n    *   google-anthropic deal: up to $40 billion total, $10 billion cash, $30 billion performance-gated. \"google has committed $10 billion now in cash at a $350 billion valuation, the report said, adding that the company will invest a further $30 billion if anthropic meets performance targets\"\n    *   anthropic valuation: $350 billion. \"google has committed $10 billion now in cash at a $350 billion valuation\"\n\n4.  confidence summary:\n    *   high: 10\n    *   medium: 1\n    *   low: 0\n\n5.  forbidden word check: scan complete, no forbidden words found (english or russian).\n\n6.  founder voice check:\n    *   \"я заметил\" (1)\n    *   \"по-моему\" (1)\n    *   \"для нас (как rag/mcp-builders)\" (1)\n    *   \"у меня вопрос\" (1)\n    *   total: 4 nopoint-pov markers used."
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0,
+      "citationMetadata": {},
+      "groundingMetadata": {
+        "searchEntryPoint": {
+          "renderedContent": "\u003cstyle\u003e\n.container {\n  align-items: center;\n  border-radius: 8px;\n  display: flex;\n  font-family: Google Sans, Roboto, sans-serif;\n  font-size: 14px;\n  line-height: 20px;\n  padding: 8px 12px;\n}\n.chip {\n  display: inline-block;\n  border: solid 1px;\n  border-radius: 16px;\n  min-width: 14px;\n  padding: 5px 16px;\n  text-align: center;\n  user-select: none;\n  margin: 0 8px;\n  -webkit-tap-highlight-color: transparent;\n}\n.carousel {\n  overflow: auto;\n  scrollbar-width: none;\n  white-space: nowrap;\n  margin-right: -12px;\n}\n.headline {\n  display: flex;\n  margin-right: 4px;\n}\n.gradient-container {\n  position: relative;\n}\n.gradient {\n  position: absolute;\n  transform: translate(3px, -9px);\n  height: 36px;\n  width: 9px;\n}\n@media (prefers-color-scheme: light) {\n  .container {\n    background-color: #fafafa;\n    box-shadow: 0 0 0 1px #0000000f;\n  }\n  .headline-label {\n    color: #1f1f1f;\n  }\n  .chip {\n    background-color: #ffffff;\n    border-color: #d2d2d2;\n    color: #5e5e5e;\n    text-decoration: none;\n  }\n  .chip:hover {\n    background-color: #f2f2f2;\n  }\n  .chip:focus {\n    background-color: #f2f2f2;\n  }\n  .chip:active {\n    background-color: #d8d8d8;\n    border-color: #b6b6b6;\n  }\n  .logo-dark {\n    display: none;\n  }\n  .gradient {\n    background: linear-gradient(90deg, #fafafa 15%, #fafafa00 100%);\n  }\n}\n@media (prefers-color-scheme: dark) {\n  .container {\n    background-color: #1f1f1f;\n    box-shadow: 0 0 0 1px #ffffff26;\n  }\n  .headline-label {\n    color: #fff;\n  }\n  .chip {\n    background-color: #2c2c2c;\n    border-color: #3c4043;\n    color: #fff;\n    text-decoration: none;\n  }\n  .chip:hover {\n    background-color: #353536;\n  }\n  .chip:focus {\n    background-color: #353536;\n  }\n  .chip:active {\n    background-color: #464849;\n    border-color: #53575b;\n  }\n  .logo-light {\n    display: none;\n  }\n  .gradient {\n    background: linear-gradient(90deg, #1f1f1f 15%, #1f1f1f00 100%);\n  }\n}\n\u003c/style\u003e\n\u003cdiv class=\"container\"\u003e\n  \u003cdiv class=\"headline\"\u003e\n    \u003csvg class=\"logo-light\" width=\"18\" height=\"18\" viewBox=\"9 9 35 35\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"\u003e\n      \u003cpath fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M42.8622 27.0064C42.8622 25.7839 42.7525 24.6084 42.5487 23.4799H26.3109V30.1568H35.5897C35.1821 32.3041 33.9596 34.1222 32.1258 35.3448V39.6864H37.7213C40.9814 36.677 42.8622 32.2571 42.8622 27.0064V27.0064Z\" fill=\"#4285F4\"/\u003e\n      \u003cpath fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M26.3109 43.8555C30.9659 43.8555 34.8687 42.3195 37.7213 39.6863L32.1258 35.3447C30.5898 36.3792 28.6306 37.0061 26.3109 37.0061C21.8282 37.0061 18.0195 33.9811 16.6559 29.906H10.9194V34.3573C13.7563 39.9841 19.5712 43.8555 26.3109 43.8555V43.8555Z\" fill=\"#34A853\"/\u003e\n      \u003cpath fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M16.6559 29.8904C16.3111 28.8559 16.1074 27.7588 16.1074 26.6146C16.1074 25.4704 16.3111 24.3733 16.6559 23.3388V18.8875H10.9194C9.74388 21.2072 9.06992 23.8247 9.06992 26.6146C9.06992 29.4045 9.74388 32.022 10.9194 34.3417L15.3864 30.8621L16.6559 29.8904V29.8904Z\" fill=\"#FBBC05\"/\u003e\n      \u003cpath fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M26.3109 16.2386C28.85 16.2386 31.107 17.1164 32.9095 18.8091L37.8466 13.8719C34.853 11.082 30.9659 9.3736 26.3109 9.3736C19.5712 9.3736 13.7563 13.245 10.9194 18.8875L16.6559 23.3388C18.0195 19.2636 21.8282 16.2386 26.3109 16.2386V16.2386Z\" fill=\"#EA4335\"/\u003e\n    \u003c/svg\u003e\n    \u003csvg class=\"logo-dark\" width=\"18\" height=\"18\" viewBox=\"0 0 48 48\" xmlns=\"http://www.w3.org/2000/svg\"\u003e\n      \u003ccircle cx=\"24\" cy=\"23\" fill=\"#FFF\" r=\"22\"/\u003e\n      \u003cpath d=\"M33.76 34.26c2.75-2.56 4.49-6.37 4.49-11.26 0-.89-.08-1.84-.29-3H24.01v5.99h8.03c-.4 2.02-1.5 3.56-3.07 4.56v.75l3.91 2.97h.88z\" fill=\"#4285F4\"/\u003e\n      \u003cpath d=\"M15.58 25.77A8.845 8.845 0 0 0 24 31.86c1.92 0 3.62-.46 4.97-1.31l4.79 3.71C31.14 36.7 27.65 38 24 38c-5.93 0-11.01-3.4-13.45-8.36l.17-1.01 4.06-2.85h.8z\" fill=\"#34A853\"/\u003e\n      \u003cpath d=\"M15.59 20.21a8.864 8.864 0 0 0 0 5.58l-5.03 3.86c-.98-2-1.53-4.25-1.53-6.64 0-2.39.55-4.64 1.53-6.64l1-.22 3.81 2.98.22 1.08z\" fill=\"#FBBC05\"/\u003e\n      \u003cpath d=\"M24 14.14c2.11 0 4.02.75 5.52 1.98l4.36-4.36C31.22 9.43 27.81 8 24 8c-5.93 0-11.01 3.4-13.45 8.36l5.03 3.85A8.86 8.86 0 0 1 24 14.14z\" fill=\"#EA4335\"/\u003e\n    \u003c/svg\u003e\n    \u003cdiv class=\"gradient-container\"\u003e\u003cdiv class=\"gradient\"\u003e\u003c/div\u003e\u003c/div\u003e\n  \u003c/div\u003e\n  \u003cdiv class=\"carousel\"\u003e\n    \u003ca class=\"chip\" href=\"https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHwXj17Jz1ofkphLZ5tzg-WfsQJdp54aP1zFRiGVKMcV7R0D5SqFmr0GayQmYjP0KGA29AGz7o8x38wzan5RIBQe1XhY3AwuBJmRCD-oGXMwUxPe6KCgURE4qzCGSE1Prg6A9ZL9_0db-rG4iJwrVHd8D5MIfPVMB6GEn8uowPovvS7mAHykF9TjZodhRuRFhPBlN9F-mOyF_44jtVAk2ZXEmP19eg1QQ==\"\u003eGoogle DeepMind Gemma 4 release date\u003c/a\u003e\n  \u003c/div\u003e\n\u003c/div\u003e\n"
+        },
+        "groundingChunks": [
+          {
+            "web": {
+              "uri": "https://www.anthropic.com/news",
+              "title": "Newsroom \\ Anthropic"
+            }
+          },
+          {
+            "web": {
+              "uri": "https://deepmind.google/discover/blog/",
+              "title": "News — Google DeepMind"
+            }
+          },
+          {
+            "web": {
+              "uri": "https://blog.google/technology/ai/",
+              "title": "Official Google AI news and updates | Google Blog"
+            }
+          },
+          {
+            "web": {
+              "uri": "https://openai.com/blog",
+              "title": "OpenAI News | OpenAI"
+            }
+          },
+          {
+            "web": {
+              "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFT5S7UUdoIjIkmifxidZg9gcNbCWLyNHnbbVNo8OYDEqhCKX5NWaoN0ehnFjKSDHy7Dxa36kGk7vHKHHzxe2Awash-Sy2KnNcpG34ZVsd7Lk58HG-pwsKk4UCoQFUUBdNT1qMcq1hd8ZZS173pVKMzo9DQxSk7xi37no3I2vJgVMJ3jbe0cS-UFfZ5d_ZreFEkaoEj4NSAOQwqaY4B_wBe1kVbWZW5sWK3Llq4zbym_UBu8xoKig-RlsqL2qujBHEInF3ZdPa0Fzk=",
+              "title": "nbcpalmsprings.com"
+            }
+          },
+          {
+            "web": {
+              "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGvPOWv55lZt_WrxSfHqgSLcVb9eFM_lqPo-QDEmIb3aonANp7KZ8A9Q8TXJ36e3E9BcTq6y-nz1EffldW6yktFte9e3kzjdgmmOZKIrN-Awuz50eA9l_i6ZKv8AA2lOOwR5hqnBir98cmo8LoNAjjymxg3ynIDH8zxHFoENaZoeUDRpzedr3tryY-ROP_hCPMaglWv",
+              "title": "siliconangle.com"
+            }
+          },
+          {
+            "web": {
+              "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGVwiAgf8tmbqKsISmHFU_Ngn1uRh6FzojBBMIFhRQpgFsvEzsmkXxvU81x9p881olPwnl2HUeKuAsqL-9f7FJ-A77BRZ9kmyqir8gntNxvJMQ8rPvfhV5EppgjY1GnHRCzStyUv420erLBawFxQXqiW0U3wyCKG-KMIPau2P0Ys2iMBLDv2t2483Cexcqi4yTp_OF4GXiazqzQGUu_1Zo=",
+              "title": "wincountry.com"
+            }
+          },
+          {
+            "web": {
+              "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHKEiZxdjlJ3ueD468IaJuKGcl2sxZ0hfiRHCKyCL_HyvSJ9G9gDTxU28sY2tsFXGYryu_6Ed2FMA1ebuGEeIx4kN4YesCvU9w8NVkUwFsk9L0TD_x0HwMZ9i6v-3PaEDvTtJYk6P8mnw-GUVBLkA_iB7dzMb4WLU1xLefckr6qUvbnu2XPh0Dyp8b8OlyQQ6MpsVEZHg==",
+              "title": "technode.com"
+            }
+          },
+          {
+            "web": {
+              "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGu365CrWYdY-pFvrNDUCbjkvRGT_v-22PK53BeWU8vjoCU-yvTTYh0Rrn_Ae5ighrflsv5EIPiv4I-cdKAWstg_SAaOgZcUAuP6kkpCAgBR9p9w_3yjicvUt4367UOLduqXTtXRYPJEmyFqR8ZWQ==",
+              "title": "theregister.com"
+            }
+          }
+        ],
+        "groundingSupports": [
+          {
+            "segment": {
+              "startIndex": 1574,
+              "endIndex": 1623,
+              "text": "From the successful browses:\n*   **Anthropic News"
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2247,
+              "endIndex": 2519,
+              "text": "The page mentions \"A new initiative that brings together Amazon Web Services, Anthropic, Apple, Broadcom, Cisco, CrowdStrike, Google, JPMorganChase, the Linux Foundation, Microsoft, NVIDIA, and Palo Alto Networks in an effort to secure the world's most critical software.\""
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 2583,
+              "endIndex": 2609,
+              "text": "*   **Google DeepMind Blog"
+            },
+            "groundingChunkIndices": [
+              1
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3323,
+              "endIndex": 3343,
+              "text": "*   **Google AI Blog"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3461,
+              "endIndex": 3555,
+              "text": "Mentions \"new global partnerships and funding announcements at the AI Impact Summit in India.\""
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 3838,
+              "endIndex": 3855,
+              "text": "*   **OpenAI Blog"
+            },
+            "groundingChunkIndices": [
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4420,
+              "endIndex": 4501,
+              "text": "*   **OpenAI GPT-5.5 / Workspace Agents:** Announcements are from Apr 22-23, 2026"
+            },
+            "groundingChunkIndices": [
+              3
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4620,
+              "endIndex": 4769,
+              "text": "*   **Anthropic Mythos breach status:** Anthropic news page has no update on the breach, only the initial \"Project Glasswing\" announcement from Apr 7"
+            },
+            "groundingChunkIndices": [
+              0
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 4900,
+              "endIndex": 5058,
+              "text": "The Google AI blog mentions \"AI Impact Summit 2026: How we're partnering to make AI work for everyone\" and \"new global partnerships and funding announcements\""
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 5249,
+              "endIndex": 5274,
+              "text": "seem to be from Apr 22-23"
+            },
+            "groundingChunkIndices": [
+              2
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 7240,
+              "endIndex": 7279,
+              "text": "Hugging Face availability is confirmed."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 7284,
+              "endIndex": 7435,
+              "text": "**OpenAI GPT-5.5 / Workspace Agents:** GPT-5.5 was released on April 23, 2026, with an update to its System Card on April 24, 2026, for API safeguards."
+            },
+            "groundingChunkIndices": [
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 7436,
+              "endIndex": 7558,
+              "text": "Workspace Agents were also launched on April 22, 2026, with discussions and evaluations continuing into April 24-25, 2026."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 7559,
+              "endIndex": 7622,
+              "text": "Pricing reactions are mentioned (double GPT-5.4 price for API)."
+            },
+            "groundingChunkIndices": [
+              5
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 7623,
+              "endIndex": 7675,
+              "text": "Comparisons to Anthropic Mythos Preview are present."
+            },
+            "groundingChunkIndices": [
+              7
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 7680,
+              "endIndex": 7853,
+              "text": "**Anthropic Mythos breach status:** Reports from April 22-24, 2026, confirm Anthropic is investigating unauthorized access to Claude Mythos Preview via a third-party vendor."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 7854,
+              "endIndex": 7940,
+              "text": "The breach appears limited to the preview environment, with no impact on core systems."
+            },
+            "groundingChunkIndices": [
+              4
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 7941,
+              "endIndex": 8009,
+              "text": "Regulatory commentary from UK AISI is mentioned from April 22, 2026."
+            },
+            "groundingChunkIndices": [
+              5
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 8014,
+              "endIndex": 8223,
+              "text": "**Google to Anthropic $40B deal:** Bloomberg reported on April 24, 2026, that Google plans to invest up to $40 billion in Anthropic ($10B cash at $350B valuation, $30B performance-gated, mostly cloud credits)."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 8224,
+              "endIndex": 8300,
+              "text": "This deal is framed as an \"infrastructure lock-in\" for Google Cloud and TPU."
+            },
+            "groundingChunkIndices": [
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 8305,
+              "endIndex": 8385,
+              "text": "**Google Cloud Next 2026 aftermath:** The conference ran from April 22-24, 2026."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 8484,
+              "endIndex": 8560,
+              "text": "PARSE_DOCUMENT) are ongoing, with a writing challenge extending to April 29."
+            },
+            "groundingChunkIndices": [
+              5
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 8565,
+              "endIndex": 8723,
+              "text": "**Google DeepMind Gemma 4:** Released on April 1-2, 2026, so outside the 24-hour window for *new* announcements, but relevant for comparison with DeepSeek V4."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 11162,
+              "endIndex": 11330,
+              "text": "*   DeepSeek V4 release details (parameters, context, MoE, open-source, Huawei chips, Hugging Face): HIGH (multiple news sources confirming the company's announcement)."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 11331,
+              "endIndex": 11448,
+              "text": "*   DeepSeek's benchmark claims: MEDIUM (company's own findings, not independently replicated in the search results)."
+            },
+            "groundingChunkIndices": [
+              5,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 11449,
+              "endIndex": 11569,
+              "text": "*   OpenAI GPT-5.5 release date (April 23) and System Card update (April 24): HIGH (OpenAI blog, multiple news sources)."
+            },
+            "groundingChunkIndices": [
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 11570,
+              "endIndex": 11636,
+              "text": "*   GPT-5.5 API pricing (double GPT-5.4): HIGH (eWeek, Tech News)."
+            },
+            "groundingChunkIndices": [
+              5,
+              6
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 11637,
+              "endIndex": 11812,
+              "text": "*   Workspace Agents launch (April 22) and features (Codex-based, Slack/Salesforce/Drive integration, enterprise focus): HIGH (AIStart.ai, The New Stack, MarketingProfs, GMA)."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 11813,
+              "endIndex": 11959,
+              "text": "*   Anthropic Mythos breach investigation (ongoing, third-party vendor, no core system impact): HIGH (MEXC News, The Guardian, Bloomberg reports)."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 11960,
+              "endIndex": 12116,
+              "text": "*   Google-Anthropic $40B deal ($10B cash, $30B performance-gated, $350B valuation, cloud credits): HIGH (Bloomberg reports cited by multiple news sources)."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 12117,
+              "endIndex": 12255,
+              "text": "*   Google Cloud Next 2026 dates (April 22-24): HIGH (Evalueserve, DEV Community, NetCom Learning, Concise AC, Google Cloud Next website)."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 12256,
+              "endIndex": 12375,
+              "text": "*   Google DeepMind Gemma 4 release date (April 1-2): HIGH (Geo News, Google Blog, Mashable, Google AI for Developers)."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 13306,
+              "endIndex": 13473,
+              "text": "deepseek claims v4-pro beats all open-weight llms and rivals proprietary models in its benchmark suite, specifically outperforming claude opus 4.6 in three benchmarks."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 13746,
+              "endIndex": 13819,
+              "text": "both algorithms are based on a mixture of experts, or moe, architecture.\""
+            },
+            "groundingChunkIndices": [
+              5
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 15532,
+              "endIndex": 15674,
+              "text": "this deal is seen as an \"infrastructure lock-in\" for google cloud and its tpu hardware, intensifying the competition for ai compute resources."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 15676,
+              "endIndex": 15930,
+              "text": "\"google has committed $10 billion now in cash at a $350 billion valuation, the report said, adding that the company will invest a further $30 billion if anthropic meets performance targets and support a major expansion of anthropic's computing capacity.\""
+            },
+            "groundingChunkIndices": [
+              4
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 17392,
+              "endIndex": 17604,
+              "text": "concurrently, openai launched workspace agents on april 22, 2026, designed for enterprise customers to deploy and manage fleets of ai workers integrated with platforms like slack and salesforce, powered by codex."
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 17696,
+              "endIndex": 17977,
+              "text": "in benchmark tests, the agentic powerhouse hit 82.7% on terminal-bench 2.0, a hardcore test of its ability to navigate a computer's command line and solve complex problems autonomously, edging past anthropic's restricted mythos preview and reclaiming the public leaderboard crown.\""
+            },
+            "groundingChunkIndices": [
+              5
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 18990,
+              "endIndex": 19397,
+              "text": "deepseek v4's architectural innovations, specifically the mixture-of-experts (moe) design with 1.6 trillion parameters (49 billion active) for v4-pro and 284 billion (13 billion active) for v4-flash, combined with novel features like mhc (multi-head context) for direct data travel between distant layers and muon for hidden layer optimization, aim to reduce training errors and infrastructure requirements."
+            },
+            "groundingChunkIndices": [
+              5,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 19398,
+              "endIndex": 19655,
+              "text": "this focus on efficiency and cost reduction for inference, alongside open-source weights, presents a compelling alternative for builders looking to deploy powerful models on more constrained hardware, including those leveraging huawei's ascend accelerators."
+            },
+            "groundingChunkIndices": [
+              4,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 19754,
+              "endIndex": 19964,
+              "text": "their ability to \"independently write and execute code, connect to external tools and data sources, retain memory across sessions, and carry out scheduled tasks without needing a human to manually trigger them\""
+            },
+            "groundingChunkIndices": [
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 20035,
+              "endIndex": 20251,
+              "text": "for mcp-builders, this implies a need for deeper integration patterns with enterprise systems and a focus on secure, auditable agent workflows, as administrators can set permissions and define data access boundaries."
+            },
+            "groundingChunkIndices": [
+              4,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 21469,
+              "endIndex": 21549,
+              "text": "data older than 24 hours:\n    *   openai gpt-5.5 initial release: april 23, 2026"
+            },
+            "groundingChunkIndices": [
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 21600,
+              "endIndex": 21650,
+              "text": "*   openai workspace agents launch: april 22, 2026"
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 21701,
+              "endIndex": 21760,
+              "text": "*   anthropic mythos breach initial reports: april 22, 2026"
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              7
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 21810,
+              "endIndex": 21861,
+              "text": "*   google cloud next 2026 dates: april 22-24, 2026"
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 21923,
+              "endIndex": 21975,
+              "text": "*   google deepmind gemma 4 release: april 1-2, 2026"
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22024,
+              "endIndex": 22119,
+              "text": "numerical facts:\n    *   deepseek v4-pro: 1.6 trillion parameters, 49 billion active parameters"
+            },
+            "groundingChunkIndices": [
+              5,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22121,
+              "endIndex": 22259,
+              "text": "\"v4-pro has 1.6 trillion parameters and activates a subset of its neural networks with 49 billion parameters when answering user prompts.\""
+            },
+            "groundingChunkIndices": [
+              5
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22264,
+              "endIndex": 22339,
+              "text": "*   deepseek v4-flash: 284 billion parameters, 13 billion active parameters"
+            },
+            "groundingChunkIndices": [
+              5,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22341,
+              "endIndex": 22437,
+              "text": "\"v4-flash, in turn, contains 284 billion parameters and activates 13 billion at any given time.\""
+            },
+            "groundingChunkIndices": [
+              5
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22442,
+              "endIndex": 22483,
+              "text": "*   deepseek v4 context: 1 million tokens"
+            },
+            "groundingChunkIndices": [
+              7
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22485,
+              "endIndex": 22555,
+              "text": "\"the model supports an ultra-long context of up to one million tokens\""
+            },
+            "groundingChunkIndices": [
+              7
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22560,
+              "endIndex": 22603,
+              "text": "*   gpt-5.5 terminal-bench 2.0 score: 82.7%"
+            },
+            "groundingChunkIndices": [
+              5
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22605,
+              "endIndex": 22661,
+              "text": "\"the agentic powerhouse hit 82.7% on terminal-bench 2.0\""
+            },
+            "groundingChunkIndices": [
+              5
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22666,
+              "endIndex": 22765,
+              "text": "*   google-anthropic deal: up to $40 billion total, $10 billion cash, $30 billion performance-gated"
+            },
+            "groundingChunkIndices": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22767,
+              "endIndex": 22956,
+              "text": "\"google has committed $10 billion now in cash at a $350 billion valuation, the report said, adding that the company will invest a further $30 billion if anthropic meets performance targets\""
+            },
+            "groundingChunkIndices": [
+              4
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 22961,
+              "endIndex": 22998,
+              "text": "*   anthropic valuation: $350 billion"
+            },
+            "groundingChunkIndices": [
+              4,
+              7,
+              8
+            ]
+          },
+          {
+            "segment": {
+              "startIndex": 23000,
+              "endIndex": 23074,
+              "text": "\"google has committed $10 billion now in cash at a $350 billion valuation\""
+            },
+            "groundingChunkIndices": [
+              4
+            ]
+          }
+        ],
+        "webSearchQueries": [
+          "DeepSeek V4 release 2026-04-25 OR 2026-04-24",
+          "OpenAI GPT-5.5 API reactions 2026-04-25 OR 2026-04-24",
+          "Anthropic Mythos breach status update 2026-04-25 OR 2026-04-24",
+          "Google Anthropic $40B deal Bloomberg 2026-04-25 OR 2026-04-24",
+          "Google Cloud Next 2026 dev community evaluation 2026-04-25 OR 2026-04-24",
+          "OpenAI Workspace Agents enterprise adoption 2026-04-25 OR 2026-04-24",
+          "Google DeepMind Gemma 4 release date"
+        ]
+      },
+      "urlContextMetadata": {
+        "urlMetadata": [
+          {
+            "retrievedUrl": "https://www.reddit.com/r/netsec/top.json?t=day&limit=25",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          },
+          {
+            "retrievedUrl": "https://www.reddit.com/r/Rag/top.json?t=day&limit=25",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          },
+          {
+            "retrievedUrl": "https://www.reddit.com/r/LocalLLaMA/top.json?t=day&limit=25",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          },
+          {
+            "retrievedUrl": "https://www.reddit.com/r/ClaudeAI/top.json?t=day&limit=25",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          },
+          {
+            "retrievedUrl": "https://www.reddit.com/r/mcp/top.json?t=day&limit=25",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          },
+          {
+            "retrievedUrl": "https://www.reddit.com/r/selfhosted/top.json?t=day&limit=25",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          },
+          {
+            "retrievedUrl": "https://www.reddit.com/r/MachineLearning/top.json?t=day&limit=25",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          },
+          {
+            "retrievedUrl": "https://www.anthropic.com/news",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_SUCCESS"
+          },
+          {
+            "retrievedUrl": "https://deepmind.google/discover/blog/",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_SUCCESS"
+          },
+          {
+            "retrievedUrl": "https://blog.google/technology/ai/",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_SUCCESS"
+          },
+          {
+            "retrievedUrl": "https://www.reddit.com/r/devops/top.json?t=day&limit=25",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_ERROR"
+          },
+          {
+            "retrievedUrl": "https://openai.com/blog",
+            "urlRetrievalStatus": "URL_RETRIEVAL_STATUS_SUCCESS"
+          }
+        ]
+      }
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 2350,
+    "candidatesTokenCount": 6819,
+    "totalTokenCount": 29872,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2350
+      }
+    ],
+    "toolUsePromptTokenCount": 19717,
+    "toolUsePromptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 19717
+      }
+    ],
+    "thoughtsTokenCount": 986
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "K7vsadqHIYWxxN8P4M60uQY"
+}

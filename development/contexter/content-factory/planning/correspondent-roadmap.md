@@ -1,0 +1,859 @@
+# Correspondent Roadmap — Contexter Content Factory
+> Status: planning · 2026-04-25
+> Owner: Axis (Orchestrator) · Production: Sonnet correspondents under general-purpose harness
+> Pipeline parent: `nospace/development/contexter/content-factory/`
+
+## Architecture overview
+
+```
+Layer 0 — Sources (open APIs + RSS + scrape)
+   |
+   v
+Layer 1 — Correspondents (8 specialized scout agents)
+   ├── HN Correspondent           (✓ shipped)
+   ├── Reddit Correspondent       (✓ shipped)
+   ├── GitHub Correspondent       (planned, P1)
+   ├── ArXiv Correspondent        (planned, P1)
+   ├── Hugging Face Correspondent (planned, P1)
+   ├── Dev.to Correspondent       (planned, P2)
+   ├── Lab Blogs Correspondent    (planned, P2 — Anthropic + OpenAI + Google combined OR separate per user)
+   └── Telegram Correspondent     (planned, P3 — special architecture)
+   |
+   v
+Layer 2 — Synthesis (Gemini API or Deep Research API)
+   ├── Free tier: gemini-2.5-flash + url_context
+   ├── Paid tier: gemini-3-flash-preview (Pro at Flash price)
+   └── Hands-off: deep-research-preview-04-2026 (Interactions API)
+   |
+   v
+Layer 3 — Editorial (Claude Code as Orchestrator)
+   ├── Fact-check via WebSearch
+   ├── Voice cleanup (Bauhaus rules)
+   ├── Founder POV injection (nopoint)
+   └── Forbidden word strip
+   |
+   v
+Layer 4 — Distribution (master + 10 platform snippets)
+   └── See Workspace 02 in Pencil content-factory v1
+```
+
+## Correspondent priority order
+
+P1 (next wave — 4 parallel research SEEDs):
+1. GitHub Correspondent
+2. ArXiv Correspondent
+3. Hugging Face Correspondent
+4. Dev.to Correspondent
+
+P2 (after P1):
+5. Anthropic Correspondent
+6. OpenAI Correspondent
+7. Google AI Correspondent
+
+P3 (special architecture):
+8. Telegram Correspondent
+
+---
+
+## 1. GitHub Correspondent
+
+### Mission
+Daily intelligence on shipped code in our 8 core topics: RAG, MCP, LLM tooling, AI infra, agent frameworks, AI security, dev productivity, self-hosted OSS.
+
+### Sources / APIs
+
+**REST API** (api.github.com) — token-authenticated, 5000 req/h free:
+- `/search/repositories?q=<keywords>+language:typescript+pushed:>2026-04-24&sort=stars&order=desc`
+- `/search/repositories?q=topic:mcp+pushed:>2026-04-24`
+- `/repos/{owner}/{repo}/releases` — release feed for tracked repos
+- `/repos/{owner}/{repo}/commits` — recent commit activity
+- `/users/{user}/events/public` — public activity for known builder accounts
+- `/repos/{owner}/{repo}/security-advisories` — security disclosures
+
+**GraphQL API** (api.github.com/graphql) — better for batch queries:
+- Trending detection via star velocity (stars per hour over last 24h)
+- Multi-repo release sweep in one query
+- Watcher count + fork delta
+
+**Trending page (no API, scrape):**
+- `github.com/trending/typescript?since=daily`
+- `github.com/trending/python?since=daily`
+- `github.com/trending/rust?since=daily`
+- `github.com/trending?since=daily` (all languages)
+
+**Topic feeds:**
+- `github.com/topics/mcp`
+- `github.com/topics/rag`
+- `github.com/topics/claude`
+- `github.com/topics/llm`
+- `github.com/topics/ai-agent`
+- `github.com/topics/vector-database`
+
+**Awesome lists watch:**
+- `awesome-claude-code` releases
+- `awesome-mcp-servers` recent commits
+- `awesome-selfhosted` PR activity
+
+### Tracked repositories whitelist (P1 list, expandable)
+
+**Frontier model + tooling:**
+- `anthropics/claude-code`
+- `modelcontextprotocol/specification` (MCP spec changes)
+- `modelcontextprotocol/servers` (official server impls)
+- `modelcontextprotocol/python-sdk`, `modelcontextprotocol/typescript-sdk`
+- `openai/codex`
+- `openai/openai-python`, `openai/openai-node`
+- `anthropic-ai/anthropic-sdk-python`, `anthropic-ai/anthropic-sdk-typescript`
+
+**RAG / retrieval:**
+- `langchain-ai/langchain`, `langchain-ai/langgraph`
+- `run-llama/llama_index`
+- `pgvector/pgvector`
+- `weaviate/weaviate`, `qdrant/qdrant`, `chroma-core/chroma`
+- `Mintplex-Labs/anything-llm` (AnythingLLM)
+
+**Agent frameworks:**
+- `joaomdmoura/crewAI`
+- `microsoft/autogen`
+- `openai/swarm` (if it exists)
+- `humanlayer/12-factor-agents`
+
+**Code agents / IDEs:**
+- `cline/cline`
+- `getcursor/cursor`
+- `aider-AI/aider`
+- `continuedev/continue`
+
+**Inference / serving:**
+- `ollama/ollama`
+- `vllm-project/vllm`
+- `ggerganov/llama.cpp`
+- `oobabooga/text-generation-webui`
+- `LMSYS/FastChat`
+
+**Vector / search:**
+- `pgvector/pgvector` (releases)
+- `tantivy-search/tantivy`
+- `redis/redis-stack`
+
+### Quality signals
+
+- **Star velocity** = stars / hours_since_creation, normalized: >50/h = viral, 10-50/h = rising, <10 = stable
+- **Fork ratio** = forks / stars, >0.1 = production usage signal
+- **Open issues / closed issues ratio** = maintenance health
+- **Recent commit activity** = is project alive (commits in last 7d)
+- **Security advisory severity** = CRITICAL / HIGH = include regardless of stars
+- **Release type** = major (vN.0.0) > minor (vN.M.0) > patch
+- **CHANGELOG quality** in releases — substantive vs autogenerated
+
+### Skip list
+
+- Forks of trending repos (filter `fork=true`)
+- README-only repos (no real code)
+- Tutorial / awesome-list updates (low signal density)
+- Single-author hobby projects without traction
+- Abandoned repos (last commit > 90 days, low star velocity)
+- Crypto/blockchain unless infra (filter against blacklist domains in repo URL)
+
+### Output format (proposed)
+
+```yaml
+- repo_full_name: anthropics/claude-code
+  url: https://github.com/anthropics/claude-code
+  topic_tags: [llm_tooling, agent_frameworks]
+  event_type: release | trending | advisory | major_commit
+  details:
+    release_tag: v2.1.95
+    release_date: 2026-04-25
+    breaking_changes: [...]
+  stars_total: 32847
+  stars_velocity_24h: 1247
+  forks: 1893
+  language: TypeScript
+  digest_blurb: "anthropic shipped claude code 2.1.95 — adds native MCP via Responses API, parallel tool calls, hosted shell skill"
+  quality_score: 3
+  related: [anthropics/anthropic-sdk-typescript@new release]
+```
+
+### Build dependencies
+- GitHub personal access token in `~/.tLOS/github-token` (read-only, public)
+- Existing `lead-tech-research` for SEED — same pattern as HN/Reddit
+
+---
+
+## 2. ArXiv Correspondent
+
+### Mission
+Daily academic signal in our domain: RAG/retrieval research, LLM architecture, agent frameworks, AI safety, evaluation methodology.
+
+### Sources / APIs
+
+**ArXiv REST API** (export.arxiv.org/api/query) — no auth, 1 req per 3s rate limit:
+- `?search_query=cat:cs.CL+AND+submittedDate:[202604240000+TO+202604252359]&sortBy=submittedDate&sortOrder=descending&max_results=50`
+- Categories to monitor: `cs.CL` (computational linguistics, our primary), `cs.IR` (info retrieval = RAG papers), `cs.AI`, `cs.LG` (machine learning broadly), `cs.SE` (software engineering — for code agents)
+
+**RSS feeds (mirror of API):**
+- `export.arxiv.org/rss/cs.CL`
+- `export.arxiv.org/rss/cs.IR`
+- `export.arxiv.org/rss/cs.AI`
+
+**Hugging Face Daily Papers** (curated subset):
+- `huggingface.co/papers` — daily picked papers, often with implementation links
+- API: `huggingface.co/api/daily_papers?date=2026-04-25`
+
+**arxiv-sanity-lite** (PageRank curation, by Karpathy):
+- `arxiv-sanity-lite.com/?rank=time&tags=rag` (RSS available)
+
+**Papers with Code:**
+- `paperswithcode.com/api/v1/papers/?ordering=-published&from_date=2026-04-24` — papers with code repo links
+
+### Quality signals
+
+- **Citations / week 1** — even early signal that paper resonates
+- **Code availability** — paper with GitHub repo = production-relevant
+- **Author affiliation** — DeepMind / FAIR / Anthropic / OpenAI / known labs = signal
+- **Hugging Face Daily Papers pick** — automatic +1 signal (community-curated)
+- **Comments on Hugging Face paper page** — engagement
+- **Title contains specific tool/method name** vs generic "improving X" titles
+- **Replication signal** — "We release code/weights" in abstract
+
+### Skip list
+
+- Pure theory papers without practical implication (cs.LG abstract math)
+- Workshop submissions without clear venue
+- arxiv withdrawal flag (paper retracted)
+- Re-submissions / minor revisions of older papers (check `version` field)
+- Survey papers unless seminal (most surveys = noise)
+- Single-language non-English papers (we read EN)
+
+### Output format
+
+```yaml
+- arxiv_id: 2604.21536
+  title: "Pre-trained LLMs Meet Sequential Recommenders: Efficient User-Centric Knowledge Distillation"
+  authors: [list]
+  affiliations: [list]
+  category: cs.IR
+  primary_category: cs.IR
+  submitted_date: 2026-04-24
+  abstract_preview: "..."
+  pdf_url: https://arxiv.org/pdf/2604.21536
+  code_url: https://github.com/... (if found)
+  hf_paper_url: huggingface.co/papers/2604.21536 (if picked)
+  hf_picked: true | false
+  topic_tags: [rag, llm_tooling]
+  digest_blurb: "knowledge distillation method for sequential recommenders that beats teacher LLM at 1/10 cost. authors at xx university. github repo with reproducible benchmarks."
+  quality_score: 3
+```
+
+### Specific watchlist authors / labs
+
+**High-signal labs** (always include if from these):
+- DeepMind, FAIR (Meta), Anthropic, OpenAI, Microsoft Research, Google Research, Allen Institute (AI2)
+- Stanford NLP, Berkeley BAIR, MIT CSAIL
+- Carnegie Mellon LTI, Princeton NLP
+
+**High-signal individual authors** (track via author search):
+- Andrej Karpathy, Yann LeCun (when posting), Sebastian Raschka, Yi Tay (Reka), Tri Dao (Together), Percy Liang (Stanford)
+
+### Build dependencies
+- No auth needed for ArXiv API
+- Hugging Face token optional (not required for daily papers feed)
+- Existing `lead-tech-research` for SEED
+
+---
+
+## 3. Hugging Face Correspondent
+
+### Mission
+Frontier model releases, leaderboards, dataset announcements, hosted demos relevant to our 8 topics.
+
+### Sources / APIs
+
+**HF REST API** (huggingface.co/api/) — auth optional for read:
+- `/models?sort=likes7d&direction=-1&limit=50` — trending models last 7 days
+- `/models?sort=downloads&direction=-1&filter=text-generation` — most downloaded LLMs
+- `/datasets?sort=downloads&direction=-1` — popular datasets
+- `/papers?sort=trending` — community-picked papers
+- `/spaces?sort=likes7d&direction=-1&filter=transformers` — hosted demos
+- `/api/whoami` — auth check
+
+**Daily Papers feed:**
+- `huggingface.co/papers` (HTML scrape) — picks per day
+- `huggingface.co/api/daily_papers?date=YYYY-MM-DD` — JSON
+
+**Leaderboards (HTML scrape mostly):**
+- `huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard`
+- `huggingface.co/spaces/lmsys/chatbot-arena-leaderboard`
+- `huggingface.co/spaces/mteb/leaderboard` (embedding models)
+- `huggingface.co/spaces/lmsys/lmsys-arena-leaderboard-images` (image gen arena)
+
+**Specific orgs to watch:**
+- `huggingface.co/anthropic` (if exists)
+- `huggingface.co/openai` (if exists)
+- `huggingface.co/meta-llama`
+- `huggingface.co/deepseek-ai`
+- `huggingface.co/Qwen`
+- `huggingface.co/google`
+- `huggingface.co/mistralai`
+- `huggingface.co/allenai`
+
+### Quality signals
+
+- **likes7d > 100** = community attention
+- **downloads > 10000 first 24h** = production adoption
+- **Has `model_card.md`** with proper benchmarks (not just description)
+- **License** — Apache-2.0 / MIT / Llama license vs research-only
+- **Picked for Daily Papers** = HF curator validation
+- **Spaces demo deployed** = practical, can test
+- **Author org reputable** (whitelist above)
+- **Quantized variants released** alongside full = serious about deployment
+
+### Skip list
+
+- Fine-tuned variants of known models without novel methodology
+- LoRA adapters without strong benchmark improvements
+- Demo spaces that are just gradio wrappers around openai API
+- Datasets with < 1000 examples
+- Models with no model card or auto-generated readme
+
+### Output format
+
+```yaml
+- model_id: deepseek-ai/DeepSeek-V4-Pro
+  url: https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro
+  type: model | dataset | space | paper
+  org: deepseek-ai
+  org_reputable: true
+  released_at: 2026-04-24T10:00:00Z
+  likes_7d: 4521
+  downloads_24h: 38291
+  license: deepseek-license-v1
+  size_billion_params: 1600
+  active_params_billion: 49
+  context_length: 1000000
+  hf_paper_link: https://huggingface.co/papers/...
+  spaces_demos: [...]
+  benchmarks_in_card: {SWE-Bench: 58.1, MMLU: 90.2, GSM8K: 95.7}
+  topic_tags: [llm_tooling, ai_infra]
+  digest_blurb: "deepseek v4 pro: 1.6T MoE / 49B active, 1M context default. weights live, license commercial-friendly. third frontier-tier open-weights release in 2026."
+  quality_score: 3
+```
+
+### Build dependencies
+- HF token in `~/.tLOS/huggingface-token` (optional, increases rate limit)
+- Existing `lead-tech-research` for SEED
+
+---
+
+## 4. Dev.to Correspondent
+
+### Mission
+Community technical writing in our 8 topics. Catch builder how-tos, deep dives, "I built X" posts that signal product/library adoption.
+
+### Sources / APIs
+
+**Dev.to REST API** (dev.to/api/) — no auth required, generous rate limit:
+- `/articles?tag=ai&top=1` — top of yesterday in tag (top=days)
+- `/articles?tag=rag&top=7` — top of week
+- `/articles?tag=mcp&top=7`
+- `/articles?tag=claude&top=7`
+- `/articles?tag=openai&top=7`
+- `/articles?tag=langchain&top=1`
+- `/articles?tag=ollama&top=1`
+- `/articles/latest?per_page=100` — chronological firehose, filter client-side
+- `/articles/{id}` — full article body if needed
+- `/users/{username}` — author profile + recent articles
+
+**Specific tags to monitor (in priority):**
+- `ai`, `llm`, `rag`, `mcp`, `claude`, `openai`, `gemini`, `agent`, `langchain`, `llamaindex`, `pgvector`, `embeddings`, `vector-search`, `huggingface`, `ollama`, `selfhosted`, `devops`, `webdev` (cross-pollination), `python`, `typescript`
+
+**Author whitelist (high-signal builders, expand):**
+- TBD — research will populate during SEED. Likely candidates: people who write AI tooling tutorials with original code, founders of AI tools posting build-in-public, ML engineers from notable companies.
+
+### Quality signals
+
+- **Reaction count > 50** = community resonance
+- **Comment count > 10** with substantive replies = engagement
+- **Read time > 5 min** = depth signal (vs quick takes)
+- **Has working code samples** (check for ```code blocks)
+- **Has external repo link** (real implementation)
+- **Author posting cadence** — regular contributors > one-off
+- **Cross-posted from personal blog** with `canonical_url` field — usually higher quality
+- **Tags align with our topics** > 1 of our 8 = include
+
+### Skip list
+
+- Career advice posts (off-topic)
+- Pure tutorial mills (basic "how to call OpenAI API" posts)
+- Listicles ("Top 10 AI tools 2026")
+- Marketing posts (recognizable promotional style)
+- Translations of other people's posts (low original signal)
+- Posts under 200 words
+
+### Output format
+
+```yaml
+- article_id: 1234567
+  title: "..."
+  author: "@user"
+  author_handle: dev.to/user
+  url: https://dev.to/user/article-slug
+  published_at: 2026-04-24T15:23:00Z
+  read_time_min: 8
+  reactions: 142
+  comments: 23
+  tags: [rag, llamaindex, python]
+  canonical_url: https://userblog.com/...  # if cross-posted
+  has_code_samples: true
+  has_repo_link: true
+  repo_url: https://github.com/...
+  topic_tags: [rag, llm_tooling]
+  digest_blurb: "dev.to user shipped a chunking benchmark across 5 strategies on 10 corpora — semantic chunking wins hard on scientific domain, fixed-size hierarchical wins on legal."
+  quality_score: 3
+```
+
+### Build dependencies
+- No auth required
+- Existing `lead-tech-research` for SEED
+
+---
+
+## 5. Anthropic Correspondent
+
+### Mission
+Track everything Anthropic ships: model releases, Claude Code updates, MCP spec changes, research papers, policy posts, status incidents.
+
+### Sources / APIs
+
+**Anthropic news (RSS):**
+- `anthropic.com/news/rss.xml`
+- `anthropic.com/research/rss.xml` (if exists)
+
+**Anthropic news pages (HTML):**
+- `anthropic.com/news` — main feed
+- `anthropic.com/research` — research index
+
+**GitHub:**
+- `github.com/anthropics/claude-code/releases` (RSS available)
+- `github.com/anthropics/anthropic-sdk-python/releases`
+- `github.com/anthropics/anthropic-sdk-typescript/releases`
+- `github.com/modelcontextprotocol/specification` (Anthropic-led)
+
+**Status:**
+- `status.anthropic.com` — incident feed
+- `status.anthropic.com/api/v2/incidents/unresolved.json`
+- `status.anthropic.com/api/v2/summary.json`
+
+**Twitter (closed-API problem):**
+- `@AnthropicAI` (official)
+- `@DarioAmodei` (CEO)
+- `@_catwu` (Claude Code lead)
+- Workaround: monitor when these accounts get cited on HN/Reddit
+
+**HN search (cross-source):**
+- `tags=story+author_anthropics OR tags=story+url:anthropic.com`
+
+### Quality signals
+
+- **Model release** = always include, top priority
+- **MCP spec change** = always include, P1
+- **Major policy / safety post** = include with full context
+- **Status incident severity high** = include if affects builders
+- **Research paper with code** = include
+- **Mentioned in HN top 30 same day** = signal amplification
+- **Dario / Mike Krieger / Tom Brown personal post** = priority
+
+### Skip list
+
+- Routine job openings
+- Marketing case studies (corporate customer success stories)
+- Press release re-issues (same content as previous)
+- Generic "thoughts on AI safety" without new substance
+
+### Output format
+
+```yaml
+- announcement_id: anthropic-2026-04-25-claude-code-2.1.95
+  title: "Claude Code 2.1.95 release notes"
+  url: https://anthropic.com/news/...
+  published_at: 2026-04-25T10:00:00Z
+  type: model_release | feature | research | policy | incident
+  importance: P1 | P2 | P3
+  details:
+    summary: "..."
+    affects: [claude-code, anthropic-sdk]
+    breaking_changes: false
+  cross_amplification:
+    on_hn: hn_id 47894xxx, score 412
+    on_reddit: r/ClaudeAI score 198
+  topic_tags: [llm_tooling]
+  digest_blurb: "..."
+  quality_score: 3
+```
+
+### Build dependencies
+- No auth for public RSS
+- Anthropic API key for status (already have via Claude Code token)
+
+---
+
+## 6. OpenAI Correspondent
+
+### Mission
+Track everything OpenAI ships: model releases (GPT-N updates), API changelog, research papers, system cards, status, ChatGPT product updates that affect builders.
+
+### Sources / APIs
+
+**Blog & research:**
+- `openai.com/blog` (HTML, no RSS publicly?)
+- `openai.com/research/index/` (HTML)
+- `openai.com/system-cards/` — model cards on release
+
+**API changelog (CRITICAL):**
+- `developers.openai.com/api/docs/changelog` — chronological feed
+- `platform.openai.com/docs/changelog` — historical (legacy URL)
+
+**Status:**
+- `status.openai.com` — incidents
+- `status.openai.com/api/v2/incidents/unresolved.json`
+
+**GitHub:**
+- `github.com/openai/openai-python/releases`
+- `github.com/openai/openai-node/releases`
+- `github.com/openai/openai-cookbook/commits` (recipe updates signal new features)
+- `github.com/openai/codex` (if public — check)
+
+**Twitter (closed):**
+- `@OpenAIDevs` (official dev)
+- `@sama` (CEO)
+- `@gdb` (Greg Brockman)
+- `@karina_nguyen`, `@AndrewMayne` (DevRel)
+
+**HN cross-source:**
+- `tags=story+url:openai.com` Algolia search
+
+### Quality signals
+
+- **API changelog new entry** = priority — direct builder relevance
+- **GPT-N release** = top priority
+- **System card released** = substantive (architecture details)
+- **Research paper from OpenAI** = include if not pure benchmarking
+- **DevDay / event coverage** — include during event window
+- **Pricing changes** = always include (affects builder economics)
+- **Deprecation announcements** = always include
+
+### Skip list
+
+- ChatGPT consumer feature updates not affecting API (Plus tier UI changes)
+- Marketing fluff (case studies)
+- Job postings
+- Conference talks unless new technical content
+- Investor / business news (not relevant to dev/builder)
+
+### Output format
+
+(Similar structure to Anthropic Correspondent)
+
+### Build dependencies
+- OpenAI API key in `~/.tLOS/openai-token` (already have for codex compat)
+- No special auth for blog scrape / status
+
+---
+
+## 7. Google AI Correspondent
+
+### Mission
+Track Google's AI output: Gemini API changes, Google Cloud Next announcements, DeepMind research, Workspace agent features, Vertex AI updates.
+
+### Sources / APIs
+
+**Blog feeds:**
+- `blog.google/technology/ai/` (HTML)
+- `blog.google/technology/developers/` (developer-specific)
+- `deepmind.google/discover/blog/` (DeepMind research)
+- `research.google/blog/` (Google Research)
+- `cloud.google.com/blog/topics/ai-machine-learning` (Cloud AI)
+- `developers.googleblog.com` (developer blog)
+
+**Gemini API specific:**
+- `ai.google.dev/gemini-api/docs/changelog` — model + API changes
+- `ai.google.dev/release-notes` (if exists)
+- GitHub: `googleapis/python-genai` releases, `googleapis/js-genai` releases
+
+**Vertex AI:**
+- `cloud.google.com/release-notes` (filter Vertex AI category)
+
+**GitHub:**
+- `github.com/google-deepmind` repos (Gemma, AlphaFold, etc.)
+- `github.com/google/generative-ai-docs/commits` — doc updates signal
+
+**Workspace agents:**
+- `workspaceupdates.googleblog.com` — Drive/Docs/Gmail AI updates
+
+**Twitter (closed):**
+- `@GoogleDeepMind`, `@GoogleAI`, `@OfficialLoganK`, `@_philschmid`, `@JeffDean`, `@demishassabis`
+
+**HN cross-source:**
+- `tags=story+url:blog.google OR url:deepmind.google OR url:cloud.google.com`
+
+### Quality signals
+
+- **Gemini model release** = priority
+- **Gemini API breaking change** = priority — affects our pipeline directly
+- **Cloud Next major announcement** = priority during event week
+- **DeepMind research paper** = include if applied (not pure theory)
+- **AlphaFold / scientific applications** = include selectively
+- **TPU / hardware announcement** = include if relevant to inference
+- **Workspace AI feature for builders** = include (Drive grounding, etc.)
+
+### Skip list
+
+- Consumer product updates (Pixel, Search consumer features unless AI-relevant)
+- Marketing case studies
+- DEI / corporate news
+- Routine Workspace UI changes
+- Developer events without new technical content
+
+### Output format
+
+(Similar to Anthropic / OpenAI structure)
+
+### Build dependencies
+- Optional Google Cloud API token for Vertex notifications
+- No auth for blog scrape
+
+---
+
+## 8. Telegram Correspondent
+
+### Mission
+Russian + English AI/dev tech channels — catch news that hits Telegram first (especially regional KZ/RU AI scene + indie dev RU community).
+
+### Architecture (special)
+
+**Auth:** Telethon (Python) requires phone number + verification code at first run. nopoint phone needed.
+
+**Channel access:** Public channels only — broadcast subscription, read messages via API, no posting.
+
+**Rate limits:** Telegram MTProto API:
+- ~30 messages/second on bot tokens
+- ~20 req/min on user account
+- Flood wait responses on bursts → exponential backoff
+
+**Approach:**
+- Use Telethon to fetch messages from N curated public channels
+- Parse + dedupe + topic-classify
+- Forwarded posts: track origin (forwarded_from)
+- Media handling: store images/PDFs to local cache, OCR if relevant
+
+### Sources / channels (curated whitelist — needs nopoint approval)
+
+**Russian AI/Tech:**
+- `@addmeto` (Григорий Бакунов)
+- `@seeallochnaya` (Сиолошная — AI новости)
+- `@dlinniypost` (длиннопост — AI/tech)
+- `@ai_newz` (Артём Кулаков)
+- `@dataispower`
+- `@gradient_dude` (DL новости)
+- `@denissexy` (Денис Сергеев — AI)
+- `@neuralshit` (нейро-мемы + новости)
+- `@nlpcoreteam` (Yandex NLP)
+- `@partially_unsupervised`
+- `@gonzo_ML` (Gonzo MachineLearning)
+
+**Russian dev / startup:**
+- `@vc.ru` (vc.ru канал)
+- `@startupoftheday`
+- `@indiedev_news`
+
+**English AI:**
+- `@ainews_us` (если existует)
+- `@aitelegraph`
+
+**Kazakh AI/tech:**
+- TBD — nopoint местный, подскажет лучшие каналы KZ scene
+
+**TODO:** nopoint approves final channel list, я не знаю всё что он читает.
+
+### Quality signals
+
+- **Origin posts** (not forwards) — author voice
+- **Forwarded multiple times** (10+ subscribers' channels) — viral signal
+- **Has media (image/video)** with substance — visual evidence
+- **Length > 500 chars** = substantive (vs single-line meme)
+- **Channel size** — большие каналы amplify, small =earlier signal
+- **Engagement (views / subscribers)** — for channels with public stats
+
+### Skip list
+
+- Pure meme posts
+- Crypto trading signals
+- Job postings
+- Promotional / sponsored posts (channels mark them obvious)
+- Forwarded news without commentary (just relay)
+
+### Output format
+
+```yaml
+- message_id: 12345
+  channel: "@seeallochnaya"
+  channel_subscribers: 38500
+  author_displayed: "Игорь Котенков"
+  posted_at: 2026-04-25T14:23:00Z
+  text_preview: "..."
+  text_full_chars: 1200
+  is_forward: false
+  forward_from: null
+  views: 12500
+  reactions: 247
+  has_media: true
+  media_type: image | video | document
+  external_links: [...]
+  topic_tags: [ai_infra, llm_tooling]
+  language: ru | en | kz
+  digest_blurb: "Котенков опубликовал разбор GPT-5.5 SWE-Bench Pro 58.6% — указывает что бенчмарк синтетический, реальные задачи в проде ниже на 15-20%."
+  quality_score: 3
+```
+
+### Build dependencies (CRITICAL — most complex)
+
+1. nopoint phone number for Telethon first-time auth
+2. Telegram code (sent to phone) — interactive setup
+3. session file saved to `~/.tLOS/telegram-session.session` (chmod 600)
+4. nopoint provides curated channel list (or research suggests, nopoint approves)
+5. Telethon Python deps: `pip install telethon` (in dedicated venv)
+6. Build separate scrape script `nospace/tools/telegram-scraper/`
+
+### Risks
+
+- **Account flagging** if scrape too aggressive — Telegram may temp-ban personal account. Mitigation: gentle pace (1 channel / 10 sec), respect flood waits.
+- **Media storage** — images/videos can blow up disk. Strict 30-day cache TTL.
+- **Privacy** — only public channels, no DMs, no private groups.
+- **Channel deletion** — channels can disappear, must handle 404 gracefully.
+
+### Build sequencing
+
+Telegram is **last** because:
+1. Architecture more complex (custom scraper, not just curl)
+2. Requires nopoint interactive setup (phone code)
+3. Requires nopoint channel curation
+4. Account-risk profile elevated
+
+Build only after P1+P2 correspondents shipped and validated.
+
+---
+
+## Cross-correspondent integration
+
+### Dedup across sources
+
+When same story appears across multiple correspondents (e.g. DeepSeek V4 in HN + Reddit + GitHub + HF + lab blogs):
+
+1. **URL fingerprint** dedup (canonical URL)
+2. **Title Jaccard** > 0.7 fuzzy match
+3. **Entity match** (model name, product name) appearing across sources
+4. **Time correlation** within 24h window
+
+Output: single story object with `sources` array listing all correspondents that surfaced it.
+
+### Amplification scoring
+
+Story appears in N correspondents:
+- 1 source: standard signal
+- 2-3 sources: "multi-source" — elevate
+- 4-5 sources: "trending" — top of digest
+- 6+ sources: "breaking" — headline candidate
+
+### Topic mapping
+
+Each correspondent emits standardized `topic_tags` from same vocabulary:
+`rag` · `mcp` · `llm_tooling` · `ai_infra` · `agent_frameworks` · `ai_security` · `dev_productivity` · `self_hosted_oss`
+
+Synthesizer aggregates by topic for cross-source thematic clustering.
+
+### Cycle timing
+
+All correspondents run twice daily on same schedule:
+- **09:00 UTC** (morning digest)
+- **21:00 UTC** (evening digest)
+
+Output dir: `nospace/development/contexter/content-factory/digests/YYYY-MM-DD-HH/`
+
+After all correspondents complete (estimated 5-15 min total parallel), synthesizer (Gemini API or Claude) aggregates into master digest.
+
+---
+
+## Implementation plan (sequencing)
+
+### Wave 1 (next, P1) — research + build 4 correspondents
+
+Parallel SEED research:
+1. GitHub Correspondent intelligence playbook
+2. ArXiv Correspondent intelligence playbook
+3. Hugging Face Correspondent intelligence playbook
+4. Dev.to Correspondent intelligence playbook
+
+Each: ~10-15 min via `lead-tech-research` agent. Total: 4 parallel → ~15 min wall-clock.
+
+Then build 4 agent files in `~/.claude/agents/`. ~30 min total.
+
+### Wave 2 (after Wave 1) — research + build 3 lab correspondents
+
+Parallel SEED research:
+5. Anthropic Correspondent
+6. OpenAI Correspondent
+7. Google AI Correspondent
+
+(Or combined Lab Blogs Correspondent if user reconsiders the combine option.)
+
+Then build agent files.
+
+### Wave 3 (special, P3)
+
+8. Telegram Correspondent — architecture research + custom scraper build + nopoint interactive setup.
+
+### Cross-cutting (after waves)
+
+- Build aggregator/synthesizer that ingests N correspondent outputs
+- Define unified topic vocabulary (already drafted above)
+- Build cross-source dedup logic
+- Set up cron schedule for 09:00 + 21:00 UTC daily
+
+### Pencil visualization update
+
+Workspace 03 in content-factory v1 currently shows 11 platforms. After all 8 correspondents shipped, add a **Workspace 04 — Correspondent Mesh** showing the 8 scout agents → synthesizer → master.
+
+---
+
+## Quality bar (consistent across all correspondents)
+
+Every correspondent agent file must include:
+
+1. Frontmatter (name, description, tools, model claude-sonnet-4-6)
+2. Mission + audience definition
+3. Source list with API endpoint examples
+4. Daily scout protocol (step-by-step)
+5. Quality signals cheatsheet (numerical thresholds)
+6. Skip list (anti-patterns)
+7. Topic query recipes (copy-paste curls)
+8. Output format spec (YAML/JSON)
+9. Quality gates (pre-output checklist)
+10. Failure modes table
+11. Frontier notes (April 2026 specific)
+12. Reference link to full playbook
+
+Standards adherence per file:
+- E6 incremental writes
+- A2 verify external claims
+- E3 source-trace
+- C2 Sonnet default
+- C7 inline context
+
+---
+
+## Decision log
+
+- **2026-04-25:** Plan created. 8 correspondents listed by user. P1 = GitHub + ArXiv + HF + Dev.to (parallel). P2 = Anthropic + OpenAI + Google (parallel). P3 = Telegram (special). User chose separate Lab correspondents (3) vs combined (1) — respect user choice, build separately.
+- **2026-04-25:** Telegram channel whitelist requires nopoint review before research starts.
+- **2026-04-25:** Topic vocabulary locked: 8 tags, all correspondents emit same.

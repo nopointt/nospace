@@ -60,7 +60,9 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Tests | `tests/` (chunker, embedder, content-filter, parsers, rag, vectorstore — 6 files, 1682 lines) |
 | Memory | `memory/` |
 | Co-founder docs | `docs/artem/` (29 files MD+HTML, index.html, convert.ts) |
-| Research | `nospace/docs/research/` (GTM, competitors, Reddit guide) |
+| Research | `nospace/docs/research/` (GTM, competitors, Reddit guide, correspondent intelligence playbooks, Gemini API capability matrix) |
+| **Content factory** | `content-factory/` (planning/correspondent-roadmap.md, prompts/evening-digest-v2.md, digests/{date}-{cycle}/{narratives,structured,master-blog-post,triangulation-bundle}) |
+| **Correspondent agents** | `~/.claude/agents/{hn,reddit}-correspondent.md` (production-ready, 12+14 KB, persistent across sessions) |
 
 ## Deployed
 

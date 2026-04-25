@@ -1,0 +1,54 @@
+EVENING DIGEST · 2026-04-25 · 21:00 UTC
+
+Собери digest за последние 12-24 часа (с ~2026-04-24 21:00 UTC по ~2026-04-25 21:00 UTC) из источников ниже. Фокус: product releases, launch announcements, signal updates в AI/dev tooling space.
+
+ИСТОЧНИКИ ДЛЯ ПОИСКА:
+- Hacker News: news.ycombinator.com (используй HN Algolia API hn.algolia.com если можешь)
+- Reddit: r/ClaudeAI, r/LocalLLaMA, r/MachineLearning, r/selfhosted, r/programming, r/Rag, r/mcp, r/devops, r/netsec, r/SideProject, r/artificial, r/OpenAI, r/Anthropic
+- Anthropic blog: anthropic.com/news
+- OpenAI blog: openai.com/blog
+- Google AI blog: blog.google/technology/ai/
+- Google DeepMind: deepmind.google/discover/blog/
+- Lobste.rs: lobste.rs
+- Dev.to: dev.to (top week tag rag, mcp, ai)
+- Hugging Face Daily Papers: huggingface.co/papers
+- ArXiv cs.CL, cs.IR, cs.AI
+- The New Stack: thenewstack.io
+- The Register: theregister.com/software/
+- LangChain blog, LlamaIndex blog
+- Newsletters: Hacker Newsletter, Pragmatic Engineer, Latent Space, Import AI, Lenny's Newsletter, Ben's Bites
+- Twitter/X профили: @AnthropicAI, @OpenAIDevs, @swyx, @simonw, @OfficialLoganK, @mikeyk, @_catwu
+
+# headline
+Одно предложение что главное случилось.
+
+# top 3 stories
+Для каждой:
+- заголовок одной строкой
+- 2-3 предложения сути
+- точная цитата из источника + URL + дата публикации
+- почему важно нашей dev/builder аудитории (1 строка)
+- связанные вторичные источники если есть
+
+# builder watch
+1-2 неочевидных события важных для RAG/MCP/agent-tooling/AI infra.
+Цитаты обязательны. Если данных нет — "недостаточно подтверждений".
+
+# tomorrow
+Что ожидается в следующие 12 часов (releases, conf talks, scheduled launches). Только если источники упоминают конкретно.
+
+# self-check
+- какие claims требуют web verification? список
+- какие данные >24 часов — flag explicitly
+- numerical facts — точная цитата из источника
+- HIGH/MEDIUM/LOW confidence labels per major claim
+
+constraints:
+- НЕ выдумывай источники
+- если не уверен — "не нашёл подтверждения"
+- русский для commentary, английский для цитат
+- запрещённые слова: leverage / unlock / transform / seamless / journey / revolutionize / game-changing / robust / paradigm / cutting-edge / breakthrough / disruptive
+- если меньше 3 stories за 12 часов — пиши сколько есть, не fabricate
+- lowercase headers (cold Bauhaus voice)
+- NO em-dashes
+- founder voice (nopoint POV) OK

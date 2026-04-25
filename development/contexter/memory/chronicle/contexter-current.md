@@ -71,3 +71,59 @@ Autonomous mode active for GTM-01 (declared session 5, J3 hard safeguards in for
 - Session tangential to GTM-01 — pitch prep + reference save, не code/deploy
 - Research reglament: pre-research clarification выполнена, но агент не создал output file (instruction violation)
 - STATE.md отстаёт от реальности (последний update 245) — tech debt
+<!-- ENTRY:2026-04-25:CLOSE:250:contexter:gtm-01-omnipresence-epic [AXIS] -->
+## 2026-04-25 — сессия 250 CLOSE [Axis]
+
+**Decisions:**
+- D-CONTENT-01: Контент-фабрика построена как multi-tier OSINT pipeline. Tier 1 = specialized correspondents (HN + Reddit shipped). Tier 2 = Gemini API synthesis. Tier 3 = Claude editorial. Tier 4 = master + 10 platform snippets.
+- D-CONTENT-02: Voice locked = cold Bauhaus + info-style + founder POV (nopoint). Lowercase headers, no em-dashes, founder voice >= 3 markers, forbidden words list.
+- D-CONTENT-03: Master digest length 1500-2500 words. Asymmetric Gleichgewicht weighting (story 1 ~40% / 2 ~30% / 3 ~15%).
+- D-CONTENT-04: Gemini API НЕ primary scout. Reddit JSON + HN Algolia блокируются url_context. Gemini = synthesis-only layer.
+- D-CONTENT-05: Triangulation = 2-pass (constrained verification + Deep Research synthesis). Single-pass Deep Research auto-decompose ломает iteration по corpus.
+- D-CONTENT-06: 8 correspondents в roadmap (HN ✓, Reddit ✓, GitHub/ArXiv/HF/Dev.to P1, Anthropic/OpenAI/Google P2, Telegram P3 special).
+- D-CONTENT-07: r/programming LLM ban appears LIFTED (verified by Reddit correspondent v2).
+- D-CONTENT-08: Cold Bauhaus visual system Contexter exists в `design/contexter/foundations/` (philosophy + principles + 7 guidelines).
+
+**Files changed:**
+- `~/.claude/agents/hn-correspondent.md` — new (12 KB)
+- `~/.claude/agents/reddit-correspondent.md` — new (14 KB)
+- `~/.tLOS/gemini-api-key` + `gemini-project.json` — new
+- `~/.claude/projects/.../memory/feedback_no_time_estimates.md` + `reference_contexter_content_voice.md` + MEMORY.md — new/updated
+- `nospace/docs/research/{image-providers-seed,video-models-seed,hn-correspondent-intelligence-playbook,reddit-correspondent-intelligence-playbook,gemini-api-capability-matrix}.md` — 5 new research artifacts
+- `nospace/development/contexter/content-factory/{planning/correspondent-roadmap.md,prompts/evening-digest-v2.md}` — new
+- `nospace/development/contexter/content-factory/digests/2026-04-25-21/` — new directory: hn/reddit narratives + structured + master-blog-post-2026-04-25.md + triangulation-bundle/{CORPUS,PROMPT}.md + Gemini API runs
+- `nospace/design/contexter/contexter-ui.pen` — modified (Workspace 01/02/03 для content factory v1)
+
+**Completed:**
+- HN + Reddit correspondent agents shipped + production tested (all quality gates pass)
+- First master blog post written + editorial pass (1620 words, 9 HIGH/3 MEDIUM/2 LOW)
+- Gemini API integration validated (free tier, 3 Flash Preview production-grade)
+- Gemini API capability research (Deep Research API, Gemini 3 series, url_context, context caching)
+- Triangulation v1/v2 prompt iterations + corpus refactor (numbered signals, hard constraints)
+- Triangulation v2 second attempt: structural success (26/26 signals), enrichment quality low
+- 8-correspondent roadmap planning artifact
+- Pencil content factory v1 visualization (3 workspaces)
+- Disk cleanup 2.6→6.1 GB free (Tier 🟢+🟡 autonomous)
+- Memory: 2 new entries (no time estimates feedback, Contexter content voice reference)
+
+**Opened:**
+- Wave 1 correspondents: GitHub + ArXiv + Hugging Face + Dev.to (parallel research SEEDs)
+- Wave 2: Anthropic + OpenAI + Google (separate per user)
+- Wave 3: Telegram (Telethon auth + nopoint manual setup)
+- Triangulation Pass 2 (Deep Research mode) on filtered 14 publishable signals для enrichment
+- Master post v1 vs v2 quality comparison после Pass 2
+- Daily cron 09:00 + 21:00 UTC scheduling
+- Sources catalog `nospace/docs/content-factory/sources-input.tsv` (300 sources max for NotebookLM)
+
+**Blockers:**
+- Pre-CTX-11 commits `a5eb98a..c3f4033` local main NOT pushed (унаследовано от 249, не блокер этой сессии)
+- Reddit JSON / HN Algolia блокируются Gemini url_context (architectural constraint, обходится через 2-tier scout+synthesis)
+- arxiv 2604.21691 + CVE-2026-5752 + CVE-2025-59532 + securityscanner.dev report — не verified в NVD/external sources, MEDIUM confidence
+- Telegram correspondent: Telethon phone auth + channel whitelist requires nopoint
+- Triangulation enrichment depth low в Gemini standard chat — нужен Pass 2 Deep Research для lateral/discourse/notable voices
+
+**Notes:**
+- Knowledge cutoff Claude January 2026 систематически ломает оценку post-cutoff claims (Claude Code leak, Anthropic Mythos, GPT-5.5, Gemini 3.x). A1+A2 stricter applied этой сессии.
+- Contexter design system existing (16 markdown files в `design/contexter/`) — discovered этой сессии. Brand уже определён, не нужно reinventing.
+- Pencil app post-Apr-23 update требует полного restart для MCP recovery — изучено + workaround applied.
+- Gemini API лимиты: 2.5 Flash 10 RPM / 250 RPD, Flash-Lite 15 / 1000, 3 Flash Preview free unlimited (effectively), все Pro paid.

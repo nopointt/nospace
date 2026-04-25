@@ -1,0 +1,95 @@
+TASK: produce evening digest for 2026-04-25 21:00 UTC.
+
+WINDOW: last 12-24 hours (from ~2026-04-24 21:00 UTC to ~2026-04-25 21:00 UTC).
+
+FOCUS: product releases, launch announcements, signal updates in AI/dev tooling space.
+
+# topical anchors (must check status of these — substantive activity in last 24h)
+
+1. DeepSeek V4 release (April 24, 2026) - V4-Pro 1.6T/49B + V4-Flash 284B/13B, 1M context default, weights on HuggingFace. Look for: bench replication posts, quantization releases, integration into Ollama/vLLM, simonw + minimaxir analysis, community testing.
+
+2. OpenAI GPT-5.5 / GPT-5.5 Pro in API (April 24, 2026) - 1M context, native MCP via Responses API, computer use, hosted shell, apply patch, Skills. Look for: pricing reactions, MCP integration tutorials, comparisons vs DeepSeek V4 / Claude Opus 4.7 / Anthropic Mythos Preview.
+
+3. Anthropic Mythos breach status (ongoing since April 7-21) - "Discord Sleuths" group accessed via third-party contractor. Project Glasswing limited release (Amazon, Apple, JPMorgan). Look for: investigation updates, regulatory commentary (RU MOF + UK AISI), security tooling response.
+
+4. Google to Anthropic $40B deal (April 24, 2026) - $10B at $350B valuation + $30B performance-gated, mostly cloud credits via Bloomberg. Look for: market reaction, TPU implication discussion, dependency analysis on HN/Reddit.
+
+5. Google Cloud Next 2026 aftermath - Agent Registry, Agent Identity, Agent Sandbox, TPU 8t/8i, AI.PARSE_DOCUMENT in BigQuery. Look for: dev community evaluation, comparison vs OpenAI Workspace Agents.
+
+6. OpenAI Workspace Agents (April 23, 2026 launch) - Codex-based, persistent context, cloud-resident, Slack/Salesforce/Drive integration. Look for: enterprise adoption signal, builder community evaluation.
+
+You are NOT obligated to cover all 6. Only those with substantive activity in window. If anchor has no movement: note "no significant activity in 24h" and move on.
+
+# standing topics
+
+Always relevant:
+- MCP ecosystem signals (new servers, security tooling, spec changes)
+- RAG production patterns (hybrid search, chunking, eval)
+- Agent framework evolution (LangGraph, CrewAI, AutoGen)
+- AI security incidents
+- Self-hosted OSS frontier-tier models
+
+# specific URLs to fetch via url_context tool
+
+You have url_context tool available. Use it to fetch up to 20 URLs directly. Recommended targets:
+
+HN sources:
+- http://hn.algolia.com/api/v1/search_by_date?tags=story&numericFilters=created_at_i>1745611200,points>50&hitsPerPage=20
+- https://news.ycombinator.com/news
+
+Reddit sources (use Mozilla User-Agent in url_context):
+- https://www.reddit.com/r/ClaudeAI/top.json?t=day&limit=25
+- https://www.reddit.com/r/LocalLLaMA/top.json?t=day&limit=25
+- https://www.reddit.com/r/MachineLearning/top.json?t=day&limit=25
+- https://www.reddit.com/r/mcp/top.json?t=day&limit=25
+- https://www.reddit.com/r/Rag/top.json?t=day&limit=25
+- https://www.reddit.com/r/selfhosted/top.json?t=day&limit=25
+- https://www.reddit.com/r/netsec/top.json?t=day&limit=25
+- https://www.reddit.com/r/devops/top.json?t=day&limit=25
+
+Lab blogs:
+- https://www.anthropic.com/news
+- https://openai.com/blog
+- https://blog.google/technology/ai/
+- https://deepmind.google/discover/blog/
+
+Use Google Search grounding to verify specific claims (numbers, dates, product names).
+
+# output structure (mandatory order, lowercase headers)
+
+## headline
+
+1 sentence, 25-40 words. Concrete subject + concrete event + concrete consequence. Not "industry shifts toward X" but "X shipped Y, Z reacted with W".
+
+## top 3 stories
+
+Exactly 3, fewer if not enough qualify. NEVER fabricate to fill.
+
+For each: title in lowercase, 1-line context (source/author/score/age), 2-3 sentences substance, exact quote with URL and date, 1 line "почему важно нашей dev/builder аудитории", cross-source amplification field (also appearing in HN/Reddit/X if known), HIGH/MEDIUM/LOW confidence label.
+
+## builder watch
+
+1-2 unobvious technical insights for RAG/MCP/agent-tooling/AI infra. Direct quotes mandatory. If no signal: "недостаточно подтверждений в 24h окне".
+
+## tomorrow
+
+ONLY confirmed events with timestamps + sources. Format: "[time UTC] - [event] - [source]". If nothing confirmed: "не нашёл подтверждённых анонсов на следующие 12 часов". Speculation goes in separate "watch-list (LOW)" subsection if needed.
+
+## self-check (6 components)
+
+1. claims requiring web verification - bullet list with reasons + confidence levels
+2. data older than 24 hours - flag with source dates
+3. numerical facts - each with source URL + exact quote
+4. confidence summary - count HIGH / MEDIUM / LOW
+5. forbidden word check - confirm scan complete
+6. founder voice check - count nopoint-POV markers used
+
+# constraints
+
+- No fabrication. If unsure write "не нашёл" / "MEDIUM confidence + verify".
+- Headlines never use forbidden words (above list)
+- No em-dashes
+- Founder voice >= 3 markers
+- Length 1500-2500 words
+
+Begin now. Save final narrative to the narrative file path provided.

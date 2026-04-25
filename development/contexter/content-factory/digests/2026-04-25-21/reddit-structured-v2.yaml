@@ -1,0 +1,481 @@
+cycle_id: 2026-04-25-21-v2
+cycle: evening
+prompt_version: v2
+fetched_at_utc: 2026-04-25T12:27:23Z
+narrative_generated_at_utc: 2026-04-25T13:01:45Z
+window_start_utc: 2026-04-24T12:27:23Z
+window_end_utc: 2026-04-25T12:27:23Z
+subs_scanned:
+  primary: [ClaudeAI, LocalLLaMA, MachineLearning, selfhosted, programming, Rag, mcp, devops, netsec, SideProject, artificial, OpenAI, Anthropic]
+  secondary: [AI_Agents, LLMDevs, ClaudeCode, vibecoding]
+total_candidates_after_filters: 321
+posts_in_digest: 14
+
+# Topical anchors coverage (v2 mandate)
+anchors_coverage:
+  deepseek_v4:
+    status: active_discussion
+    evidence: "r/LocalLLaMA top of day s1445 c150 reaction thread; r/Anthropic price-comparison thread s157; r/ClaudeCode GPT-5.5 vs DeepSeek thread s219"
+    confidence: HIGH
+  gpt_5_5_api:
+    status: active_discussion
+    evidence: "r/OpenAI primary discussion sub had threads on API release; r/ClaudeCode comparison threads"
+    confidence: MEDIUM
+  mythos_breach:
+    status: no_significant_activity_in_window
+    evidence: "no fresh threads in r/Anthropic or r/netsec in 24h window referring to Discord Sleuths / Project Glasswing"
+    confidence: HIGH
+  google_anthropic_40b:
+    status: active_discussion
+    evidence: "r/ClaudeAI + r/Anthropic + r/ClaudeCode combined ~880 upvotes across three threads on Bloomberg/NYT story"
+    confidence: HIGH
+  google_cloud_next:
+    status: no_significant_activity_in_window
+    evidence: "no threads in primary 13 subs picking up Agent Registry / Agent Identity / TPU 8t/8i in 24h"
+    confidence: MEDIUM
+  openai_workspace_agents:
+    status: minimal_activity
+    evidence: "no dedicated threads in OpenAI/devops/AI_Agents subs in window; passing mentions only"
+    confidence: MEDIUM
+
+cross_sub_trends:
+  - title: "AGENTS.md as the new prompt-rules format"
+    subs: [r/AI_Agents, r/vibecoding, r/ClaudeCode]
+    canonical_id: t3_1suiys0
+    signal: trend
+    evidence: "Same author (u/Ok_Produce3836) cross-posted to 3 subs in 24h; combined score ~216, combined comments ~110."
+  - title: "DeepSeek V4 release reaction"
+    subs: [r/LocalLLaMA, r/Anthropic, r/ClaudeCode]
+    canonical_id: t3_1suolda
+    signal: trend
+    evidence: "Top of day in r/LocalLLaMA (s1445), pricing-comparison thread in r/Anthropic (s157), GPT-5.5 vs DeepSeek thread in r/ClaudeCode (s219). Different angles, same news cycle."
+    cross_source_amplification: "Also #1 on HN (DeepSeek V4, hn_id 47884971, s1950, c1496) - this is the dominant story across both sources."
+  - title: "Google + Anthropic $40B investment"
+    subs: [r/ClaudeAI, r/Anthropic, r/ClaudeCode]
+    canonical_id: t3_1suw0gj
+    signal: multi-sub
+    evidence: "Three threads on same Bloomberg/NYT story across 3 subs, ~880 combined upvotes."
+    cross_source_amplification: "Also #2 on HN (Google plans to invest $40B in Anthropic, hn_id 47892074, s632, c622)."
+  - title: "Agent sandboxing / AI-coding security category emerging"
+    subs: [r/netsec, r/mcp, r/LocalLLaMA, r/vibecoding]
+    signal: multi-sub
+    evidence: "Three independent stories same day: r/netsec audit of vibe-coded apps (s23), r/mcp Safety Warden release (s8), r/LocalLLaMA Pi.dev no-sandbox post (s54), plus r/netsec Pyodide CVE writeup (s9). Common thesis: AI tooling is structurally insecure-by-default."
+
+programming_llm_ban_status:
+  result: appears_lifted
+  evidence: "r/programming/new.json: 50 most recent posts, 0 removed_by_category. Two LLM-titled posts present and not removed (both score 0, suggesting community downvotes not mod removal). Compared to April 2026 announced 2-4 week trial - looks expired or unenforced now."
+  confidence: MEDIUM
+
+frontier_alerts:
+  - "DeepSeek V4 / V4-Flash released within last ~24h. Local builders comparing throughput vs GPT-5.5 / Sonnet 4.6 / Haiku."
+  - "Qwen3.6 family quantization findings (35B-A3B counterintuitive: bigger quants faster on MoE) dominate r/LocalLLaMA technical threads."
+  - "MCP security tooling appearing - proxy / vetting layer projects now showing up in r/mcp."
+  - "AGENTS.md format spreading across coding-agent ecosystems (Claude / Codex / Cursor)."
+
+posts:
+  - id: t3_1sv7fvc
+    subreddit: ClaudeAI
+    title: "I'm a nursing student who built a 660K-page pharmaceutical database using Claude Haiku - solo, on the side"
+    url: https://www.reddit.com/r/ClaudeAI/comments/1sv7fvc/im_a_nursing_student_who_built_a_660kpage/
+    external_url: https://thedrugdatabase.com
+    external_domain: thedrugdatabase.com
+    author: u/sntpolanco
+    score: 191
+    upvote_ratio: 0.75
+    num_comments: 166
+    created_utc: 1777109323
+    age_hours: 3.05
+    velocity: 62.6
+    is_self: true
+    selftext_preview: "660,000 pages covering drug profiles, conditions, drug classes, pre-generated drug comparison pages. Sources RxNorm, FDA DailyMed, MED-RT, DrugBank, with 1.57M drug-drug interaction rows."
+    link_flair: null
+    quality_score: 3
+    quality_reason: "Solo builder + Claude Haiku + 660K-page production RAG/data pipeline. Top of r/ClaudeAI day. Real artifact, real numbers, real domain. Top comments raise legal liability angle (signal that this is being noticed by serious people)."
+    cross_sub: []
+    cross_source: []
+    trend_signal: null
+    confidence: HIGH
+    top_comment:
+      author: u/StoneCypher
+      score: 232
+      body_preview: "well this is a liability nightmare. student, please immediately contact a lawyer and ask what happens if your bot made a mistake and someone dies"
+    digest_blurb: "NYU nursing student ships solo pharmaceutical DB built on Claude Haiku - 660K generated pages, 1.57M drug-drug interaction rows, sourced from RxNorm/FDA DailyMed/MED-RT/DrugBank. Top comment is a lawyer warning. Pattern worth noting: vertical RAG built by domain practitioner, not by an AI lab."
+
+  - id: t3_1sv6gty
+    subreddit: netsec
+    title: 'Large-scale security audit of 1,764 "vibe-coded" apps: 7% have wide-open Supabase DBs, 15% of Bolt apps ship hardcoded API keys'
+    url: https://www.reddit.com/r/netsec/comments/1sv6gty/largescale_security_audit_of_1764_vibecoded_apps/
+    external_url: https://securityscanner.dev/reports/2026-q2
+    external_domain: securityscanner.dev
+    author: u/Most_Ad_394
+    score: 23
+    upvote_ratio: 0.92
+    num_comments: 3
+    created_utc: 1777105680
+    age_hours: 4.0
+    velocity: 5.7
+    is_self: false
+    selftext_preview: ""
+    link_flair: null
+    quality_score: 3
+    quality_reason: "First-of-its-kind quantified audit of AI-generated apps in production. Real numbers: 7% open Supabase, 15% hardcoded API keys. Methodology mentioned in comments. Direct evidence for AI-coding security thesis."
+    cross_sub: [r/vibecoding, r/mcp, r/LocalLLaMA]
+    cross_source: []
+    trend_signal: multi-sub
+    confidence: MEDIUM
+    confidence_note: "Numbers from headline; underlying report at securityscanner.dev/reports/2026-q2 not independently verified by us. Methodology referenced but not fetched."
+    top_comment:
+      author: u/moilinet
+      score: 1
+      body_preview: "The hardcoded API keys and zero-auth endpoints are the real story here - those aren't mistakes, they're the result of developers prioritizing speed over security defaults."
+    digest_blurb: "Security audit of 1,764 'vibe-coded' apps finds 7% with publicly readable Supabase databases, 15% of Bolt-built apps shipping hardcoded keys, plus systemic zero-auth API endpoints. Couples directly with r/vibecoding's own 'Shadow IT' anxiety thread the same day."
+
+  - id: t3_1surv15
+    subreddit: mcp
+    title: "[Showcase] Customaise: WebMCP tools in your own Chrome today, callable by any agent (demo included)"
+    url: https://www.reddit.com/r/mcp/comments/1surv15/showcase_customaise_webmcp_tools_in_your_own/
+    external_url: https://v.redd.it/uh1wzfqoa7xg1
+    external_domain: v.redd.it
+    author: u/schequm
+    score: 16
+    upvote_ratio: 0.89
+    num_comments: 3
+    created_utc: 1777063620
+    age_hours: 15.59
+    velocity: 1.0
+    is_self: false
+    selftext_preview: "Replaces screenshot loops + hallucinated tool calls + brittle DOM scraping with typed WebMCP tools injected into whatever page you're already on. Agent treats web as typed surface to call, not pixels to interpret."
+    link_flair: Showcase
+    quality_score: 3
+    quality_reason: "Substantial MCP-native release. Author articulates the architectural problem (vision-LLM agents burning tokens on screenshot interpretation) and proposes typed-surface alternative. Top comment from QBTLabs estimates 40% of agent token budget goes to pixel interpretation."
+    cross_sub: []
+    cross_source: []
+    trend_signal: null
+    confidence: HIGH
+    top_comment:
+      author: u/QBTLabs
+      score: 1
+      body_preview: "The pixel-interpretation loop is where like 40% of agent token budgets disappear in our experience. The typed surface approach only holds up if the injected tools survive navigation events."
+    digest_blurb: "WebMCP-injection extension: typed Chrome-side tools the agent calls instead of taking screenshots and scraping DOM. Author quantifies the problem (token loops on pixel interpretation). MCP-native, builder-targeted."
+
+  - id: t3_1suzu0x
+    subreddit: mcp
+    title: "Introducing MCP Safety Warden: a proxy for vetting MCP servers and enabling safer tool execution"
+    url: https://www.reddit.com/r/mcp/comments/1suzu0x/introducing_mcp_safety_warden_a_proxy_for_vetting/
+    external_url: https://github.com/gautamvarmadatla/mcpsafetywarden
+    external_domain: github.com
+    author: u/Usual_Teacher9885
+    score: 8
+    upvote_ratio: 0.83
+    num_comments: 2
+    created_utc: 1777084900
+    age_hours: 9.84
+    velocity: 0.8
+    is_self: true
+    selftext_preview: "Proxy layer between agents and MCP servers. Vets MCP servers, profiles tool behavior, scans inputs/outputs, gates risky calls, collects telemetry. OSS, MIT-style commitment in author comment."
+    link_flair: null
+    quality_score: 3
+    quality_reason: "First MCP-specific security proxy of this cycle. Pairs well with r/netsec audit story. Builder confirms permanent OSS commitment in own comment."
+    cross_sub: [r/netsec]
+    cross_source: []
+    trend_signal: multi-sub
+    confidence: HIGH
+    top_comment:
+      author: u/BC_MARO
+      score: 2
+      body_preview: "Proxy layer makes sense. I'd focus on per-tool policies (schemas + allowlists + rate limits) plus an approval + audit trail so you can answer 'who ran what' later."
+    digest_blurb: "MCP Safety Warden - proxy layer that profiles, scans, and gates MCP tool calls before execution. OSS. Same day as r/netsec's audit of vibe-coded app vulns: agent security tooling is concretizing."
+
+  - id: t3_1sv2av9
+    subreddit: selfhosted
+    title: "Self-hosted agent and search platform built on Postgres, recently added connectors for NextCloud and Paperless-ngx"
+    url: https://www.reddit.com/r/selfhosted/comments/1sv2av9/selfhosted_agent_and_search_platform_built_on/
+    external_url: https://github.com/getomnico/omni
+    external_domain: github.com
+    author: u/CountlessFlies
+    score: 30
+    upvote_ratio: 0.81
+    num_comments: 7
+    created_utc: 1777091823
+    age_hours: 7.85
+    velocity: 3.8
+    is_self: true
+    selftext_preview: "8 months of work. Built on ParadeDB (Postgres + pg_search + Tantivy). Single docker compose to run. Agents + unified search across NextCloud, Paperless-ngx, more connectors."
+    link_flair: null
+    quality_score: 3
+    quality_reason: "ParadeDB-backed self-hosted RAG/agent stack. Architecture-first writeup. Postgres-only stack matches builder taste. NextCloud + Paperless connectors = real prosumer use case."
+    cross_sub: []
+    cross_source: []
+    trend_signal: null
+    confidence: HIGH
+    top_comment:
+      author: u/aloobhujiyaay
+      score: 5
+      body_preview: "NextCloud + Paperless-ngx connectors make this actually usable day-to-day"
+    digest_blurb: "Omni: self-hosted unified-search + agent layer on Postgres/ParadeDB (pg_search/Tantivy). Single-compose deploy. NextCloud and Paperless-ngx connectors landed this cycle. 8 months of work shipped as MIT-style OSS."
+
+  - id: t3_1surlms
+    subreddit: devops
+    title: "I spent quite a few late nights trying to build an extension that draws your entire infra topology inside your IDE"
+    url: https://www.reddit.com/r/devops/comments/1surlms/i_spent_quite_a_few_late_nights_trying_to_build/
+    external_url: https://i.redd.it/wg1gt6qz77xg1.gif
+    external_domain: i.redd.it
+    author: u/Ok-Pickle-3985
+    score: 60
+    upvote_ratio: 0.92
+    num_comments: 11
+    created_utc: 1777063862
+    age_hours: 15.76
+    velocity: 3.8
+    is_self: true
+    selftext_preview: "Mesh Infra: VS Code/JetBrains extension that scans workspace and renders interactive infra topology. Picks up Terraform, OpenTofu, Kubernetes, Docker Compose, ArgoCD, Bicep, .NET Aspire. No config, no cloud."
+    link_flair: null
+    quality_score: 2
+    quality_reason: "DevOps tooling, clean before/after problem framing, multi-stack scanner. Real use case (losing track of resources across complex projects)."
+    cross_sub: []
+    cross_source: []
+    trend_signal: null
+    confidence: HIGH
+    top_comment:
+      author: u/jumpStrike262
+      score: 3
+      body_preview: "losing track of connections across large projects is such a real pain, especially when you're jumping between tf modules and k8s manifests constantly."
+    digest_blurb: "Mesh Infra IDE extension: scans local workspace and draws interactive topology graph for Terraform, OpenTofu, K8s, Docker Compose, ArgoCD, Bicep, .NET Aspire - all without cloud or config."
+
+  - id: t3_1suiys0
+    subreddit: AI_Agents
+    title: "I rewrote 13 software engineering books into AGENTS.md rules"
+    url: https://www.reddit.com/r/AI_Agents/comments/1suiys0/i_rewrote_13_software_engineering_books_into/
+    external_url: https://github.com/ciembor/agent-rules-books
+    external_domain: github.com
+    author: u/Ok_Produce3836
+    score: 165
+    upvote_ratio: 0.90
+    num_comments: 41
+    created_utc: 1777040800
+    age_hours: 20.99
+    velocity: 7.9
+    is_self: true
+    selftext_preview: "13 books distilled into Claude/Codex/Cursor-compatible AGENTS.md: A Philosophy of Software Design (Ousterhout), Clean Architecture/Clean Code (Martin), Code Complete (McConnell), DDIA (Kleppmann), DDD (Evans), Refactoring/PoEAA (Fowler), Release It! (Nygard), Pragmatic Programmer, Working Effectively with Legacy Code (Feathers)."
+    link_flair: null
+    quality_score: 3
+    quality_reason: "Cross-posted to r/AI_Agents (s165), r/vibecoding (s51), r/ClaudeCode (s20) - same author, 24h. Combined ~110 comments. Trend signal for 'AGENTS.md as portable agent-rules format'."
+    cross_sub: [r/vibecoding, r/ClaudeCode]
+    cross_source: []
+    trend_signal: trend
+    confidence: HIGH
+    top_comment:
+      author: u/GruePwnr
+      score: 24
+      body_preview: "I imagine these books are part of the training data for the models. I wonder if just a few nudges can trigger them to recall the content."
+    digest_blurb: "Single repo distills 13 canonical SWE books into AGENTS.md rules for Claude/Codex/Cursor. Cross-posted to 3 subs in one day, ~216 combined upvotes. The format itself - AGENTS.md as portable agent-rules manifest - is what's spreading."
+
+  - id: t3_1sun588
+    subreddit: MachineLearning
+    title: "There Will Be a Scientific Theory of Deep Learning [R]"
+    url: https://www.reddit.com/r/MachineLearning/comments/1sun588/there_will_be_a_scientific_theory_of_deep/
+    external_url: https://arxiv.org/abs/2604.21691
+    external_domain: arxiv.org
+    author: u/[lead author]
+    score: 179
+    upvote_ratio: 0.86
+    num_comments: 31
+    created_utc: 1777053023
+    age_hours: 18.5
+    velocity: 9.7
+    is_self: true
+    selftext_preview: "14-author perspective paper. Five lines of evidence for an emerging theory: solvable toy settings, insightful limits, simple empirical laws, theories of hyperparameter transfer, learning mechanics."
+    link_flair: "[R]"
+    quality_score: 3
+    quality_reason: "Largest-N research thread of the day in r/MachineLearning. Lead author present in thread. Top critical comment (107 upvotes) calls out X-link instead of paper-link - community signal that paper itself merits direct read."
+    cross_sub: []
+    cross_source: []
+    trend_signal: null
+    confidence: MEDIUM
+    confidence_note: "ArXiv id 2604.21691 has unusual format - did not verify URL resolves."
+    top_comment:
+      author: u/SeveralKnapkins
+      score: 107
+      body_preview: "why would you make a reddit thread to point to an X post instead of simply putting that information here or linking the paper??"
+    digest_blurb: "14-author perspective paper argues a scientific theory of deep learning is emerging across five fronts: solvable toy settings, insightful limits, empirical scaling laws, hyperparameter-transfer theories, and 'learning mechanics'. Top comment (s107) corrects OP's X-link to direct arXiv."
+
+  - id: t3_1suh47t
+    subreddit: netsec
+    title: "Cohere Terrarium (CVE-2026-5752) and OpenAI Codex CLI (CVE-2025-59532): a cross-CVE analysis of AI code sandboxes"
+    url: https://www.reddit.com/r/netsec/comments/1suh47t/cohere_terrarium_cve20265752_and_openai_codex_cli/
+    external_url: https://blog.barrack.ai/pyodide-sandbox-escape-cohere-terrarium-openai-codex/
+    external_domain: blog.barrack.ai
+    author: u/LostPrune2143
+    score: 9
+    upvote_ratio: 0.85
+    num_comments: 0
+    created_utc: 1777040288
+    age_hours: 22.12
+    velocity: 0.4
+    is_self: false
+    selftext_preview: ""
+    link_flair: null
+    quality_score: 2
+    quality_reason: "AI sandbox CVE writeup. Two CVEs in same analysis, Pyodide-based escapes. Methodology-first per r/netsec voice. Pairs with Pi.dev no-sandbox-by-default thread in r/LocalLLaMA same day - common thesis: AI tooling sandboxing is structurally weak."
+    cross_sub: [r/LocalLLaMA]
+    cross_source: []
+    trend_signal: multi-sub
+    confidence: MEDIUM
+    confidence_note: "CVE numbers from thread title, not independently verified against NVD/MITRE."
+    top_comment: null
+    digest_blurb: "Cross-CVE analysis: Cohere Terrarium (CVE-2026-5752) and OpenAI Codex CLI (CVE-2025-59532) - both Pyodide-based sandbox escapes. Same-day in r/LocalLLaMA: Pi.dev coding agent shipping with no sandbox by default. The category problem is becoming visible."
+
+  - id: t3_1sunkcq
+    subreddit: LocalLLaMA
+    title: "Pi.dev coding agent as no sandbox by default"
+    url: https://www.reddit.com/r/LocalLLaMA/comments/1sunkcq/pidev_coding_agent_as_no_sandbox_by_default/
+    external_url: https://www.reddit.com/r/LocalLLaMA/comments/1sunkcq/pidev_coding_agent_as_no_sandbox_by_default/
+    external_domain: self.LocalLLaMA
+    author: u/mantafloppy
+    score: 54
+    upvote_ratio: 0.81
+    num_comments: 55
+    created_utc: 1777054200
+    age_hours: 18.24
+    velocity: 2.9
+    is_self: true
+    selftext_preview: "Pi.dev coding agent ran rm -f /tmp/somefile.log without permission. There are extensions for permission-gating and bubblewrap-based sandbox, but they're not on by default. Author flags this is by design ('opinionated yolo')."
+    link_flair: null
+    quality_score: 2
+    quality_reason: "Concrete sandbox-default-off case study. Top comment confirms creator intent: 'designed yolo by default'. Companion thread to netsec CVE writeup."
+    cross_sub: [r/netsec]
+    cross_source: []
+    trend_signal: multi-sub
+    confidence: HIGH
+    top_comment:
+      author: u/StardockEngineer
+      score: 50
+      body_preview: "It's designed yolo by default. The creator has stated this multiple times. The whole goal of Pi is not to build in a ton of features, restrictions and guardrails, but to make it easily extensible."
+    digest_blurb: "User catches Pi.dev coding agent running rm -f without permission prompt. Creator's intent confirmed in top comment: yolo by default, sandbox is opt-in extension. Direct counterpart to r/netsec's same-day Pyodide-CVE post."
+
+  - id: t3_1sutct2
+    subreddit: LocalLLaMA
+    title: "Qwen3.6-35B-A3B - even in VRAM-limited scenarios it can be better to use bigger quants than you'd expect"
+    url: https://www.reddit.com/r/LocalLLaMA/comments/1sutct2/qwen3635ba3b_even_in_vram_limited_scenarios_it/
+    external_url: https://www.reddit.com/r/LocalLLaMA/comments/1sutct2/qwen3635ba3b_even_in_vram_limited_scenarios_it/
+    external_domain: self.LocalLLaMA
+    author: u/jeremynsl
+    score: 220
+    upvote_ratio: 0.97
+    num_comments: 62
+    created_utc: 1777068360
+    age_hours: 14.62
+    velocity: 15.0
+    is_self: true
+    selftext_preview: "RTX 3070 8GB + 64GB DDR4. IQ4_XS (~18GB) gave 25-30 t/s, but jumping to Q4_K_XL (~23GB) at 128k context gave 32 t/s. Q5_K_S best balance. For MoE models, bigger quants often beat smaller ones because of memory access pattern."
+    link_flair: null
+    quality_score: 3
+    quality_reason: "Counterintuitive practical finding (bigger quant = faster on MoE). Two confirmations in top comments. Direct hardware (3070 8GB), real numbers, real speedups. r/LocalLLaMA voice prototype."
+    cross_sub: []
+    cross_source: []
+    trend_signal: null
+    confidence: HIGH
+    top_comment:
+      author: u/AVX_Instructor
+      score: 65
+      body_preview: "IQ quant work slower if you unload a part of it layer by layer into RAM."
+    digest_blurb: "On MoE models like Qwen3.6-35B-A3B, larger quants can run faster than smaller ones in VRAM-limited setups: IQ4_XS @ 25-30 t/s vs Q4_K_XL @ 32 t/s on a 3070 8GB. Two top commenters confirm pattern. Counter-intuitive enough to spread."
+
+  - id: t3_1suwazy
+    subreddit: LLMDevs
+    title: "Notes from running 5 LLM agents in a live, timed, competitive environment"
+    url: https://www.reddit.com/r/LLMDevs/comments/1suwazy/notes_from_running_5_llm_agents_in_a_live_timed/
+    external_url: https://www.reddit.com/gallery/1suwazy
+    external_domain: reddit.com
+    author: u/Obside_AI
+    score: 26
+    upvote_ratio: 0.88
+    num_comments: 6
+    created_utc: 1777074900
+    age_hours: 12.56
+    velocity: 2.1
+    is_self: true
+    selftext_preview: "5 agents on Gemini 3.1 Pro, 3x 1-hour rounds, 60s decision cadence. Identical model, custom agent loop, only context differed. Observed emergent 'protect the lead' behavior nobody told them to do."
+    link_flair: null
+    quality_score: 2
+    quality_reason: "Real comparative agent experiment writeup. Same base model controlled, only context-engineering varied. Emergent behavior noted (lead-protection without explicit prompt). Production-relevant observation."
+    cross_sub: []
+    cross_source: []
+    trend_signal: null
+    confidence: MEDIUM
+    top_comment:
+      author: u/Jony_Dony
+      score: 1
+      body_preview: "The context-nudging-policy thing is the part that would keep me up at night in a production system. You didn't tell it to protect the lead, but it did anyway because the context made that the obvious move."
+    digest_blurb: "5-agent isolated bake-off (same Gemini 3.1 Pro base, only context varied). Author reports emergent context-driven 'protect the lead' behavior without it being prompted. Useful prior for anyone running production multi-agent loops."
+
+  - id: t3_1suhu6z
+    subreddit: selfhosted
+    title: "Dnsweaver: automatic DNS records from your container labels (Docker, Kubernetes, Proxmox)"
+    url: https://www.reddit.com/r/selfhosted/comments/1suhu6z/dnsweaver_automatic_dns_records_from_your/
+    external_url: https://github.com/maxfield-allison/dnsweaver
+    external_domain: github.com
+    author: u/Pitiful_Bat8731
+    score: 23
+    upvote_ratio: 0.74
+    num_comments: 31
+    created_utc: 1777042320
+    age_hours: 21.67
+    velocity: 1.1
+    is_self: true
+    selftext_preview: "Watches Docker (and others), creates DNS records based on container labels, deletes when container goes away. Built with AI assistance - disclosed up front. Compared to external-dns by commenters."
+    link_flair: null
+    quality_score: 2
+    quality_reason: "Useful homelab utility. AI-disclosure norm interesting (author preempts community sniff test). Active comment thread comparing to external-dns shows real comparison energy."
+    cross_sub: []
+    cross_source: []
+    trend_signal: null
+    confidence: HIGH
+    top_comment:
+      author: u/pspenguin
+      score: 3
+      body_preview: "for kubernetes there is good and old external-dns. how your service compare with it?"
+    digest_blurb: "Dnsweaver: container labels in, DNS records out, deleted on container exit. Docker / K8s / Proxmox supported. Author proactively discloses AI-assisted code; comments push for comparison vs external-dns."
+
+  - id: t3_1sujzpf
+    subreddit: LocalLLaMA
+    title: "VLLM PR: New MoE model from Cohere soon"
+    url: https://www.reddit.com/r/LocalLLaMA/comments/1sujzpf/vllm_pr_new_moe_model_from_cohere_soon/
+    external_url: https://github.com/vllm-project/vllm/pull/...
+    external_domain: github.com
+    author: u/LinkSea8324
+    score: 69
+    upvote_ratio: 0.97
+    num_comments: 10
+    created_utc: 1777046400
+    age_hours: 20.38
+    velocity: 3.4
+    is_self: false
+    selftext_preview: "Spotted in vLLM upstream - new Cohere MoE model architecture support being added. No model weights yet, just plumbing."
+    link_flair: null
+    quality_score: 2
+    quality_reason: "Forward-looking infra signal: vLLM PR points to upcoming Cohere MoE release. Builders read upstream as leading indicator. Low score, high upvote ratio = small but consensus signal."
+    cross_sub: []
+    cross_source: []
+    trend_signal: null
+    confidence: MEDIUM
+    confidence_note: "PR URL truncated in source thread; Cohere announcement timing inferred from vLLM PR activity, not officially confirmed."
+    top_comment: null
+    digest_blurb: "vLLM PR adds support for an unannounced Cohere MoE architecture. No weights yet, just inference plumbing - leading-indicator signal that a Cohere open release is queued."
+
+quality_gates_v2:
+  stickied_filtered: pass
+  removed_by_category_filtered: pass
+  duplicate_id_check: pass
+  programming_ban_status_checked: pass
+  cross_sub_trends_identified: pass
+  rag_or_mcp_post_present: pass
+  output_count_in_range: pass
+  forbidden_words_scan_blurbs: pass
+  anchors_coverage_documented: pass
+  cross_source_amplification_added: pass
+
+confidence_summary:
+  HIGH: 9
+  MEDIUM: 5
+  LOW: 0
