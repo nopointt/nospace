@@ -1,8 +1,8 @@
 ---
 # provizor-unit-economics.md — APT-13 Unit Economics
-> Layer: L3 | Epic: APT-13 | Status: 🔶 IN PROGRESS
+> Layer: L3 | Epic: APT-13 | Status: ✅ COMPLETE
 > Created: 2026-04-04 (session 231)
-> Last updated: 2026-04-04 (session 5 — V2 full build, 16 tasks, date range picker, closeaxis safety rules)
+> Last updated: 2026-04-04 (session 6 — closed after full audit, remaining items → finmodel-polish)
 > Deadline: 2026-04-05 (встреча с Алимханом)
 ---
 
@@ -132,8 +132,17 @@ Reference: `STATE.md` → V2 Direction section (полная спека + пут
 ## Blockers
 
 - ✅ V2 build — completed (session 5)
-- Deploy на Hetzner
 - ✅ Tight deadline (встреча Алимхан) — V2 ready
+- Deploy на Hetzner → transferred to finmodel-polish
+
+## Closure Note (session 6)
+
+APT-13 closed after full code audit. All Phase 0 (research) and Phase 1 (build) items complete.
+Remaining items transferred to APT-16 finmodel-polish:
+- Visual review + polish
+- Deploy на Hetzner
+- Custom date range input
+- UX/UI/Code audit
 
 ## AC
 

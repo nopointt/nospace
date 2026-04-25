@@ -1,53 +1,60 @@
 {
-  "updated_at": 1776813460,
+  "updated_at": 1776965596,
   "start_capital": 10000,
-  "current_balance_usdt": 3752.389406,
-  "current_balance_btc": 1.01663,
-  "current_balance_eth": 3.1457,
+  "current_balance_usdt": 8753.9226383,
+  "current_balance_btc": 1.01703,
+  "current_balance_eth": 1.02,
   "by_strategy": {
     "remizov_v2": {
-      "trades": 17,
-      "buys": 10,
-      "sells": 7,
-      "volume_usd": 21245.5251581,
+      "trades": 23,
+      "buys": 13,
+      "sells": 10,
+      "volume_usd": 28743.518505300002,
       "virtual": false
     },
     "remizov_v2_cramer": {
-      "trades": 17,
-      "buys": 7,
-      "sells": 10,
-      "volume_usd": 21245.524670099996,
+      "trades": 22,
+      "buys": 10,
+      "sells": 12,
+      "volume_usd": 27495.470982099992,
       "virtual": true
     },
     "basic_ema_rsi": {
-      "trades": 6,
-      "buys": 4,
-      "sells": 2,
-      "volume_usd": 7500.361877099999,
+      "trades": 16,
+      "buys": 8,
+      "sells": 8,
+      "volume_usd": 19998.1921903,
       "virtual": false
     },
     "basic_ema_rsi_cramer": {
-      "trades": 4,
-      "buys": 2,
-      "sells": 2,
-      "volume_usd": 5000.001368,
+      "trades": 14,
+      "buys": 8,
+      "sells": 6,
+      "volume_usd": 17499.992574,
       "virtual": true
     },
     "macd_trend": {
-      "trades": 1,
-      "buys": 1,
-      "sells": 0,
-      "volume_usd": 1249.816322,
+      "trades": 5,
+      "buys": 3,
+      "sells": 2,
+      "volume_usd": 6249.1847378,
       "virtual": false
+    },
+    "macd_trend_cramer": {
+      "trades": 3,
+      "buys": 2,
+      "sells": 1,
+      "volume_usd": 3749.9831719999997,
+      "virtual": true
     }
   },
   "totals": {
-    "trades": 40,
-    "volume_usd": 49991.22196830001,
-    "virtual_trades": 5,
-    "virtual_volume": 6250.007427,
-    "dedup": 192,
-    "cooldown": 0
+    "trades": 60,
+    "volume_usd": 74986.41404450001,
+    "virtual_trades": 23,
+    "virtual_volume": 28749.928116999996,
+    "dedup": 787,
+    "cooldown": 1
   },
   "halt_active": false
 }

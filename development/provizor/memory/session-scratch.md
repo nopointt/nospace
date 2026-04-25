@@ -1,2 +1,3 @@
 # session-scratch.md
-> Closed · Axis · 2026-04-05
+> Placeholder · Axis · 2026-04-07 · session 8
+> Last processed checkpoint: #7

@@ -88,3 +88,19 @@
 
 **Files:** turnover-mock.ts, TurnoverPage.tsx, DefecturaPage.tsx, DashboardPage.tsx, RoadmapPage.tsx, MetricCard.tsx, Sidebar.tsx, App.tsx, benchmarks.ts
 <!-- /ENTRY -->
+
+<!-- ENTRY: 7 | 2026-04-05 | PIVOT | provizor-whatsapp-bot -->
+## Session 7 — WhatsApp Bot Research Sprint (2026-04-05)
+
+**Trigger:** Встреча с Алимханом → Telegram deprecated → WhatsApp = единственная платформа.
+
+**Pivot:** APT-16 PAUSED → APT-02 WhatsApp Bot IN PROGRESS. APT-17/18 added.
+
+**Research (6 files, ~3,800 lines):** SEED + 5 DEEP. Compliance, architecture, BSP, commerce flow, Rx handling. 42 decisions (D-17—D-42).
+
+**Key:** Direct Cloud API, whatsapp-api-js, Groq $13/mo, KZ VPS, info assistant, CTA→external+Kaspi Pay, Rx reserve+pickup, criminal liability 01.01.2026.
+
+**Deliverables:** Briefing PDF v2 for Алимхан (181 KB). L3 finalized.
+
+**Next:** ТОО docs → Meta registration → bot dev 1-2 weeks.
+<!-- /ENTRY -->

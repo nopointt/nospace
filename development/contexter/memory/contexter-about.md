@@ -61,8 +61,9 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | Memory | `memory/` |
 | Co-founder docs | `docs/artem/` (29 files MD+HTML, index.html, convert.ts) |
 | Research | `nospace/docs/research/` (GTM, competitors, Reddit guide, correspondent intelligence playbooks, Gemini API capability matrix) |
-| **Content factory** | `content-factory/` (planning/correspondent-roadmap.md, prompts/evening-digest-v2.md, digests/{date}-{cycle}/{narratives,structured,master-blog-post,triangulation-bundle}) |
+| **Content factory** | `content-factory/` (planning/correspondent-roadmap.md, prompts/evening-digest-v2.md, **specs/editorial-layer-4-digest.md** (genre spec v1), **specs/master-article-process.md** (5-stage pipeline doc), digests/{date}-{cycle}/{narratives,structured,master-blog-post,triangulation-bundle}) |
 | **Correspondent agents** | `~/.claude/agents/{hn,reddit}-correspondent.md` (production-ready, 12+14 KB, persistent across sessions) |
+| **Digest auto-execution skills** | `~/.claude/skills/{morningDigest,eveningDigest}/SKILL.md` (auto-execution для 09:00/21:00 UTC cycles, references master-article-process.md) |
 
 ## Deployed
 
