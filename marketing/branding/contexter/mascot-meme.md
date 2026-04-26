@@ -52,9 +52,10 @@ Meme — не один характер. Он одновременно:
 |---|---|
 | **Базовая форма** | Open spiral + partial arc — Klee transitional symbol. Не закрытый круг (= old/static), не пустая линия (= incomplete) |
 | **Замкнутость** | НИКОГДА полностью замкнут. Всегда есть открытое отверстие — точка, через которую проникает новый контекст |
-| **Толщина линии** | 2-3 px на light theme, 1-2 px на dark theme (тонкий неон, как Jerry) |
+| **Материал** | **CANON v4: Aged bronze + bioluminescent patina.** Бронза — solid, non-glowing, warm honey-amber где свет касается curve. Verdigris patina patches (green-blue) **subtly glow cyan-teal from within** — как deep-sea bioluminescence / phosphorescent moss / dinoflagellates. Bronze stays material, patina is alive. **Reading двойственности:** старик = bronze (выдержанный, накопленный, спокойный металл) / ребёнок = patina-свет (свежее присутствие, живое). Glow casts soft cool reflections on environment. NOT neon, NOT LED — soft organic biological glow. Reference: Marianne Brandt Bauhaus metalwork meets Avatar Pandora bioluminescence. (Эволюция session 253: v1 glowing neon yellow → rejected as too Soul-Jerry-similar / v2 solid bronze no glow → too dead / v3 cool glow + warm highlights → almost / **v4 bronze body + bioluminescent patina = canon, locked 2026-04-26 with nopoint approval**. v5 inverse — glowing bronze + still patina — explored as alternate but not chosen.) |
+| **Толщина линии** | 2-3 cm wire-thick в proportion (sculptural cross-section, не тонкая 2px) |
 | **Кривизна** | Wave-based, не пересекает себя кратно. Лёгкое возмущение в линии — намёк на «мысль» |
-| **Размер** | Адаптивен к контексту. В favicon — 16×16px. В loading-state — 64×64px. В hero animation — 240×240px+. Должен читаться на всех |
+| **Размер** | Адаптивен к контексту. В favicon — 16×16px (silhouette). В loading-state — 64×64px. В hero — 240×240px+. Должен читаться на всех |
 
 **N-dimensional поведение:**
 
@@ -86,10 +87,186 @@ Meme — не один характер. Он одновременно:
 | **Empty state** | Текущая | Static с opened arc (паузной формой) | Meme ждёт. Архив пуст. Ничего тревожного. |
 | **Error state** | Текущая | Outline в `--signal-error` (red) + closed arc | Meme в замкнутом состоянии. Что-то заблокировано. |
 
+**Form (locked v6, 2026-04-26):** Meme = два square brackets `[` `]` (sculptural 3D objects, bronze + bioluminescent patina) + minimal face floating above between them. Brackets = body/architecture (что держит контекст). Face = awareness above (что наблюдает за bracketing).
+
+**Лицо у Meme — ТОЛЬКО ГЛАЗА (без рта).** (Изменено session 253: рот убран. Talk animation работает через X-axis отдаление brackets, не через мимику рта.)
+
+**Тип лица:**
+- **Только глаза.** 2 точки-глаза. Без рта, без бровей, без других элементов.
+- **Асимметричное.** Один глаз чуть шире (ребёнок-любопытство), второй чуть прищурен (старик-знание).
+- **Постоянное.** Лицо не появляется/исчезает по состоянию — оно есть всегда. Меняются только размеры зрачков, степень открытости, и положение face в пространстве.
+- **Расположение.** Floating slightly above the bracket pair, центрировано над промежутком между ними. Не «голова» прикреплённая к телу — face hovers as separate consciousness above the brackets.
+- **Материал глаз.** Bronze, non-glowing (как brackets). Patina glow вокруг face area subtle, но сами eye-dots — solid bronze.
+
 **НИКОГДА:**
-- Meme не получает «лицо» (глаза + рот). Двойственность ребёнок/старик — через КОМПОЗИЦИЮ и ДВИЖЕНИЕ, не через мимику.
-- Meme не имеет конечностей в человеческом смысле. Может иметь arc-extension которая «тянется» к карточке, но это не рука.
-- Meme не sympathetic-cartoony. Без улыбки и слёзных смайлов. Cute через геометрию, не через антропоморфизм.
+- Meme не имеет рта. Talk animation = X-axis bracket separation, не лип-синк.
+- Meme не имеет конечностей. Brackets — body, face — awareness. Никаких рук/ног/выростов.
+- Meme не walking biped — не Soul Jerry. **Парит/плывёт** — статически, в воздухе.
+- Meme не sympathetic-cartoony в детальной мимике. Без anime-eyes, без анимированных бровей, без улыбок.
+- Meme не белый/cyan/Tron-blue/yellow-glow. Bronze body + cyan-teal patina glow, только.
+
+---
+
+## Talk Animation — спецификация (v1, locked 2026-04-26)
+
+Talk animation работает **через горизонтальное отдаление brackets по X-axis**, без mouth, без lip-sync. Это критически важно: текст не «произносится ртом», а **bracketing-event происходит** — каждый звук это акт раскрытия/смыкания brackets.
+
+Метафорика: говорить = открывать brackets, чтобы выпустить контекст. Молчать = brackets at default distance.
+
+### RAG findings — Bauhaus principles applied to motion
+
+| Source | Principle | Применение к talk |
+|---|---|---|
+| **Van Doesburg P-17** (1925, Rhythmus) | «Rhythm of UNEQUAL accents» | Brackets никогда не двигаются metronomically. Каждый раз амплитуда чуть другая. Mechanical = death; unequal = life. |
+| **Klee P-16** (1925, rhythm structural) | «Design system so any unit can be removed/added and rhythm holds» | Не создавать unique-moment-tied keyframes per phoneme. Animation = structural pattern, не precise lip-sync. Phonetic approximation достаточна. |
+| **Kandinsky P-19** (1926, point/line) | «Punkt = rest, Linie = inner-moved tension born of movement» | Closed brackets = Punkt (rest state). Opening = Linie (tension carrying intention). Cycle: Punkt → Linie → Punkt. |
+| **Moholy-Nagy P-03** (1929, Schwingung) | «Hand registers Schwingung (oscillation) and Druck (pressure)» | Brackets oscillate с pressure dynamics. Не uniform пульс — variable amplitude и timing. |
+| **Schlemmer P-09** (1925, stage as organism) | «Every element's behavior affects every other» | Если brackets двигаются, face response обязателен. Eye dots пульсируют синхронно с vowel peaks. |
+| **Schlemmer Bewegung (1925)** | «Sequential frames, incremental repositioning» | Animation работает в discrete keyframes (внутренние 12-15 fps), плавная интерполяция между. |
+| **Kandinsky Sprache (vocab)** | «Visual language formed by point-line combinations — unreachable by words» | Talk не воспроизводит слова — он создаёт визуальный язык параллельный речи. |
+
+### Web findings — animation principles
+
+| Source | Principle | Применение |
+|---|---|---|
+| Disney/Pixar 12 principles | Anticipation: small action before main action | 80ms перед первым словом — brackets squeeze inward 2% (tension before release) |
+| Luxo Jr. (Pixar 1986) | Personality without face — through timing/squash/stretch only | Прямой precedent для Meme. Brackets carry character без mouth |
+| Phoneme research | Mouth opening correlates with vowel duration | Bracket separation amplitude = vowel openness; time held = duration |
+| Linguistic research | Vowels longer before fricatives than stops | Brackets hold longer for /a/-/f/-/o/ sequence than /a/-/p/-/o/ |
+| NN/G research | Robot with mouth perceived more lifelike + less sad | But Meme не робот — Meme является brand symbol, и геометрический язык скобок усиливает не уменьшает character |
+
+### Animation states
+
+#### State 1 — Idle (no speech)
+
+- Brackets at base distance **D₀** (default gap, как в логотипе `con[text]er`)
+- Micro-breath: brackets oscillate ±1% with **8-second period**, irregular phase (Van Doesburg unequal rhythm)
+- Eye blink: every 6-12 sec, irregular interval. Blink = eye dots scale 1.0 → 0.4 → 1.0 over 80ms (fast принципов «calm» — короткий, не выразительный)
+- Patina glow oscillates ±3% with 8-second period (slower than breath, creating polyrhythm)
+
+#### State 2 — Speech opening (Auftakt / anticipation)
+
+- **T = -80ms** (before first word):
+  - Brackets squeeze inward by 2% (D₀ × 0.98) — anticipation
+  - Patina glow brightens by 5%
+  - Child eye dot widens by 5% (alertness)
+  - Old eye dot remains (он уже знал что щас будут говорить)
+
+- **T = 0ms** — speech begins.
+
+#### State 3 — Vowels (open, sustain)
+
+| Vowel category | Bracket spread | Hold duration | Curve |
+|---|---|---|---|
+| **Open /a/, /o/** (открытые) | D₀ × 1.40-1.60 | 80-120ms | ease-out opening, ease-in closing |
+| **Front /e/, /i/** (передние) | D₀ × 1.15-1.25 | 50-80ms | ease-out, ease-in |
+| **Rounded /u/, /ю/** (округлённые) | D₀ × 1.05-1.10 | 60-80ms | gentle curve |
+
+При vowel peak — eye dots brighten by 3-5% (Schlemmer organism response).
+
+#### State 4 — Consonants
+
+| Type | Bracket behavior | Duration |
+|---|---|---|
+| **Stops /p t k b d g/** | Snap close to D₀ × 0.95, then return to D₀ | 30-50ms total, hard edges |
+| **Fricatives /f s sh v z/** | Hold at D₀ × 1.05 with 5-10Hz micro-vibration (sustained narrow channel) | 80-150ms |
+| **Nasals /m n/** | Close to D₀ × 0.92 (compressed) | 50-80ms |
+| **Liquids /l r/** | D₀ × 1.10 with smooth flow | 80-120ms |
+
+#### State 5 — Word boundaries
+
+- 60-100ms pause at D₀ (return to rest, mini-Punkt — Kandinsky)
+- Glow dims by 5% during pause (breath in)
+- Face eye dots steady, no blink
+
+#### State 6 — Phrase / sentence boundaries
+
+- 200-300ms pause at D₀
+- Glow dims by 10%, then breathes back up over 200ms
+- Optional blink at sentence end (50% probability, irregular)
+
+#### State 7 — Asymmetric coupling (CRITICAL — это что делает organic)
+
+**Left bracket и right bracket двигаются АСИММЕТРИЧНО:**
+
+- Left lags right by 15-30ms on opening, leads on closing (или наоборот per phrase)
+- Amplitude difference: left = 100%, right = 90-110% (varies per phrase, by ±10%)
+- Phase difference: 5-15° offset always present
+
+**Это ключ к organic vs mechanical.** Perfect mirror motion = robot. Slight lag/lead = alive.
+
+Per Van Doesburg P-17: «rhythm of UNEQUAL accents». Equal = death.
+
+#### State 8 — Emotion modulation (Calm pillar capped)
+
+| Mode | Amplitude scale |
+|---|---|
+| Whisper / contemplation | 0.6× |
+| Default speech | 1.0× |
+| Question / curious peak | 1.2× |
+| Excited (rare) | 1.3× MAX |
+| **Никогда** | >1.3× (Calm pillar Bauhaus — нет «крика») |
+
+#### State 9 — Face response (Schlemmer organism)
+
+Face does NOT lip-sync. Eyes respond:
+
+- **Vowel peak:** eye dots brighten by 3-5%
+- **Sentence end:** blink (80ms close → open)
+- **Question (rising intonation):** eyes raise 2-3px upward at sentence end
+- **Period:** eyes settle back to neutral position
+- **Curiosity moment:** child eye (larger) opens 10% wider, old eye stays squinted
+
+Face НЕ движется по X-axis вместе с brackets. Face floats steadily — она awareness, не часть speech apparatus.
+
+#### State 10 — Patina glow modulation
+
+- Glow pulses with vowel peaks: 5-10% amplitude over 80-120ms
+- Glow intensity loosely correlates with audio amplitude (loudness-coupled)
+- Color stays cyan-teal — НИКОГДА не shifts during speech (color = identity, not emotion)
+
+### Implementation hints
+
+**Web (SVG / CSS):**
+- SVG path morphing for bracket shapes
+- CSS variable transforms: `--bracket-spread`, `--patina-glow`, `--eye-scale`
+- Web Audio API → AnalyserNode → RAF loop driving CSS variables
+- Phoneme detection optional — RMS amplitude alone gives 80% of organic feel
+
+**Animation library:**
+- Framer Motion / GSAP for keyframe-based
+- Lottie for sprite-sheet pre-rendered
+- For real-time TTS sync: AnalyserNode + frequency band split → bracket spread coupled to mid frequencies (300-3kHz speech band)
+
+**Frame rate:**
+- Internal 12-15 fps (Schlemmer sequential frames)
+- Rendered at 60fps with smooth bezier interpolation
+- Don't render at 60fps native — feels too smooth, loses Bauhaus discrete-step character
+
+### Don'ts (Calm pillar enforcement)
+
+- ❌ No bouncing
+- ❌ No squash-and-stretch beyond ±5% per axis
+- ❌ No exaggeration peaks beyond 1.3× amplitude
+- ❌ No emoji-style expressions or expression swaps
+- ❌ No "happy / sad" mode toggles — единая dual personality всегда
+- ❌ No color shifts during speech (glow color = identity)
+- ❌ No perfect bilateral symmetry (Van Doesburg P-17)
+- ❌ No metronomic timing (always unequal accents)
+
+### Reference cycle (1 second of speech, simplified)
+
+```
+T=0ms:    [   ]  D₀ idle
+T=-80ms:  [  ]   D₀ × 0.98 anticipation
+T=0ms:    [    ] D₀ × 1.4 vowel /a/, hold 100ms, glow +8%
+T=100ms:  [  ]   D₀ × 0.95 stop /t/, snap, 40ms
+T=140ms:  [   ]  D₀ × 1.05 fricative /s/, vibrate 5Hz, 100ms
+T=240ms:  [   ]  D₀ pause 80ms, glow -5%
+T=320ms:  [   ]  next word ...
+```
+
+Asymmetry: каждый из этих frames — left и right bracket двигаются с 15-30ms phase offset.
 
 ---
 
