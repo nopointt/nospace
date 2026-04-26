@@ -6,6 +6,8 @@ Adapted from Harkly `guidelines/elevation.md`. Cold elevation model.
 
 ## Elevation Model
 
+### Light theme (Weiß-polus)
+
 | Level | Token | Value | Use |
 |---|---|---|---|
 | elevation.0 | `--bg-canvas` | #FAFAFA | Page ground |
@@ -14,6 +16,19 @@ Adapted from Harkly `guidelines/elevation.md`. Cold elevation model.
 | elevation.3 | `--bg-pressed` | #D9D9D9 | Pressed state, modals |
 
 Direction: ground is lightest, elevation adds darkness. Each step descends ~5 lightness points. Pure gray (hue 0°).
+
+### Dark theme (Gelb-polus)
+
+| Level | Token | Value | Use |
+|---|---|---|---|
+| elevation.0 | `--bg-canvas` | #1A1A1A | Page ground |
+| elevation.1 | `--bg-surface` | #262626 | Cards, panels, table headers |
+| elevation.2 | `--bg-elevated` | #333333 | Hover states, dropdowns |
+| elevation.3 | `--bg-pressed` | #404040 | Pressed state, modals |
+
+Direction inverted: ground is darkest, elevation adds lightness. Each step ascends ~5 lightness points. Pure gray (hue 0°) preserved.
+
+**Rationale:** Kandinsky P-01 — black-on-white and white-on-black are structurally equivalent. The semantic role of each elevation level is the same; only the lightness axis flips.
 
 ---
 

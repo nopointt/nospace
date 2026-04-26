@@ -11,7 +11,7 @@ Adapted from Harkly `guidelines/typography.md`. Dual typeface system.
 | Token | Family | Use |
 |---|---|---|
 | `--font-sans` | Inter | Body text, headings, labels, buttons, navigation |
-| `--font-mono` | JetBrains Mono | Code blocks, inline code, API tokens, technical data, pipeline labels |
+| `--font-mono` | JetBrains Mono | Code blocks, inline code, API tokens, technical data display (chunk text, embedding values, raw JSON). NOT for pipeline stage labels — those are `label` role and use Inter per rule 07. |
 
 Inter is a geometric sans-serif optimized for screen readability. JetBrains Mono provides fixed-width alignment for technical content where character alignment matters.
 
