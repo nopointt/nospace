@@ -61,3 +61,24 @@ if file.lines > hard_limit:
 
 - SRE Lead MUST проверять размеры ключевых файлов памяти раз в неделю.
 - Запись в `/memory/logs/system/file-size-audit-{date}.md` при каждой проверке.
+
+---
+
+## § 6 — Исключения (binary / encrypted / generated)
+
+Лимит 800 строк применяется к **текстовым человеко-/AI-читаемым файлам**. Для бинарных и сгенерированных форматов количество строк семантически не значимо — `wc -l` считает встроенные line-endings внутри зашифрованного/сжатого блоба, не структуру.
+
+**Исключения от line-count check (pre-commit hook + reviewer agents):**
+
+| Тип файла | Причина исключения |
+|---|---|
+| `.pen` | Pencil encrypted file. Структура управляется через MCP tools, не line-count. Содержит дизайн-систему/экраны как зашифрованную сериализацию. |
+| `.ipynb` | Jupyter notebook с embedded outputs (изображения, JSON cells). |
+| `.min.js`, `.min.css` | Минифицированные бандлы — single-line by definition. |
+| `package-lock.json`, `bun.lock`, `yarn.lock`, `pnpm-lock.yaml`, `*.lock` | Сгенерированные dependency lockfiles. |
+| `.svg` | Часто single-line vector data, line count неинформативен. |
+| `.pdf` | Бинарный формат. |
+
+Дополнительные исключения добавляются по запросу через PR в этот файл + соответствующее обновление `.git/hooks/pre-commit` секция § 3.
+
+**Что НЕ освобождается:** обычные текстовые форматы (`.md`, `.ts`, `.tsx`, `.py`, `.go`, `.rs`, `.json` non-lock, `.yaml` non-lock, `.css` source, `.html`) — лимиты § 2 действуют полностью.
