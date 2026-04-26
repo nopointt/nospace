@@ -1,9 +1,73 @@
 ---
 # Meme — Contexter Mascot Specification
-> Version: 1.0 | 2026-04-26
-> Sources: nopoint creative brief 2026-04-26 + Bauhaus RAG (Klee P-24, Moholy-Nagy P-03/P-09, Schlemmer Triadic Ballet)
+> Version: 2.0 (index) | Last updated: 2026-04-26 (session 254)
+> Status: This file became INDEX. Full canonical mascot spec moved to `mascot/` subfolder.
+> Sources: nopoint creative brief 2026-04-26 + session 253 form lock + session 254 R-02 development
 > Companion: design-system-themes.pen (theme axis light/dark)
 ---
+
+## ⚠️ This file is now an INDEX
+
+> **Полный canonical spec маскота Meme живёт в подпапке [`mascot/`](mascot/).**
+>
+> Эта папка содержит **21 файл** покрывающих каждый слой маскота: philosophy / canon-* / motion / voice / marketing / discipline / archive. Каждый файл заполнен исчерпывающе. Не сокращать.
+>
+> При работе с маскотом — читай файлы в [`mascot/`](mascot/), а не этот файл. Этот файл сохранён для исторической справки.
+
+### Quick navigation
+
+| Topic | File в `mascot/` |
+|---|---|
+| Что такое Meme и почему он такой | [`mascot/philosophy.md`](mascot/philosophy.md) |
+| Геометрия (форма, углы, симметрия) | [`mascot/canon-geometry.md`](mascot/canon-geometry.md) |
+| Бронзовый корпус | [`mascot/canon-material-bronze.md`](mascot/canon-material-bronze.md) |
+| Verdigris патина | [`mascot/canon-material-patina.md`](mascot/canon-material-patina.md) |
+| Биолюминесцентное свечение + 5-level scale | [`mascot/canon-bioluminescent-glow.md`](mascot/canon-bioluminescent-glow.md) |
+| Лицо (3-layer eye structure, asymmetry) | [`mascot/canon-face.md`](mascot/canon-face.md) |
+| Композиция (R-01..R-06 reference shots) | [`mascot/canon-composition.md`](mascot/canon-composition.md) |
+| Освещение (single soft box upper-left) | [`mascot/canon-lighting.md`](mascot/canon-lighting.md) |
+| 7 канонических состояний | [`mascot/states.md`](mascot/states.md) |
+| Talk animation 10-state spec | [`mascot/motion-talk-animation.md`](mascot/motion-talk-animation.md) |
+| Idle / curious / knowing / bridging / processing motion | [`mascot/motion-idle-and-states.md`](mascot/motion-idle-and-states.md) |
+| Что Meme говорит (копи) | [`mascot/voice-and-copy.md`](mascot/voice-and-copy.md) |
+| Как Meme звучит (sonic signature, ElevenLabs) | [`mascot/voice-audio.md`](mascot/voice-audio.md) |
+| Где Meme появляется (favicon → marketing video) | [`mascot/marketing-surfaces.md`](mascot/marketing-surfaces.md) |
+| Cute через геометрию | [`mascot/cute-friendliness.md`](mascot/cute-friendliness.md) |
+| Что Meme никогда не делает | [`mascot/anti-patterns.md`](mascot/anti-patterns.md) |
+| Paste-ready блок для Imagen / Veo / Lyria prompts | [`mascot/continuity-block.md`](mascot/continuity-block.md) |
+| История канона (v1 → v7) | [`mascot/decisions-log.md`](mascot/decisions-log.md) |
+| Bauhaus + web research цитаты | [`mascot/references-rag-sources.md`](mascot/references-rag-sources.md) |
+| Pending decisions | [`mascot/open-questions.md`](mascot/open-questions.md) |
+
+### Когда какой файл загружать
+
+Полный purpose map в [`mascot/README.md`](mascot/README.md). Quick reference:
+
+- **Imagen / Veo prompt** → `canon-*` все + `continuity-block.md`
+- **DaVinci grade** → `canon-material-*` + `canon-bioluminescent-glow.md` + `canon-lighting.md`
+- **ElevenLabs voice** → `voice-audio.md` + `philosophy.md`
+- **UI копирайт** → `voice-and-copy.md`
+- **Onboarding нового агента** → `mascot/README.md` + `mascot/philosophy.md`
+- **Любая mascot задача** → minimum `continuity-block.md`
+
+### Lock status (current canon = v7)
+
+- Form (brackets + face above) — LOCKED v6 (session 253, 2026-04-26)
+- Material concept (bronze + verdigris patina + bioluminescent glow) — LOCKED v4 (session 253)
+- 3-layer eye structure (bronze rim → white iris → black pupil) — LOCKED v7 (session 254)
+- Patina coverage ≤30% mirror match — LOCKED v7 (session 254)
+- Bioluminescent glow 5-level scale, baseline L2 — LOCKED v7 (session 254)
+- No mouth, talk = X-axis bracket separation — LOCKED v6 (session 253)
+- Talk animation 10-state spec — LOCKED v1 (session 253)
+- Voice (sonic signature) — LOCKED v1 (session 254)
+
+См. [`mascot/decisions-log.md`](mascot/decisions-log.md) для полной истории канона и обоснований.
+
+---
+
+## Legacy content (preserved per G1 — original session 253 spec)
+
+> Текст ниже — оригинальная mascot-meme.md spec session 253 до создания подпапки `mascot/`. Сохранён согласно G1 (никогда не удаляем). При расхождении с подпапкой `mascot/` — **подпапка mascot/ является source of truth**.
 
 ## Origin
 
