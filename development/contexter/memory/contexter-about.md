@@ -64,6 +64,10 @@ Team: nopoint (founder). Evolved from Harkly MVP data layer into standalone prod
 | **Content factory** | `content-factory/` (planning/correspondent-roadmap.md, prompts/evening-digest-v2.md, **specs/editorial-layer-4-digest.md** (genre spec v1), **specs/master-article-process.md** (5-stage pipeline doc), digests/{date}-{cycle}/{narratives,structured,master-blog-post,triangulation-bundle}) |
 | **Correspondent agents** | `~/.claude/agents/{hn,reddit}-correspondent.md` (production-ready, 12+14 KB, persistent across sessions) |
 | **Digest auto-execution skills** | `~/.claude/skills/{morningDigest,eveningDigest}/SKILL.md` (auto-execution для 09:00/21:00 UTC cycles, references master-article-process.md) |
+| **Brand bible v1** | `nospace/marketing/branding/contexter/` (9 файлов session 253: tov.md 530-line CANONICAL voice contract + brand-bible RU + values + positioning + category-manifesto + mascot-meme + ui-language + interaction-pattern + brand-and-design-overview) |
+| **Mascot Meme v6** | brackets `[ ]` + face above (eye-dots only, NO mouth) + bronze + cyan-teal bioluminescent patina. Spec at `marketing/branding/contexter/mascot-meme.md` (363 строки, talk animation 10-state RAG-grounded) |
+| **Design system dual-theme** | `nospace/design/contexter/design-system-themes.pen` (290 KB, 14 sections × 2 themes via theme axis: light=Weiß-polus blue accent + dark=Gelb-polus yellow #E8C018 accent на canvas #1A1A1A) |
+| **Video production research** | `nospace/docs/research/contexter-meme-*-deep.md` (7 artifacts ~5500 lines: SEED + 5 DEEPs + INDEX). INDEX = `contexter-meme-production-INDEX.md` is bridge для production playbook v1 synthesis. |
 
 ## Deployed
 
